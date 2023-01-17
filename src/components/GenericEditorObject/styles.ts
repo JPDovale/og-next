@@ -42,6 +42,10 @@ export const GenericEditorObjectContainer = styled('div', {
     subObjectsFormIsVisible: {
       true: {
         overflowY: 'hidden',
+
+        '@media screen and (max-width: 768px)': {
+          height: '100vh',
+        },
       },
     },
   },

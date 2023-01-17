@@ -2,20 +2,15 @@ import { HomePageContainer } from './styles'
 
 import logo from '../../assets/logos/logoToDown.svg'
 import Image from 'next/image'
-import { useContext, useEffect } from 'react'
-import { UserContext } from '../../contexts/user'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 export default function HomePage() {
-  const { userLogged } = useContext(UserContext)
-
   const router = useRouter()
 
   useEffect(() => {
-    if (!userLogged) {
-      router.replace('/login')
-    }
-  }, [userLogged, router])
+    router.replace('/login')
+  }, [router])
 
   return (
     <HomePageContainer>
