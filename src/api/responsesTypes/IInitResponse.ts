@@ -13,6 +13,7 @@ export interface IInitResponse {
     createAt: string
     updateAt: string
     isInitialized: boolean
+    isSocialLogin: boolean
     name: string
   }
   refreshToken: string
