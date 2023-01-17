@@ -31,10 +31,19 @@ export function NewProjectPopup({
 }: INewProjectPopupProps) {
   const { createProject } = useContext(ProjectsContext)
 
-  const [isPrivate, setIsPrivate] = useState(false)
-  const [type, setType] = useState('book')
+  const [
+    isPrivate,
+    // setIsPrivate
+  ] = useState(false)
+  const [
+    type,
+    // setType
+  ] = useState('book')
   const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
+  const [
+    password,
+    // setPassword
+  ] = useState('')
   const [errorIn, setErrorIn] = useState('')
 
   const router = useRouter()

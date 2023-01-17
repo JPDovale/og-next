@@ -1,5 +1,4 @@
 import { Button, Text } from '@og-ui/react'
-import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import {
   Fingerprint,
@@ -76,8 +75,8 @@ export function UserOptionsPopup() {
             //       redirect: true,
             //       callbackUrl: 'http://localhost:3000/login',
             //     }).then(() => logout())
-            //   : 
-              logout()
+            //   :
+            logout()
           }
         />
         <Button
