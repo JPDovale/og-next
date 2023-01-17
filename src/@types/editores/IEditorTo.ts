@@ -1,0 +1,10 @@
+export type IEditorTo =
+  | 'sonho'
+  | 'medo'
+  | 'desejo'
+  | 'personalidade'
+  | 'valor'
+  | 'aparência'
+  | 'trauma'
+  | 'poder'
+  | 'casal'
