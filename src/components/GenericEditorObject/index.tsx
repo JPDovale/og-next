@@ -101,6 +101,9 @@ export function GenericEditorObject({
   ) as IPersonsResponse
 
   const filteredPersons = persons.filter((person) => person.id !== personId)
+  const personsThisProject = filteredPersons.filter(
+    (person) => person.defaultProject === projectId,
+  )
 
   const filteredRefs = findRefs(editorTo, refs, person)
 
@@ -397,7 +400,7 @@ export function GenericEditorObject({
 
                     <Avatares
                       listEmptyMessage="Você ainda não criou nenhum personagem que possa ser atribuído"
-                      persons={filteredPersons}
+                      persons={personsThisProject}
                       internalButtonIcon={<Brandy />}
                       functionInternalButton={setPersonSelected}
                       personSelected={personSelected || object?.personId}
