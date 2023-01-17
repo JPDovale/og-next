@@ -66,7 +66,7 @@ export default function LoginPage() {
   }, [userLogged, router])
 
   useEffect(() => {
-    if (session?.data?.loggedUser.errorTitle) return
+    if (session?.data?.loggedUser?.errorTitle) return
     setUser(session?.data?.loggedUser!)
   }, [session, setUser])
 

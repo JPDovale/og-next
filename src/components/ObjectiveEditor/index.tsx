@@ -72,9 +72,13 @@ export function ObjectiveEditor({
     (person) => person.id === personId,
   ) as IPersonsResponse
 
+  const personsThisProject = persons.filter(
+    (person) => person.defaultProject === projectId,
+  )
+
   const initialSupporters = objective
     ? supporting ||
-      persons.filter((person) => {
+      personsThisProject.filter((person) => {
         const isSupporter = !!objective.supporting.find(
           (support) => support === person.id,
         )
@@ -85,7 +89,7 @@ export function ObjectiveEditor({
 
   const initialAvoiders = objective
     ? avoiders ||
-      persons.filter((person) => {
+      personsThisProject.filter((person) => {
         const isAvoider = !!objective.avoiders.find(
           (avoider) => avoider === person.id,
         )
@@ -94,7 +98,7 @@ export function ObjectiveEditor({
       })
     : avoiders
 
-  const restPersons = persons.filter((person) => {
+  const restPersons = personsThisProject.filter((person) => {
     const isAdded =
       !(
         avoiders?.find((avoider) => avoider.id === person.id) ||
