@@ -21,6 +21,7 @@ import { ProjectsContext } from '../../../../contexts/projects'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
 import { orderElements } from '../../../../services/orderElements'
 import {
+  FastAccessPersons,
   InfosBasics,
   InputForm,
   InputHeader,
@@ -94,7 +95,8 @@ export default function PersonsPage() {
   const finalPersonsToShow = query
     ? personsOrd?.filter(
         (person) =>
-          person.name.includes(query) || person.lastName.includes(query),
+          person.name.toLowerCase().includes(query.toLowerCase()) ||
+          person.lastName.toLowerCase().includes(query.toLowerCase()),
       )
     : personsOrd
 
@@ -176,23 +178,6 @@ export default function PersonsPage() {
             onSubmit={handleSubmit(handleNewPerson)}
             formIsVisible={formIsVisible}
           >
-            {formIsVisible && (
-              <>
-                <Text
-                  css={{ marginBottom: '-$10', color: '$base700' }}
-                  size="xs"
-                >
-                  Todos os personagens:
-                </Text>
-                <Avatares
-                  size={smallWindow ? 'xsm' : 'sm'}
-                  columns={18}
-                  listEmptyMessage="Nenhum personagem foi criado ainda"
-                  persons={personsOrd}
-                />
-              </>
-            )}
-
             <NewInfosPerson>
               <InfosBasics>
                 <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
@@ -279,6 +264,19 @@ export default function PersonsPage() {
             />
           </NewPersonForm>
         </NewPersonFormContainer>
+
+        <FastAccessPersons>
+          <Text size="xs">Acesso rápido:</Text>
+          <Avatares
+            size={smallWindow ? 'xsm' : 'sm'}
+            columns={12}
+            listEmptyMessage={
+              loading ? 'Carregando...' : 'Nenhum personagem foi criado ainda'
+            }
+            persons={finalPersonsToShow}
+            isClickable
+          />
+        </FastAccessPersons>
 
         <PersonsContainer>
           {finalPersonsToShow[0] ? (

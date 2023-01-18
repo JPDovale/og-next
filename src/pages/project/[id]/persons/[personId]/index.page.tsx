@@ -78,6 +78,8 @@ export default function PersonPage() {
   const person = persons.find((person) => person?.id === personId)
   const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
+  const historyLineBreaks = person?.history.split('\n')
+
   async function handleUpdateImage(files: FileList | null) {
     setOnEditImg(false)
 
@@ -319,7 +321,19 @@ export default function PersonPage() {
               />
             )}
           </HeadingPart>
-          <HistoryContent>{person?.history || 'Carregando...'}</HistoryContent>
+          <HistoryContent>
+            {historyLineBreaks?.map((line) => {
+              if (line) {
+                return (
+                  <Text family="body" key={line}>
+                    {line}
+                  </Text>
+                )
+              }
+
+              return null
+            }) || <Text family="body">Carregando...</Text>}
+          </HistoryContent>
         </History>
 
         <ObjectContainer>

@@ -144,3 +144,17 @@ export const QueryInputContainer = styled('div', {
 })
 
 export const QueryInput = styled(TextInput, {})
+
+export const FastAccessPersons = styled('div', {
+  padding: '$4',
+  boxShadow: '$onActive',
+  width: '96%',
+  margin: 'auto',
+  background: '$gray900',
+  borderRadius: '$sm',
+  marginTop: '$8',
+
+  p: {
+    color: '$base700',
+  },
+})

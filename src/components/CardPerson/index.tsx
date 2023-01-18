@@ -28,6 +28,8 @@ export function CardPerson({
 
   const personId = person.id
 
+  const historyBreakLines = person.history?.split('\n')
+
   return (
     <CardPersonContainer
       as={!isNotPreview ? 'button' : 'div'}
@@ -161,9 +163,17 @@ export function CardPerson({
                 <Text as="label" weight="bold" size="xl">
                   História:
                 </Text>
-                <Text as="p" family="body">
-                  {person.history}
-                </Text>
+                {historyBreakLines.map((line) => {
+                  if (line) {
+                    return (
+                      <Text key={line} as="p" family="body">
+                        {line}
+                      </Text>
+                    )
+                  }
+
+                  return null
+                })}
               </PersonHistory>
               <EditPersonButton
                 icon={<Pencil weight="bold" size={32} />}

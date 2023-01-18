@@ -60,12 +60,27 @@ export const PersonAvatar = styled('div', {
   flexDirection: 'column',
   alignItems: 'center',
   gap: '$2',
+  transition: 'ease-in-out 250ms',
 
   button: {
     padding: '$1',
     boxShadow: 'none',
     background: '$purple400',
     borderRadius: '$md',
+  },
+
+  variants: {
+    isClickable: {
+      true: {
+        cursor: 'pointer',
+        borderRadius: '$md',
+
+        '&:hover': {
+          scale: 1.1,
+          boxShadow: '$default',
+        },
+      },
+    },
   },
 })
 

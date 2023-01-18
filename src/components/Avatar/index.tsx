@@ -8,6 +8,7 @@ interface IAvatarProps {
   selected?: boolean
   error?: boolean
   whitShadow?: boolean
+  isClickable?: boolean
 }
 
 export function AvatarWeb({
@@ -16,6 +17,7 @@ export function AvatarWeb({
   selected = false,
   error = false,
   whitShadow = false,
+  isClickable = false,
 }: IAvatarProps) {
   return (
     <AvatarRoot
@@ -23,6 +25,7 @@ export function AvatarWeb({
       selected={selected}
       error={error}
       whitShadow={whitShadow}
+      isClickable={isClickable}
     >
       <AvatarImage
         size={size}
@@ -153,6 +156,11 @@ const AvatarRoot = styled(Avatar.Root, {
         border: '1px solid $blue300',
       },
       false: {},
+    },
+    isClickable: {
+      true: {
+        cursor: 'pointer',
+      },
     },
   },
 })

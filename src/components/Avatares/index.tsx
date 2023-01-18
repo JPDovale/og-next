@@ -1,4 +1,5 @@
 import { Button, Text } from '@og-ui/react'
+import { useRouter } from 'next/dist/client/router'
 import { ReactNode } from 'react'
 import { IPersonsResponse } from '../../api/responsesTypes/IPersonsResponse'
 import { AvatarWeb } from '../Avatar'
@@ -17,6 +18,7 @@ interface IAvataresProps {
   internalButtonIcon?: ReactNode
   columns?: 7 | 12 | 15 | 18
   size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full'
+  isClickable?: boolean
 
   firstButtonKey?: 'supporting' | 'avoider'
   secondButtonKey?: 'supporting' | 'avoider'
@@ -41,6 +43,7 @@ export function Avatares({
   secondaryButtonIcon,
   internalButtonIcon,
   size = 'sm',
+  isClickable = false,
 
   firstButtonKey,
   secondButtonKey,
@@ -56,6 +59,9 @@ export function Avatares({
   secondaryButtonFunction,
   functionInternalButton,
 }: IAvataresProps) {
+  const router = useRouter()
+  const { id } = router.query
+
   function findPersonAndReturn(id: string) {
     return functionInternalButton && functionInternalButton(id)
   }
@@ -78,7 +84,14 @@ export function Avatares({
     <AvataresContainer columns={columns} isEmpty={!persons[0]}>
       {persons.map((person) => {
         return (
-          <PersonAvatar key={person.id}>
+          <PersonAvatar
+            key={person.id}
+            onClick={() => {
+              isClickable &&
+                router.replace(`/project/${id}/persons/${person.id}`)
+            }}
+            isClickable={isClickable}
+          >
             <Buttons>
               {firstButtonIcon && personSelected !== person.id && (
                 <Button
@@ -121,6 +134,7 @@ export function Avatares({
                 src={person?.image?.url}
                 selected={personSelected === person.id && true}
                 error={!personSelected && error && true}
+                isClickable={isClickable}
               />
 
               <p>{person.name}</p>

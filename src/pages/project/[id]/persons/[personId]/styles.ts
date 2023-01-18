@@ -173,19 +173,25 @@ export const HeadingPart = styled(Heading, {
   },
 })
 
-export const HistoryContent = styled('p', {
+export const HistoryContent = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$4',
   padding: '$4',
-
-  textAlign: 'justify',
-  fontFamily: '$bodyText',
-  fontWeight: 'bold',
-  lineHeight: '$base',
-  fontSize: '1.1rem',
 
   background: '$base300',
   boxShadow: '$onActive',
   borderRadius: '$xs',
-  color: '$gray900',
+
+  p: {
+    textAlign: 'justify',
+    fontFamily: '$bodyText',
+    fontWeight: 'bold',
+    lineHeight: '$base',
+    fontSize: '1.1rem',
+
+    color: '$gray900',
+  },
 })
 
 export const ObjectContainer = styled('div', {
