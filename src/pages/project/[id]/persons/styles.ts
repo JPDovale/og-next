@@ -128,6 +128,10 @@ export const QueryInputContainer = styled('div', {
   position: 'absolute',
   width: '50%',
 
+  '@media screen and (max-width: 768px)': {
+    width: '75%',
+  },
+
   div: {
     padding: '$2',
     width: '100%',
@@ -148,7 +152,7 @@ export const QueryInput = styled(TextInput, {})
 export const FastAccessPersons = styled('div', {
   padding: '$4',
   boxShadow: '$onActive',
-  width: '96%',
+  width: '98%',
   margin: 'auto',
   background: '$gray900',
   borderRadius: '$sm',
@@ -156,5 +160,9 @@ export const FastAccessPersons = styled('div', {
 
   p: {
     color: '$base700',
+  },
+
+  '@media screen and (max-width: 768px)': {
+    width: '90%',
   },
 })

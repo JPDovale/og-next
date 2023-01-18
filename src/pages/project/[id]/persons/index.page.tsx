@@ -149,7 +149,9 @@ export default function PersonsPage() {
             icon={
               formIsVisible ? <X weight="bold" /> : <UserPlus weight="bold" />
             }
-            label={!formIsVisible ? 'Criar personagem' : ''}
+            label={
+              !formIsVisible ? (smallWindow ? '' : 'Criar personagem') : ''
+            }
             wid="hug"
             onClick={() => setFormIsVisible(!formIsVisible)}
           />
