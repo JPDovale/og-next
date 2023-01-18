@@ -6,8 +6,7 @@ import {
   ITag,
 } from '../../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { Error } from '../../../../../../components/Error'
-import { Loading } from '../../../../../../components/Loading'
+
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
@@ -20,32 +19,24 @@ export default function AppearancePage() {
   const router = useRouter()
   const { id, personId, appearanceId } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  const tag = project.tags.find(
+  const tag = project?.tags.find(
     (tag) => tag.type === 'persons/appearance',
   ) as ITag
 
   const refs = tag && tag.refs
-  const permission = project.users.find((u) => u.id === user?.id)?.permission
-
-  if (!project || !persons) return <Error />
+  const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   const person = persons.find((person) => person.id === personId)
 
-  if (!person) return <Error />
+  const exiteAppearance = person?.appearance?.find(
+    (appearance) => appearance.id === appearanceId,
+  )
 
-  const exiteAppearance =
-    appearanceId !== 'new'
-      ? person.appearance?.find((appearance) => appearance.id === appearanceId)
-      : undefined
-
-  const commentsInThisAppearance = person.comments?.filter(
+  const commentsInThisAppearance = person?.comments?.filter(
     (comment) => comment.to === `appearance/${appearanceId}`,
   )
 
@@ -57,26 +48,27 @@ export default function AppearancePage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={[
         'Personagens',
-        `${person?.name}`,
+        `${person?.name || 'Carregando...'}`,
         'Aparência',
         exiteAppearance ? 'Edição' : 'Novo',
       ]}
       loading={loading}
+      inError={!loading && appearanceId !== 'new' && !exiteAppearance}
     >
       <EditorAndCommentsToGenerics
         persons={persons}
         refs={refs}
-        isNew={!exiteAppearance}
+        isNew={appearanceId === 'new'}
         editorTo="aparência"
-        projectId={project.id}
-        personId={person.id}
+        projectId={project?.id}
+        personId={person?.id!}
         object={exiteAppearance}
         permission={permission}
-        projectCreatedPerUser={project.createdPerUser}
+        projectCreatedPerUser={project?.createdPerUser}
         onNewComment={CommentInPerson}
         to={`appearance/${appearanceId}`}
         comments={commentsInThisAppearance}

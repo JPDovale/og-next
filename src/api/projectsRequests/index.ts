@@ -118,3 +118,18 @@ export async function unshareProjectRequest(
     return err.response.data
   }
 }
+
+interface IDeleteImageProjectRequestProps {
+  projectId: string
+}
+
+export async function deleteImageProjectRequest({
+  projectId,
+}: IDeleteImageProjectRequestProps) {
+  try {
+    const response = await api.delete(`/projects/image/${projectId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

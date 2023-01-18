@@ -1,4 +1,4 @@
-import { Button, styled, Text } from '@og-ui/react'
+import { Button, styled, Text, TextInput } from '@og-ui/react'
 
 export const PersonsContainer = styled('div', {
   display: 'flex',
@@ -121,3 +121,26 @@ export const InputHeader = styled(Text, {
     lineHeight: 0,
   },
 })
+
+export const QueryInputContainer = styled('div', {
+  zIndex: 0,
+  display: 'flex',
+  position: 'absolute',
+  width: '50%',
+
+  div: {
+    padding: '$2',
+    width: '100%',
+  },
+
+  variants: {
+    formIsVisible: {
+      false: {},
+      true: {
+        display: 'none',
+      },
+    },
+  },
+})
+
+export const QueryInput = styled(TextInput, {})

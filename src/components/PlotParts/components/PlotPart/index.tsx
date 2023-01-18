@@ -39,6 +39,8 @@ export function PlotPart({
 
   const comment = comments?.filter((comment) => comment.to === keyValue)[0]
 
+  const elementLineBraked = element?.split('\n')
+
   return (
     <PlotPartContainer
       disabled={!element && isInitialized && disabled}
@@ -60,7 +62,7 @@ export function PlotPart({
         )}
       </Heading>
       <Text
-        as="p"
+        as="div"
         family="body"
         size="lg"
         onClick={() => {
@@ -72,10 +74,22 @@ export function PlotPart({
           ? permission === 'edit'
             ? `Você ainda não definiu ${term} ${to} do seu projeto`
             : `${to} ainda não foi definido pelos editores do projeto`
-          : element}
+          : elementLineBraked?.map((line) => {
+              if (line) {
+                return (
+                  <Text key={line} family="body">
+                    {line}
+                    <br />
+                    <br />
+                  </Text>
+                )
+              }
+
+              return null
+            })}
 
         {!element && isInitialized ? (
-          <Text as="span">
+          <Text as="span" size="sm">
             {disabled && permission === 'edit'
               ? `Você precisa definir ${lastTerm || term} ${last} antes`
               : disabled
@@ -87,7 +101,13 @@ export function PlotPart({
               : 'Aguardando os editores'}
           </Text>
         ) : (
-          <Text as="span">Clique para definir</Text>
+          <Text
+            as="span"
+            size="xs"
+            css={{ alignSelf: 'center', color: '$base700' }}
+          >
+            Clique para definir
+          </Text>
         )}
       </Text>
       {!isPreview && comment && (

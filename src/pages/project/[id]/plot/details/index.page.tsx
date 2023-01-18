@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -48,24 +47,21 @@ export default function DetailsPage() {
       projectId={`${id}`}
       paths={['Plot', 'Detalhes']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          message={message}
-          label="Detalhes"
-          updateValue={handleUpdateDetails}
-          value={details}
-          preValue={project.plot.details}
-          permission={userInProject?.permission}
-          comments={commentsDetails}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setDetails}
-          to="details"
-        />
-      )}
+      <EditorAndComments
+        message={message}
+        label="Detalhes"
+        updateValue={handleUpdateDetails}
+        value={details}
+        preValue={project?.plot.details}
+        permission={userInProject?.permission}
+        comments={commentsDetails}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setDetails}
+        to="details"
+      />
     </ProjectPageLayout>
   )
 }

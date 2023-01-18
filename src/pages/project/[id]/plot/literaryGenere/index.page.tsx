@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -48,24 +47,21 @@ export default function LiteraryGenerePage() {
       projectId={`${id}`}
       paths={['Plot', 'Gênero literário']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          message={message}
-          label="Gênero literário"
-          updateValue={handleUpdateLiteraryGenere}
-          value={literaryGenere}
-          preValue={project.plot.literaryGenere}
-          permission={userInProject?.permission}
-          comments={commentsLiteraryGenere}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setLiteraryGenere}
-          to="literaryGenere"
-        />
-      )}
+      <EditorAndComments
+        message={message}
+        label="Gênero literário"
+        updateValue={handleUpdateLiteraryGenere}
+        value={literaryGenere}
+        preValue={project?.plot.literaryGenere}
+        permission={userInProject?.permission}
+        comments={commentsLiteraryGenere}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setLiteraryGenere}
+        to="literaryGenere"
+      />
     </ProjectPageLayout>
   )
 }

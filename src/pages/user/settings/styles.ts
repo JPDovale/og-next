@@ -130,9 +130,24 @@ export const Input = styled('label', {
   gap: '$2',
 
   background: '$purple600',
+  transition: 'all 250ms',
+  cursor: 'pointer',
+
+  '&:hover': {
+    background: '$purple500',
+  },
 
   input: {
     position: 'absolute',
     visibility: 'hidden',
+  },
+
+  variants: {
+    disabled: {
+      true: {
+        opacity: 0.5,
+        cursor: 'not-allowed',
+      },
+    },
   },
 })

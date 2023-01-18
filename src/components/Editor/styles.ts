@@ -6,6 +6,7 @@ export const EditorContainer = styled('div', {
   gap: '$4',
 
   width: '100%',
+  height: '100vh',
   padding: '$8',
   paddingBottom: '$40',
 

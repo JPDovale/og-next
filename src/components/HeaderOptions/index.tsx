@@ -10,6 +10,7 @@ import {
 import { useContext, useState } from 'react'
 import { InterfaceContext } from '../../contexts/interface'
 import { UserContext } from '../../contexts/user'
+import { useWindowSize } from '../../hooks/useWindow'
 import { AvatarWeb } from '../Avatar'
 import { NewProjectPopup } from './components/NewProjectPopup'
 import { NotificationsPopup } from './components/NotificationsPopup'
@@ -66,7 +67,8 @@ export function HeaderOptions({
     newProjectIsOpen
   )
 
-  const smallWindow = screen.width < 786
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
 
   function closePopUp() {
     if (!onPopUpOpen) return
@@ -201,20 +203,24 @@ export function HeaderOptions({
           </QueryContainer>
         )}
       </HeaderOptionsContainer>
-      <UserOptionsPopup />
-      <NotificationsPopup
-        notificationsIsOpen={notificationsIsOpen}
-        setNotificationsIsOpen={setNotificationsIsOpen}
-      />
-      <PreferenciesPopup
-        preferenciesIsOpen={preferenciesIsOpen}
-        setPreferenciesIsOpen={setPreferenciesIsOpen}
-      />
-      {newProjectIsOpen && (
-        <NewProjectPopup
-          newProjectIsOpen={newProjectIsOpen}
-          setNewProjectIsOpen={setNewProjectIsOpen}
-        />
+      {!isLoading && (
+        <>
+          <UserOptionsPopup />
+          <NotificationsPopup
+            notificationsIsOpen={notificationsIsOpen}
+            setNotificationsIsOpen={setNotificationsIsOpen}
+          />
+          <PreferenciesPopup
+            preferenciesIsOpen={preferenciesIsOpen}
+            setPreferenciesIsOpen={setPreferenciesIsOpen}
+          />
+          {newProjectIsOpen && (
+            <NewProjectPopup
+              newProjectIsOpen={newProjectIsOpen}
+              setNewProjectIsOpen={setNewProjectIsOpen}
+            />
+          )}
+        </>
       )}
     </>
   )

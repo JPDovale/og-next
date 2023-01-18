@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router'
 import { PlusCircle } from 'phosphor-react'
 import { ReactNode } from 'react'
+import { Error } from '../../../../../../../components/Error'
 import { GenericCardObject } from '../../../../../../../components/GenericCardObject'
 import { ListEmpty } from '../../../../../../../components/ListEmpty'
+import { Loading } from '../../../../../../../components/Loading'
 import { CampuContainer, CampuContent, HeadingCampu } from './styles'
 
 interface ISubObject {
@@ -27,6 +29,7 @@ interface ICampuProps {
   withSubObjects?: 'consequências' | 'exceções' | undefined
   isUniqueRelational?: boolean
   permission: 'view' | 'edit' | 'comment' | undefined
+  isLoading: boolean
 }
 
 export function Campu({
@@ -38,52 +41,61 @@ export function Campu({
   withSubObjects,
   isUniqueRelational = false,
   permission,
+  isLoading,
 }: ICampuProps) {
   const router = useRouter()
   const { id, personId } = router.query
 
   return (
     <CampuContainer>
-      <HeadingCampu size="sm">
-        {icon}
-        {title}:
-        {permission === 'edit' && (
-          <PlusCircle
-            size={40}
-            onClick={() =>
-              router.replace(
-                `/project/${id}/persons/${personId}/${keyIndex}/new`,
-              )
-            }
-          />
-        )}
-      </HeadingCampu>
-
-      <CampuContent columns={columns} isEmpty={!objectOfCampu[0]}>
-        {objectOfCampu && objectOfCampu[0] ? (
-          objectOfCampu.map((personality) => {
-            const subObjects =
-              personality.consequences || personality.exceptions
-
-            return (
-              <GenericCardObject
-                permission={permission}
-                to={keyIndex}
-                key={personality.id}
-                object={personality}
-                withSubObjects={withSubObjects && withSubObjects}
-                subObjects={withSubObjects && subObjects}
-                isUniqueRelational={isUniqueRelational}
+      {isLoading ? (
+        <Loading />
+      ) : !isLoading && !objectOfCampu ? (
+        <Error />
+      ) : (
+        <>
+          <HeadingCampu size="sm">
+            {icon}
+            {title}:
+            {permission === 'edit' && (
+              <PlusCircle
+                size={40}
+                onClick={() =>
+                  router.replace(
+                    `/project/${id}/persons/${personId}/${keyIndex}/new`,
+                  )
+                }
               />
-            )
-          })
-        ) : (
-          <ListEmpty
-            icon={icon}
-            message={`Nenhum(a) ${title} foi adicionado(a) ainda`}
-          />
-        )}
-      </CampuContent>
+            )}
+          </HeadingCampu>
+
+          <CampuContent columns={columns} isEmpty={!objectOfCampu[0]}>
+            {objectOfCampu && objectOfCampu[0] ? (
+              objectOfCampu.map((personality) => {
+                const subObjects =
+                  personality.consequences || personality.exceptions
+
+                return (
+                  <GenericCardObject
+                    permission={permission}
+                    to={keyIndex}
+                    key={personality.id}
+                    object={personality}
+                    withSubObjects={withSubObjects && withSubObjects}
+                    subObjects={withSubObjects && subObjects}
+                    isUniqueRelational={isUniqueRelational}
+                  />
+                )
+              })
+            ) : (
+              <ListEmpty
+                icon={icon}
+                message={`Nenhum(a) ${title} foi adicionado(a) ainda`}
+              />
+            )}
+          </CampuContent>
+        </>
+      )}
     </CampuContainer>
   )
 }

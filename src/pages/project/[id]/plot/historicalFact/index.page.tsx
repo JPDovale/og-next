@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -48,24 +47,21 @@ export default function HistoricalFactPage() {
       projectId={`${id}`}
       paths={['Plot', 'Fato histórico']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          message={message}
-          label="Fato histórico"
-          updateValue={handleUpdateHistoricalFact}
-          value={historicalFact}
-          preValue={project.plot.historicalFact}
-          permission={userInProject?.permission}
-          comments={commentsHistoricalFact}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setHistoricalFact}
-          to="historicalFact"
-        />
-      )}
+      <EditorAndComments
+        message={message}
+        label="Fato histórico"
+        updateValue={handleUpdateHistoricalFact}
+        value={historicalFact}
+        preValue={project?.plot.historicalFact}
+        permission={userInProject?.permission}
+        comments={commentsHistoricalFact}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setHistoricalFact}
+        to="historicalFact"
+      />
     </ProjectPageLayout>
   )
 }

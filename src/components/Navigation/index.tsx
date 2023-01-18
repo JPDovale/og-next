@@ -18,6 +18,7 @@ import { useContext } from 'react'
 import { InterfaceContext } from '../../contexts/interface'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useWindowSize } from '../../hooks/useWindow'
 
 export function NavigationBar() {
   const {
@@ -32,7 +33,9 @@ export function NavigationBar() {
   const router = useRouter()
   const location = router.pathname.split('/')[1]
 
-  const smallWindow = screen.width < 786
+  const windowSize = useWindowSize()
+
+  const smallWindow = windowSize.width! < 786
 
   return (
     <NavigationBarContainer navIsOpen={navIsOpen}>

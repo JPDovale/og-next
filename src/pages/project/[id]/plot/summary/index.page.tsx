@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -48,24 +47,21 @@ export default function SummaryPage() {
       projectId={`${id}`}
       paths={['Plot', 'Resumo']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          message={message}
-          label="Resumo"
-          updateValue={handleUpdateSummary}
-          value={summary}
-          preValue={project.plot.summary}
-          permission={userInProject?.permission}
-          comments={commentsSummary}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setSummary}
-          to="summary"
-        />
-      )}
+      <EditorAndComments
+        message={message}
+        label="Resumo"
+        updateValue={handleUpdateSummary}
+        value={summary}
+        preValue={project?.plot.summary}
+        permission={userInProject?.permission}
+        comments={commentsSummary}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setSummary}
+        to="summary"
+      />
     </ProjectPageLayout>
   )
 }

@@ -3,8 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Error } from '../../../../../components/Error'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -19,20 +17,15 @@ export default function StorytellerPage() {
   const router = useRouter()
   const { id } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  if (!project || !user) return <Error />
-
-  const commentsStoryteller = project.plot.comments?.filter(
+  const commentsStoryteller = project?.plot?.comments?.filter(
     (comment) => comment.to === 'storyteller',
   )
 
-  const userInProject = project.users.find((u) => u.id === user.id)
+  const userInProject = project?.users.find((u) => u.id === user?.id)
 
   async function handleUpdateStoryteller() {
     setMessage('')
@@ -50,28 +43,25 @@ export default function StorytellerPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={['plot', 'Narrador']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          message={message}
-          label="Narrador"
-          updateValue={handleUpdateStoryteller}
-          value={storyteller}
-          preValue={project.plot.storyteller}
-          permission={userInProject?.permission}
-          comments={commentsStoryteller}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setStoryteller}
-          to="storyteller"
-        />
-      )}
+      <EditorAndComments
+        message={message}
+        label="Narrador"
+        updateValue={handleUpdateStoryteller}
+        value={storyteller}
+        preValue={project?.plot?.storyteller}
+        permission={userInProject?.permission}
+        comments={commentsStoryteller}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setStoryteller}
+        to="storyteller"
+      />
     </ProjectPageLayout>
   )
 }

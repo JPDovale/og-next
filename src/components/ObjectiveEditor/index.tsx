@@ -115,7 +115,7 @@ export function ObjectiveEditor({
   const filteredPersons = restPersons.filter((person) => person.id !== personId)
 
   const filteredRefs = refs?.filter((ref) => {
-    const idAddedRef = !person.objectives?.find(
+    const idAddedRef = !person?.objectives?.find(
       (objective) => objective.id === ref.object.id,
     )
 

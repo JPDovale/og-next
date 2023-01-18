@@ -6,8 +6,6 @@ import {
   ITag,
 } from '../../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { Error } from '../../../../../../components/Error'
-import { Loading } from '../../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
@@ -32,30 +30,22 @@ export default function TraumaPage() {
   const router = useRouter()
   const { id, personId, traumaId } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  const tag = project.tags.find((tag) => tag.type === 'persons/traumas') as ITag
+  const tag = project?.tags.find(
+    (tag) => tag.type === 'persons/traumas',
+  ) as ITag
 
   const refs = tag && tag.refs
-  const permission = project.users.find((u) => u.id === user?.id)?.permission
-
-  if (!project || !persons) return <Error />
+  const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   const person = persons.find((person) => person.id === personId)
 
-  if (!person) return <Error />
+  const exiteTrauma = person?.traumas?.find((trauma) => trauma.id === traumaId)
 
-  const exiteTrauma =
-    traumaId !== 'new'
-      ? person.traumas?.find((trauma) => trauma.id === traumaId)
-      : undefined
-
-  const commentsInThisTrauma = person.comments?.filter(
+  const commentsInThisTrauma = person?.comments?.filter(
     (comment) => comment.to === `traumas/${traumaId}`,
   )
 
@@ -67,23 +57,24 @@ export default function TraumaPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={[
         'Personagens',
-        `${person?.name}`,
+        `${person?.name || 'Carregando...'}`,
         'Trauma',
         exiteTrauma ? 'Edição' : 'Novo',
       ]}
       loading={loading}
+      inError={!loading && traumaId !== 'new' && !exiteTrauma}
     >
       <EditorAndCommentsToGenerics
         persons={persons}
         refs={refs}
-        isNew={!exiteTrauma}
+        isNew={traumaId === 'new'}
         editorTo="trauma"
-        projectId={project.id}
-        personId={person.id}
+        projectId={project?.id}
+        personId={person?.id!}
         object={
           {
             ...exiteTrauma,
@@ -92,7 +83,7 @@ export default function TraumaPage() {
         }
         withSubObjects="consequências"
         permission={permission}
-        projectCreatedPerUser={project.createdPerUser}
+        projectCreatedPerUser={project?.createdPerUser}
         onNewComment={CommentInPerson}
         to={`trauma/${traumaId}`}
         comments={commentsInThisTrauma}

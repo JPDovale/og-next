@@ -13,15 +13,17 @@ import { InterfaceContext } from '../../../../contexts/interface'
 import { UserContext } from '../../../../contexts/user'
 import { AvatarWeb } from '../../../Avatar'
 import { Error } from '../../../Error'
+import { Loading } from '../../../Loading'
 import { Options, UserInfos, UserOptionsPopupContainer } from './style'
 
 export function UserOptionsPopup() {
-  const { user, logout } = useContext(UserContext)
+  const { user, logout, loading } = useContext(UserContext)
   const { userOptionsIsOpen, setUserOptionsIsOpen } =
     useContext(InterfaceContext)
 
   const router = useRouter()
 
+  if (loading) return <Loading />
   if (!user) return <Error />
 
   return (

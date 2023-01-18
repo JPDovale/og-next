@@ -21,6 +21,7 @@ export default function PlotPage() {
       projectId={`${id}`}
       paths={['Plot']}
       loading={loading}
+      inError={!loading && !project}
       isScrolling
     >
       {!loading && <PlotParts project={project} />}

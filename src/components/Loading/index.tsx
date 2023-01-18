@@ -39,6 +39,7 @@ const LoadingContainer = styled('div', {
   justifyContent: 'center',
   alignItems: 'center',
   background: '$gray900',
+  position: 'relative',
 
   width: '100%',
   height: '100vh',

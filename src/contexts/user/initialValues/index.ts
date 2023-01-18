@@ -22,4 +22,5 @@ export const userDefaultValues: IUserContext = {
   updatePassword: async (oldPassword: string, password: string) => {},
   loginWithGoogle: async (user: any) => {},
   setUser: (loggedUser: ICreateSessionResponse) => {},
+  deleteAvatar: async () => {},
 }

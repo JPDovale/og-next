@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import {
   Calendar,
   IdentificationCard,
+  MagnifyingGlass,
   PlusCircle,
   UserFocus,
   UserPlus,
@@ -15,8 +16,6 @@ import { useContext, useState } from 'react'
 import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { DefaultError } from '../../../../components/DefaultError'
-import { Error } from '../../../../components/Error'
-import { Loading } from '../../../../components/Loading'
 import { InterfaceContext } from '../../../../contexts/interface'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
@@ -29,12 +28,15 @@ import {
   NewPersonForm,
   NewPersonFormContainer,
   PersonsContainer,
+  QueryInput,
+  QueryInputContainer,
   ShowFormButton,
 } from './styles'
 import { TextInput } from '../../../../components/TextInput'
 import { CardPerson } from '../../../../components/CardPerson'
 import { ListEmpty } from '../../../../components/ListEmpty'
 import { Avatares } from '../../../../components/Avatares'
+import { useWindowSize } from '../../../../hooks/useWindow'
 
 const newPersonFormSchema = z.object({
   name: z
@@ -58,6 +60,7 @@ type NewPersonFormData = z.infer<typeof newPersonFormSchema>
 export default function PersonsPage() {
   const [formIsVisible, setFormIsVisible] = useState(false)
   const [success, setSuccess] = useState('')
+  const [query, setQuery] = useState('')
 
   const { projects, loading, persons, createNewPerson, error, setError } =
     useContext(ProjectsContext)
@@ -71,25 +74,28 @@ export default function PersonsPage() {
   const router = useRouter()
   const { id } = router.query
 
-  const smallWindow = screen.width < 786
-
-  if (loading) return <Loading />
-  if (!projects) return <Error />
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
 
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  if (!project || !persons) return <Error />
-
-  const personsThisProject = persons.filter(
-    (person) => person.defaultProject === project.id,
+  const personsThisProject = persons?.filter(
+    (person) => person.defaultProject === project?.id,
   )
 
   const personsOrd = orderElements(
     personsThisProject,
     orderBy,
   ) as IPersonsResponse[]
+
+  const finalPersonsToShow = query
+    ? personsOrd?.filter(
+        (person) =>
+          person.name.includes(query) || person.lastName.includes(query),
+      )
+    : personsOrd
 
   async function handleNewPerson(data: NewPersonFormData) {
     const newPerson = {
@@ -113,10 +119,11 @@ export default function PersonsPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={['Personagens']}
       loading={loading}
+      inError={!loading && !project}
       isScrolling
     >
       {error && (
@@ -137,6 +144,15 @@ export default function PersonsPage() {
           wid="hug"
           onClick={() => setFormIsVisible(!formIsVisible)}
         />
+
+        <QueryInputContainer formIsVisible={formIsVisible}>
+          <QueryInput
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            icon={<MagnifyingGlass size={24} />}
+            placeholder="Encontre um personagem"
+          />
+        </QueryInputContainer>
 
         <Text
           size="md"
@@ -253,14 +269,15 @@ export default function PersonsPage() {
       </NewPersonFormContainer>
 
       <PersonsContainer>
-        {personsThisProject[0] ? (
-          personsOrd.map((person) => {
+        {finalPersonsToShow[0] ? (
+          finalPersonsToShow.map((person) => {
             return <CardPerson key={person.id} person={person} isNotPreview />
           })
         ) : (
           <ListEmpty
+            isLoading={loading}
             message="Você ainda não criou nenhum personagem para esse projeto."
-            icon={<UserFocus size={90} />}
+            icon={<UserFocus size={loading ? 0 : 90} />}
           />
         )}
       </PersonsContainer>

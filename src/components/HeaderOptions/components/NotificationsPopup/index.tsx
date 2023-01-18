@@ -10,6 +10,7 @@ import {
 } from './styles'
 import { Error } from '../../../Error'
 import { reverbKeys } from '../../../../services/reverbKeys'
+import { Loading } from '../../../Loading'
 
 interface INotificationsPopupProps {
   notificationsIsOpen: boolean
@@ -20,8 +21,9 @@ export function NotificationsPopup({
   notificationsIsOpen,
   setNotificationsIsOpen,
 }: INotificationsPopupProps) {
-  const { user } = useContext(UserContext)
+  const { user, loading } = useContext(UserContext)
 
+  if (loading) return <Loading />
   if (!user) return <Error />
 
   return (

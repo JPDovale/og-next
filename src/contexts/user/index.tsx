@@ -7,7 +7,6 @@ import { INewInitializeDTO } from '../../api/dtos/INewInitializeDTO'
 import { ICreateSessionResponse } from '../../api/responsesTypes/ICreateResponse'
 
 import { INewSessionDTO } from '../../api/dtos/INewSessionDTO'
-import { Loading } from '../../components/Loading'
 import { createSessionFunction } from './functions/createSessionFunction'
 import { createUserFunction } from './functions/createUserFunction'
 import { getUserFunction } from './functions/getUserFunction'
@@ -23,6 +22,7 @@ import { userReducer } from './reducer/userReducer'
 import { IUserContext, IUserContextProps } from './types/IPersonContext'
 import { setUserFunction } from './functions/setUserFunction'
 import { signOut } from 'next-auth/react'
+import { deleteAvatarFunction } from './functions/deleteAvatarFunction'
 
 export const UserContext = createContext<IUserContext>(userDefaultValues)
 
@@ -112,6 +112,12 @@ export function UserProvider({ children }: IUserContextProps) {
     return loginWithGoogleFunction(user, dispatch)
   }
 
+  async function deleteAvatar() {
+    setLoading(true)
+    await deleteAvatarFunction(dispatch)
+    setLoading(false)
+  }
+
   useEffect(() => {
     getUser()
   }, [])
@@ -135,9 +141,10 @@ export function UserProvider({ children }: IUserContextProps) {
         updatePassword,
         loginWithGoogle,
         setUser,
+        deleteAvatar,
       }}
     >
-      {loading ? <Loading /> : children}
+      {children}
     </UserContext.Provider>
   )
 }

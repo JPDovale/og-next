@@ -27,6 +27,7 @@ export interface IUserContext {
   updatePassword: (oldPassword: string, password: string) => Promise<void>
   loginWithGoogle: (user: any) => Promise<void>
   setUser: (loggedUser: ICreateSessionResponse) => void
+  deleteAvatar: () => Promise<void>
 }
 
 export interface IUserContextProps {

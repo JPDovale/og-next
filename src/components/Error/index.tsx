@@ -2,20 +2,30 @@ import { Heading, Text, styled } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
-export function Error() {
+interface IErrorProps {
+  isRedirectable?: boolean
+  pathRedirect?: string
+  statusCode?: number
+  errorMessage?: string
+}
+
+export function Error({
+  errorMessage = 'Houve um erro durante a recuperação das infirmações. Entre em contato com a nossa equipe e informe o problema.',
+  isRedirectable = false,
+  pathRedirect = '/login',
+  statusCode = 500,
+}: IErrorProps) {
   const router = useRouter()
 
   useEffect(() => {
-    router.replace('/login')
-  }, [router])
+    if (!isRedirectable) return
+    router.replace(pathRedirect)
+  }, [router, isRedirectable, pathRedirect])
 
   return (
     <ErrorContainer>
-      <ErrorNumber size="lg">500</ErrorNumber>
-      <ErrorMessage size="xxs">
-        Houve um erro durante a recuperação das infirmações. Entre em contato
-        com a nossa equipe e informe o problema.
-      </ErrorMessage>
+      <ErrorNumber size="lg">{statusCode}</ErrorNumber>
+      <ErrorMessage size="xxs">{errorMessage}</ErrorMessage>
     </ErrorContainer>
   )
 }

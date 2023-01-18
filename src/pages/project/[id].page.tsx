@@ -12,11 +12,11 @@ import { useContext, useState } from 'react'
 import { IPersonsResponse } from '../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../api/responsesTypes/IProjcetResponse'
 import { CardPerson } from '../../components/CardPerson'
-import { Error } from '../../components/Error'
 import { Loading } from '../../components/Loading'
 import { PlotParts } from '../../components/PlotParts'
 import { ProjectsContext } from '../../contexts/projects'
 import { UserContext } from '../../contexts/user'
+import { useWindowSize } from '../../hooks/useWindow'
 import { ProjectPageLayout } from '../../layouts/ProjectPageLayout'
 import {
   EditImgForm,
@@ -34,32 +34,32 @@ import {
 export default function ProjectPage() {
   const [onEditImg, setOnEditImg] = useState(false)
 
-  const { projects, updateImageProject, persons, loading } =
+  const { projects, updateImageProject, persons, loading, deleteImageProject } =
     useContext(ProjectsContext)
   const { user } = useContext(UserContext)
 
   const router = useRouter()
   const { id } = router.query
 
-  if (!projects) return <Error />
-
-  const project = projects.find(
+  const project = projects?.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  if (!project || !persons) return <Error />
-
-  const personsThisProject = persons.filter(
-    (person) => person.defaultProject === project.id,
+  const personsThisProject = persons?.filter(
+    (person) => person.defaultProject === project?.id,
   )
-  const permissionThisUserInProject = project.users.find(
+  const permissionThisUserInProject = project?.users.find(
     (u) => user?.id === u.id,
   )?.permission
 
-  const smallWindow = screen.width < 786
-  const largeWindow = screen.width > 1700
+  const windowSize = useWindowSize()
+
+  const smallWindow = windowSize.width! < 786
+  const largeWindow = windowSize.width! > 1700
 
   async function handleUpdateImage(files: FileList | null) {
+    setOnEditImg(false)
+
     if (!files) return
 
     const file = files[0]
@@ -71,16 +71,17 @@ export default function ProjectPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       loading={loading}
+      inError={!loading && !project?.name}
       isScrolling
     >
       <HeaderProjectInfos>
         <ImageContainer>
           {loading ? (
             <Loading />
-          ) : !project.image ? (
+          ) : !project?.image?.url ? (
             <ImageIco
               className="image"
               weight="thin"
@@ -94,7 +95,7 @@ export default function ProjectPage() {
               width={400}
               height={400}
               className="image"
-              src={project.image.url}
+              src={project?.image?.url}
               alt=""
               onClick={() => setOnEditImg(!onEditImg)}
             />
@@ -113,13 +114,17 @@ export default function ProjectPage() {
               }}
             />
           </Input>
-          {project.image && (
+          {project?.image?.url && (
             <Button
               type="button"
               icon={<Trash />}
               wid="middle"
               align="center"
               label="REMOVER"
+              onClick={() => {
+                deleteImageProject({ projectId: project.id! })
+                setOnEditImg(false)
+              }}
             />
           )}
         </EditImgForm>
@@ -130,7 +135,7 @@ export default function ProjectPage() {
                 Nome:
               </Text>
               <Text as="p" size="sm">
-                {project.name}
+                {project?.name || 'Carregando...'}
               </Text>
             </Info>
 
@@ -139,7 +144,7 @@ export default function ProjectPage() {
                 Tipo:
               </Text>
               <Text as="p" size="sm">
-                {project.type}
+                {project?.type || 'Carregando...'}
               </Text>
             </Info>
           </Infos>
@@ -150,7 +155,7 @@ export default function ProjectPage() {
                 Criado:
               </Text>
               <Text as="p" size="sm">
-                {project.createAt}
+                {project?.createAt || 'Carregando...'}
               </Text>
             </Info>
 
@@ -159,7 +164,7 @@ export default function ProjectPage() {
                 Última atualização:
               </Text>
               <Text as="p" size="sm">
-                {project.updateAt}
+                {project?.updateAt || 'Carregando...'}
               </Text>
             </Info>
           </Infos>
@@ -170,7 +175,7 @@ export default function ProjectPage() {
                 Usuários:
               </Text>
               <Text as="p" size="sm">
-                {project.users.length}
+                {project?.users?.length || 0}
               </Text>
             </Info>
             <Info>
@@ -194,7 +199,7 @@ export default function ProjectPage() {
                 Personagens:
               </Text>
               <Text as="p" size="sm">
-                {personsThisProject.length}
+                {personsThisProject?.length || 0}
               </Text>
             </Info>
           </Infos>
@@ -208,7 +213,7 @@ export default function ProjectPage() {
           <BookOpen size={40} />
           PLOT
         </HeadingPart>
-        <PlotParts project={project} isPreview />
+        {loading ? <Loading /> : <PlotParts project={project} isPreview />}
         <HeadingPart
           size="md"
           onClick={() => router.replace(`/project/${project.id}/persons`)}
@@ -218,7 +223,7 @@ export default function ProjectPage() {
         </HeadingPart>
         <PersonsContainer>
           {permissionThisUserInProject === 'edit' && (
-            <CardPerson person={{} as IPersonsResponse} key="12121212" isAdd />
+            <CardPerson person={{} as IPersonsResponse} key="--" isAdd />
           )}
 
           {personsThisProject.map((person, i) => {

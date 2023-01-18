@@ -13,6 +13,8 @@ import {
 } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
+import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
+import { IDeleteImageProject } from './interfaceFunctions/IDeleteImageProject'
 
 export interface IProjectsContext {
   loading: boolean
@@ -98,6 +100,8 @@ export interface IProjectsContext {
   ) => Promise<void>
   unshareProject: (userEmail: string, projectId: string) => Promise<void>
   updatePerson: (person: ICreatePersonDTO, personId: string) => Promise<void>
+  deleteImageProject: ({ projectId }: IDeleteImageProject) => Promise<void>
+  deleteImagePerson: ({ personId }: IDeleteImagePerson) => Promise<void>
 }
 
 export interface IProjectsContextProps {

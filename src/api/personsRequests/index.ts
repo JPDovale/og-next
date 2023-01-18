@@ -177,3 +177,18 @@ export async function updatePersonRequest(
 }
 
 // DELETE
+
+interface IDeleteImagePersonRequest {
+  personId: string
+}
+
+export async function deleteImagePersonRequest({
+  personId,
+}: IDeleteImagePersonRequest) {
+  try {
+    const response = await api.delete(`/persons/image/${personId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

@@ -41,7 +41,7 @@ export function HeaderProject({
             onClick={() => router.replace(`/project/${projectId}`)}
           />
           <Text as="span" weight="bold">
-            {projectName}
+            {loading ? 'Carregando...' : projectName || 'Error'}
           </Text>
           <Text
             as="span"

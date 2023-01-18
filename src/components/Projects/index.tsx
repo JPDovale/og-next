@@ -12,12 +12,14 @@ interface IProjectProps {
   projects: IProjectResponse[]
   listEmptyMessage: string
   query?: string
+  isLoading: boolean
 }
 
 export function Projects({
   projects,
   listEmptyMessage,
   query = '',
+  isLoading,
 }: IProjectProps) {
   const { isList, navIsOpen, orderBy } = useContext(InterfaceContext)
   const { user } = useContext(UserContext)
@@ -53,6 +55,7 @@ export function Projects({
 
       {projectsOrd && !projectsOrd[0] && (
         <ListEmpty
+          isLoading={isLoading}
           icon={<ProjectorScreenChart size={98} />}
           message={
             query ? `Nenhum projeto encontrado para ${query}` : listEmptyMessage

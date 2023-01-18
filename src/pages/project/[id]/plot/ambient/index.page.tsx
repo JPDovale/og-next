@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -18,7 +17,7 @@ export default function AmbientPage() {
   const router = useRouter()
   const { id } = router.query
 
-  const project = projects.find(
+  const project = projects?.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
@@ -48,24 +47,21 @@ export default function AmbientPage() {
       projectId={`${id}`}
       paths={['Plot', 'Ambientação']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          message={message}
-          label="Ambientação"
-          updateValue={handleUpdateAmbient}
-          value={ambient}
-          preValue={project.plot.ambient}
-          permission={userInProject?.permission}
-          comments={commentsAmbient}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setAmbient}
-          to="ambient"
-        />
-      )}
+      <EditorAndComments
+        message={message}
+        label="Ambientação"
+        updateValue={handleUpdateAmbient}
+        value={ambient}
+        preValue={project?.plot?.ambient}
+        permission={userInProject?.permission}
+        comments={commentsAmbient}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setAmbient}
+        to="ambient"
+      />
     </ProjectPageLayout>
   )
 }

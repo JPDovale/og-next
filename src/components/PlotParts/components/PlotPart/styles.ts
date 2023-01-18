@@ -23,6 +23,14 @@ export const PlotPartContainer = styled(Box, {
     textAlign: 'start',
   },
 
+  div: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: '100%',
+  },
+
   p: {
     textAlign: 'justify',
     display: 'flex',
@@ -115,6 +123,10 @@ export const PlotPartContainer = styled(Box, {
           width: '100%',
           minWidth: '0',
         },
+      },
+
+      true: {
+        div: { alignItems: 'center', paddingBottom: '$4' },
       },
     },
   },

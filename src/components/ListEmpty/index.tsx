@@ -1,5 +1,6 @@
 import { Text, styled } from '@og-ui/react'
 import { ReactNode } from 'react'
+import { Loading } from '../Loading'
 
 const ListEmptyContainer = styled('div', {
   display: 'flex',
@@ -32,19 +33,25 @@ interface IListEmptyProps {
   icon?: ReactNode
   message: string
   isInLine?: boolean
+  isLoading?: boolean
 }
 
 export function ListEmpty({
   message,
   icon,
   isInLine = false,
+  isLoading = false,
 }: IListEmptyProps) {
   return (
     <ListEmptyContainer isInLine={isInLine}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Text as="label" size="xl" family="body">
+          {message}
+        </Text>
+      )}
       {icon}
-      <Text as="label" size="xl" family="body">
-        {message}
-      </Text>
     </ListEmptyContainer>
   )
 }

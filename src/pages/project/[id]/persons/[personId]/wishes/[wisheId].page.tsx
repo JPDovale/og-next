@@ -6,8 +6,6 @@ import {
   ITag,
 } from '../../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { Error } from '../../../../../../components/Error'
-import { Loading } from '../../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
@@ -20,30 +18,20 @@ export default function WishePage() {
   const router = useRouter()
   const { id, personId, wisheId } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  const tag = project.tags.find((tag) => tag.type === 'persons/wishes') as ITag
+  const tag = project?.tags.find((tag) => tag.type === 'persons/wishes') as ITag
 
   const refs = tag && tag.refs
-  const permission = project.users.find((u) => u.id === user?.id)?.permission
-
-  if (!project || !persons) return <Error />
+  const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   const person = persons.find((person) => person.id === personId)
 
-  if (!person) return <Error />
+  const exiteWishe = person?.wishes?.find((wishe) => wishe.id === wisheId)
 
-  const exiteWishe =
-    wisheId !== 'new'
-      ? person.wishes?.find((wishe) => wishe.id === wisheId)
-      : undefined
-
-  const commentsInThisWishe = person.comments?.filter(
+  const commentsInThisWishe = person?.comments?.filter(
     (comment) => comment.to === `wishes/${wisheId}`,
   )
 
@@ -55,26 +43,27 @@ export default function WishePage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={[
         'Personagens',
-        `${person?.name}`,
+        `${person?.name || 'Carregando...'}`,
         'Desejos',
         exiteWishe ? 'Edição' : 'Novo',
       ]}
       loading={loading}
+      inError={!loading && wisheId !== 'new' && !exiteWishe}
     >
       <EditorAndCommentsToGenerics
         persons={persons}
         refs={refs}
-        isNew={!exiteWishe}
+        isNew={wisheId === 'new'}
         editorTo="desejo"
-        projectId={project.id}
-        personId={person.id}
+        projectId={project?.id}
+        personId={person?.id!}
         object={exiteWishe}
         permission={permission}
-        projectCreatedPerUser={project.createdPerUser}
+        projectCreatedPerUser={project?.createdPerUser}
         onNewComment={CommentInPerson}
         to={`wishes/${wisheId}`}
         comments={commentsInThisWishe}

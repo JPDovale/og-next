@@ -108,7 +108,7 @@ export function CardProject({
         >
           {isList === false && (
             <div className="project-image">
-              {project?.image ? (
+              {project?.image?.url ? (
                 <Image
                   src={project?.image.url}
                   alt=""

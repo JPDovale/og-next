@@ -7,6 +7,8 @@ import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
 import { IShareProjectDTO } from '../../../api/dtos/IShareProjectDTO'
 import { IUpdatePlotDTO } from '../../../api/dtos/IUpdatePlotDTO'
 import { IObjective } from '../../../api/responsesTypes/IPersonsResponse'
+import { IDeleteImagePerson } from '../types/interfaceFunctions/IDeleteImagePerson'
+import { IDeleteImageProject } from '../types/interfaceFunctions/IDeleteImageProject'
 import { IProjectsContext } from '../types/IProjectContext'
 
 export const projectsDefaultValues: IProjectsContext = {
@@ -90,4 +92,6 @@ export const projectsDefaultValues: IProjectsContext = {
   ) => {},
   unshareProject: async (userEmail: string, projectId: string) => {},
   updatePerson: async (person: ICreatePersonDTO, personId: string) => {},
+  deleteImageProject: async ({ projectId }: IDeleteImageProject) => {},
+  deleteImagePerson: async ({ personId }: IDeleteImagePerson) => {},
 }

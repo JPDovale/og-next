@@ -28,6 +28,7 @@ import { AvatarWeb } from '../../../../components/Avatar'
 import { ResponseInfoApi } from '../../../../components/ResponseInfoApi'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { UserContext } from '../../../../contexts/user'
+import { useWindowSize } from '../../../../hooks/useWindow'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
 
 import { CardUserWithAccess } from './components/CardUserWithAccess'
@@ -77,7 +78,8 @@ export default function SettingsPage() {
     user,
   ] as IUserResponse[]
 
-  const smallWindow = screen.width < 786
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
 
   const objects = useMemo(() => {
     const findeObjectives: IObjects = {
@@ -163,6 +165,7 @@ export default function SettingsPage() {
       projectId={`${id}`}
       paths={['Configurações']}
       loading={loading}
+      inError={!loading && !project}
       isScrolling
     >
       <SettingsProject>
@@ -173,7 +176,7 @@ export default function SettingsPage() {
             Nome
             <TextInput
               icon={<Presentation />}
-              placeholder={project?.name}
+              placeholder={project?.name || 'Carregando...'}
               disabled
             />
             A alteração estará disponível em breve para os criadores do projeto
@@ -183,7 +186,7 @@ export default function SettingsPage() {
         <Info isCard>
           <Text family="body" as="label">
             Tipo do projeto
-            <Text>{project?.type}</Text>
+            <Text>{project?.type || 'Carregando...'}</Text>
             <Text family="body" as="label">
               Outros tipos de projetos estarão disponíveis em breve para os
               criadores do projeto...
@@ -216,15 +219,15 @@ export default function SettingsPage() {
               <div>
                 <Text family="body" as="label">
                   Nome
-                  <Text>{userCreator.name}</Text>
+                  <Text>{userCreator?.name || 'Carregando...'}</Text>
                 </Text>
                 <Text family="body" as="label">
                   Nome de usuário
-                  <Text>{userCreator.username}</Text>
+                  <Text>{userCreator?.username || 'Carregando...'}</Text>
                 </Text>
                 <Text family="body" as="label">
                   Email
-                  <Text>{userCreator.email}</Text>
+                  <Text>{userCreator?.email || 'Carregando...'}</Text>
                 </Text>
               </div>
             </Creator>
@@ -238,7 +241,7 @@ export default function SettingsPage() {
             </Text>
             <Info columns={smallWindow ? 1 : 2}>
               {allUsersWithAccess?.map((userWithAccess) => {
-                if (userWithAccess.id !== userCreator.id) {
+                if (userWithAccess?.id !== userCreator?.id) {
                   return (
                     <CardUserWithAccess
                       key={userWithAccess.id}
@@ -260,12 +263,12 @@ export default function SettingsPage() {
         <Info isCard columns={2}>
           <Text family="body" as="label">
             <header>Data de criação</header>
-            <Text size="sm">{project?.createAt}</Text>
+            <Text size="sm">{project?.createAt || 'Carregando...'}</Text>
           </Text>
 
           <Text family="body" as="label">
             <header>Ultima alteração</header>
-            <Text size="sm">{project?.updateAt}</Text>
+            <Text size="sm">{project?.updateAt || 'Carregando...'}</Text>
           </Text>
         </Info>
 
@@ -281,7 +284,7 @@ export default function SettingsPage() {
               <UserFocus />
               Personagens
             </header>
-            <Text>{personsOfProject.length}</Text>
+            <Text>{personsOfProject?.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -289,7 +292,7 @@ export default function SettingsPage() {
               <Crosshair />
               Objetivos criados
             </header>
-            <Text>{objects.objectives.length}</Text>
+            <Text>{objects?.objectives.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -297,7 +300,7 @@ export default function SettingsPage() {
               <RainbowCloud />
               Sonhos criados
             </header>
-            <Text>{objects.dreams.length}</Text>
+            <Text>{objects?.dreams.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -305,7 +308,7 @@ export default function SettingsPage() {
               <Warning />
               Medos criados
             </header>
-            <Text>{objects.fears.length}</Text>
+            <Text>{objects?.fears.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -313,7 +316,7 @@ export default function SettingsPage() {
               <Person />
               Aparências criadas
             </header>
-            <Text>{objects.appearance.length}</Text>
+            <Text>{objects?.appearance.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -321,7 +324,7 @@ export default function SettingsPage() {
               <UserCircleGear />
               Personalidades criadas
             </header>
-            <Text>{objects.personality.length}</Text>
+            <Text>{objects?.personality.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -329,7 +332,7 @@ export default function SettingsPage() {
               <Lightning />
               Poderes criados
             </header>
-            <Text>{objects.powers.length}</Text>
+            <Text>{objects?.powers.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -337,7 +340,7 @@ export default function SettingsPage() {
               <HeartBreak />
               Traumas criados
             </header>
-            <Text>{objects.traumas.length}</Text>
+            <Text>{objects?.traumas.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -345,7 +348,7 @@ export default function SettingsPage() {
               <TreeStructure />
               Valores criados
             </header>
-            <Text>{objects.values.length}</Text>
+            <Text>{objects?.values.length || 0}</Text>
           </Text>
 
           <Text family="body" as="label">
@@ -353,7 +356,7 @@ export default function SettingsPage() {
               <SketchLogo />
               Desejos criados
             </header>
-            <Text>{objects.wishes.length}</Text>
+            <Text>{objects?.wishes.length || 0}</Text>
           </Text>
         </Info>
       </SettingsProject>

@@ -111,3 +111,12 @@ export async function logouRequest() {
     return err.response
   }
 }
+
+export async function deleteAvatarRequest() {
+  try {
+    const response = await api.delete('/users/avatar')
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

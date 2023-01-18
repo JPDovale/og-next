@@ -36,6 +36,7 @@ import {
 } from './styles'
 import { ResponseInfoApi } from '../../../components/ResponseInfoApi'
 import { AvatarWeb } from '../../../components/Avatar'
+import { useWindowSize } from '../../../hooks/useWindow'
 
 interface IObjects {
   objectives: IRef[]
@@ -65,10 +66,12 @@ export default function UserSettingsPage() {
     setError,
     updateAvatar,
     updatePassword,
+    deleteAvatar,
   } = useContext(UserContext)
   const { users, projects, persons } = useContext(ProjectsContext)
 
-  const smallWindow = screen.width < 786
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
 
   const objects = useMemo(() => {
     const findeObjectives: IObjects = {
@@ -154,7 +157,7 @@ export default function UserSettingsPage() {
 
     const file = files[0]
 
-    if (file.type !== 'image/jpeg' && file.type !== 'image/png') return
+    if (file?.type !== 'image/jpeg' && file.type !== 'image/png') return
 
     await updateAvatar(file)
   }
@@ -390,14 +393,15 @@ export default function UserSettingsPage() {
               <AvatarWeb src={user?.avatar?.url} size="full" />
             </Avatar>
             <Text size="lg" weight="bold">
-              {user?.username.toUpperCase()}
+              {user?.username?.toUpperCase()}
             </Text>
 
             <div className="buttons">
-              <Input htmlFor="file">
+              <Input htmlFor="file" disabled={loading}>
                 <PencilLine />
                 Alterar avatar
                 <input
+                  disabled={loading}
                   type="file"
                   id="file"
                   accept="image/png, image/jpeg"
@@ -408,6 +412,8 @@ export default function UserSettingsPage() {
               </Input>
 
               <Button
+                disabled={!user?.avatar?.url || loading}
+                onClick={deleteAvatar}
                 type="button"
                 label="Remover avatar"
                 icon={<X />}

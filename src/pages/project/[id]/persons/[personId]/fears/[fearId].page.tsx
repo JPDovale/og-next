@@ -6,8 +6,7 @@ import {
   ITag,
 } from '../../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { Error } from '../../../../../../components/Error'
-import { Loading } from '../../../../../../components/Loading'
+
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
@@ -20,30 +19,20 @@ export default function FearPage() {
   const router = useRouter()
   const { id, personId, fearId } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  const tag = project.tags.find((tag) => tag.type === 'persons/fears') as ITag
+  const tag = project?.tags.find((tag) => tag.type === 'persons/fears') as ITag
 
   const refs = tag && tag.refs
-  const permission = project.users.find((u) => u.id === user?.id)?.permission
-
-  if (!project || !persons) return <Error />
+  const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   const person = persons.find((person) => person.id === personId)
 
-  if (!person) return <Error />
+  const exiteFear = person?.fears?.find((fear) => fear.id === fearId)
 
-  const exiteFear =
-    fearId !== 'new'
-      ? person.fears?.find((fear) => fear.id === fearId)
-      : undefined
-
-  const commentsInThisFear = person.comments?.filter(
+  const commentsInThisFear = person?.comments?.filter(
     (comment) => comment.to === `fears/${fearId}`,
   )
 
@@ -55,26 +44,27 @@ export default function FearPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={[
         'Personagens',
-        `${person?.name}`,
+        `${person?.name || 'Carregando...'}`,
         'Medos',
         exiteFear ? 'Edição' : 'Novo',
       ]}
       loading={loading}
+      inError={!loading && fearId !== 'new' && !exiteFear}
     >
       <EditorAndCommentsToGenerics
         persons={persons}
         refs={refs}
-        isNew={!exiteFear}
+        isNew={fearId === 'new'}
         editorTo="medo"
-        projectId={project.id}
-        personId={person.id}
+        projectId={project?.id}
+        personId={person?.id!}
         object={exiteFear}
         permission={permission}
-        projectCreatedPerUser={project.createdPerUser}
+        projectCreatedPerUser={project?.createdPerUser}
         onNewComment={CommentInPerson}
         to={`fears/${fearId}`}
         comments={commentsInThisFear}

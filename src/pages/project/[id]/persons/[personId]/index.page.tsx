@@ -34,7 +34,6 @@ import {
 } from '../../../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { CardObjective } from '../../../../../components/CardObjective'
-import { Error } from '../../../../../components/Error'
 import { ListEmpty } from '../../../../../components/ListEmpty'
 import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
@@ -59,29 +58,29 @@ export default function PersonPage() {
   const [onEditImg, setOnEditImg] = useState(false)
   const [onUpdateImg, setOnUpdateImg] = useState(false)
 
-  const { projects, loading, persons, updateImageFromPerson } =
-    useContext(ProjectsContext)
+  const {
+    projects,
+    loading,
+    persons,
+    updateImageFromPerson,
+    deleteImagePerson,
+  } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
 
   const router = useRouter()
   const { id, personId } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  if (!project || !persons) return <Error />
-
-  const person = persons.find((person) => person.id === personId)
-  const permission = project.users.find((u) => u.id === user?.id)?.permission
-
-  if (!person) return <Error />
+  const person = persons.find((person) => person?.id === personId)
+  const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   async function handleUpdateImage(files: FileList | null) {
-    if (!files) return setOnEditImg(false)
+    setOnEditImg(false)
+
+    if (!files) return
 
     setOnEditImg(false)
     setOnUpdateImg(true)
@@ -95,10 +94,11 @@ export default function PersonPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
-      paths={['Personagens', `${person?.name}`]}
+      paths={['Personagens', `${person?.name || 'Carregando...'}`]}
       loading={loading}
+      inError={!loading && (!project?.id || !person?.name)}
       isScrolling
     >
       <HeaderPersonInfos>
@@ -106,7 +106,7 @@ export default function PersonPage() {
           <div className="image">
             <Loading />
           </div>
-        ) : !person.image ? (
+        ) : !person?.image?.url ? (
           <ImageIco
             className="image"
             weight="thin"
@@ -117,7 +117,7 @@ export default function PersonPage() {
         ) : (
           <Image
             className="image"
-            src={person.image.url}
+            src={person?.image.url}
             alt=""
             onClick={() => setOnEditImg(!onEditImg)}
             height={800}
@@ -140,13 +140,17 @@ export default function PersonPage() {
                 }}
               />
             </Input>
-            {project.image && (
+            {person?.image?.url && (
               <Button
                 type="button"
                 icon={<Trash />}
                 wid="middle"
                 align="center"
                 label="REMOVER"
+                onClick={() => {
+                  deleteImagePerson({ personId: person?.id! })
+                  setOnEditImg(false)
+                }}
               />
             )}
           </EditImgForm>
@@ -167,7 +171,7 @@ export default function PersonPage() {
                 Nome:
               </Text>
               <Text as="p" size="sm">
-                {person.name} {person.lastName}
+                {person?.name || 'Carregando...'} {person?.lastName}
               </Text>
             </Info>
 
@@ -176,7 +180,7 @@ export default function PersonPage() {
                 Idade:
               </Text>
               <Text as="p" size="sm">
-                {person.age} anos
+                {`${person?.age} anos` || 'Carregando...'}
               </Text>
             </Info>
           </Infos>
@@ -187,7 +191,7 @@ export default function PersonPage() {
                 Criado:
               </Text>
               <Text as="p" size="sm">
-                {person.createAt}
+                {person?.createAt || 'Carregando...'}
               </Text>
             </Info>
 
@@ -196,7 +200,7 @@ export default function PersonPage() {
                 Última atualização:
               </Text>
               <Text as="p" size="sm">
-                {person.updateAt}
+                {person?.updateAt || 'Carregando...'}
               </Text>
             </Info>
           </Infos>
@@ -207,7 +211,7 @@ export default function PersonPage() {
                 Objetivos:
               </Text>
               <Text as="p" size="sm">
-                {person.objectives.length}
+                {person?.objectives.length || 0}
               </Text>
             </Info>
 
@@ -216,7 +220,7 @@ export default function PersonPage() {
                 Personalidade:
               </Text>
               <Text as="p" size="sm">
-                {person.personality.length}
+                {person?.personality.length || 0}
               </Text>
             </Info>
 
@@ -225,7 +229,7 @@ export default function PersonPage() {
                 Valores:
               </Text>
               <Text as="p" size="sm">
-                {person.values.length}
+                {person?.values.length || 0}
               </Text>
             </Info>
 
@@ -234,7 +238,7 @@ export default function PersonPage() {
                 Traumas:
               </Text>
               <Text as="p" size="sm">
-                {person.traumas.length}
+                {person?.traumas.length || 0}
               </Text>
             </Info>
           </Infos>
@@ -245,7 +249,7 @@ export default function PersonPage() {
                 Aparência:
               </Text>
               <Text as="p" size="sm">
-                {person.appearance.length}
+                {person?.appearance.length || 0}
               </Text>
             </Info>
 
@@ -254,7 +258,7 @@ export default function PersonPage() {
                 Sonhos:
               </Text>
               <Text as="p" size="sm">
-                {person.dreams.length}
+                {person?.dreams.length || 0}
               </Text>
             </Info>
 
@@ -263,7 +267,7 @@ export default function PersonPage() {
                 Medos:
               </Text>
               <Text as="p" size="sm">
-                {person.fears.length}
+                {person?.fears.length || 0}
               </Text>
             </Info>
 
@@ -272,7 +276,7 @@ export default function PersonPage() {
                 Desejos:
               </Text>
               <Text as="p" size="sm">
-                {person.wishes.length}
+                {person?.wishes.length || 0}
               </Text>
             </Info>
           </Infos>
@@ -283,7 +287,7 @@ export default function PersonPage() {
                 Casais:
               </Text>
               <Text as="p" size="sm">
-                {person.couples.length}
+                {person?.couples.length || 0}
               </Text>
             </Info>
 
@@ -292,7 +296,7 @@ export default function PersonPage() {
                 Poderes:
               </Text>
               <Text as="p" size="sm">
-                {person.powers.length}
+                {person?.powers.length || 0}
               </Text>
             </Info>
           </Infos>
@@ -312,7 +316,7 @@ export default function PersonPage() {
             />
           )}
         </HeadingPart>
-        <HistoryContent>{person.history}</HistoryContent>
+        <HistoryContent>{person?.history || 'Carregando...'}</HistoryContent>
       </History>
 
       <ObjectContainer>
@@ -332,11 +336,11 @@ export default function PersonPage() {
         </HeadingPart>
 
         <ObjectivesContent>
-          {person.objectives && person.objectives[0] ? (
-            person.objectives.map((objective) => {
+          {person?.objectives && person?.objectives[0] ? (
+            person?.objectives.map((objective) => {
               const avoiders = persons.filter((person) => {
                 const isAvoider = !!objective.avoiders.find(
-                  (avoider) => avoider === person.id,
+                  (avoider) => avoider === person?.id,
                 )
 
                 return isAvoider
@@ -344,7 +348,7 @@ export default function PersonPage() {
 
               const supporters = persons.filter((person) => {
                 const isSupporter = !!objective.supporting.find(
-                  (support) => support === person.id,
+                  (support) => support === person?.id,
                 )
 
                 return isSupporter
@@ -370,82 +374,91 @@ export default function PersonPage() {
       </ObjectContainer>
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<UserCircleGear size={40} />}
         title="Personalidade"
         keyIndex="personality"
-        objectOfCampu={person.personality as IPersonality[]}
+        objectOfCampu={person?.personality as IPersonality[]}
         withSubObjects="consequências"
         columns={2}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<TreeStructure size={40} />}
         title="Valores"
         keyIndex="values"
-        objectOfCampu={person.values as IValue[]}
+        objectOfCampu={person?.values as IValue[]}
         withSubObjects="exceções"
         columns={2}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<HeartBreak size={40} />}
         title="Traumas"
         keyIndex="traumas"
-        objectOfCampu={person.traumas as ITrauma[]}
+        objectOfCampu={person?.traumas as ITrauma[]}
         withSubObjects="consequências"
         columns={2}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<Person size={40} />}
         title="Aparência"
         keyIndex="appearance"
-        objectOfCampu={person.appearance as IAppearance[]}
+        objectOfCampu={person?.appearance as IAppearance[]}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<RainbowCloud size={48} />}
         title="Sonhos"
         keyIndex="dreams"
-        objectOfCampu={person.dreams as IDream[]}
+        objectOfCampu={person?.dreams as IDream[]}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<Warning size={40} />}
         title="Medos"
         keyIndex="fears"
-        objectOfCampu={person.fears as IFear[]}
+        objectOfCampu={person?.fears as IFear[]}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<SketchLogo size={40} />}
         title="Desejos"
         keyIndex="wishes"
-        objectOfCampu={person.wishes as IWishe[]}
+        objectOfCampu={person?.wishes as IWishe[]}
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<Users size={40} />}
         title="Casais"
         keyIndex="couples"
-        objectOfCampu={person.couples as ICouple[]}
+        objectOfCampu={person?.couples as ICouple[]}
         isUniqueRelational
       />
 
       <Campu
+        isLoading={loading}
         permission={permission}
         icon={<Lightning size={40} />}
         title="poderes"
         keyIndex="powers"
-        objectOfCampu={person.powers as IPower[]}
+        objectOfCampu={person?.powers as IPower[]}
       />
     </ProjectPageLayout>
   )

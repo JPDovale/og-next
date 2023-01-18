@@ -14,11 +14,13 @@ import { ICreateProjectDTO } from '../../api/dtos/ICreateProjectDTO'
 import { IShareProjectDTO } from '../../api/dtos/IShareProjectDTO'
 import { IUpdatePlotDTO } from '../../api/dtos/IUpdatePlotDTO'
 import { IObjective } from '../../api/responsesTypes/IPersonsResponse'
+import { Error } from '../../components/Error'
 import { UserContext } from '../user'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
 import { createObjetiveOfPersonFunction } from './functions/personsFunctions/createObjetiveOfPersonFunction'
+import { deleteImagePersonFunction } from './functions/personsFunctions/deleteImagePersonFunction'
 import { deleteObjectGenericFunction } from './functions/personsFunctions/deleteObjectGenericFunction'
 import { responseCommentInPersonFunction } from './functions/personsFunctions/responseCommentInPersonFunction'
 import { saveRefObjectGenericFunction } from './functions/personsFunctions/saveRefObjectGenericFunction'
@@ -29,6 +31,7 @@ import { updateObjetiveOfPersonFunction } from './functions/personsFunctions/upd
 import { updatedPersonFunction } from './functions/personsFunctions/updatePersonFunction'
 import { commentInPlotFunction } from './functions/projectFunctions/commentInPlotFunction'
 import { createProjectFunction } from './functions/projectFunctions/createProjectFunction'
+import { deleteImageProjectFunction } from './functions/projectFunctions/deleteImageProjectFunction'
 import { deleteProjectFunction } from './functions/projectFunctions/deleteProjectFunction'
 import { getProjectsFunction } from './functions/projectFunctions/getProjectsFunction'
 import { responseCommentInPlotFunction } from './functions/projectFunctions/responseCommentInPlotFunction'
@@ -39,6 +42,8 @@ import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunct
 import { projectsDefaultValues } from './initialValues'
 import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
+import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
+import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
 import {
   IProjectsContext,
   IProjectsContextProps,
@@ -58,7 +63,11 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     persons: [],
   })
 
-  const { userLogged } = useContext(UserContext)
+  const {
+    userLogged,
+    loading: loadingUser,
+    error: errorUser,
+  } = useContext(UserContext)
 
   const { projects, error, users, persons } = projectState
 
@@ -91,7 +100,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   }
 
   async function shareProject(newShare: IShareProjectDTO) {
+    setLoading(true)
     const response = await shareProjectFunction(newShare, dispatch)
+    setLoading(false)
+
     return response
   }
 
@@ -133,11 +145,21 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   }
 
   async function createNewPerson(person: ICreatePersonDTO) {
-    return await createNewPersonFunction(person, dispatch)
+    setLoading(true)
+    const isCreated = await createNewPersonFunction(person, dispatch)
+    setLoading(false)
+    return isCreated
   }
 
   async function updateImageFromPerson(personId: string, file: File) {
-    return await updateImageFromPersonFunction(file, personId, dispatch)
+    setLoading(true)
+    const isUpdated = await updateImageFromPersonFunction(
+      file,
+      personId,
+      dispatch,
+    )
+    setLoading(false)
+    return isUpdated
   }
 
   async function updateObjective(
@@ -145,12 +167,15 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     objectiveId: string,
   ) {
-    return await updateObjetiveOfPersonFunction(
+    setLoading(true)
+    const isUpdated = await updateObjetiveOfPersonFunction(
       objective,
       personId,
       objectiveId,
       dispatch,
     )
+    setLoading(false)
+    return isUpdated
   }
 
   async function createObjective(
@@ -158,12 +183,15 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     projectId: string,
   ) {
-    return await createObjetiveOfPersonFunction(
+    setLoading(true)
+    const isCreated = await createObjetiveOfPersonFunction(
       objective,
       personId,
       projectId,
       dispatch,
     )
+    setLoading(false)
+    return isCreated
   }
 
   async function saveRefObjective(
@@ -172,20 +200,25 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     projectId: string,
     refId: string,
   ) {
-    return await saveRefObjectiveFunction(
+    setLoading(true)
+    const isRefCreated = await saveRefObjectiveFunction(
       objective,
       personId,
       projectId,
       refId,
       dispatch,
     )
+    setLoading(false)
+    return isRefCreated
   }
 
   async function commentInPerson(
     newComment: ICreateCommentDTO,
     personId: string,
   ) {
-    return await commentInPersonFunction(newComment, personId, dispatch)
+    setLoading(true)
+    await commentInPersonFunction(newComment, personId, dispatch)
+    setLoading(false)
   }
 
   async function responseCommentToPerson(
@@ -193,12 +226,14 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     commentId: string,
   ) {
-    return await responseCommentInPersonFunction(
+    setLoading(true)
+    await responseCommentInPersonFunction(
       newResponse,
       personId,
       commentId,
       dispatch,
     )
+    setLoading(false)
   }
 
   async function createObjectGeneric(
@@ -207,13 +242,16 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     projectId: string,
   ) {
-    return await createObjectGenericFunction(
+    setLoading(true)
+    const isCreated = await createObjectGenericFunction(
       generic,
       to,
       personId,
       projectId,
       dispatch,
     )
+    setLoading(true)
+    return isCreated
   }
 
   async function saveRefObjectGeneric(
@@ -226,7 +264,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       description: string
     }>,
   ) {
-    return await saveRefObjectGenericFunction(
+    setLoading(true)
+    const isRefCreated = await saveRefObjectGenericFunction(
       personId,
       projectId,
       refId,
@@ -234,6 +273,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       dispatch,
       subObjects,
     )
+    setLoading(false)
+    return isRefCreated
   }
 
   async function updateObjectGeneric(
@@ -242,13 +283,16 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     genericId: string,
     to: IEditorTo,
   ) {
-    return await updateObjectGenericFunction(
+    setLoading(true)
+    const isUpdated = await updateObjectGenericFunction(
       generic,
       personId,
       genericId,
       to,
       dispatch,
     )
+    setLoading(false)
+    return isUpdated
   }
 
   async function deleteObjectGeneric(
@@ -257,27 +301,47 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     genericId: string,
     to: IEditorTo,
   ) {
-    return await deleteObjectGenericFunction(
+    setLoading(true)
+    await deleteObjectGenericFunction(
       generic,
       personId,
       genericId,
       to,
       dispatch,
     )
+    setLoading(false)
   }
 
   async function unshareProject(userEmail: string, projectId: string) {
-    return await unshareProjectFunction(userEmail, projectId, dispatch)
+    setLoading(true)
+    await unshareProjectFunction(userEmail, projectId, dispatch)
+    setLoading(false)
   }
 
   async function updatePerson(person: ICreatePersonDTO, personId: string) {
-    return await updatedPersonFunction(person, personId, dispatch)
+    setLoading(true)
+    await updatedPersonFunction(person, personId, dispatch)
+    setLoading(false)
+  }
+
+  async function deleteImageProject({ projectId }: IDeleteImageProject) {
+    setLoading(true)
+    await deleteImageProjectFunction({ projectId, dispatch })
+    setLoading(false)
+  }
+
+  async function deleteImagePerson({ personId }: IDeleteImagePerson) {
+    setLoading(true)
+    await deleteImagePersonFunction({ personId, dispatch })
+    setLoading(false)
   }
 
   useEffect(() => {
     if (!userLogged) return
     getProjects()
   }, [userLogged])
+
+  console.log(errorUser)
 
   return (
     <ProjectsContext.Provider
@@ -311,9 +375,15 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updateObjective,
         unshareProject,
         updatePerson,
+        deleteImageProject,
+        deleteImagePerson,
       }}
     >
-      {children}
+      {!loadingUser && !userLogged && error?.title === 'Access denied' ? (
+        <Error isRedirectable />
+      ) : (
+        children
+      )}
     </ProjectsContext.Provider>
   )
 }

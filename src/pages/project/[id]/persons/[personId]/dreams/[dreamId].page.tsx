@@ -6,8 +6,6 @@ import {
   ITag,
 } from '../../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { Error } from '../../../../../../components/Error'
-import { Loading } from '../../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
@@ -20,30 +18,20 @@ export default function DreamPage() {
   const router = useRouter()
   const { id, personId, dreamId } = router.query
 
-  if (loading) return <Loading />
-  if (!projects) return <Error />
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
 
-  const tag = project.tags.find((tag) => tag.type === 'persons/dreams') as ITag
+  const tag = project?.tags.find((tag) => tag.type === 'persons/dreams') as ITag
 
   const refs = tag && tag.refs
-  const permission = project.users.find((u) => u.id === user?.id)?.permission
-
-  if (!project || !persons) return <Error />
+  const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   const person = persons.find((person) => person.id === personId)
 
-  if (!person) return <Error />
+  const exiteDream = person?.dreams?.find((dream) => dream.id === dreamId)
 
-  const exiteDream =
-    dreamId !== 'new'
-      ? person.dreams?.find((dream) => dream.id === dreamId)
-      : undefined
-
-  const commentsInThisDream = person.comments?.filter(
+  const commentsInThisDream = person?.comments?.filter(
     (comment) => comment.to === `dreams/${dreamId}`,
   )
 
@@ -55,26 +43,27 @@ export default function DreamPage() {
 
   return (
     <ProjectPageLayout
-      projectName={project.name}
+      projectName={project?.name}
       projectId={`${id}`}
       paths={[
         'Personagens',
-        `${person?.name}`,
+        `${person?.name || 'Carregando'}`,
         'Sonhos',
         exiteDream ? 'Edição' : 'Novo',
       ]}
       loading={loading}
+      inError={!loading && dreamId !== 'new' && !exiteDream}
     >
       <EditorAndCommentsToGenerics
         persons={persons}
         refs={refs}
-        isNew={!exiteDream}
+        isNew={dreamId === 'new'}
         editorTo="sonho"
-        projectId={project.id}
-        personId={person.id}
+        projectId={project?.id}
+        personId={person?.id!}
         object={exiteDream}
         permission={permission}
-        projectCreatedPerUser={project.createdPerUser}
+        projectCreatedPerUser={project?.createdPerUser}
         onNewComment={CommentInPerson}
         to={`dreams/${dreamId}`}
         comments={commentsInThisDream}

@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
@@ -66,34 +65,31 @@ export default function StructurePage() {
       projectId={`${id}`}
       paths={['Plot', 'Estrutura']}
       loading={loading}
+      inError={!loading && !project}
     >
-      {loading ? (
-        <Loading />
-      ) : (
-        <EditorAndComments
-          toMany={[
-            { key: 'act1', label: 'Ato 1' },
-            { key: 'act2', label: 'Ato 2' },
-            { key: 'act3', label: 'Ato 3' },
-          ]}
-          preValueToMany={[
-            act1?.value || (project.plot.structure?.act1 as string),
-            act2?.value || (project.plot.structure?.act2 as string),
-            act3?.value || (project.plot.structure?.act3 as string),
-          ]}
-          message={message}
-          label="Estrutura"
-          updateValue={handleUpdateStructure}
-          value={structure}
-          preValue={project.plot.structure?.act1}
-          permission={userInProject?.permission}
-          comments={commentsStructure}
-          projectCreatedPerUser={project.createdPerUser}
-          projectId={project.id as string}
-          setValue={setStructure}
-          to="structure"
-        />
-      )}
+      <EditorAndComments
+        toMany={[
+          { key: 'act1', label: 'Ato 1' },
+          { key: 'act2', label: 'Ato 2' },
+          { key: 'act3', label: 'Ato 3' },
+        ]}
+        preValueToMany={[
+          act1?.value || (project?.plot.structure?.act1 as string),
+          act2?.value || (project?.plot.structure?.act2 as string),
+          act3?.value || (project?.plot.structure?.act3 as string),
+        ]}
+        message={message}
+        label="Estrutura"
+        updateValue={handleUpdateStructure}
+        value={structure}
+        preValue={project?.plot.structure?.act1}
+        permission={userInProject?.permission}
+        comments={commentsStructure}
+        projectCreatedPerUser={project?.createdPerUser}
+        projectId={project?.id as string}
+        setValue={setStructure}
+        to="structure"
+      />
     </ProjectPageLayout>
   )
 }
