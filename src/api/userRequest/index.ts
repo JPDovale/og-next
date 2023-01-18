@@ -33,8 +33,12 @@ export async function createSessionRequest(
 export async function createUserRequest(
   user: ICreateUserDTO,
 ): Promise<ICreateResponse> {
-  const response = await api.post('/users', user)
-  return response.data
+  try {
+    const response = await api.post('/users', user)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
 }
 
 export async function initializeUserRequest(
