@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function PremisePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['plot', 'Premissa']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Premissa"
-        updateValue={handleUpdatePremise}
-        value={premise}
-        preValue={project?.plot?.premise}
-        permission={userInProject?.permission}
-        comments={commentsPremise}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setPremise}
-        to="premise"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Premissa | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['plot', 'Premissa']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Premissa"
+          updateValue={handleUpdatePremise}
+          value={premise}
+          preValue={project?.plot?.premise}
+          permission={userInProject?.permission}
+          comments={commentsPremise}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setPremise}
+          to="premise"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

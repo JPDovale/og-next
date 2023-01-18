@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -47,6 +48,9 @@ export default function ValuePage() {
     (comment) => comment.to === `values/${valueId}`,
   )
 
+  const inError =
+    !loading && ((valueId !== 'new' && !exiteValue) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -54,38 +58,46 @@ export default function ValuePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Valor',
-        exiteValue ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && valueId !== 'new' && !exiteValue}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={valueId === 'new'}
-        editorTo="valor"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={
-          {
-            ...exiteValue,
-            subObjects: exiteValue?.exceptions || [],
-          } as IGenericObject
-        }
-        withSubObjects="exceções"
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`value/${valueId}`}
-        comments={commentsInThisValue}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          valueId === 'new' ? 'Novo' : 'Editar'
+        } valor | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Valor',
+          exiteValue ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={valueId === 'new'}
+          editorTo="valor"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={
+            {
+              ...exiteValue,
+              subObjects: exiteValue?.exceptions || [],
+            } as IGenericObject
+          }
+          withSubObjects="exceções"
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`value/${valueId}`}
+          comments={commentsInThisValue}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

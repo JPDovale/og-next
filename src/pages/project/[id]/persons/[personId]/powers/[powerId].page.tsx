@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -36,6 +37,9 @@ export default function PowerPage() {
     (comment) => comment.to === `powers/${powerId}`,
   )
 
+  const inError =
+    !loading && ((powerId !== 'new' && !exitePower) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -43,32 +47,40 @@ export default function PowerPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Poderes',
-        exitePower ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && powerId !== 'new' && !exitePower}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={powerId === 'new'}
-        editorTo="poder"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={exitePower}
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`powers/${powerId}`}
-        comments={commentsInThisPower}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          powerId === 'new' ? 'Novo' : 'Editar'
+        } poder | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Poderes',
+          exitePower ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={powerId === 'new'}
+          editorTo="poder"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={exitePower}
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`powers/${powerId}`}
+          comments={commentsInThisPower}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function DetailsPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot', 'Detalhes']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Detalhes"
-        updateValue={handleUpdateDetails}
-        value={details}
-        preValue={project?.plot.details}
-        permission={userInProject?.permission}
-        comments={commentsDetails}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setDetails}
-        to="details"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Detalhes | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot', 'Detalhes']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Detalhes"
+          updateValue={handleUpdateDetails}
+          value={details}
+          preValue={project?.plot.details}
+          permission={userInProject?.permission}
+          comments={commentsDetails}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setDetails}
+          to="details"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -52,44 +53,56 @@ export default function PersonalityPage() {
     (comment) => comment.to === `personality/${personalityId}`,
   )
 
+  const inError =
+    !loading &&
+    ((personalityId !== 'new' && !exitePersonality) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
     await commentInPerson(newComment, person?.id as string)
   }
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Personalidade',
-        exitePersonality ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && personalityId !== 'new' && !exitePersonality}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={personalityId === 'new'}
-        editorTo="personalidade"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={
-          {
-            ...exitePersonality,
-            subObjects: exitePersonality?.consequences || [],
-          } as IGenericObject
-        }
-        withSubObjects="consequências"
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`personality/${personalityId}`}
-        comments={commentsInThisPersonality}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          personalityId === 'new' ? 'Nova' : 'Editar'
+        } personalidade | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Personalidade',
+          exitePersonality ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={personalityId === 'new'}
+          editorTo="personalidade"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={
+            {
+              ...exitePersonality,
+              subObjects: exitePersonality?.consequences || [],
+            } as IGenericObject
+          }
+          withSubObjects="consequências"
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`personality/${personalityId}`}
+          comments={commentsInThisPersonality}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

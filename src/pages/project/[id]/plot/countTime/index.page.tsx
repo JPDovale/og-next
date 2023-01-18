@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,34 @@ export default function CountTimePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot', 'Tempo em que se passa']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Tempo em que se passa"
-        updateValue={handleUpdateCountTime}
-        value={countTime}
-        preValue={project?.plot.countTime}
-        permission={userInProject?.permission}
-        comments={commentsCountTime}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setCountTime}
-        to="countTime"
+    <>
+      <NextSeo
+        title={`${
+          project?.name || 'Carregando...'
+        }-Tempo em que se passa | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot', 'Tempo em que se passa']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Tempo em que se passa"
+          updateValue={handleUpdateCountTime}
+          value={countTime}
+          preValue={project?.plot.countTime}
+          permission={userInProject?.permission}
+          comments={commentsCountTime}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setCountTime}
+          to="countTime"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

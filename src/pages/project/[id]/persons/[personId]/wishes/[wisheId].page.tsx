@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -35,6 +36,9 @@ export default function WishePage() {
     (comment) => comment.to === `wishes/${wisheId}`,
   )
 
+  const inError =
+    !loading && ((wisheId !== 'new' && !exiteWishe) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -42,32 +46,40 @@ export default function WishePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Desejos',
-        exiteWishe ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && wisheId !== 'new' && !exiteWishe}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={wisheId === 'new'}
-        editorTo="desejo"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={exiteWishe}
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`wishes/${wisheId}`}
-        comments={commentsInThisWishe}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          wisheId === 'new' ? 'Novo' : 'Editar'
+        } desejo | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Desejos',
+          exiteWishe ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={wisheId === 'new'}
+          editorTo="desejo"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={exiteWishe}
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`wishes/${wisheId}`}
+          comments={commentsInThisWishe}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

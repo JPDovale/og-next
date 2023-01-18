@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -49,6 +50,9 @@ export default function TraumaPage() {
     (comment) => comment.to === `traumas/${traumaId}`,
   )
 
+  const inError =
+    !loading && ((traumaId !== 'new' && !exiteTrauma) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -56,38 +60,46 @@ export default function TraumaPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Trauma',
-        exiteTrauma ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && traumaId !== 'new' && !exiteTrauma}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={traumaId === 'new'}
-        editorTo="trauma"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={
-          {
-            ...exiteTrauma,
-            subObjects: exiteTrauma?.consequences || [],
-          } as IGenericObject
-        }
-        withSubObjects="consequências"
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`trauma/${traumaId}`}
-        comments={commentsInThisTrauma}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          traumaId === 'new' ? 'Novo' : 'Editar'
+        } trauma | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Trauma',
+          exiteTrauma ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={traumaId === 'new'}
+          editorTo="trauma"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={
+            {
+              ...exiteTrauma,
+              subObjects: exiteTrauma?.consequences || [],
+            } as IGenericObject
+          }
+          withSubObjects="consequências"
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`trauma/${traumaId}`}
+          comments={commentsInThisTrauma}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

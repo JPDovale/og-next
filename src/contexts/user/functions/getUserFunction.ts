@@ -1,6 +1,9 @@
 import { Dispatch } from 'react'
 import { getUserRequest } from '../../../api/userRequest'
-import { setErrorAction, setUserAction } from '../reducer/actionsUserReducer'
+import {
+  // setErrorAction,
+  setUserAction,
+} from '../reducer/actionsUserReducer'
 import { refreshSessionFunction } from './refreshSessionFunction'
 
 export async function getUserFunction(
@@ -14,12 +17,12 @@ export async function getUserFunction(
     if (isRefreshed) {
       return getUserFunction(dispatch)
     } else {
-      dispatch(
-        setErrorAction({
-          title: 'Access denied',
-          message: 'Sua seção expirou, efetue o login novamente.',
-        }),
-      )
+      // dispatch(
+      //   setErrorAction({
+      //     title: 'Access denied',
+      //     message: 'Sua seção expirou, efetue o login novamente.',
+      //   }),
+      // )
       return false
     }
   }

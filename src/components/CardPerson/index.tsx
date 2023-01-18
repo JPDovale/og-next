@@ -49,7 +49,7 @@ export function CardPerson({
       ) : (
         <>
           <div className="person-image">
-            {person?.image.url ? (
+            {person?.image?.url ? (
               <Image src={person.image.url} alt="" width={400} height={400} />
             ) : (
               <ImageIco weight="thin" size={64} alt="" color="#e3e3e3" />

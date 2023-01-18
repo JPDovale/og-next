@@ -70,23 +70,31 @@ export function PlotPart({
           router.replace(`/project/${id}/plot/${keyValue}`)
         }}
       >
-        {!element
-          ? permission === 'edit'
-            ? `Você ainda não definiu ${term} ${to} do seu projeto`
-            : `${to} ainda não foi definido pelos editores do projeto`
-          : elementLineBraked?.map((line) => {
-              if (line) {
-                return (
-                  <Text key={line} family="body">
-                    {line}
-                    <br />
-                    <br />
-                  </Text>
-                )
-              }
+        {!element ? (
+          permission === 'edit' ? (
+            <Text family="body">
+              Você ainda não definiu {term} {to} do seu projeto{' '}
+            </Text>
+          ) : (
+            <Text family="body">
+              {to} ainda não foi definido pelos editores do projeto
+            </Text>
+          )
+        ) : (
+          elementLineBraked?.map((line) => {
+            if (line) {
+              return (
+                <Text key={line} family="body">
+                  {line}
+                  <br />
+                  <br />
+                </Text>
+              )
+            }
 
-              return null
-            })}
+            return null
+          })
+        )}
 
         {!element && isInitialized ? (
           <Text as="span" size="sm">

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function StorytellerPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['plot', 'Narrador']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Narrador"
-        updateValue={handleUpdateStoryteller}
-        value={storyteller}
-        preValue={project?.plot?.storyteller}
-        permission={userInProject?.permission}
-        comments={commentsStoryteller}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setStoryteller}
-        to="storyteller"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Narrador | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['plot', 'Narrador']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Narrador"
+          updateValue={handleUpdateStoryteller}
+          value={storyteller}
+          preValue={project?.plot?.storyteller}
+          permission={userInProject?.permission}
+          comments={commentsStoryteller}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setStoryteller}
+          to="storyteller"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

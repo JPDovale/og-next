@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -40,6 +41,10 @@ export default function AppearancePage() {
     (comment) => comment.to === `appearance/${appearanceId}`,
   )
 
+  const inError =
+    !loading &&
+    ((appearanceId !== 'new' && !exiteAppearance) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -47,32 +52,41 @@ export default function AppearancePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Aparência',
-        exiteAppearance ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && appearanceId !== 'new' && !exiteAppearance}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={appearanceId === 'new'}
-        editorTo="aparência"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={exiteAppearance}
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`appearance/${appearanceId}`}
-        comments={commentsInThisAppearance}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          appearanceId === 'new' ? 'Nova' : 'Editar'
+        } aparência | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Aparência',
+          exiteAppearance ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={appearanceId === 'new'}
+          editorTo="aparência"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={exiteAppearance}
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`appearance/${appearanceId}`}
+          comments={commentsInThisAppearance}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

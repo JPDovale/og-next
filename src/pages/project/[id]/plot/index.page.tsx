@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
@@ -16,15 +17,21 @@ export default function PlotPage() {
   ) as IProjectResponse
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot']}
-      loading={loading}
-      inError={!loading && !project}
-      isScrolling
-    >
-      {!loading && <PlotParts project={project} />}
-    </ProjectPageLayout>
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Plot | Ognare`}
+        noindex
+      />
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot']}
+        loading={loading}
+        inError={!loading && !project}
+        isScrolling
+      >
+        {!loading && <PlotParts project={project} />}
+      </ProjectPageLayout>
+    </>
   )
 }

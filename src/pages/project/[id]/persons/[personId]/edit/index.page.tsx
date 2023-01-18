@@ -26,6 +26,7 @@ import {
 } from 'phosphor-react'
 import { ICreatePersonDTO } from '../../../../../../api/dtos/ICreatePersonDTO'
 import { useWindowSize } from '../../../../../../hooks/useWindow'
+import { NextSeo } from 'next-seo'
 
 const personFormSchema = z.object({
   name: z.string(),
@@ -76,176 +77,183 @@ export default function EditPersonPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Personagens', `${person?.name || 'Carregando...'}`, 'Edição']}
-      loading={loading}
-      inError={!loading && !person}
-      isScrolling
-    >
-      <EditContainer onSubmit={handleSubmit(handleUpdatePerson)}>
-        {error && <ResponseInfoApi error={error} />}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-Editar | Ognare`}
+        noindex
+      />
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Personagens', `${person?.name || 'Carregando...'}`, 'Edição']}
+        loading={loading}
+        inError={!loading && (!person || !project)}
+        isScrolling
+      >
+        <EditContainer onSubmit={handleSubmit(handleUpdatePerson)}>
+          {error && <ResponseInfoApi error={error} />}
 
-        <Info isCard columns={smallWindow ? 1 : 3}>
-          <Text family="body" as="label">
-            Nome
-            <TextInput
-              placeholder={person?.name || 'Carregando...'}
-              label="name"
-              register={register}
-            />
-          </Text>
+          <Info isCard columns={smallWindow ? 1 : 3}>
+            <Text family="body" as="label">
+              Nome
+              <TextInput
+                placeholder={person?.name || 'Carregando...'}
+                label="name"
+                register={register}
+              />
+            </Text>
 
-          <Text family="body" as="label">
-            Sobrenome
-            <TextInput
-              placeholder={person?.lastName || 'Carregando...'}
-              label="lastName"
-              register={register}
-            />
-          </Text>
+            <Text family="body" as="label">
+              Sobrenome
+              <TextInput
+                placeholder={person?.lastName || 'Carregando...'}
+                label="lastName"
+                register={register}
+              />
+            </Text>
 
-          <Text family="body" as="label">
-            Idade
-            <TextInput
-              placeholder={person?.age || 'Carregando...'}
-              label="age"
-              register={register}
-            />
-          </Text>
-        </Info>
+            <Text family="body" as="label">
+              Idade
+              <TextInput
+                placeholder={person?.age || 'Carregando...'}
+                label="age"
+                register={register}
+              />
+            </Text>
+          </Info>
 
-        <Info isCard>
-          <Text family="body" as="label">
-            História
-            <Textarea
-              placeholder={person?.history || 'Carregando...'}
-              {...register('history')}
-              css={{ fontSize: '$lg', minHeight: '430px' }}
-            />
-          </Text>
-        </Info>
+          <Info isCard>
+            <Text family="body" as="label">
+              História
+              <Textarea
+                placeholder={person?.history || 'Carregando...'}
+                {...register('history')}
+                css={{ fontSize: '$lg', minHeight: '430px' }}
+              />
+            </Text>
+          </Info>
 
-        <Button
-          type="submit"
-          label="Salvar alterações"
-          icon={<PencilLine />}
-          wid={smallWindow ? 'full' : 'middle'}
-          align="center"
-          disabled={
-            !!(!name && !lastName && !age && !history) || formState.isSubmitting
-          }
-          css={{
-            padding: '$3 $10',
-            alignSelf: 'center',
-            marginTop: '$4',
-            marginBottom: '$8',
-          }}
-        />
+          <Button
+            type="submit"
+            label="Salvar alterações"
+            icon={<PencilLine />}
+            wid={smallWindow ? 'full' : 'middle'}
+            align="center"
+            disabled={
+              !!(!name && !lastName && !age && !history) ||
+              formState.isSubmitting
+            }
+            css={{
+              padding: '$3 $10',
+              alignSelf: 'center',
+              marginTop: '$4',
+              marginBottom: '$8',
+            }}
+          />
 
-        <Info isCard columns={2}>
-          <Text family="body" as="label">
-            <header>Data de criação</header>
-            <Text size="sm">{person?.createAt || 'Carregando...'}</Text>
-          </Text>
+          <Info isCard columns={2}>
+            <Text family="body" as="label">
+              <header>Data de criação</header>
+              <Text size="sm">{person?.createAt || 'Carregando...'}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>Ultima alteração</header>
-            <Text size="sm">{person?.updateAt || 'Carregando...'}</Text>
-          </Text>
-        </Info>
+            <Text family="body" as="label">
+              <header>Ultima alteração</header>
+              <Text size="sm">{person?.updateAt || 'Carregando...'}</Text>
+            </Text>
+          </Info>
 
-        <Info columns={smallWindow ? 2 : 3} isCard>
-          <Text family="body" as="label">
-            <header>
-              <Crosshair />
-              Objetivos criados
-            </header>
-            <Text>{person?.objectives.length || 0}</Text>
-          </Text>
+          <Info columns={smallWindow ? 2 : 3} isCard>
+            <Text family="body" as="label">
+              <header>
+                <Crosshair />
+                Objetivos criados
+              </header>
+              <Text>{person?.objectives.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <RainbowCloud />
-              Sonhos criados
-            </header>
-            <Text>{person?.dreams.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <RainbowCloud />
+                Sonhos criados
+              </header>
+              <Text>{person?.dreams.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Warning />
-              Medos criados
-            </header>
-            <Text>{person?.fears.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Warning />
+                Medos criados
+              </header>
+              <Text>{person?.fears.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Person />
-              Aparências criadas
-            </header>
-            <Text>{person?.appearance.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Person />
+                Aparências criadas
+              </header>
+              <Text>{person?.appearance.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <UserCircleGear />
-              Personalidades criadas
-            </header>
-            <Text>{person?.personality.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <UserCircleGear />
+                Personalidades criadas
+              </header>
+              <Text>{person?.personality.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Lightning />
-              Poderes criados
-            </header>
-            <Text>{person?.powers.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Lightning />
+                Poderes criados
+              </header>
+              <Text>{person?.powers.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <HeartBreak />
-              Traumas criados
-            </header>
-            <Text>{person?.traumas.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <HeartBreak />
+                Traumas criados
+              </header>
+              <Text>{person?.traumas.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <TreeStructure />
-              Valores criados
-            </header>
-            <Text>{person?.values.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <TreeStructure />
+                Valores criados
+              </header>
+              <Text>{person?.values.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <SketchLogo />
-              Desejos criados
-            </header>
-            <Text>{person?.wishes.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <SketchLogo />
+                Desejos criados
+              </header>
+              <Text>{person?.wishes.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Users />
-              Casais
-            </header>
-            <Text>{person?.couples.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Users />
+                Casais
+              </header>
+              <Text>{person?.couples.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Chats />
-              Comentários
-            </header>
-            <Text>{person?.comments.length || 0}</Text>
-          </Text>
-        </Info>
-      </EditContainer>
-    </ProjectPageLayout>
+            <Text family="body" as="label">
+              <header>
+                <Chats />
+                Comentários
+              </header>
+              <Text>{person?.comments.length || 0}</Text>
+            </Text>
+          </Info>
+        </EditContainer>
+      </ProjectPageLayout>
+    </>
   )
 }

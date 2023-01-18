@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function SubgenrePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot', 'Subgênero']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Subgênero"
-        updateValue={handleUpdateSubgenre}
-        value={subgenre}
-        preValue={project?.plot.subgenre}
-        permission={userInProject?.permission}
-        comments={commentsSubgenre}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setSubgenre}
-        to="subgenre"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Subgênero | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot', 'Subgênero']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Subgênero"
+          updateValue={handleUpdateSubgenre}
+          value={subgenre}
+          preValue={project?.plot.subgenre}
+          permission={userInProject?.permission}
+          comments={commentsSubgenre}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setSubgenre}
+          to="subgenre"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -38,6 +39,10 @@ export default function ObjectivePage() {
     (comment) => comment.to === `objectives/${objectiveId}`,
   )
 
+  const inError =
+    !loading &&
+    ((objectiveId !== 'new' && !exiteObjective) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -45,30 +50,38 @@ export default function ObjectivePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Objetivos',
-        exiteObjective ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && objectiveId !== 'new' && !exiteObjective}
-    >
-      <EditorAndCommentsToObjective
-        isNew={objectiveId === 'new'}
-        objective={exiteObjective}
-        onNewComment={CommentInPerson}
-        permission={permission}
-        personId={person?.id as string}
-        persons={persons}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        refs={refs}
-        comments={commentsInThisObjective}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          objectiveId === 'new' ? 'Novo' : 'Editar'
+        } objetivo | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Objetivos',
+          exiteObjective ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToObjective
+          isNew={objectiveId === 'new'}
+          objective={exiteObjective}
+          onNewComment={CommentInPerson}
+          permission={permission}
+          personId={person?.id as string}
+          persons={persons}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          refs={refs}
+          comments={commentsInThisObjective}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

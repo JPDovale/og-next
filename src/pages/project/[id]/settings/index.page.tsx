@@ -3,6 +3,7 @@ import {
   Text,
   TextInput,
 } from '@og-ui/react'
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
 import {
   Crosshair,
@@ -160,41 +161,47 @@ export default function SettingsPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Configurações']}
-      loading={loading}
-      inError={!loading && !project}
-      isScrolling
-    >
-      <SettingsProject>
-        {error && <ResponseInfoApi error={error} />}
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Configurações | Ognare`}
+        noindex
+      />
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Configurações']}
+        loading={loading}
+        inError={!loading && !project}
+        isScrolling
+      >
+        <SettingsProject>
+          {error && <ResponseInfoApi error={error} />}
 
-        <Info isCard>
-          <Text family="body" as="label">
-            Nome
-            <TextInput
-              icon={<Presentation />}
-              placeholder={project?.name || 'Carregando...'}
-              disabled
-            />
-            A alteração estará disponível em breve para os criadores do projeto
-          </Text>
-        </Info>
-
-        <Info isCard>
-          <Text family="body" as="label">
-            Tipo do projeto
-            <Text>{project?.type || 'Carregando...'}</Text>
+          <Info isCard>
             <Text family="body" as="label">
-              Outros tipos de projetos estarão disponíveis em breve para os
-              criadores do projeto...
+              Nome
+              <TextInput
+                icon={<Presentation />}
+                placeholder={project?.name || 'Carregando...'}
+                disabled
+              />
+              A alteração estará disponível em breve para os criadores do
+              projeto
             </Text>
-          </Text>
-        </Info>
+          </Info>
 
-        {/* <Button
+          <Info isCard>
+            <Text family="body" as="label">
+              Tipo do projeto
+              <Text>{project?.type || 'Carregando...'}</Text>
+              <Text family="body" as="label">
+                Outros tipos de projetos estarão disponíveis em breve para os
+                criadores do projeto...
+              </Text>
+            </Text>
+          </Info>
+
+          {/* <Button
                     type="button"
 
           label="Salvar alterações"
@@ -211,155 +218,156 @@ export default function SettingsPage() {
           }}
         /> */}
 
-        <Info isCard columns={smallWindow ? 1 : 2}>
-          <Text family="body" as="label">
-            Criador
-            <Creator>
-              <AvatarWeb size="4xl" src={userCreator?.avatar?.url} />
-              <div>
-                <Text family="body" as="label">
-                  Nome
-                  <Text>{userCreator?.name || 'Carregando...'}</Text>
-                </Text>
-                <Text family="body" as="label">
-                  Nome de usuário
-                  <Text>{userCreator?.username || 'Carregando...'}</Text>
-                </Text>
-                <Text family="body" as="label">
-                  Email
-                  <Text>{userCreator?.email || 'Carregando...'}</Text>
-                </Text>
-              </div>
-            </Creator>
-          </Text>
-          <Text family="body" as="label">
-            Usuários com acesso: {project?.users.length}
-            <Text family="body" as="label" height="shorter">
-              A opção de alterar a permissão em breve estará disponível... Se
-              precisar alterar, remova o usuário e o adicione novamente com a
-              permissão desejada.
+          <Info isCard columns={smallWindow ? 1 : 2}>
+            <Text family="body" as="label">
+              Criador
+              <Creator>
+                <AvatarWeb size="4xl" src={userCreator?.avatar?.url} />
+                <div>
+                  <Text family="body" as="label">
+                    Nome
+                    <Text>{userCreator?.name || 'Carregando...'}</Text>
+                  </Text>
+                  <Text family="body" as="label">
+                    Nome de usuário
+                    <Text>{userCreator?.username || 'Carregando...'}</Text>
+                  </Text>
+                  <Text family="body" as="label">
+                    Email
+                    <Text>{userCreator?.email || 'Carregando...'}</Text>
+                  </Text>
+                </div>
+              </Creator>
             </Text>
-            <Info columns={smallWindow ? 1 : 2}>
-              {allUsersWithAccess?.map((userWithAccess) => {
-                if (userWithAccess?.id !== userCreator?.id) {
-                  return (
-                    <CardUserWithAccess
-                      key={userWithAccess.id}
-                      userWithAccess={userWithAccess}
-                      project={project}
-                      setUnshare={setUnshare}
-                      unshare={unshare}
-                      handleUnshare={handleUnshare}
-                    />
-                  )
-                } else {
-                  return ''
-                }
-              })}
-            </Info>
-          </Text>
-        </Info>
+            <Text family="body" as="label">
+              Usuários com acesso: {project?.users.length}
+              <Text family="body" as="label" height="shorter">
+                A opção de alterar a permissão em breve estará disponível... Se
+                precisar alterar, remova o usuário e o adicione novamente com a
+                permissão desejada.
+              </Text>
+              <Info columns={smallWindow ? 1 : 2}>
+                {allUsersWithAccess?.map((userWithAccess) => {
+                  if (userWithAccess?.id !== userCreator?.id) {
+                    return (
+                      <CardUserWithAccess
+                        key={userWithAccess.id}
+                        userWithAccess={userWithAccess}
+                        project={project}
+                        setUnshare={setUnshare}
+                        unshare={unshare}
+                        handleUnshare={handleUnshare}
+                      />
+                    )
+                  } else {
+                    return ''
+                  }
+                })}
+              </Info>
+            </Text>
+          </Info>
 
-        <Info isCard columns={2}>
-          <Text family="body" as="label">
-            <header>Data de criação</header>
-            <Text size="sm">{project?.createAt || 'Carregando...'}</Text>
-          </Text>
+          <Info isCard columns={2}>
+            <Text family="body" as="label">
+              <header>Data de criação</header>
+              <Text size="sm">{project?.createAt || 'Carregando...'}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>Ultima alteração</header>
-            <Text size="sm">{project?.updateAt || 'Carregando...'}</Text>
-          </Text>
-        </Info>
+            <Text family="body" as="label">
+              <header>Ultima alteração</header>
+              <Text size="sm">{project?.updateAt || 'Carregando...'}</Text>
+            </Text>
+          </Info>
 
-        <Info css={{ marginTop: '$6' }}>
-          <Text family="body" as="label">
-            Ás referencias criadas não são contadas na listagem
-          </Text>
-        </Info>
+          <Info css={{ marginTop: '$6' }}>
+            <Text family="body" as="label">
+              Ás referencias criadas não são contadas na listagem
+            </Text>
+          </Info>
 
-        <Info columns={smallWindow ? 2 : 3} isCard>
-          <Text family="body" as="label">
-            <header>
-              <UserFocus />
-              Personagens
-            </header>
-            <Text>{personsOfProject?.length || 0}</Text>
-          </Text>
+          <Info columns={smallWindow ? 2 : 3} isCard>
+            <Text family="body" as="label">
+              <header>
+                <UserFocus />
+                Personagens
+              </header>
+              <Text>{personsOfProject?.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Crosshair />
-              Objetivos criados
-            </header>
-            <Text>{objects?.objectives.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Crosshair />
+                Objetivos criados
+              </header>
+              <Text>{objects?.objectives.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <RainbowCloud />
-              Sonhos criados
-            </header>
-            <Text>{objects?.dreams.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <RainbowCloud />
+                Sonhos criados
+              </header>
+              <Text>{objects?.dreams.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Warning />
-              Medos criados
-            </header>
-            <Text>{objects?.fears.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Warning />
+                Medos criados
+              </header>
+              <Text>{objects?.fears.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Person />
-              Aparências criadas
-            </header>
-            <Text>{objects?.appearance.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Person />
+                Aparências criadas
+              </header>
+              <Text>{objects?.appearance.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <UserCircleGear />
-              Personalidades criadas
-            </header>
-            <Text>{objects?.personality.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <UserCircleGear />
+                Personalidades criadas
+              </header>
+              <Text>{objects?.personality.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <Lightning />
-              Poderes criados
-            </header>
-            <Text>{objects?.powers.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <Lightning />
+                Poderes criados
+              </header>
+              <Text>{objects?.powers.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <HeartBreak />
-              Traumas criados
-            </header>
-            <Text>{objects?.traumas.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <HeartBreak />
+                Traumas criados
+              </header>
+              <Text>{objects?.traumas.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <TreeStructure />
-              Valores criados
-            </header>
-            <Text>{objects?.values.length || 0}</Text>
-          </Text>
+            <Text family="body" as="label">
+              <header>
+                <TreeStructure />
+                Valores criados
+              </header>
+              <Text>{objects?.values.length || 0}</Text>
+            </Text>
 
-          <Text family="body" as="label">
-            <header>
-              <SketchLogo />
-              Desejos criados
-            </header>
-            <Text>{objects?.wishes.length || 0}</Text>
-          </Text>
-        </Info>
-      </SettingsProject>
-    </ProjectPageLayout>
+            <Text family="body" as="label">
+              <header>
+                <SketchLogo />
+                Desejos criados
+              </header>
+              <Text>{objects?.wishes.length || 0}</Text>
+            </Text>
+          </Info>
+        </SettingsProject>
+      </ProjectPageLayout>
+    </>
   )
 }

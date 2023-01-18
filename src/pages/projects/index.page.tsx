@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
 import { Projects } from '../../components/Projects'
 import { ProjectsContext } from '../../contexts/projects'
@@ -15,19 +16,23 @@ export default function ProjectsPage() {
   )
 
   return (
-    <DashboardPageLayout
-      window="Meus projetos"
-      query={query}
-      setQuery={setQuery}
-      loading={loading}
-      queryless={!!projectsThisUser[0]}
-    >
-      <Projects
-        listEmptyMessage="Você ainda não criou nenhum projeto"
-        projects={projectsThisUser}
+    <>
+      <NextSeo title="Meus projetos | Ognare" noindex />
+
+      <DashboardPageLayout
+        window="Meus projetos"
         query={query}
-        isLoading={loading}
-      />
-    </DashboardPageLayout>
+        setQuery={setQuery}
+        loading={loading}
+        queryless={!!projectsThisUser[0]}
+      >
+        <Projects
+          listEmptyMessage="Você ainda não criou nenhum projeto"
+          projects={projectsThisUser}
+          query={query}
+          isLoading={loading}
+        />
+      </DashboardPageLayout>
+    </>
   )
 }

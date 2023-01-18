@@ -37,6 +37,7 @@ import {
 import { ResponseInfoApi } from '../../../components/ResponseInfoApi'
 import { AvatarWeb } from '../../../components/Avatar'
 import { useWindowSize } from '../../../hooks/useWindow'
+import { NextSeo } from 'next-seo'
 
 interface IObjects {
   objectives: IRef[]
@@ -169,261 +170,265 @@ export default function UserSettingsPage() {
   }
 
   return (
-    <DashboardPageLayout window="Configurações do usuário" loading={loading}>
-      <UserSettingsPageContainer>
-        <UserSettings>
-          {error && <ResponseInfoApi error={error} />}
+    <>
+      <NextSeo title={`Configurações-${user?.username} | Ognare`} noindex />
 
-          <Info isCard>
-            <Text family="body" as="label">
-              Nome
-              <TextInput
-                icon={<UserCircle />}
-                placeholder={user?.name}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Text>
-          </Info>
+      <DashboardPageLayout window="Configurações do usuário" loading={loading}>
+        <UserSettingsPageContainer>
+          <UserSettings>
+            {error && <ResponseInfoApi error={error} />}
 
-          <Info isCard>
-            <Text family="body" as="label">
-              Nome de usuário
-              <TextInput
-                icon={<At />}
-                placeholder={user?.username}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </Text>
-          </Info>
+            <Info isCard>
+              <Text family="body" as="label">
+                Nome
+                <TextInput
+                  icon={<UserCircle />}
+                  placeholder={user?.name}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Text>
+            </Info>
 
-          <Info isCard>
-            <Text family="body" as="label">
-              Email
-              <TextInput
-                type="email"
-                icon={<Envelope />}
-                placeholder={user?.email}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled
-              />
-              Caso você não forneça um email valido, não poderemos recuperar a
-              sua conta...
-            </Text>
-          </Info>
+            <Info isCard>
+              <Text family="body" as="label">
+                Nome de usuário
+                <TextInput
+                  icon={<At />}
+                  placeholder={user?.username}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Text>
+            </Info>
 
-          <Button
-            type="button"
-            label="Salvar alterações"
-            icon={<PencilLine />}
-            wid={smallWindow ? 'full' : 'middle'}
-            align="center"
-            disabled={!!(!name && !email && !username)}
-            onClick={handleSaveUser}
-            css={{
-              padding: '$3 $10',
-              alignSelf: 'center',
-              marginTop: '$4',
-              marginBottom: '$8',
-            }}
-          />
+            <Info isCard>
+              <Text family="body" as="label">
+                Email
+                <TextInput
+                  type="email"
+                  icon={<Envelope />}
+                  placeholder={user?.email}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled
+                />
+                Caso você não forneça um email valido, não poderemos recuperar a
+                sua conta...
+              </Text>
+            </Info>
 
-          <Info isCard>
-            <Text family="body" as="label">
-              Alterar senha
-              <Info isCard columns={smallWindow ? 1 : 2}>
-                <Text family="body" as="label">
-                  <header>Senha antiga</header>
-                  <TextInput
-                    type="password"
-                    icon={<Key />}
-                    placeholder="**********"
-                    value={oldPassword}
-                    onChange={(e) => setOldPassword(e.target.value)}
-                  />
-                </Text>
+            <Button
+              type="button"
+              label="Salvar alterações"
+              icon={<PencilLine />}
+              wid={smallWindow ? 'full' : 'middle'}
+              align="center"
+              disabled={!!(!name && !email && !username)}
+              onClick={handleSaveUser}
+              css={{
+                padding: '$3 $10',
+                alignSelf: 'center',
+                marginTop: '$4',
+                marginBottom: '$8',
+              }}
+            />
 
-                <Text family="body" as="label">
-                  <header>Nova senha</header>
-                  <TextInput
-                    type="password"
-                    icon={<LockKey />}
-                    placeholder="**********"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </Text>
-              </Info>
-              <Button
-                type="button"
-                label="Alterar"
-                icon={<LockLaminated />}
-                wid="hug"
-                disabled={!oldPassword || !password}
-                onClick={() => handleUpdatePassword()}
-                css={{
-                  padding: '$3 $10',
-                  alignSelf: 'center',
-                  marginTop: '$4',
-                }}
-              />
-            </Text>
-          </Info>
+            <Info isCard>
+              <Text family="body" as="label">
+                Alterar senha
+                <Info isCard columns={smallWindow ? 1 : 2}>
+                  <Text family="body" as="label">
+                    <header>Senha antiga</header>
+                    <TextInput
+                      type="password"
+                      icon={<Key />}
+                      placeholder="**********"
+                      value={oldPassword}
+                      onChange={(e) => setOldPassword(e.target.value)}
+                    />
+                  </Text>
 
-          <Info isCard columns={2}>
-            <Text family="body" as="label">
-              <header>Data de criação</header>
-              <Text size="sm">{user?.createAt}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>Ultima alteração</header>
-              <Text size="sm">{user?.updateAt}</Text>
-            </Text>
-          </Info>
-
-          <Info css={{ marginTop: '$6' }}>
-            <Text family="body" as="label">
-              Ás referencias criadas não são contadas na listagem
-            </Text>
-          </Info>
-          <Info columns={smallWindow ? 2 : 3} isCard>
-            <Text family="body" as="label">
-              <header>
-                <ProjectorScreenChart /> Projetos
-              </header>
-              <Text>{projects.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <UsersThree />
-                Usuários acessíveis
-              </header>
-              <Text>{users.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <UserFocus />
-                Personagens
-              </header>
-              <Text>{persons.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <Crosshair />
-                Objetivos criados
-              </header>
-              <Text>{objects.objectives.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <RainbowCloud />
-                Sonhos criados
-              </header>
-              <Text>{objects.dreams.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <Warning />
-                Medos criados
-              </header>
-              <Text>{objects.fears.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <Person />
-                Aparências criadas
-              </header>
-              <Text>{objects.appearance.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <UserCircleGear />
-                Personalidades criadas
-              </header>
-              <Text>{objects.personality.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <Lightning />
-                Poderes criados
-              </header>
-              <Text>{objects.powers.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <HeartBreak />
-                Traumas criados
-              </header>
-              <Text>{objects.traumas.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <TreeStructure />
-                Valores criados
-              </header>
-              <Text>{objects.values.length}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <SketchLogo />
-                Desejos criados
-              </header>
-              <Text>{objects.wishes.length}</Text>
-            </Text>
-          </Info>
-        </UserSettings>
-
-        <UserInfos>
-          <Info>
-            <Avatar>
-              <AvatarWeb src={user?.avatar?.url} size="full" />
-            </Avatar>
-            <Text size="lg" weight="bold">
-              {user?.username?.toUpperCase()}
-            </Text>
-
-            <div className="buttons">
-              <Input htmlFor="file" disabled={loading}>
-                <PencilLine />
-                Alterar avatar
-                <input
-                  disabled={loading}
-                  type="file"
-                  id="file"
-                  accept="image/png, image/jpeg"
-                  onChange={(e) => {
-                    handleUpdateImage(e.target.files)
+                  <Text family="body" as="label">
+                    <header>Nova senha</header>
+                    <TextInput
+                      type="password"
+                      icon={<LockKey />}
+                      placeholder="**********"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </Text>
+                </Info>
+                <Button
+                  type="button"
+                  label="Alterar"
+                  icon={<LockLaminated />}
+                  wid="hug"
+                  disabled={!oldPassword || !password}
+                  onClick={() => handleUpdatePassword()}
+                  css={{
+                    padding: '$3 $10',
+                    alignSelf: 'center',
+                    marginTop: '$4',
                   }}
                 />
-              </Input>
+              </Text>
+            </Info>
 
-              <Button
-                disabled={!user?.avatar?.url || loading}
-                onClick={deleteAvatar}
-                type="button"
-                label="Remover avatar"
-                icon={<X />}
-                wid="full"
-                align="center"
-              />
-            </div>
-          </Info>
-        </UserInfos>
-      </UserSettingsPageContainer>
-    </DashboardPageLayout>
+            <Info isCard columns={2}>
+              <Text family="body" as="label">
+                <header>Data de criação</header>
+                <Text size="sm">{user?.createAt}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>Ultima alteração</header>
+                <Text size="sm">{user?.updateAt}</Text>
+              </Text>
+            </Info>
+
+            <Info css={{ marginTop: '$6' }}>
+              <Text family="body" as="label">
+                Ás referencias criadas não são contadas na listagem
+              </Text>
+            </Info>
+            <Info columns={smallWindow ? 2 : 3} isCard>
+              <Text family="body" as="label">
+                <header>
+                  <ProjectorScreenChart /> Projetos
+                </header>
+                <Text>{projects.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <UsersThree />
+                  Usuários acessíveis
+                </header>
+                <Text>{users.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <UserFocus />
+                  Personagens
+                </header>
+                <Text>{persons.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <Crosshair />
+                  Objetivos criados
+                </header>
+                <Text>{objects.objectives.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <RainbowCloud />
+                  Sonhos criados
+                </header>
+                <Text>{objects.dreams.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <Warning />
+                  Medos criados
+                </header>
+                <Text>{objects.fears.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <Person />
+                  Aparências criadas
+                </header>
+                <Text>{objects.appearance.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <UserCircleGear />
+                  Personalidades criadas
+                </header>
+                <Text>{objects.personality.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <Lightning />
+                  Poderes criados
+                </header>
+                <Text>{objects.powers.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <HeartBreak />
+                  Traumas criados
+                </header>
+                <Text>{objects.traumas.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <TreeStructure />
+                  Valores criados
+                </header>
+                <Text>{objects.values.length}</Text>
+              </Text>
+
+              <Text family="body" as="label">
+                <header>
+                  <SketchLogo />
+                  Desejos criados
+                </header>
+                <Text>{objects.wishes.length}</Text>
+              </Text>
+            </Info>
+          </UserSettings>
+
+          <UserInfos>
+            <Info>
+              <Avatar>
+                <AvatarWeb src={user?.avatar?.url} size="full" />
+              </Avatar>
+              <Text size="lg" weight="bold">
+                {user?.username?.toUpperCase()}
+              </Text>
+
+              <div className="buttons">
+                <Input htmlFor="file" disabled={loading}>
+                  <PencilLine />
+                  Alterar avatar
+                  <input
+                    disabled={loading}
+                    type="file"
+                    id="file"
+                    accept="image/png, image/jpeg"
+                    onChange={(e) => {
+                      handleUpdateImage(e.target.files)
+                    }}
+                  />
+                </Input>
+
+                <Button
+                  disabled={!user?.avatar?.url || loading}
+                  onClick={deleteAvatar}
+                  type="button"
+                  label="Remover avatar"
+                  icon={<X />}
+                  wid="full"
+                  align="center"
+                />
+              </div>
+            </Info>
+          </UserInfos>
+        </UserSettingsPageContainer>
+      </DashboardPageLayout>
+    </>
   )
 }

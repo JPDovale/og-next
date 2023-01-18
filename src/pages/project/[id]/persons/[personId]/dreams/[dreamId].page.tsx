@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -35,6 +36,9 @@ export default function DreamPage() {
     (comment) => comment.to === `dreams/${dreamId}`,
   )
 
+  const inError =
+    !loading && ((dreamId !== 'new' && !exiteDream) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -42,32 +46,40 @@ export default function DreamPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando'}`,
-        'Sonhos',
-        exiteDream ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && dreamId !== 'new' && !exiteDream}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={dreamId === 'new'}
-        editorTo="sonho"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={exiteDream}
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`dreams/${dreamId}`}
-        comments={commentsInThisDream}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          dreamId === 'new' ? 'Novo' : 'Editar'
+        } sonho | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando'}`,
+          'Sonhos',
+          exiteDream ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={dreamId === 'new'}
+          editorTo="sonho"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={exiteDream}
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`dreams/${dreamId}`}
+          comments={commentsInThisDream}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function HistoricalFactPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot', 'Fato histórico']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Fato histórico"
-        updateValue={handleUpdateHistoricalFact}
-        value={historicalFact}
-        preValue={project?.plot.historicalFact}
-        permission={userInProject?.permission}
-        comments={commentsHistoricalFact}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setHistoricalFact}
-        to="historicalFact"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Fato histórico | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot', 'Fato histórico']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Fato histórico"
+          updateValue={handleUpdateHistoricalFact}
+          value={historicalFact}
+          preValue={project?.plot.historicalFact}
+          permission={userInProject?.permission}
+          comments={commentsHistoricalFact}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setHistoricalFact}
+          to="historicalFact"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

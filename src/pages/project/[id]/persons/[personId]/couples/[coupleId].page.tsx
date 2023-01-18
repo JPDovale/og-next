@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -37,6 +38,9 @@ export default function CouplePage() {
     (comment) => comment.to === `couples/${coupleId}`,
   )
 
+  const inError =
+    !loading && ((coupleId !== 'new' && !exiteCouple) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -44,33 +48,41 @@ export default function CouplePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Casais',
-        exiteCouple ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && coupleId !== 'new' && !exiteCouple}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={coupleId === 'new'}
-        editorTo="casal"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={exiteCouple}
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`couple/${coupleId}`}
-        comments={commentsInThisCouple}
-        isUniqueRelational
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          coupleId === 'new' ? 'Novo' : 'Editar'
+        } casal | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Casais',
+          exiteCouple ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={coupleId === 'new'}
+          editorTo="casal"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={exiteCouple}
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`couple/${coupleId}`}
+          comments={commentsInThisCouple}
+          isUniqueRelational
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

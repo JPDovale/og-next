@@ -37,6 +37,7 @@ import { CardPerson } from '../../../../components/CardPerson'
 import { ListEmpty } from '../../../../components/ListEmpty'
 import { Avatares } from '../../../../components/Avatares'
 import { useWindowSize } from '../../../../hooks/useWindow'
+import { NextSeo } from 'next-seo'
 
 const newPersonFormSchema = z.object({
   name: z
@@ -118,169 +119,181 @@ export default function PersonsPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Personagens']}
-      loading={loading}
-      inError={!loading && !project}
-      isScrolling
-    >
-      {error && (
-        <DefaultError
-          close={() => setError(undefined)}
-          title={error.title}
-          message={error.message}
-        />
-      )}
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Personagens | Ognare`}
+        noindex
+      />
 
-      <NewPersonFormContainer>
-        <ShowFormButton
-          formIsVisible={formIsVisible}
-          icon={
-            formIsVisible ? <X weight="bold" /> : <UserPlus weight="bold" />
-          }
-          label={!formIsVisible ? 'Criar personagem' : ''}
-          wid="hug"
-          onClick={() => setFormIsVisible(!formIsVisible)}
-        />
-
-        <QueryInputContainer formIsVisible={formIsVisible}>
-          <QueryInput
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            icon={<MagnifyingGlass size={24} />}
-            placeholder="Encontre um personagem"
-          />
-        </QueryInputContainer>
-
-        <Text
-          size="md"
-          css={{
-            color: '$successDefault',
-          }}
-          weight="bold"
-          family="body"
-        >
-          {success}
-        </Text>
-
-        <NewPersonForm
-          onSubmit={handleSubmit(handleNewPerson)}
-          formIsVisible={formIsVisible}
-        >
-          {formIsVisible && (
-            <>
-              <Text css={{ marginBottom: '-$10', color: '$base700' }} size="xs">
-                Todos os personagens:
-              </Text>
-              <Avatares
-                size={smallWindow ? 'xsm' : 'sm'}
-                columns={18}
-                listEmptyMessage="Nenhum personagem foi criado ainda"
-                persons={personsOrd}
-              />
-            </>
-          )}
-
-          <NewInfosPerson>
-            <InfosBasics>
-              <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                <InputHeader size={'xs'}>
-                  NOME
-                  <Text size="sm" as="span" family="body">
-                    {formState.errors?.name?.message}
-                  </Text>
-                </InputHeader>
-
-                <TextInput
-                  label="name"
-                  register={register}
-                  variant={
-                    formState.errors.name?.message ? 'denied' : 'default'
-                  }
-                  icon={<IdentificationCard weight="bold" />}
-                  placeholder="Nome do personagem"
-                />
-              </InputForm>
-
-              <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                <InputHeader size={'xs'}>
-                  SOBRENOME
-                  <Text size="sm" as="span" family="body">
-                    {formState.errors?.lastName?.message}
-                  </Text>
-                </InputHeader>
-
-                <TextInput
-                  label="lastName"
-                  register={register}
-                  variant={
-                    formState.errors.lastName?.message ? 'denied' : 'default'
-                  }
-                  icon={<IdentificationCard weight="bold" />}
-                  placeholder="Sobrenome do personagem"
-                />
-              </InputForm>
-
-              <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                <InputHeader size={'xs'}>
-                  IDADE
-                  <Text size="sm" as="span" family="body">
-                    {formState.errors?.age?.message}
-                  </Text>
-                </InputHeader>
-
-                <TextInput
-                  label="age"
-                  register={register}
-                  variant={formState.errors.age?.message ? 'denied' : 'default'}
-                  icon={<Calendar weight="bold" />}
-                  placeholder="Idade do personagem"
-                />
-              </InputForm>
-            </InfosBasics>
-
-            <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-              <InputHeader size={'xs'}>
-                HISTÓRIA
-                <Text size="sm" as="span" family="body">
-                  {formState.errors?.history?.message}
-                </Text>
-              </InputHeader>
-              <Textarea
-                variant={
-                  formState.errors.history?.message ? 'denied' : 'default'
-                }
-                placeholder="História do personagem"
-                {...register('history')}
-              />
-            </InputForm>
-          </NewInfosPerson>
-
-          <Button
-            label="Criar"
-            type="submit"
-            icon={<PlusCircle weight="bold" />}
-            align="center"
-            disabled={formState.isSubmitting}
-          />
-        </NewPersonForm>
-      </NewPersonFormContainer>
-
-      <PersonsContainer>
-        {finalPersonsToShow[0] ? (
-          finalPersonsToShow.map((person) => {
-            return <CardPerson key={person.id} person={person} isNotPreview />
-          })
-        ) : (
-          <ListEmpty
-            isLoading={loading}
-            message="Você ainda não criou nenhum personagem para esse projeto."
-            icon={<UserFocus size={loading ? 0 : 90} />}
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Personagens']}
+        loading={loading}
+        inError={!loading && !project}
+        isScrolling
+      >
+        {error && (
+          <DefaultError
+            close={() => setError(undefined)}
+            title={error.title}
+            message={error.message}
           />
         )}
-      </PersonsContainer>
-    </ProjectPageLayout>
+
+        <NewPersonFormContainer>
+          <ShowFormButton
+            formIsVisible={formIsVisible}
+            icon={
+              formIsVisible ? <X weight="bold" /> : <UserPlus weight="bold" />
+            }
+            label={!formIsVisible ? 'Criar personagem' : ''}
+            wid="hug"
+            onClick={() => setFormIsVisible(!formIsVisible)}
+          />
+
+          <QueryInputContainer formIsVisible={formIsVisible}>
+            <QueryInput
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              icon={<MagnifyingGlass size={24} />}
+              placeholder="Encontre um personagem"
+            />
+          </QueryInputContainer>
+
+          <Text
+            size="md"
+            css={{
+              color: '$successDefault',
+            }}
+            weight="bold"
+            family="body"
+          >
+            {success}
+          </Text>
+
+          <NewPersonForm
+            onSubmit={handleSubmit(handleNewPerson)}
+            formIsVisible={formIsVisible}
+          >
+            {formIsVisible && (
+              <>
+                <Text
+                  css={{ marginBottom: '-$10', color: '$base700' }}
+                  size="xs"
+                >
+                  Todos os personagens:
+                </Text>
+                <Avatares
+                  size={smallWindow ? 'xsm' : 'sm'}
+                  columns={18}
+                  listEmptyMessage="Nenhum personagem foi criado ainda"
+                  persons={personsOrd}
+                />
+              </>
+            )}
+
+            <NewInfosPerson>
+              <InfosBasics>
+                <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
+                  <InputHeader size={'xs'}>
+                    NOME
+                    <Text size="sm" as="span" family="body">
+                      {formState.errors?.name?.message}
+                    </Text>
+                  </InputHeader>
+
+                  <TextInput
+                    label="name"
+                    register={register}
+                    variant={
+                      formState.errors.name?.message ? 'denied' : 'default'
+                    }
+                    icon={<IdentificationCard weight="bold" />}
+                    placeholder="Nome do personagem"
+                  />
+                </InputForm>
+
+                <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
+                  <InputHeader size={'xs'}>
+                    SOBRENOME
+                    <Text size="sm" as="span" family="body">
+                      {formState.errors?.lastName?.message}
+                    </Text>
+                  </InputHeader>
+
+                  <TextInput
+                    label="lastName"
+                    register={register}
+                    variant={
+                      formState.errors.lastName?.message ? 'denied' : 'default'
+                    }
+                    icon={<IdentificationCard weight="bold" />}
+                    placeholder="Sobrenome do personagem"
+                  />
+                </InputForm>
+
+                <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
+                  <InputHeader size={'xs'}>
+                    IDADE
+                    <Text size="sm" as="span" family="body">
+                      {formState.errors?.age?.message}
+                    </Text>
+                  </InputHeader>
+
+                  <TextInput
+                    label="age"
+                    register={register}
+                    variant={
+                      formState.errors.age?.message ? 'denied' : 'default'
+                    }
+                    icon={<Calendar weight="bold" />}
+                    placeholder="Idade do personagem"
+                  />
+                </InputForm>
+              </InfosBasics>
+
+              <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
+                <InputHeader size={'xs'}>
+                  HISTÓRIA
+                  <Text size="sm" as="span" family="body">
+                    {formState.errors?.history?.message}
+                  </Text>
+                </InputHeader>
+                <Textarea
+                  variant={
+                    formState.errors.history?.message ? 'denied' : 'default'
+                  }
+                  placeholder="História do personagem"
+                  {...register('history')}
+                />
+              </InputForm>
+            </NewInfosPerson>
+
+            <Button
+              label="Criar"
+              type="submit"
+              icon={<PlusCircle weight="bold" />}
+              align="center"
+              disabled={formState.isSubmitting}
+            />
+          </NewPersonForm>
+        </NewPersonFormContainer>
+
+        <PersonsContainer>
+          {finalPersonsToShow[0] ? (
+            finalPersonsToShow.map((person) => {
+              return <CardPerson key={person.id} person={person} isNotPreview />
+            })
+          ) : (
+            <ListEmpty
+              isLoading={loading}
+              message="Você ainda não criou nenhum personagem para esse projeto."
+              icon={<UserFocus size={loading ? 0 : 90} />}
+            />
+          )}
+        </PersonsContainer>
+      </ProjectPageLayout>
+    </>
   )
 }

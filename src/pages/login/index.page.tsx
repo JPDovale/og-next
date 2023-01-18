@@ -29,6 +29,7 @@ import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from '../api/auth/[...nextauth].api'
 import { loginWithGoogleRequest } from '../../api/userRequest'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
+import { NextSeo } from 'next-seo'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -71,85 +72,91 @@ export default function LoginPage() {
   }, [session, setUser])
 
   return (
-    <LoginPageContainer>
-      <Image className="logo" src={LogoToDown} alt="" />
-      <Image className="logo2" src={Logo} alt="" />
-      <BackgroundLogin src={Back} alt="" />
+    <>
+      <NextSeo title="Faça o login | Ognare" />
 
-      <LoginFormContainer onSubmit={handleSubmit(handleLogin)}>
-        <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
-          Efetue o login
-        </Text>
+      <LoginPageContainer>
+        <Image className="logo" src={LogoToDown} alt="" />
+        <Image className="logo2" src={Logo} alt="" />
+        <BackgroundLogin src={Back} alt="" />
 
-        <InputContainer>
+        <LoginFormContainer onSubmit={handleSubmit(handleLogin)}>
+          <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
+            Efetue o login
+          </Text>
+
+          <InputContainer>
+            <Button
+              type="button"
+              label="Fazer login com o google"
+              icon={<GoogleLogo weight="bold" />}
+              css={{ padding: '$3' }}
+              align="center"
+              onClick={() => signIn('google')}
+            />
+          </InputContainer>
+
+          {error && <ResponseInfoApi error={error} />}
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              E-MAIL
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.email?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              label="email"
+              register={register}
+              variant={formState.errors.email?.message ? 'denied' : 'default'}
+              icon={<Envelope />}
+              placeholder="exemplo@exemplo.com"
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              SUA SENHA
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.password?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              type={'password'}
+              label="password"
+              register={register}
+              variant={
+                formState.errors.password?.message ? 'denied' : 'default'
+              }
+              icon={<LockKey />}
+              placeholder="***************"
+            />
+          </InputContainer>
+
           <Button
-            type="button"
-            label="Fazer login com o google"
-            icon={<GoogleLogo weight="bold" />}
-            css={{ padding: '$3' }}
+            type="submit"
+            label="Entrar"
             align="center"
-            onClick={() => signIn('google')}
+            disabled={formState.isSubmitting}
           />
-        </InputContainer>
 
-        {error && <ResponseInfoApi error={error} />}
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            E-MAIL
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.email?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            label="email"
-            register={register}
-            variant={formState.errors.email?.message ? 'denied' : 'default'}
-            icon={<Envelope />}
-            placeholder="exemplo@exemplo.com"
-          />
-        </InputContainer>
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            SUA SENHA
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.password?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            type={'password'}
-            label="password"
-            register={register}
-            variant={formState.errors.password?.message ? 'denied' : 'default'}
-            icon={<LockKey />}
-            placeholder="***************"
-          />
-        </InputContainer>
-
-        <Button
-          type="submit"
-          label="Entrar"
-          align="center"
-          disabled={formState.isSubmitting}
-        />
-
-        <Links>
-          <Link href="/register">
-            <Text as="span" size="xs">
-              Ainda não tenho cadastro
-            </Text>
-          </Link>
-          <Link href="/getuser">
-            <Text as="span" size="xs">
-              Possuo um código de acesso
-            </Text>
-          </Link>
-        </Links>
-      </LoginFormContainer>
-    </LoginPageContainer>
+          <Links>
+            <Link href="/register">
+              <Text as="span" size="xs">
+                Ainda não tenho cadastro
+              </Text>
+            </Link>
+            {/* <Link href="/getuser">
+              <Text as="span" size="xs">
+                Possuo um código de acesso
+              </Text>
+            </Link> */}
+          </Links>
+        </LoginFormContainer>
+      </LoginPageContainer>
+    </>
   )
 }
 

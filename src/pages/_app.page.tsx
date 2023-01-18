@@ -6,6 +6,7 @@ import { InterfaceProvider } from '../contexts/interface'
 import { ProjectsProvider } from '../contexts/projects'
 import { UserProvider } from '../contexts/user'
 import { globalStyles } from '../styles/global'
+import { DefaultSeo } from 'next-seo'
 
 globalStyles()
 
@@ -18,6 +19,20 @@ export default function App({
       <InterfaceProvider>
         <UserProvider>
           <ProjectsProvider>
+            <DefaultSeo
+              openGraph={{
+                type: 'website',
+                locale: 'pt-br',
+                url: 'https://ognare.com',
+                siteName: 'Ognare',
+                title: 'Ognare',
+                description: 'A origem das suas ideias...',
+              }}
+              defaultTitle="Ognare"
+              description="A origem das suas ideias..."
+              title="Ognare"
+            />
+
             <Component {...pageProps} />
           </ProjectsProvider>
         </UserProvider>

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function OnePhrasePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot', 'Ideia central']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Ideia central"
-        updateValue={handleUpdateOnePhrase}
-        value={onePhrase}
-        preValue={project?.plot?.onePhrase}
-        permission={userInProject?.permission}
-        comments={commentsOnePhrase}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setOnePhrase}
-        to="onePhrase"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Ideia central | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot', 'Ideia central']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Ideia central"
+          updateValue={handleUpdateOnePhrase}
+          value={onePhrase}
+          preValue={project?.plot?.onePhrase}
+          permission={userInProject?.permission}
+          comments={commentsOnePhrase}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setOnePhrase}
+          to="onePhrase"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

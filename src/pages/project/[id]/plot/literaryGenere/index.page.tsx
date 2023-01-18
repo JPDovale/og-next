@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
@@ -42,26 +43,32 @@ export default function LiteraryGenerePage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={['Plot', 'Gênero literário']}
-      loading={loading}
-      inError={!loading && !project}
-    >
-      <EditorAndComments
-        message={message}
-        label="Gênero literário"
-        updateValue={handleUpdateLiteraryGenere}
-        value={literaryGenere}
-        preValue={project?.plot.literaryGenere}
-        permission={userInProject?.permission}
-        comments={commentsLiteraryGenere}
-        projectCreatedPerUser={project?.createdPerUser}
-        projectId={project?.id as string}
-        setValue={setLiteraryGenere}
-        to="literaryGenere"
+    <>
+      <NextSeo
+        title={`${project?.name || 'Carregando...'}-Gênero literário | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={['Plot', 'Gênero literário']}
+        loading={loading}
+        inError={!loading && !project}
+      >
+        <EditorAndComments
+          message={message}
+          label="Gênero literário"
+          updateValue={handleUpdateLiteraryGenere}
+          value={literaryGenere}
+          preValue={project?.plot.literaryGenere}
+          permission={userInProject?.permission}
+          comments={commentsLiteraryGenere}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setLiteraryGenere}
+          to="literaryGenere"
+        />
+      </ProjectPageLayout>
+    </>
   )
 }

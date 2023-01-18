@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { HomePageContainer } from './styles'
 
 import logo from '../../assets/logos/logoToDown.svg'
@@ -13,14 +14,20 @@ export default function HomePage() {
   }, [router])
 
   return (
-    <HomePageContainer>
-      <Image
-        width={300}
-        src={logo}
-        alt="Garota segurando uma pena abaixo de uma noite estrelada seguido pelo texto 'Ognare'"
-        quality={100}
-        priority
+    <>
+      <NextSeo
+        title="Dando origem as suas ideias | Ognare"
+        description="Um lugar organizado para você criar as suas histórias"
       />
-    </HomePageContainer>
+      <HomePageContainer>
+        <Image
+          width={300}
+          src={logo}
+          alt="Garota segurando uma pena abaixo de uma noite estrelada seguido pelo texto 'Ognare'"
+          quality={100}
+          priority
+        />
+      </HomePageContainer>
+    </>
   )
 }

@@ -29,6 +29,7 @@ import { loginWithGoogleRequest } from '../../api/userRequest'
 import { authOptions } from '../api/auth/[...nextauth].api'
 import { GetServerSideProps } from 'next'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
+import { NextSeo } from 'next-seo'
 
 const registerFormSchema = z.object({
   name: z
@@ -97,150 +98,158 @@ export default function RegisterPage() {
   }, [session, setUser])
 
   return (
-    <RegisterPageContainer>
-      <Image className="logo" src={LogoToDown} alt="Ognare" />
-      <Image className="logo2" src={Logo} alt="Ognare" />
+    <>
+      <NextSeo title="Crie uma conta | Ognare" />
 
-      <BackgroundRegister src={Back} alt="" />
+      <RegisterPageContainer>
+        <Image className="logo" src={LogoToDown} alt="Ognare" />
+        <Image className="logo2" src={Logo} alt="Ognare" />
 
-      <RegisterFormContainer onSubmit={handleSubmit(handleCreateUser)}>
-        <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
-          Efetue seu cadastro
-        </Text>
+        <BackgroundRegister src={Back} alt="" />
 
-        <InputContainer>
+        <RegisterFormContainer onSubmit={handleSubmit(handleCreateUser)}>
+          <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
+            Efetue seu cadastro
+          </Text>
+
+          <InputContainer>
+            <Button
+              type="button"
+              label="Fazer cadastro com o google"
+              icon={<GoogleLogo weight="bold" />}
+              css={{ padding: '$3' }}
+              align="center"
+              onClick={() => signIn('google')}
+            />
+          </InputContainer>
+
+          {error && <ResponseInfoApi error={error} />}
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              NOME COMPLETO
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.name?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              label="name"
+              register={register}
+              variant={formState.errors.name?.message ? 'denied' : 'default'}
+              icon={<UserCircle />}
+              placeholder="Ana Maria da Silva"
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              NOME DE USUÁRIO
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.username?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              label="username"
+              register={register}
+              variant={
+                formState.errors.username?.message ? 'denied' : 'default'
+              }
+              icon={<At />}
+              placeholder="Aninha"
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              E-MAIL VÁLIDO
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.email?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              label="email"
+              register={register}
+              variant={formState.errors.email?.message ? 'denied' : 'default'}
+              icon={<Envelope />}
+              placeholder="exemplo@exemplo.com"
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              SUA SENHA
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.password?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              label="password"
+              register={register}
+              variant={
+                formState.errors.password?.message ? 'denied' : 'default'
+              }
+              type="password"
+              icon={<LockKey />}
+              placeholder="***************"
+            />
+          </InputContainer>
+
+          <InputContainer>
+            <InputHeader size={'xs'}>
+              CONFIRME A SUA SENHA
+              <Text size="sm" as="span" family="body">
+                {formState.errors?.confirmPassword?.message}
+              </Text>
+            </InputHeader>
+
+            <TextInput
+              label="confirmPassword"
+              register={register}
+              variant={
+                formState.errors.confirmPassword?.message ? 'denied' : 'default'
+              }
+              type="password"
+              icon={<LockKey />}
+              placeholder="***************"
+            />
+          </InputContainer>
+
           <Button
-            type="button"
-            label="Fazer cadastro com o google"
-            icon={<GoogleLogo weight="bold" />}
-            css={{ padding: '$3' }}
+            type="submit"
+            label="Cadastrar"
             align="center"
-            onClick={() => signIn('google')}
+            disabled={formState.isSubmitting}
           />
-        </InputContainer>
+          <Text
+            size="sm"
+            family="body"
+            css={{
+              marginTop: '-$4',
+              color: '$base700',
+            }}
+          >
+            Ao clicar no botão você declara que aceita os termos de uso
+          </Text>
 
-        {error && <ResponseInfoApi error={error} />}
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            NOME COMPLETO
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.name?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            label="name"
-            register={register}
-            variant={formState.errors.name?.message ? 'denied' : 'default'}
-            icon={<UserCircle />}
-            placeholder="Ana Maria da Silva"
-          />
-        </InputContainer>
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            NOME DE USUÁRIO
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.username?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            label="username"
-            register={register}
-            variant={formState.errors.username?.message ? 'denied' : 'default'}
-            icon={<At />}
-            placeholder="Aninha"
-          />
-        </InputContainer>
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            E-MAIL VÁLIDO
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.email?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            label="email"
-            register={register}
-            variant={formState.errors.email?.message ? 'denied' : 'default'}
-            icon={<Envelope />}
-            placeholder="exemplo@exemplo.com"
-          />
-        </InputContainer>
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            SUA SENHA
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.password?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            label="password"
-            register={register}
-            variant={formState.errors.password?.message ? 'denied' : 'default'}
-            type="password"
-            icon={<LockKey />}
-            placeholder="***************"
-          />
-        </InputContainer>
-
-        <InputContainer>
-          <InputHeader size={'xs'}>
-            CONFIRME A SUA SENHA
-            <Text size="sm" as="span" family="body">
-              {formState.errors?.confirmPassword?.message}
-            </Text>
-          </InputHeader>
-
-          <TextInput
-            label="confirmPassword"
-            register={register}
-            variant={
-              formState.errors.confirmPassword?.message ? 'denied' : 'default'
-            }
-            type="password"
-            icon={<LockKey />}
-            placeholder="***************"
-          />
-        </InputContainer>
-
-        <Button
-          type="submit"
-          label="Cadastrar"
-          align="center"
-          disabled={formState.isSubmitting}
-        />
-        <Text
-          size="sm"
-          family="body"
-          css={{
-            marginTop: '-$4',
-            color: '$base700',
-          }}
-        >
-          Ao clicar no botão você declara que aceita os termos de uso
-        </Text>
-
-        <Links>
-          <Link href="/login">
-            <Text as="a" size="xs">
-              Já tenho cadastro
-            </Text>
-          </Link>
-          <Link href="/getuser">
-            <Text as="a" size="xs">
-              Possuo um código de acesso
-            </Text>
-          </Link>
-        </Links>
-      </RegisterFormContainer>
-    </RegisterPageContainer>
+          <Links>
+            <Link href="/login">
+              <Text as="a" size="xs">
+                Já tenho cadastro
+              </Text>
+            </Link>
+            {/* <Link href="/getuser">
+              <Text as="a" size="xs">
+                Possuo um código de acesso
+              </Text>
+            </Link> */}
+          </Links>
+        </RegisterFormContainer>
+      </RegisterPageContainer>
+    </>
   )
 }
 

@@ -1,3 +1,4 @@
+import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
@@ -36,6 +37,9 @@ export default function FearPage() {
     (comment) => comment.to === `fears/${fearId}`,
   )
 
+  const inError =
+    !loading && ((fearId !== 'new' && !exiteFear) || !project || !person)
+
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
@@ -43,32 +47,40 @@ export default function FearPage() {
   }
 
   return (
-    <ProjectPageLayout
-      projectName={project?.name}
-      projectId={`${id}`}
-      paths={[
-        'Personagens',
-        `${person?.name || 'Carregando...'}`,
-        'Medos',
-        exiteFear ? 'Edição' : 'Novo',
-      ]}
-      loading={loading}
-      inError={!loading && fearId !== 'new' && !exiteFear}
-    >
-      <EditorAndCommentsToGenerics
-        persons={persons}
-        refs={refs}
-        isNew={fearId === 'new'}
-        editorTo="medo"
-        projectId={project?.id}
-        personId={person?.id!}
-        object={exiteFear}
-        permission={permission}
-        projectCreatedPerUser={project?.createdPerUser}
-        onNewComment={CommentInPerson}
-        to={`fears/${fearId}`}
-        comments={commentsInThisFear}
+    <>
+      <NextSeo
+        title={`${person?.name || 'Carregando...'}-${
+          fearId === 'new' ? 'Novo' : 'Editar'
+        } medo | Ognare`}
+        noindex
       />
-    </ProjectPageLayout>
+      <ProjectPageLayout
+        projectName={project?.name}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${person?.name || 'Carregando...'}`,
+          'Medos',
+          exiteFear ? 'Edição' : 'Novo',
+        ]}
+        loading={loading}
+        inError={inError}
+      >
+        <EditorAndCommentsToGenerics
+          persons={persons}
+          refs={refs}
+          isNew={fearId === 'new'}
+          editorTo="medo"
+          projectId={project?.id}
+          personId={person?.id!}
+          object={exiteFear}
+          permission={permission}
+          projectCreatedPerUser={project?.createdPerUser}
+          onNewComment={CommentInPerson}
+          to={`fears/${fearId}`}
+          comments={commentsInThisFear}
+        />
+      </ProjectPageLayout>
+    </>
   )
 }
