@@ -12,6 +12,7 @@ interface IProjectPageLayout {
   paths?: string[]
   loading?: boolean
   isScrolling?: boolean
+  isFullScreen?: boolean
   inError: boolean
 }
 
@@ -22,6 +23,7 @@ export function ProjectPageLayout({
   loading = true,
   paths,
   isScrolling = false,
+  isFullScreen = false,
   inError,
 }: IProjectPageLayout) {
   return (
@@ -40,7 +42,10 @@ export function ProjectPageLayout({
             errorMessage="Não foi possível encontrar o projeto. Volte a tela inicial e tente novamente..."
           />
         ) : (
-          <ProjectContainer isScrolling={isScrolling}>
+          <ProjectContainer
+            isFullScreen={isFullScreen}
+            isScrolling={isScrolling}
+          >
             {children}
           </ProjectContainer>
         )}
