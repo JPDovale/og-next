@@ -1,6 +1,6 @@
 // import { Text } from '@og-ui/react'
 import { Text } from '@og-ui/react'
-import { ArrowCircleDown } from 'phosphor-react'
+import { ArrowCircleUp } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { IPersonsResponse } from '../../api/responsesTypes/IPersonsResponse'
@@ -72,7 +72,7 @@ export function MindMap({ project }: IMindMapProps) {
                     name="Fechar personagens"
                     onClick={() => setPersonsIsColapse(!personsIsColapse)}
                   >
-                    <ArrowCircleDown size={24} />
+                    <ArrowCircleUp size={24} />
                   </ButtonColapse>
                 </PersonsHeader>
 
@@ -101,7 +101,7 @@ export function MindMap({ project }: IMindMapProps) {
                     name="Fechar tags"
                     onClick={() => setTagsIsColapse(!tagsIsColapse)}
                   >
-                    <ArrowCircleDown size={24} />
+                    <ArrowCircleUp size={24} />
                   </ButtonColapse>
                 </header>
 
