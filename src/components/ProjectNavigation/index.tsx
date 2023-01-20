@@ -33,6 +33,7 @@ import {
   UsersFour,
   XSquare,
   House,
+  TreeStructure,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { ProjectsContext } from '../../contexts/projects'
@@ -445,6 +446,24 @@ export function ProjectNavigation({
               variant={onWindow === 'timelines' ? 'active' : 'default'}
             />
           </Label>
+
+          <Label
+            size="xxs"
+            onClick={() => {
+              router.replace(`/project/${id}/mindMap`)
+              setNavigatorProjectIsOpen(false)
+            }}
+          >
+            Mind map
+            <Button
+              type="button"
+              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+              align="center"
+              icon={<TreeStructure weight="bold" />}
+              variant={onWindow === 'mindMap' ? 'active' : 'default'}
+            />
+          </Label>
+
           <Label size="xxs">
             Configurações
             <Button
