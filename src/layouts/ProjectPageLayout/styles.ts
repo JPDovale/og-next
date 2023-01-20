@@ -23,6 +23,12 @@ export const ProjectContainer = styled('div', {
         },
       },
     },
+    isFullScreen: {
+      true: {
+        padding: 0,
+        overflow: 'hidden',
+      },
+    },
   },
 })
 
