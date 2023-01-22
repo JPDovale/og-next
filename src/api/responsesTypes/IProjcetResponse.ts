@@ -48,6 +48,7 @@ export interface IPlotProject {
   summary?: string
   persons?: string[]
   structure?: IStructure
+  urlOfText?: string
   comments?: IComment[]
 }
 

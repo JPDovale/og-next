@@ -148,6 +148,11 @@ export default function LoginPage() {
                 Ainda não tenho cadastro
               </Text>
             </Link>
+            <Link href="/user/password/forgot">
+              <Text as="span" size="xs">
+                Esqueci minha senha
+              </Text>
+            </Link>
             {/* <Link href="/getuser">
               <Text as="span" size="xs">
                 Possuo um código de acesso
