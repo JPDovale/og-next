@@ -1,4 +1,5 @@
 import { IError } from '../../../@types/errors/IError'
+import { ISuccess } from '../../../@types/success/ISuccess'
 import { ICreateUserDTO } from '../../../api/dtos/ICreateUserDTO'
 import { INewInitializeDTO } from '../../../api/dtos/INewInitializeDTO'
 import { INewSessionDTO } from '../../../api/dtos/INewSessionDTO'
@@ -10,8 +11,10 @@ export const userDefaultValues: IUserContext = {
   user: undefined,
   userLogged: false,
   error: undefined,
+  success: undefined,
 
   setError: (newError: IError | undefined) => {},
+  setSuccess: (success: ISuccess | undefined) => {},
 
   createUser: async (user: ICreateUserDTO) => false,
   createSession: async (user: INewSessionDTO) => false,
@@ -23,4 +26,6 @@ export const userDefaultValues: IUserContext = {
   loginWithGoogle: async (user: any) => {},
   setUser: (loggedUser: ICreateSessionResponse) => {},
   deleteAvatar: async () => {},
+  sendMailForgotPassword: async (email: string) => {},
+  recoveryPassword: async (password: string, token: string) => {},
 }

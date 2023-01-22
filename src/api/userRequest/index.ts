@@ -124,3 +124,24 @@ export async function deleteAvatarRequest() {
     return err.response.data
   }
 }
+
+export async function sendMailForgotPasswordRequest(email: string) {
+  try {
+    const response = await api.post('/users/password/forgot', { email })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function recoveryPasswordRequest(password: string, token: string) {
+  try {
+    const response = await api.post('/users/password/recovery', {
+      password,
+      token,
+    })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

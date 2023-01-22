@@ -17,12 +17,15 @@ import { updateAvatarFunction } from './functions/updateAvatarFunction'
 import { updatePasswordFunction } from './functions/updatePasswordFunction'
 import { updateUserFunction } from './functions/updateUserFunction'
 import { userDefaultValues } from './initialValues'
-import { setErrorAction } from './reducer/actionsUserReducer'
+import { setErrorAction, setSuccessAction } from './reducer/actionsUserReducer'
 import { userReducer } from './reducer/userReducer'
 import { IUserContext, IUserContextProps } from './types/IPersonContext'
 import { setUserFunction } from './functions/setUserFunction'
 import { signOut } from 'next-auth/react'
 import { deleteAvatarFunction } from './functions/deleteAvatarFunction'
+import { ISuccess } from '../../@types/success/ISuccess'
+import { sendMailForgotPasswordFunction } from './functions/sendMailForgotPasswordFunction'
+import { recoveryPasswordFunction } from './functions/recoveryPasswordFunction'
 
 export const UserContext = createContext<IUserContext>(userDefaultValues)
 
@@ -32,9 +35,10 @@ export function UserProvider({ children }: IUserContextProps) {
   const [userInfos, dispatch] = useReducer(userReducer, {
     error: undefined,
     user: undefined,
+    success: undefined,
   })
 
-  const { error, user } = userInfos
+  const { error, user, success } = userInfos
   const router = useRouter()
 
   useEffect(() => {
@@ -49,6 +53,10 @@ export function UserProvider({ children }: IUserContextProps) {
 
   function setError(error: IError | undefined) {
     dispatch(setErrorAction(error))
+  }
+
+  function setSuccess(success: ISuccess | undefined) {
+    dispatch(setSuccessAction(success))
   }
 
   async function getUser(): Promise<any> {
@@ -118,6 +126,14 @@ export function UserProvider({ children }: IUserContextProps) {
     setLoading(false)
   }
 
+  async function sendMailForgotPassword(email: string) {
+    await sendMailForgotPasswordFunction({ email, dispatch })
+  }
+
+  async function recoveryPassword(password: string, token: string) {
+    await recoveryPasswordFunction({ password, token, dispatch })
+  }
+
   useEffect(() => {
     getUser()
   }, [])
@@ -129,8 +145,10 @@ export function UserProvider({ children }: IUserContextProps) {
         user,
         userLogged: !!user,
         error,
+        success,
 
         setError,
+        setSuccess,
 
         createSession,
         createUser,
@@ -142,6 +160,8 @@ export function UserProvider({ children }: IUserContextProps) {
         loginWithGoogle,
         setUser,
         deleteAvatar,
+        sendMailForgotPassword,
+        recoveryPassword,
       }}
     >
       {children}

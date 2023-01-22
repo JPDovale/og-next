@@ -1,18 +1,20 @@
 import { Text, styled } from '@og-ui/react'
 import { IError } from '../../@types/errors/IError'
+import { ISuccess } from '../../@types/success/ISuccess'
 
 interface IResponseInfoApiProps {
-  error: IError
+  error?: IError
+  success?: ISuccess
 }
 
-export function ResponseInfoApi({ error }: IResponseInfoApiProps) {
+export function ResponseInfoApi({ error, success }: IResponseInfoApiProps) {
   return (
-    <ResponseInfoApiContainer>
+    <ResponseInfoApiContainer isError={!!error?.title}>
       <Text size="sm" as="span">
-        {error.title}
+        {error?.title || success?.successTitle}
       </Text>
       <Text size="sm" family="body">
-        {error.message}
+        {error?.message || success?.successMessage}
       </Text>
     </ResponseInfoApiContainer>
   )
@@ -25,7 +27,18 @@ const ResponseInfoApiContainer = styled('div', {
   justifyContent: 'center',
   height: '100%',
 
-  span: {
-    color: '$errorDefault',
+  variants: {
+    isError: {
+      true: {
+        span: {
+          color: '$errorDefault',
+        },
+      },
+      false: {
+        span: {
+          color: '$successDefault',
+        },
+      },
+    },
   },
 })
