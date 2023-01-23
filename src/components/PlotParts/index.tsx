@@ -157,13 +157,7 @@ export function PlotParts({ project, isPreview = false }: IPlotPartsProps) {
         permission={permission}
         to="Estrutura: Ato 1"
         term="a"
-        element={
-          project?.plot.structure?.act2
-            ? ' '
-            : project?.plot.structure?.act3
-            ? ' '
-            : project?.plot.structure?.act1
-        }
+        element={project?.plot.structure?.act1 || ''}
         disabled={!project?.plot.summary}
         keyValue="structure"
         last="Resumo"
@@ -177,13 +171,7 @@ export function PlotParts({ project, isPreview = false }: IPlotPartsProps) {
         permission={permission}
         to="Estrutura: Ato 2"
         term="a"
-        element={
-          project?.plot.structure?.act1
-            ? ' '
-            : project?.plot.structure?.act3
-            ? ' '
-            : project?.plot.structure?.act2
-        }
+        element={project?.plot.structure?.act2 || ''}
         disabled={!project?.plot.summary}
         keyValue="structure"
         last="Resumo"
@@ -197,13 +185,7 @@ export function PlotParts({ project, isPreview = false }: IPlotPartsProps) {
         permission={permission}
         to="Estrutura: Ato 3"
         term="a"
-        element={
-          project?.plot.structure?.act1
-            ? ' '
-            : project?.plot.structure?.act2
-            ? ' '
-            : project?.plot.structure?.act3
-        }
+        element={project?.plot.structure?.act3 || ''}
         disabled={!project?.plot.summary}
         keyValue="structure"
         last="Resumo"
