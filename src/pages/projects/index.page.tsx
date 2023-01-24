@@ -14,7 +14,7 @@ export default function ProjectsPage() {
   const { projects, loading } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
 
-  const projectsThisUser = projects.filter(
+  const projectsThisUser = projects?.filter(
     (project) => project.createdPerUser === user?.id,
   )
 
@@ -27,7 +27,7 @@ export default function ProjectsPage() {
         query={query}
         setQuery={setQuery}
         loading={loading}
-        queryless={!!projectsThisUser[0]}
+        queryless={projectsThisUser && !!projectsThisUser[0]}
       >
         <Projects
           listEmptyMessage="Você ainda não criou nenhum projeto"

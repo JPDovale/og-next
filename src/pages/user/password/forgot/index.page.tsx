@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import Image from 'next/image'
 
 import Back from '../../../../assets/back.svg'
@@ -46,11 +46,6 @@ export default function ForgotPasswordPage() {
 
     reset()
   }
-
-  useEffect(() => {
-    setSuccess(undefined)
-    setError(undefined)
-  }, [setError, setSuccess])
 
   return (
     <>

@@ -10,7 +10,7 @@ export function orderElements(
 ) {
   switch (option) {
     case 'a-z': {
-      const elementsOrd = elements.slice().sort((a, b) =>
+      const elementsOrd = elements?.slice().sort((a, b) =>
         a.name
           .toLowerCase()
           .normalize('NFD')
@@ -36,7 +36,7 @@ export function orderElements(
     }
 
     case 'z-a': {
-      const elementsOrd = elements.slice().sort((a, b) =>
+      const elementsOrd = elements?.slice().sort((a, b) =>
         a.name
           .toLowerCase()
           .normalize('NFD')
@@ -62,7 +62,7 @@ export function orderElements(
     }
 
     case 'time-asc': {
-      const elementsOrd = elements.slice().sort((a, b) =>
+      const elementsOrd = elements?.slice().sort((a, b) =>
         a.createAt
           .toLowerCase()
           .normalize('NFD')
@@ -88,7 +88,7 @@ export function orderElements(
     }
 
     case 'time-desc': {
-      const elementsOrd = elements.slice().sort((a, b) =>
+      const elementsOrd = elements?.slice().sort((a, b) =>
         a.createAt
           .toLowerCase()
           .normalize('NFD')
@@ -114,7 +114,7 @@ export function orderElements(
     }
 
     case 'update-asc': {
-      const elementsOrd = elements.slice().sort((a, b) =>
+      const elementsOrd = elements?.slice().sort((a, b) =>
         a.updateAt
           .toLowerCase()
           .normalize('NFD')
@@ -140,7 +140,7 @@ export function orderElements(
     }
 
     case 'update-desc': {
-      const elementsOrd = elements.slice().sort((a, b) =>
+      const elementsOrd = elements?.slice().sort((a, b) =>
         a.updateAt
           .toLowerCase()
           .normalize('NFD')
