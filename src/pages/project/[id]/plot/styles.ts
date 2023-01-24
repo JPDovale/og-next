@@ -58,6 +58,7 @@ export const BoxInput = styled('form', {
 export const LinkOfText = styled(Text, {
   textDecoration: 'none',
   color: '$purple100',
-
+  whiteSpace: 'pre-wrap',
+  wordBreak: 'break-all',
   marginTop: '$6',
 })

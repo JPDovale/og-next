@@ -2,10 +2,12 @@ import { Dispatch } from 'react'
 import { ICreatePersonDTO } from '../../../../api/dtos/ICreatePersonDTO'
 import { createPersonRequest } from '../../../../api/personsRequests'
 import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
+import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   addPersonAction,
   setErrorAction,
+  updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
 export async function createNewPersonFunction(
@@ -45,8 +47,11 @@ export async function createNewPersonFunction(
     return false
   }
 
-  const person = response as IPersonsResponse
+  const person = response.person as IPersonsResponse
+  const project = response.project as IProjectResponse
+
   dispatch(addPersonAction(person))
+  dispatch(updateProjectAction(project))
 
   return true
 }

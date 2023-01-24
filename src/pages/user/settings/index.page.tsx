@@ -38,6 +38,7 @@ import { ResponseInfoApi } from '../../../components/ResponseInfoApi'
 import { AvatarWeb } from '../../../components/Avatar'
 import { useWindowSize } from '../../../hooks/useWindow'
 import { NextSeo } from 'next-seo'
+import { usePreventBack } from '../../../hooks/usePreventDefaultBack'
 
 interface IObjects {
   objectives: IRef[]
@@ -52,6 +53,8 @@ interface IObjects {
 }
 
 export default function UserSettingsPage() {
+  usePreventBack('/projects')
+
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')

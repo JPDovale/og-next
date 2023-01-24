@@ -50,7 +50,7 @@ export function Editor({
           className="goBack"
           wid="hug"
           icon={<CaretCircleDoubleLeft weight="bold" />}
-          onClick={() => router.replace(`/project/${projectId}/${goBackPath}`)}
+          onClick={() => router.push(`/project/${projectId}/${goBackPath}`)}
         />
       </EditorHeader>
       <Text

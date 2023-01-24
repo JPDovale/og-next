@@ -37,9 +37,8 @@ export function CardPerson({
       isNotPreview={isNotPreview}
       onClick={() =>
         isAdd
-          ? router.replace(`/project/${id}/persons`)
-          : !isNotPreview &&
-            router.replace(`/project/${id}/persons/${personId}`)
+          ? router.push(`/project/${id}/persons`)
+          : !isNotPreview && router.push(`/project/${id}/persons/${personId}`)
       }
     >
       {isAdd ? (
@@ -179,7 +178,7 @@ export function CardPerson({
                 icon={<Pencil weight="bold" size={32} />}
                 wid="hug"
                 onClick={() =>
-                  router.replace(`/project/${id}/persons/${personId}`)
+                  router.push(`/project/${id}/persons/${personId}`)
                 }
               />
             </>

@@ -99,11 +99,15 @@ export function updatePersonImageAction(personId: string, url: string) {
   }
 }
 
-export function updatePersonAction(person: IPersonsResponse) {
+export function updatePersonAction(
+  person: IPersonsResponse,
+  project?: IProjectResponse,
+) {
   return {
     type: ProjectsActionsType.UpdatePerson,
     payload: {
       person,
+      project,
     },
   }
 }

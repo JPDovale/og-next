@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import Image from 'next/image'
 
 import Back from '../../../../assets/back.svg'
@@ -36,7 +36,8 @@ const resetPasswordFormSchema = z.object({
 type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 
 export default function ResetPasswordPage() {
-  const { error, setError, recoveryPassword, success } = useContext(UserContext)
+  const { error, setError, recoveryPassword, success, setSuccess } =
+    useContext(UserContext)
 
   const router = useRouter()
 
@@ -51,6 +52,9 @@ export default function ResetPasswordPage() {
   })
 
   async function handleResetPassword(data: ResetPasswordFormData) {
+    setSuccess(undefined)
+    setError(undefined)
+
     if (data.password !== data.confirmPassword) {
       return setFormError('confirmPassword', {
         message: 'As senhas são diferentes.',
@@ -70,6 +74,11 @@ export default function ResetPasswordPage() {
 
     reset()
   }
+
+  useEffect(() => {
+    setSuccess(undefined)
+    setError(undefined)
+  }, [])
 
   return (
     <>
@@ -106,7 +115,7 @@ export default function ResetPasswordPage() {
               }
               icon={<LockKey />}
               placeholder="***************"
-              type="password"
+              isShown
             />
           </InputContainer>
 
@@ -121,12 +130,12 @@ export default function ResetPasswordPage() {
             <TextInput
               label="confirmPassword"
               register={register}
-              type="password"
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
               icon={<LockKey />}
               placeholder="***************"
+              isShown
             />
           </InputContainer>
 

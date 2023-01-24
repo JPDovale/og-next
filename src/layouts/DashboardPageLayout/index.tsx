@@ -31,7 +31,7 @@ export function DashboardPageLayout({
 
   useEffect(() => {
     if (loadingUser) return
-    if (!userLogged) router.replace('/login')
+    if (!userLogged) router.push('/login')
   }, [userLogged, loadingUser, router])
 
   return (

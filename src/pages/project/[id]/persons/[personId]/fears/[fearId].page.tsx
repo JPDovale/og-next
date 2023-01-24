@@ -10,6 +10,7 @@ import { EditorAndCommentsToGenerics } from '../../../../../../components/Editor
 
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
+import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function FearPage() {
@@ -19,6 +20,7 @@ export default function FearPage() {
 
   const router = useRouter()
   const { id, personId, fearId } = router.query
+  usePreventBack(`/project/${id}/persons/${personId}`)
 
   const project = projects.find(
     (project) => project.id === id,

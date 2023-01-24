@@ -250,7 +250,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       projectId,
       dispatch,
     )
-    setLoading(true)
+    setLoading(false)
     return isCreated
   }
 

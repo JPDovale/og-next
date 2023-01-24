@@ -5,6 +5,7 @@ import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResp
 import { EditorAndComments } from '../../../../../components/EditorAndComments'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
+import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
 
 export default function SummaryPage() {
@@ -16,6 +17,7 @@ export default function SummaryPage() {
 
   const router = useRouter()
   const { id } = router.query
+  usePreventBack(`/project/${id}/plot`)
 
   const project = projects.find(
     (project) => project.id === id,

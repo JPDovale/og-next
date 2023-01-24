@@ -3,7 +3,6 @@ import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { ICreateObjectiveDTO } from '../dtos/ICreateObjectiveDTO'
 import { ICreatePersonDTO } from '../dtos/ICreatePersonDTO'
 import { IUpdateObjetiveDTO } from '../dtos/IUpdateObjetiveDTO'
-import { IPersonsResponse } from '../responsesTypes/IPersonsResponse'
 
 interface IGenericObject {
   request: any
@@ -21,9 +20,7 @@ export async function getAllPersonsThisUserRequest(projectId: string) {
 }
 
 // POST
-export async function createPersonRequest(
-  person: ICreatePersonDTO,
-): Promise<IPersonsResponse> {
+export async function createPersonRequest(person: ICreatePersonDTO) {
   try {
     const response = await api.post('/persons', person)
     return response.data

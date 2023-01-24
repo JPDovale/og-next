@@ -17,6 +17,7 @@ import { Loading } from '../../components/Loading'
 import { PlotParts } from '../../components/PlotParts'
 import { ProjectsContext } from '../../contexts/projects'
 import { UserContext } from '../../contexts/user'
+import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { useWindowSize } from '../../hooks/useWindow'
 import { ProjectPageLayout } from '../../layouts/ProjectPageLayout'
 import {
@@ -33,6 +34,8 @@ import {
 } from './styles'
 
 export default function ProjectPage() {
+  usePreventBack('/projects')
+
   const [onEditImg, setOnEditImg] = useState(false)
 
   const { projects, updateImageProject, persons, loading, deleteImageProject } =
@@ -212,7 +215,7 @@ export default function ProjectPage() {
         <PlotProjectContainer>
           <HeadingPart
             size="md"
-            onClick={() => router.replace(`/project/${project.id}/plot`)}
+            onClick={() => router.push(`/project/${project.id}/plot`)}
           >
             <BookOpen size={40} />
             PLOT
@@ -220,7 +223,7 @@ export default function ProjectPage() {
           {loading ? <Loading /> : <PlotParts project={project} isPreview />}
           <HeadingPart
             size="md"
-            onClick={() => router.replace(`/project/${project.id}/persons`)}
+            onClick={() => router.push(`/project/${project.id}/persons`)}
           >
             <UserFocus size={40} />
             Personagens

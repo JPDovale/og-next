@@ -9,6 +9,7 @@ import {
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
+import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function DreamPage() {
@@ -18,6 +19,7 @@ export default function DreamPage() {
 
   const router = useRouter()
   const { id, personId, dreamId } = router.query
+  usePreventBack(`/project/${id}/persons/${personId}`)
 
   const project = projects.find(
     (project) => project.id === id,

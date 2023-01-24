@@ -71,7 +71,7 @@ export function ProjectNavigation({
   // const smallWindow = screen.width < 786
 
   async function handleDeleteProject() {
-    router.replace('/projects')
+    router.push('/projects')
     await deleteProject(id as string)
   }
 
@@ -85,7 +85,7 @@ export function ProjectNavigation({
             className="logo"
             src={logoSvg}
             alt=""
-            onClick={() => router.replace('/projects')}
+            onClick={() => router.push('/projects')}
           />
         </Logo>
         {navigatorProjectIsOpen && (
@@ -211,7 +211,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}`)
+              router.push(`/project/${id}`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -227,7 +227,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/plot`)
+              router.push(`/project/${id}/plot`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -244,7 +244,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/books`)
+              router.push(`/project/${id}/books`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -261,7 +261,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/planets`)
+              router.push(`/project/${id}/planets`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -278,7 +278,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/nations`)
+              router.push(`/project/${id}/nations`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -295,7 +295,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/persons`)
+              router.push(`/project/${id}/persons`)
 
               setNavigatorProjectIsOpen(false)
             }}
@@ -313,7 +313,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/cities`)
+              router.push(`/project/${id}/cities`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -330,7 +330,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/races`)
+              router.push(`/project/${id}/races`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -347,7 +347,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/religions`)
+              router.push(`/project/${id}/religions`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -364,7 +364,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/powers`)
+              router.push(`/project/${id}/powers`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -381,7 +381,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/familys`)
+              router.push(`/project/${id}/familys`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -398,7 +398,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/languages`)
+              router.push(`/project/${id}/languages`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -415,7 +415,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/institutions`)
+              router.push(`/project/${id}/institutions`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -432,7 +432,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/timelines`)
+              router.push(`/project/${id}/timelines`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -450,7 +450,7 @@ export function ProjectNavigation({
           <Label
             size="xxs"
             onClick={() => {
-              router.replace(`/project/${id}/mindMap`)
+              router.push(`/project/${id}/mindMap`)
               setNavigatorProjectIsOpen(false)
             }}
           >
@@ -473,7 +473,7 @@ export function ProjectNavigation({
               align="center"
               icon={<Gear weight="bold" />}
               onClick={() => {
-                router.replace(`/project/${id}/settings`)
+                router.push(`/project/${id}/settings`)
                 setNavigatorProjectIsOpen(false)
               }}
               variant={onWindow === 'settings' ? 'active' : 'default'}

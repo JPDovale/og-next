@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import Image from 'next/image'
 
 import Back from '../../../../assets/back.svg'
@@ -30,7 +30,8 @@ const resetPasswordFormSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 
 export default function ForgotPasswordPage() {
-  const { error, success, sendMailForgotPassword } = useContext(UserContext)
+  const { error, success, sendMailForgotPassword, setSuccess, setError } =
+    useContext(UserContext)
 
   const { register, handleSubmit, formState, reset } =
     useForm<ForgotPasswordFormData>({
@@ -38,10 +39,18 @@ export default function ForgotPasswordPage() {
     })
 
   async function handleForgotPassword(data: ForgotPasswordFormData) {
+    setSuccess(undefined)
+    setError(undefined)
+
     await sendMailForgotPassword(data.email)
 
     reset()
   }
+
+  useEffect(() => {
+    setSuccess(undefined)
+    setError(undefined)
+  }, [])
 
   return (
     <>

@@ -39,6 +39,7 @@ import { ListEmpty } from '../../../../components/ListEmpty'
 import { Avatares } from '../../../../components/Avatares'
 import { useWindowSize } from '../../../../hooks/useWindow'
 import { NextSeo } from 'next-seo'
+import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
 
 const newPersonFormSchema = z.object({
   name: z
@@ -75,6 +76,7 @@ export default function PersonsPage() {
 
   const router = useRouter()
   const { id } = router.query
+  usePreventBack(`/project/${id}`)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786

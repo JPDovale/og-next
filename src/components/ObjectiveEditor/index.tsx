@@ -218,7 +218,7 @@ export function ObjectiveEditor({
     )
 
     if (isEdited) {
-      router.replace(`/project/${projectId}/persons/${personId}`)
+      router.push(`/project/${projectId}/persons/${personId}`)
     }
   }
 
@@ -240,7 +240,7 @@ export function ObjectiveEditor({
     const isCreated = await createObjective(newObjective, personId, projectId)
 
     if (isCreated) {
-      router.replace(`/project/${projectId}/persons/${personId}`)
+      router.push(`/project/${projectId}/persons/${personId}`)
     }
   }
 
@@ -272,7 +272,7 @@ export function ObjectiveEditor({
     )
 
     if (isSaved) {
-      router.replace(`/project/${projectId}/persons/${personId}`)
+      router.push(`/project/${projectId}/persons/${personId}`)
     }
   }
 
@@ -296,7 +296,7 @@ export function ObjectiveEditor({
               wid="hug"
               icon={<CaretCircleDoubleLeft weight="bold" />}
               onClick={() =>
-                router.replace(`/project/${projectId}/persons/${personId}`)
+                router.push(`/project/${projectId}/persons/${personId}`)
               }
             />
           </EditorHeader>
@@ -433,9 +433,7 @@ export function ObjectiveEditor({
                     label="Cancelar"
                     icon={<FileX weight="bold" />}
                     onClick={() =>
-                      router.replace(
-                        `/project/${projectId}/persons/${personId}`,
-                      )
+                      router.push(`/project/${projectId}/persons/${personId}`)
                     }
                   />
                 </div>

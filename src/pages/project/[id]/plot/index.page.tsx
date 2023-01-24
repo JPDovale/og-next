@@ -7,6 +7,7 @@ import { IUpdatePlotDTO } from '../../../../api/dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { PlotParts } from '../../../../components/PlotParts'
 import { ProjectsContext } from '../../../../contexts/projects'
+import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
 import {
   BoxInput,
@@ -23,6 +24,7 @@ export default function PlotPage() {
 
   const router = useRouter()
   const { id } = router.query
+  usePreventBack(`/project/${id}`)
 
   const project = projects.find(
     (project) => project.id === id,

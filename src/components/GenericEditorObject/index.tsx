@@ -128,7 +128,7 @@ export function GenericEditorObject({
       )
 
       if (savedRef) {
-        router.replace(`/project/${projectId}/persons/${personId}`)
+        router.push(`/project/${projectId}/persons/${personId}`)
       }
       return
     }
@@ -155,7 +155,7 @@ export function GenericEditorObject({
       )
 
       if (isCreated) {
-        router.replace(`/project/${projectId}/persons/${personId}`)
+        router.push(`/project/${projectId}/persons/${personId}`)
       }
       return
     }
@@ -177,7 +177,7 @@ export function GenericEditorObject({
     )
 
     if (isUpdated) {
-      router.replace(`/project/${projectId}/persons/${personId}`)
+      router.push(`/project/${projectId}/persons/${personId}`)
     }
   }
 
@@ -219,7 +219,7 @@ export function GenericEditorObject({
       editorTo,
     )
     setOnOpenDelete(false)
-    router.replace(`/project/${projectId}/persons/${personId}`)
+    router.push(`/project/${projectId}/persons/${personId}`)
   }
 
   useEffect(() => {
@@ -327,7 +327,7 @@ export function GenericEditorObject({
                   wid="hug"
                   icon={<CaretCircleDoubleLeft weight="bold" />}
                   onClick={() =>
-                    router.replace(`/project/${projectId}/persons/${personId}`)
+                    router.push(`/project/${projectId}/persons/${personId}`)
                   }
                 />
               </EditorHeader>
@@ -468,9 +468,7 @@ export function GenericEditorObject({
                       label="Cancelar"
                       icon={<FileX weight="bold" />}
                       onClick={() =>
-                        router.replace(
-                          `/project/${projectId}/persons/${personId}`,
-                        )
+                        router.push(`/project/${projectId}/persons/${personId}`)
                       }
                     />
                   </div>

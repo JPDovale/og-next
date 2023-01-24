@@ -5,6 +5,7 @@ import {
   IObjective,
   IPersonsResponse,
 } from '../../../../api/responsesTypes/IPersonsResponse'
+import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
@@ -29,7 +30,7 @@ export async function createObjetiveOfPersonFunction(
   }
 
   const newObjetive: ICreateObjectiveDTO = {
-    objectives: [objective],
+    objective,
     projectId,
     personId,
   }
@@ -61,8 +62,9 @@ export async function createObjetiveOfPersonFunction(
     return false
   }
 
-  const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
+  const person = response.person as IPersonsResponse
+  const project = response.project as IProjectResponse
+  dispatch(updatePersonAction(person, project))
 
   return true
 }

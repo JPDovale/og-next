@@ -87,8 +87,7 @@ export function Avatares({
           <PersonAvatar
             key={person.id}
             onClick={() => {
-              isClickable &&
-                router.replace(`/project/${id}/persons/${person.id}`)
+              isClickable && router.push(`/project/${id}/persons/${person.id}`)
             }}
             isClickable={isClickable}
           >

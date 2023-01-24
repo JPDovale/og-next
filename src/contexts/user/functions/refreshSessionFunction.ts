@@ -4,7 +4,7 @@ import { refreshSessionRequest } from '../../../api/userRequest'
 export async function refreshSessionFunction(): Promise<boolean> {
   const tokenString = localStorage.getItem('@og-user-refreshToken')?.toString()
 
-  if (!tokenString) return false
+  if (!tokenString || tokenString === 'undefined') return false
   const refreshToken = JSON.parse(tokenString || '')
 
   const tokens = await refreshSessionRequest(refreshToken)
