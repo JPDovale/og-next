@@ -173,7 +173,7 @@ export default function LoginPage() {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await unstable_getServerSession(req, res, authOptions)
-  const loggedUser = await loginWithGoogleRequest(session?.user)
+  const loggedUser = session && (await loginWithGoogleRequest(session?.user))
 
   return {
     props: {
