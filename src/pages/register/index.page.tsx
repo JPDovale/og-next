@@ -17,13 +17,22 @@ import Image from 'next/image'
 import { Button, Text } from '@og-ui/react'
 import { TextInput } from '../../components/TextInput'
 import Link from 'next/link'
-import { At, Envelope, GoogleLogo, LockKey, UserCircle } from 'phosphor-react'
+import {
+  At,
+  Envelope,
+  // GoogleLogo,
+  LockKey,
+  UserCircle,
+} from 'phosphor-react'
 import { z } from 'zod'
 import { ICreateUserDTO } from '../../api/dtos/ICreateUserDTO'
 import { useContext, useEffect } from 'react'
 import { UserContext } from '../../contexts/user'
 import { useRouter } from 'next/router'
-import { signIn, useSession } from 'next-auth/react'
+import {
+  // signIn,
+  useSession,
+} from 'next-auth/react'
 import { unstable_getServerSession } from 'next-auth'
 import { loginWithGoogleRequest } from '../../api/userRequest'
 import { authOptions } from '../api/auth/[...nextauth].api'
@@ -112,7 +121,7 @@ export default function RegisterPage() {
             Efetue seu cadastro
           </Text>
 
-          <InputContainer>
+          {/* <InputContainer>
             <Button
               type="button"
               label="Fazer cadastro com o google"
@@ -121,7 +130,7 @@ export default function RegisterPage() {
               align="center"
               onClick={() => signIn('google')}
             />
-          </InputContainer>
+          </InputContainer> */}
 
           {error && <ResponseInfoApi error={error} />}
 

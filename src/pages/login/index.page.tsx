@@ -1,7 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text } from '@og-ui/react'
 import Link from 'next/link'
-import { Envelope, GoogleLogo, LockKey } from 'phosphor-react'
+import {
+  Envelope,
+  // GoogleLogo,
+  LockKey,
+} from 'phosphor-react'
 import {
   BackgroundLogin,
   InputContainer,
@@ -22,7 +26,10 @@ import { z } from 'zod'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { UserContext } from '../../contexts/user'
-import { signIn, useSession } from 'next-auth/react'
+import {
+  // signIn,
+  useSession,
+} from 'next-auth/react'
 import { GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 
@@ -91,7 +98,7 @@ export default function LoginPage() {
             Efetue o login
           </Text>
 
-          <InputContainer>
+          {/* <InputContainer>
             <Button
               type="button"
               label="Fazer login com o google"
@@ -100,7 +107,7 @@ export default function LoginPage() {
               align="center"
               onClick={() => signIn('google')}
             />
-          </InputContainer>
+          </InputContainer> */}
 
           {error && <ResponseInfoApi error={error} />}
 
