@@ -14,5 +14,5 @@ export function usePreventBack(path?: string) {
     return () => {
       window.removeEventListener('popstate', handleClick)
     }
-  }, [])
+  }, [path, router])
 }

@@ -33,7 +33,6 @@ export default function PersonalityPage() {
   const { id, personId, personalityId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse

@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     setSuccess(undefined)
     setError(undefined)
-  }, [])
+  }, [setError, setSuccess])
 
   return (
     <>

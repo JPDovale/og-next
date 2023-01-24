@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
   useEffect(() => {
     setSuccess(undefined)
     setError(undefined)
-  }, [])
+  }, [setError, setSuccess])
 
   return (
     <>

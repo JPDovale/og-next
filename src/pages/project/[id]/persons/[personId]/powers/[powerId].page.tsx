@@ -22,7 +22,6 @@ export default function PowerPage() {
   const { id, personId, powerId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-
   const project = projects.find(
     (project) => project.id === id,
   ) as IProjectResponse
