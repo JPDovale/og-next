@@ -62,14 +62,7 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function RegisterPage() {
-  const {
-    createUser,
-    userLogged,
-    setUser,
-    error,
-    setError: setErrorUser,
-    setSuccess,
-  } = useContext(UserContext)
+  const { createUser, userLogged, setUser, error } = useContext(UserContext)
 
   const { handleSubmit, register, formState, setError } =
     useForm<RegisterFormData>({
@@ -103,11 +96,6 @@ export default function RegisterPage() {
   useEffect(() => {
     if (session?.data?.loggedUser!) setUser(session?.data?.loggedUser!)
   }, [session, setUser])
-
-  useEffect(() => {
-    setErrorUser(undefined)
-    setSuccess(undefined)
-  }, [setSuccess, setErrorUser])
 
   return (
     <>
