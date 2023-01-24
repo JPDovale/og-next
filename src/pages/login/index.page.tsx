@@ -56,13 +56,13 @@ export default function LoginPage() {
     const isLogged = await createSession(newSession)
 
     if (isLogged) {
-      router.replace('/projects')
+      router.push('/projects')
     }
   }
 
   useEffect(() => {
     if (userLogged) {
-      router.replace('/projects')
+      router.push('/projects')
     }
   }, [userLogged, router])
 
@@ -124,7 +124,6 @@ export default function LoginPage() {
             </InputHeader>
 
             <TextInput
-              type={'password'}
               label="password"
               register={register}
               variant={
@@ -132,6 +131,7 @@ export default function LoginPage() {
               }
               icon={<LockKey />}
               placeholder="***************"
+              isShown
             />
           </InputContainer>
 

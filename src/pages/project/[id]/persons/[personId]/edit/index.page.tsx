@@ -27,6 +27,7 @@ import {
 import { ICreatePersonDTO } from '../../../../../../api/dtos/ICreatePersonDTO'
 import { useWindowSize } from '../../../../../../hooks/useWindow'
 import { NextSeo } from 'next-seo'
+import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
 
 const personFormSchema = z.object({
   name: z.string(),
@@ -43,6 +44,7 @@ export default function EditPersonPage() {
 
   const router = useRouter()
   const { id, personId } = router.query
+  usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { register, handleSubmit, formState, watch, reset } =
     useForm<PersonFormData>({

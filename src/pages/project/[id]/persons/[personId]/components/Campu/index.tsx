@@ -61,7 +61,7 @@ export function Campu({
               <PlusCircle
                 size={40}
                 onClick={() =>
-                  router.replace(
+                  router.push(
                     `/project/${id}/persons/${personId}/${keyIndex}/new`,
                   )
                 }

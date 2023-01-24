@@ -14,7 +14,7 @@ export async function getUserRequest() {
     const response = await api.get('/users')
     return response.data
   } catch (err: any) {
-    return err.response.data
+    return err?.response?.data
   }
 }
 

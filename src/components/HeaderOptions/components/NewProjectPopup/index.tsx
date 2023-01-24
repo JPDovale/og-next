@@ -69,7 +69,7 @@ export function NewProjectPopup({
     const idNewProject = await createProject(newProject)
     setNewProjectIsOpen(false)
 
-    router.replace(`/project/${idNewProject}`)
+    router.push(`/project/${idNewProject}`)
   }
 
   return (

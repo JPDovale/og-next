@@ -83,13 +83,13 @@ export default function RegisterPage() {
     const userCreated = await createUser(newUser)
 
     if (userCreated) {
-      router.replace('/projects')
+      router.push('/projects')
     }
   }
 
   useEffect(() => {
     if (userLogged) {
-      router.replace('/projects')
+      router.push('/projects')
     }
   }, [userLogged, router])
 
@@ -192,9 +192,9 @@ export default function RegisterPage() {
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              type="password"
               icon={<LockKey />}
               placeholder="***************"
+              isShown
             />
           </InputContainer>
 
@@ -212,9 +212,9 @@ export default function RegisterPage() {
               variant={
                 formState.errors.confirmPassword?.message ? 'denied' : 'default'
               }
-              type="password"
               icon={<LockKey />}
               placeholder="***************"
+              isShown
             />
           </InputContainer>
 

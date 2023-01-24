@@ -97,11 +97,16 @@ export function projectsReducer(state: IProjectState, action: any) {
       const indexOfPerson = state.persons.findIndex(
         (person) => person.id === action.payload.person.id,
       )
+      const indexOfProject = state.projects.findIndex(
+        (project) => project.id === action.payload.project.id,
+      )
 
-      if (indexOfPerson === -1) return state
+      if (indexOfPerson === -1 || indexOfProject === -1) return state
 
       return produce(state, (draft) => {
         draft.persons[indexOfPerson] = action.payload.person
+        draft.projects[indexOfProject] =
+          action.payload.project || state.projects[indexOfProject]
       })
     }
 

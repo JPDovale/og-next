@@ -145,7 +145,7 @@ export function GenericCardObject({
         onClick={() =>
           functionToButton
             ? functionToButton(object)
-            : router.replace(
+            : router.push(
                 `/project/${id}/persons/${personId}/${to}/${object.id}`,
               )
         }

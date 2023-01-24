@@ -52,7 +52,7 @@ export function UserOptionsPopup() {
           icon={<Gear weight="bold" />}
           label="Configurações de usuário"
           onClick={() => {
-            router.replace('/user/settings')
+            router.push('/user/settings')
             setUserOptionsIsOpen(false)
           }}
         />
@@ -62,7 +62,7 @@ export function UserOptionsPopup() {
           icon={<UsersThree weight="bold" />}
           label="Projetos compartilhados"
           onClick={() => {
-            router.replace('/shared')
+            router.push('/shared')
             setUserOptionsIsOpen(false)
           }}
         />

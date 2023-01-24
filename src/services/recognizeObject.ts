@@ -27,7 +27,7 @@ export function recognizeObject(
     case 'sonho': {
       const newDreams = {
         request: {
-          dreams: [obj || null],
+          dream: obj || null,
           personId,
           projectId,
           refId,
@@ -60,7 +60,7 @@ export function recognizeObject(
     case 'medo': {
       const newFears = {
         request: {
-          fears: [obj || null],
+          fear: obj || null,
           personId,
           projectId,
           refId,
@@ -93,7 +93,7 @@ export function recognizeObject(
     case 'desejo': {
       const newWishes = {
         request: {
-          wishes: [obj || null],
+          wishe: obj || null,
           personId,
           projectId,
           refId,
@@ -136,7 +136,7 @@ export function recognizeObject(
             ? {
                 consequences: subObjects,
               }
-            : [newPersonalityObj || null],
+            : newPersonalityObj || null,
           personId,
           projectId,
           refId,
@@ -175,10 +175,9 @@ export function recognizeObject(
 
       const newValues = {
         request: {
-          values: [newValuesObj || null],
-          value: {
-            exceptions: obj?.subObjects || [],
-          },
+          value: subObjects
+            ? { exceptions: obj?.subObjects || subObjects || [] }
+            : newValuesObj || null,
           personId,
           projectId,
           refId,
@@ -216,7 +215,7 @@ export function recognizeObject(
 
       const newAppearance = {
         request: {
-          appearance: [newAppearanceObj || null],
+          appearance: newAppearanceObj || null,
           personId,
           projectId,
           refId,
@@ -255,10 +254,11 @@ export function recognizeObject(
 
       const newTrauma = {
         request: {
-          traumas: [newTraumaObj || null],
-          trauma: {
-            consequences: obj?.subObjects || [],
-          },
+          trauma: subObjects
+            ? {
+                consequences: obj?.subObjects || subObjects || [],
+              }
+            : newTraumaObj || null,
           personId,
           projectId,
           refId,
@@ -296,7 +296,7 @@ export function recognizeObject(
 
       const newPower = {
         request: {
-          powers: [newPowerObj || null],
+          power: newPowerObj || null,
           personId,
           projectId,
           refId,
@@ -336,7 +336,7 @@ export function recognizeObject(
 
       const newCouple = {
         request: {
-          couples: [newCoupleObj || null],
+          couple: newCoupleObj || null,
           personId,
           projectId,
           refId,

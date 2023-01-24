@@ -9,6 +9,7 @@ import {
 import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
+import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 interface ISubObject {
@@ -30,6 +31,7 @@ export default function ValuePage() {
 
   const router = useRouter()
   const { id, personId, valueId } = router.query
+  usePreventBack(`/project/${id}/persons/${personId}`)
 
   const project = projects.find(
     (project) => project.id === id,

@@ -43,7 +43,7 @@ export function NavigationBar() {
         src={LogoToLeft}
         alt=""
         onClick={() => {
-          router.replace('/projects')
+          router.push('/projects')
           setNavIsOpen(false)
         }}
       />
@@ -114,7 +114,7 @@ export function NavigationBar() {
           variant={location === 'projects' ? 'active' : 'default'}
           icon={<ProjectorScreenChart />}
           onClick={() => {
-            router.replace('/projects')
+            router.push('/projects')
             smallWindow && setNavIsOpen(false)
           }}
         />
@@ -124,7 +124,7 @@ export function NavigationBar() {
           variant={location === 'recent' ? 'active' : 'default'}
           icon={<Clock />}
           onClick={() => {
-            router.replace('/recent')
+            router.push('/recent')
             smallWindow && setNavIsOpen(false)
           }}
         /> */}
@@ -134,7 +134,7 @@ export function NavigationBar() {
           variant={location === 'shared' ? 'active' : 'default'}
           icon={<UsersThree />}
           onClick={() => {
-            router.replace('/shared')
+            router.push('/shared')
             smallWindow && setNavIsOpen(false)
           }}
         />
@@ -145,7 +145,7 @@ export function NavigationBar() {
           disabled
           icon={<ListChecks />}
           onClick={() => {
-            router.replace('/todo')
+            router.push('/todo')
             smallWindow && setNavIsOpen(false)
           }}
         />

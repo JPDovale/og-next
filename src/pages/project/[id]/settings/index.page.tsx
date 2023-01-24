@@ -29,6 +29,7 @@ import { AvatarWeb } from '../../../../components/Avatar'
 import { ResponseInfoApi } from '../../../../components/ResponseInfoApi'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { UserContext } from '../../../../contexts/user'
+import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
 import { useWindowSize } from '../../../../hooks/useWindow'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
 
@@ -56,6 +57,8 @@ export default function SettingsPage() {
 
   const router = useRouter()
   const { id } = router.query
+
+  usePreventBack(`/project/${id}`)
 
   const project = projects?.find(
     (project) => project?.id === id,

@@ -38,7 +38,7 @@ export function HeaderProject({
 
           <HouseLine
             size={16}
-            onClick={() => router.replace(`/project/${projectId}`)}
+            onClick={() => router.push(`/project/${projectId}`)}
           />
           <Text as="span" weight="bold">
             {loading ? 'Carregando...' : projectName || 'Error'}
@@ -59,7 +59,7 @@ export function HeaderProject({
           <button
             type="button"
             className="close"
-            onClick={() => router.replace('/projects')}
+            onClick={() => router.push('/projects')}
           >
             <XCircle size={24} />
           </button>

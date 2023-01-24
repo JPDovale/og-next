@@ -158,11 +158,12 @@ export function PlotParts({ project, isPreview = false }: IPlotPartsProps) {
         to="Estrutura: Ato 1"
         term="a"
         element={
-          project?.plot.structure?.act2
-            ? ' '
-            : project?.plot.structure?.act3
-            ? ' '
-            : project?.plot.structure?.act1
+          project?.plot.structure?.act1 || ''
+          // project?.plot.structure?.act2
+          //   ? ' '
+          //   : project?.plot.structure?.act3
+          //   ? ' '
+          //   : project?.plot.structure?.act1
         }
         disabled={!project?.plot.summary}
         keyValue="structure"
@@ -178,11 +179,13 @@ export function PlotParts({ project, isPreview = false }: IPlotPartsProps) {
         to="Estrutura: Ato 2"
         term="a"
         element={
-          project?.plot.structure?.act1
-            ? ' '
-            : project?.plot.structure?.act3
-            ? ' '
-            : project?.plot.structure?.act2
+          project?.plot.structure?.act2 || ''
+
+          // project?.plot.structure?.act1
+          //   ? ' '
+          //   : project?.plot.structure?.act3
+          //   ? ' '
+          //   : project?.plot.structure?.act2
         }
         disabled={!project?.plot.summary}
         keyValue="structure"
@@ -198,11 +201,13 @@ export function PlotParts({ project, isPreview = false }: IPlotPartsProps) {
         to="Estrutura: Ato 3"
         term="a"
         element={
-          project?.plot.structure?.act1
-            ? ' '
-            : project?.plot.structure?.act2
-            ? ' '
-            : project?.plot.structure?.act3
+          project?.plot.structure?.act3 || ''
+
+          // project?.plot.structure?.act1
+          //   ? ' '
+          //   : project?.plot.structure?.act2
+          //   ? ' '
+          //   : project?.plot.structure?.act3
         }
         disabled={!project?.plot.summary}
         keyValue="structure"

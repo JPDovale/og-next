@@ -4,9 +4,12 @@ import { Loading } from '../../components/Loading'
 import { Projects } from '../../components/Projects'
 import { ProjectsContext } from '../../contexts/projects'
 import { UserContext } from '../../contexts/user'
+import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'
 
 export default function SharedPage() {
+  usePreventBack()
+
   const [query, setQuery] = useState('')
 
   const { projects, loading } = useContext(ProjectsContext)

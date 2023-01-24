@@ -67,7 +67,7 @@ export function PlotPart({
         size="lg"
         onClick={() => {
           if (!element && isInitialized && disabled) return
-          router.replace(`/project/${id}/plot/${keyValue}`)
+          router.push(`/project/${id}/plot/${keyValue}`)
         }}
       >
         {!element ? (

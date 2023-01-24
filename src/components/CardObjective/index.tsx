@@ -80,7 +80,7 @@ export function CardObjective({
                 key={avoider.id}
                 isViewPerson
                 onClick={() =>
-                  router.replace(`/project/${projectId}/persons/${avoider.id}`)
+                  router.push(`/project/${projectId}/persons/${avoider.id}`)
                 }
               >
                 <AvatarWeb src={avoider?.image?.url} size="sm" />
@@ -108,9 +108,7 @@ export function CardObjective({
                 key={supporter.id}
                 isViewPerson
                 onClick={() =>
-                  router.replace(
-                    `/project/${projectId}/persons/${supporter.id}`,
-                  )
+                  router.push(`/project/${projectId}/persons/${supporter.id}`)
                 }
               >
                 <AvatarWeb src={supporter?.image?.url} size="sm" />
@@ -127,7 +125,7 @@ export function CardObjective({
 
       <EditButton
         onClick={() =>
-          router.replace(
+          router.push(
             `/project/${projectId}/persons/${personId}/objectives/${objective.id}`,
           )
         }

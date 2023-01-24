@@ -10,6 +10,7 @@ import { EditorAndCommentsToObjective } from '../../../../../../components/Edito
 
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
+import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function ObjectivePage() {
@@ -19,6 +20,7 @@ export default function ObjectivePage() {
 
   const router = useRouter()
   const { id, personId, objectiveId } = router.query
+  usePreventBack(`/project/${id}/persons/${personId}`)
 
   const project = projects.find(
     (project) => project.id === id,

@@ -10,6 +10,7 @@ import { EditorAndCommentsToGenerics } from '../../../../../../components/Editor
 
 import { ProjectsContext } from '../../../../../../contexts/projects'
 import { UserContext } from '../../../../../../contexts/user'
+import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function PowerPage() {
@@ -19,6 +20,8 @@ export default function PowerPage() {
 
   const router = useRouter()
   const { id, personId, powerId } = router.query
+  usePreventBack(`/project/${id}/persons/${personId}`)
+
 
   const project = projects.find(
     (project) => project.id === id,

@@ -44,7 +44,7 @@ export function UserProvider({ children }: IUserContextProps) {
   useEffect(() => {
     const tokenString = localStorage.getItem('@og-user-token')?.toString()
 
-    if (tokenString) {
+    if (tokenString && tokenString !== 'undefined') {
       const token = JSON.parse(tokenString || '')
 
       api.defaults.headers.Authorization = `Bearer ${token}`
@@ -90,7 +90,7 @@ export function UserProvider({ children }: IUserContextProps) {
       callbackUrl: 'http://localhost:3000/login',
     })
     setLoading(false)
-    router.replace('/login')
+    router.push('/login')
   }
 
   async function initializeUser(newInitialize: INewInitializeDTO) {

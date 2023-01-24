@@ -3,6 +3,7 @@ import { IEditorTo } from '../../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../../@types/editores/IGenericObject'
 import { createObjectGenericRequest } from '../../../../api/personsRequests'
 import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
+import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { recognizeObject } from '../../../../services/recognizeObject'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
@@ -68,8 +69,18 @@ export async function createObjectGenericFunction(
     return false
   }
 
-  const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
+  if (response.personOfCouple) {
+    const person = response.person
+    const personOfCouple = response.personOfCouple
+
+    dispatch(updatePersonAction(person))
+    dispatch(updatePersonAction(personOfCouple))
+    return true
+  }
+
+  const person = response.person as IPersonsResponse
+  const project = response.project as IProjectResponse
+  dispatch(updatePersonAction(person, project))
 
   return true
 }

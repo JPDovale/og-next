@@ -102,7 +102,7 @@ export function CardProject({
         <Preview
           as={isList !== 'example' && 'button'}
           onClick={() => {
-            router.replace(`/project/${project.id}`)
+            router.push(`/project/${project.id}`)
           }}
           {...rest}
         >

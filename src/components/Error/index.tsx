@@ -19,7 +19,7 @@ export function Error({
 
   useEffect(() => {
     if (!isRedirectable) return
-    router.replace(pathRedirect)
+    router.push(pathRedirect)
   }, [router, isRedirectable, pathRedirect])
 
   return (

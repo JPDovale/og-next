@@ -39,6 +39,7 @@ import { ListEmpty } from '../../../../../components/ListEmpty'
 import { Loading } from '../../../../../components/Loading'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { UserContext } from '../../../../../contexts/user'
+import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
 import { Campu } from './components/Campu'
 import {
@@ -70,6 +71,7 @@ export default function PersonPage() {
 
   const router = useRouter()
   const { id, personId } = router.query
+  usePreventBack(`/project/${id}/persons`)
 
   const project = projects.find(
     (project) => project.id === id,
@@ -167,7 +169,7 @@ export default function PersonPage() {
               className="goBack"
               wid="hug"
               icon={<CaretCircleDoubleLeft weight="bold" />}
-              onClick={() => router.replace(`/project/${id}/persons`)}
+              onClick={() => router.push(`/project/${id}/persons`)}
             />
 
             <Infos>
@@ -316,7 +318,7 @@ export default function PersonPage() {
               <PencilCircle
                 size={40}
                 onClick={() =>
-                  router.replace(`/project/${id}/persons/${personId}/edit`)
+                  router.push(`/project/${id}/persons/${personId}/edit`)
                 }
               />
             )}
@@ -344,8 +346,8 @@ export default function PersonPage() {
               <PlusCircle
                 size={40}
                 onClick={() =>
-                  router.replace(
-                    `/project/${id}/persons/${personId}/objectives/${'new'}`,
+                  router.push(
+                    `/project/${id}/persons/${personId}/objectives/new`,
                   )
                 }
               />
