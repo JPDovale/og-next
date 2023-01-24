@@ -67,7 +67,7 @@ export async function loginWithGoogleRequest(user: any) {
 
     return response.data
   } catch (err: any) {
-    return err.response.data
+    return err.response
   }
 }
 
