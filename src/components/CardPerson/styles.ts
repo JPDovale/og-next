@@ -9,7 +9,7 @@ export const CardPersonContainer = styled(Box, {
   padding: 0,
   width: '100%',
   height: '100%',
-  minHeight: '380px',
+  minHeight: '280px',
 
   backgroundColor: '$gray900',
   borderRadius: '$md',
@@ -25,7 +25,7 @@ export const CardPersonContainer = styled(Box, {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    minHeight: '380px',
+    minHeight: '280px',
 
     img: {
       display: 'flex',
@@ -36,16 +36,16 @@ export const CardPersonContainer = styled(Box, {
       overflow: 'hidden',
 
       width: '100%',
-      maxHeight: '380px',
+      maxHeight: '280px',
       objectFit: 'cover',
 
       '@media screen and (max-width: 768px)': {
-        minHeight: '280px',
+        minHeight: '150px',
       },
     },
 
     '@media screen and (max-width: 768px)': {
-      minHeight: '280px',
+      minHeight: '150px',
     },
   },
 
@@ -61,7 +61,7 @@ export const CardPersonContainer = styled(Box, {
     isNotPreview: {
       true: {
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr 2fr',
+        gridTemplateColumns: '4fr 4fr 6fr',
 
         minHeight: '400px',
 
@@ -97,9 +97,9 @@ export const PersonInfos = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: '$2',
+  gap: '$1',
 
-  padding: '$5',
+  padding: '$3',
   width: '100%',
 
   '@media screen and (max-width: 768px)': {
@@ -126,6 +126,17 @@ export const ItemInfo = styled('div', {
   },
 })
 
+export const ItemsContainer = styled('div', {
+  display: 'flex',
+  justifyContent: 'space-between',
+
+  width: '100%',
+
+  p: {
+    color: '$base400',
+  },
+})
+
 export const AddItem = styled('div', {
   display: 'flex',
   flexDirection: 'column',
@@ -142,14 +153,14 @@ export const AddItem = styled('div', {
 
 export const ObjectsOfPerson = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
 
   width: '100%',
-  height: '100%',
-  padding: '$5',
+  marginTop: '$8',
+  gap: '$2',
 
   '@media screen and (max-width: 768px)': {
-    borderTop: '0.5px solid $base900',
+    marginTop: '$4',
   },
 })
 

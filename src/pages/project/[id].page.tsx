@@ -236,9 +236,9 @@ export default function ProjectPage() {
             {personsThisProject.map((person, i) => {
               const index = permissionThisUserInProject === 'edit' ? i : i - 1
 
-              if (largeWindow && index >= 7) return null
-              if (!largeWindow && index >= 5) return null
-              if (smallWindow && index >= 3) return null
+              if (largeWindow && index >= 14) return null
+              if (!largeWindow && index >= 11) return null
+              if (smallWindow && index >= 5) return null
               return <CardPerson key={person.id} person={person} />
             })}
           </PersonsContainer>

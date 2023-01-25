@@ -391,6 +391,8 @@ export function GenericEditorObject({
                           { label: 'Não', value: false },
                         ]}
                         setState={setFinal}
+                        state={final}
+                        isInLine
                       />
                     </InputContainer>
 

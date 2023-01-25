@@ -167,10 +167,10 @@ export const PersonsContainer = styled('div', {
   display: 'grid',
   gap: '$8',
 
-  gridTemplateColumns: '1fr 1fr 1fr',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
 
   '@media screen and (min-width: 1700px)': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
   },
 
   '@media screen and (max-width: 768px)': {

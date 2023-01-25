@@ -29,14 +29,11 @@ import { ICreateUserDTO } from '../../api/dtos/ICreateUserDTO'
 import { useContext, useEffect } from 'react'
 import { UserContext } from '../../contexts/user'
 import { useRouter } from 'next/router'
-import {
-  // signIn,
-  useSession,
-} from 'next-auth/react'
-import { unstable_getServerSession } from 'next-auth'
-import { loginWithGoogleRequest } from '../../api/userRequest'
-import { authOptions } from '../api/auth/[...nextauth].api'
-import { GetServerSideProps } from 'next'
+// import { signIn, useSession } from 'next-auth/react'
+// import { unstable_getServerSession } from 'next-auth'
+// import { loginWithGoogleRequest } from '../../api/userRequest'
+// import { authOptions } from '../api/auth/[...nextauth].api'
+// import { GetServerSideProps } from 'next'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
 
@@ -71,7 +68,7 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function RegisterPage() {
-  const { createUser, userLogged, setUser, error } = useContext(UserContext)
+  const { createUser, userLogged, error } = useContext(UserContext)
 
   const { handleSubmit, register, formState, setError } =
     useForm<RegisterFormData>({
@@ -79,7 +76,7 @@ export default function RegisterPage() {
     })
 
   const router = useRouter()
-  const session = useSession()
+  // const session = useSession()
 
   async function handleCreateUser(data: RegisterFormData) {
     if (data.password !== data.confirmPassword) {
@@ -102,9 +99,9 @@ export default function RegisterPage() {
     }
   }, [userLogged, router])
 
-  useEffect(() => {
-    if (session?.data?.loggedUser!) setUser(session?.data?.loggedUser!)
-  }, [session, setUser])
+  // useEffect(() => {
+  //   if (session?.data?.loggedUser!) setUser(session?.data?.loggedUser!)
+  // }, [session, setUser])
 
   return (
     <>
@@ -262,16 +259,16 @@ export default function RegisterPage() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
-  const loggedUser = await loginWithGoogleRequest(session?.user)
+// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+//   const session = await unstable_getServerSession(req, res, authOptions)
+//   const loggedUser = await loginWithGoogleRequest(session?.user)
 
-  return {
-    props: {
-      session: {
-        ...session,
-        loggedUser,
-      },
-    },
-  }
-}
+//   return {
+//     props: {
+//       session: {
+//         ...session,
+//         loggedUser,
+//       },
+//     },
+//   }
+// }

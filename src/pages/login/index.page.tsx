@@ -26,15 +26,12 @@ import { z } from 'zod'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { UserContext } from '../../contexts/user'
-import {
-  // signIn,
-  useSession,
-} from 'next-auth/react'
-import { GetServerSideProps } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+// import { signIn, useSession } from 'next-auth/react'
+// import { GetServerSideProps } from 'next'
+// import { unstable_getServerSession } from 'next-auth'
 
-import { authOptions } from '../api/auth/[...nextauth].api'
-import { loginWithGoogleRequest } from '../../api/userRequest'
+// import { authOptions } from '../api/auth/[...nextauth].api'
+// import { loginWithGoogleRequest } from '../../api/userRequest'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
 
@@ -48,14 +45,14 @@ const loginFormSchema = z.object({
 type LoginFormData = z.infer<typeof loginFormSchema>
 
 export default function LoginPage() {
-  const { createSession, userLogged, setUser, error, setError, setSuccess } =
+  const { createSession, userLogged, error, setError, setSuccess } =
     useContext(UserContext)
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
   })
 
-  const session = useSession()
+  // const session = useSession()
   const router = useRouter()
 
   async function handleLogin(data: LoginFormData) {
@@ -74,10 +71,10 @@ export default function LoginPage() {
     }
   }, [userLogged, router])
 
-  useEffect(() => {
-    if (session?.data?.loggedUser?.errorTitle) return
-    setUser(session?.data?.loggedUser!)
-  }, [session, setUser])
+  // useEffect(() => {
+  //   if (session?.data?.loggedUser?.errorTitle) return
+  //   setUser(session?.data?.loggedUser!)
+  // }, [session, setUser])
 
   useEffect(() => {
     setError(undefined)
@@ -178,16 +175,16 @@ export default function LoginPage() {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
-  const loggedUser = session && (await loginWithGoogleRequest(session?.user))
+// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+//   const session = await unstable_getServerSession(req, res, authOptions)
+//   const loggedUser = session && (await loginWithGoogleRequest(session?.user))
 
-  return {
-    props: {
-      session: {
-        ...session,
-        loggedUser,
-      },
-    },
-  }
-}
+//   return {
+//     props: {
+//       session: {
+//         ...session,
+//         loggedUser,
+//       },
+//     },
+//   }
+// }

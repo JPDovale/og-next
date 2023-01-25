@@ -315,3 +315,16 @@ export const UserImage = styled('div', {
     },
   },
 })
+
+export const SuccessContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '$8',
+  gap: '$5',
+
+  background: '$gray900',
+  overflowY: 'scroll',
+  height: '100%',
+})
