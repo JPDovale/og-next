@@ -15,6 +15,7 @@ import { UserContext } from '../../contexts/user'
 import { AvatarWeb } from '../Avatar'
 import { InputRadio } from '../InputRadio'
 import { Loading } from '../Loading'
+import { ResponseInfoApi } from '../ResponseInfoApi'
 import {
   CardProjectContainer,
   HeaderShareForm,
@@ -25,6 +26,7 @@ import {
   ShareForm,
   SharePopUp,
   SharePopUpContainer,
+  SuccessContainer,
   UserImage,
   UsersWhitAccess,
 } from './styles'
@@ -41,18 +43,16 @@ export function CardProject({
   isSharable = false,
   ...rest
 }: ICardProject) {
-  const { shareProject, users, loading, error, setError } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { shareProject, users, error, setError } = useContext(ProjectsContext)
+  const { user, success, setSuccess } = useContext(UserContext)
 
   const [onShareProject, setOnShareProject] = useState('')
   const [sharePermission, setSharePermission] = useState('edit')
   const [shareEmail, setShareEmail] = useState('')
   const [errorIn, setErrorIn] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
-
-  if (loading) return <Loading />
 
   const creatorOfProject = users.find(
     (user) => user.id === project.createdPerUser,
@@ -90,9 +90,21 @@ export function CardProject({
       projectId: project.id as string,
     }
 
+    setLoading(true)
     const shared = await shareProject(shareProjectWithUserInfos)
+    setLoading(false)
+
     if (shared) {
-      setOnShareProject('')
+      setSuccess({
+        successTitle: `Projeto compartilhado com ${shareEmail}`,
+        successMessage: `Agora ${shareEmail} pode ${
+          sharePermission === 'edit'
+            ? 'Editar'
+            : sharePermission === 'view'
+            ? 'Visualizar'
+            : 'comentar'
+        } o seu projeto`,
+      })
     }
   }
 
@@ -238,6 +250,7 @@ export function CardProject({
             >
               <XCircle size={32} />
             </button>
+
             <HeaderShareForm as="span">
               Pronto para compartilhar {project?.name}?
               <Text
@@ -251,45 +264,58 @@ export function CardProject({
                 {error?.message}
               </Text>
             </HeaderShareForm>
-            <ShareForm onSubmit={handleShareProject}>
-              <Text size="xs">
-                Informe o email do usuário que quer compartilhar o projeto
-              </Text>
 
-              <TextInput
-                icon={<Envelope />}
-                placeholder="jonas@ognare.com"
-                type="email"
-                onChange={(e) => setShareEmail(e.target.value)}
-                value={shareEmail}
-                variant={errorIn === 'email' ? 'denied' : 'default'}
-              />
+            {loading ? (
+              <Loading />
+            ) : success ? (
+              <SuccessContainer>
+                <ResponseInfoApi success={success} />
+              </SuccessContainer>
+            ) : (
+              <ShareForm onSubmit={handleShareProject}>
+                <Text size="xs">
+                  Informe o email do usuário que quer compartilhar o projeto
+                </Text>
 
-              <Text size="xs">
-                Esse usuário poderá{' '}
-                {sharePermission === 'edit'
-                  ? 'editar '
-                  : sharePermission === 'comment'
-                  ? 'comentar n'
-                  : 'visualizar '}
-                o projeto
-              </Text>
-              <InputRadio
-                values={[
-                  { label: 'Editor', value: 'edit' },
-                  { label: 'Comentarista', value: 'comment' },
-                  { label: 'Visualiza', value: 'view' },
-                ]}
-                setState={setSharePermission}
-              />
-              <Button
-                type="submit"
-                label="Compartilhar"
-                icon={<Share />}
-                wid="middle"
-                align="center"
-              />
-            </ShareForm>
+                <TextInput
+                  icon={<Envelope />}
+                  placeholder="jonas@ognare.com"
+                  type="email"
+                  onChange={(e) => setShareEmail(e.target.value)}
+                  value={shareEmail}
+                  variant={errorIn === 'email' ? 'denied' : 'default'}
+                />
+
+                <Text size="xs">
+                  Esse usuário poderá{' '}
+                  {sharePermission === 'edit'
+                    ? 'editar '
+                    : sharePermission === 'comment'
+                    ? 'comentar n'
+                    : 'visualizar '}
+                  o projeto
+                </Text>
+
+                <InputRadio
+                  values={[
+                    { label: 'Editor', value: 'edit' },
+                    { label: 'Comentarista', value: 'comment' },
+                    { label: 'Visualização', value: 'view' },
+                  ]}
+                  setState={setSharePermission}
+                  state={sharePermission}
+                  withColorInBackground
+                />
+
+                <Button
+                  type="submit"
+                  label="Compartilhar"
+                  icon={<Share />}
+                  wid="middle"
+                  align="center"
+                />
+              </ShareForm>
+            )}
           </SharePopUp>
         </SharePopUpContainer>
       )}

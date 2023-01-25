@@ -2,17 +2,37 @@ import { Text, styled } from '@og-ui/react'
 import * as RadioGroup from '@radix-ui/react-radio-group'
 
 export const RadioRoot = styled(RadioGroup.Root, {
-  padding: '$2',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '$4',
+  padding: '$4',
   borderRadius: '$xs',
+
+  variants: {
+    isInLine: {
+      true: {
+        flexDirection: 'row',
+        gap: '$8',
+      },
+    },
+
+    withColorInBackground: {
+      true: {
+        background: '$gray500',
+      },
+    },
+  },
 })
 
 export const RadioItem = styled(RadioGroup.Item, {
+  all: 'unset',
   width: 24,
   height: 24,
 
   borderRadius: '$full',
-  background: '$gray400',
+  background: '$gray900',
   cursor: 'pointer',
+  boxShadow: '$onActive',
 })
 
 export const RadioSelected = styled(RadioGroup.Indicator, {
@@ -27,16 +47,36 @@ export const RadioSelected = styled(RadioGroup.Indicator, {
   '&::after': {
     content: '',
     display: 'block',
-    width: 12,
-    height: 12,
+    width: 24,
+    height: 24,
     borderRadius: '$full',
-    backgroundColor: '$gray600',
+    backgroundColor: '$purple500',
     boxShadow: '$default',
   },
 })
 
 export const RadioLabel = styled(Text, {
   display: 'flex',
-  gap: 8,
   cursor: 'pointer',
+  gap: '$2',
+
+  span: {
+    color: '$base800',
+  },
+
+  variants: {
+    isSelected: {
+      true: {
+        span: {
+          color: '$purple100',
+        },
+      },
+    },
+
+    isInLine: {
+      true: {
+        flexDirection: 'column',
+      },
+    },
+  },
 })

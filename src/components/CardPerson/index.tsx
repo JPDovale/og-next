@@ -7,6 +7,7 @@ import {
   CardPersonContainer,
   EditPersonButton,
   ItemInfo,
+  ItemsContainer,
   ObjectsOfPerson,
   PersonHistory,
   PersonInfos,
@@ -42,8 +43,8 @@ export function CardPerson({
       }
     >
       {isAdd ? (
-        <Text height="shorter">
-          <UserPlus size={48} />
+        <Text height="shorter" size="xs">
+          <UserPlus size={40} />
           <br />
           Criar um personagem
         </Text>
@@ -61,7 +62,7 @@ export function CardPerson({
               <Text as="label" size="sm" family="body" height="shorter">
                 Nome:
               </Text>
-              <Text>
+              <Text size="sm">
                 {person.name} {person.lastName}
               </Text>
             </ItemInfo>
@@ -69,95 +70,101 @@ export function CardPerson({
               <Text as="label" size="sm" family="body" height="shorter">
                 Idade:
               </Text>
-              <Text>{person.age} anos</Text>
+              <Text size="sm">{person.age} anos</Text>
             </ItemInfo>
-            <ItemInfo>
-              <Text as="label" size="sm" family="body" height="shorter">
-                Criado em:
-              </Text>
-              <Text>{person.createAt}</Text>
-            </ItemInfo>
-            <ItemInfo>
-              <Text as="label" size="sm" family="body" height="shorter">
-                Atualizado em:
-              </Text>
-              <Text>{person.updateAt}</Text>
-            </ItemInfo>
+
+            <ItemsContainer>
+              <ItemInfo>
+                <Text as="label" size="sm" family="body" height="shorter">
+                  Criado em:
+                </Text>
+                <Text size="xxs">{person.createAt}</Text>
+              </ItemInfo>
+              <ItemInfo>
+                <Text as="label" size="sm" family="body" height="shorter">
+                  Atualizado em:
+                </Text>
+                <Text size="xxs">{person.updateAt}</Text>
+              </ItemInfo>
+            </ItemsContainer>
+
+            {isNotPreview && (
+              <ObjectsOfPerson>
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Objetivos:
+                  </Text>
+                  <Text size="xs">{person.objectives?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Sonhos:
+                  </Text>
+                  <Text size="xs">{person.dreams?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Medos:
+                  </Text>
+                  <Text size="xs">{person.fears?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Casais:
+                  </Text>
+                  <Text size="xs">{person.couples?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Aparência:
+                  </Text>
+                  <Text size="xs">{person.appearance?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Personalidade:
+                  </Text>
+                  <Text size="xs">{person.personality?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Poderes:
+                  </Text>
+                  <Text size="xs">{person.powers?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Traumas:
+                  </Text>
+                  <Text size="xs">{person.traumas?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Valores:
+                  </Text>
+                  <Text size="xs">{person.values?.length || 0}</Text>
+                </ItemInfo>
+
+                <ItemInfo isObject>
+                  <Text as="label" size="xs" family="body" height="shorter">
+                    Desejos:
+                  </Text>
+                  <Text size="xs">{person.wishes?.length || 0}</Text>
+                </ItemInfo>
+              </ObjectsOfPerson>
+            )}
           </PersonInfos>
 
           {isNotPreview && (
             <>
-              <ObjectsOfPerson>
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Objetivos:
-                  </Text>
-                  <Text>{person.objectives?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Sonhos:
-                  </Text>
-                  <Text>{person.dreams?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Medos:
-                  </Text>
-                  <Text>{person.fears?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Casais:
-                  </Text>
-                  <Text>{person.couples?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Aparência:
-                  </Text>
-                  <Text>{person.appearance?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Personalidade:
-                  </Text>
-                  <Text>{person.personality?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Poderes:
-                  </Text>
-                  <Text>{person.powers?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Traumas:
-                  </Text>
-                  <Text>{person.traumas?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Valores:
-                  </Text>
-                  <Text>{person.values?.length || 0}</Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="sm" family="body" height="shorter">
-                    Desejos:
-                  </Text>
-                  <Text>{person.wishes?.length || 0}</Text>
-                </ItemInfo>
-              </ObjectsOfPerson>
               <PersonHistory>
                 <Text as="label" weight="bold" size="xl">
                   História:

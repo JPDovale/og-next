@@ -356,6 +356,7 @@ export function ObjectiveEditor({
                     { label: 'Não', value: false },
                   ]}
                   setState={setObjectified}
+                  state={objectified}
                 />
               )}
             </InputContainer>

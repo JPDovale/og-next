@@ -5,11 +5,11 @@ export const PersonsContainer = styled('div', {
   flexDirection: 'column',
   gap: '$8',
 
-  padding: '$6',
+  padding: '$4',
 })
 
 export const NewPersonFormContainer = styled('div', {
-  padding: '$6',
+  padding: '$4',
   position: 'relative',
 })
 
@@ -18,7 +18,7 @@ export const NewPersonForm = styled('form', {
   flexDirection: 'column',
   gap: '$8',
 
-  padding: '$6',
+  padding: '$4',
   height: 'auto',
   maxHeight: '980px',
 
@@ -71,14 +71,14 @@ export const ShowFormButton = styled(Button, {
   position: 'absolute',
 
   padding: '$2',
-  right: '$8',
-  top: '$8',
+  right: '$6',
+  top: '$6',
 
   variants: {
     formIsVisible: {
       false: {
-        right: '$6',
-        top: '$6',
+        right: '$4',
+        top: '$4',
       },
       true: {},
     },

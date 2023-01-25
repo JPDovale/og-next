@@ -100,10 +100,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   }
 
   async function shareProject(newShare: IShareProjectDTO) {
-    setLoading(true)
     const response = await shareProjectFunction(newShare, dispatch)
-    setLoading(false)
-
     return response
   }
 
