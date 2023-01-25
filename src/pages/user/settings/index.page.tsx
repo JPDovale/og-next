@@ -168,6 +168,23 @@ export default function UserSettingsPage() {
 
   async function handleUpdatePassword() {
     setError(undefined)
+
+    if (password.length < 6 || oldPassword.length < 6) {
+      return setError({
+        title: 'As senhas precisam ter pelo menos 6 caracteres.',
+        message:
+          'As senhas precisam ter pelo menos 6 caracteres, por favor verifique os campos e tente novamente.',
+      })
+    }
+
+    if (password !== oldPassword) {
+      return setError({
+        title: 'As senhas são diferentes.',
+        message:
+          'As senhas que você informou não são iguais, por favor verifique os campos e tente novamente.',
+      })
+    }
+
     await updatePassword(oldPassword, password)
     setTimeout(() => setError(undefined), 10000)
   }
