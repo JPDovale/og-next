@@ -153,7 +153,11 @@ export default function UserSettingsPage() {
 
   function handleSaveUser() {
     setError(undefined)
-    updateUser(name, username, email)
+    updateUser(
+      name || user?.name,
+      username || user?.username,
+      email || user?.email,
+    )
   }
 
   async function handleUpdateImage(files: FileList | null) {
