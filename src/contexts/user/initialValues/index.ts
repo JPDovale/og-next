@@ -28,4 +28,5 @@ export const userDefaultValues: IUserContext = {
   deleteAvatar: async () => {},
   sendMailForgotPassword: async (email: string) => {},
   recoveryPassword: async (password: string, token: string) => {},
+  visualizeNotifications: async () => {},
 }

@@ -78,6 +78,7 @@ export const HeaderOptionsContainer = styled('header', {
 })
 
 export const Title = styled('div', {
+  position: 'relative',
   display: 'flex',
   alignItems: 'center',
   gap: '$5',
@@ -125,6 +126,7 @@ export const Options = styled('div', {
   },
 
   '.icon-button': {
+    position: 'relative',
     lineHeight: 0,
 
     border: 0,
@@ -207,5 +209,37 @@ export const QueryContainer = styled('div', {
 
   defaultVariants: {
     onQuery: false,
+  },
+})
+
+export const NewNotificationAlert = styled('div', {
+  position: 'absolute',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  top: -8,
+  right: -8,
+  width: 20,
+  height: 20,
+  borderRadius: '$full',
+
+  background: '$purple200',
+
+  p: {
+    lineHeight: 0,
+  },
+
+  variants: {
+    inRight: {
+      true: {
+        left: -14,
+        top: -8,
+        right: 'unset',
+
+        width: 18,
+        height: 18,
+      },
+    },
   },
 })
