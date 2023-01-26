@@ -1,4 +1,4 @@
-import { Heading, TextInput } from '@og-ui/react'
+import { Heading, Text, TextInput } from '@og-ui/react'
 import {
   ArrowFatLinesRight,
   BellSimple,
@@ -20,6 +20,7 @@ import {
   AddNewProjectButton,
   HeaderOptionsContainer,
   Loading,
+  NewNotificationAlert,
   Options,
   QueryContainer,
   Title,
@@ -46,7 +47,7 @@ export function HeaderOptions({
 }: IHeaderOptionsProps) {
   const [queryIsOpen, setQueryIsOpen] = useState(false)
 
-  const { user } = useContext(UserContext)
+  const { user, visualizeNotifications } = useContext(UserContext)
   const {
     userOptionsIsOpen,
     setUserOptionsIsOpen,
@@ -69,6 +70,13 @@ export function HeaderOptions({
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
+
+  const newNotifications = !!user?.notifications.find(
+    (notification) => notification.isVisualized === false,
+  )
+  const newNotificationsNumber = user?.notifications.filter(
+    (notification) => notification.isVisualized === false,
+  ).length
 
   function closePopUp() {
     if (!onPopUpOpen) return
@@ -99,6 +107,13 @@ export function HeaderOptions({
           >
             {windowName.toUpperCase()}
           </Heading>
+          {smallWindow && newNotifications && (
+            <NewNotificationAlert inRight>
+              <Text size="sm" family="body">
+                {newNotificationsNumber}
+              </Text>
+            </NewNotificationAlert>
+          )}
         </Title>
         <Options>
           <AddNewProjectButton
@@ -157,9 +172,20 @@ export function HeaderOptions({
             onClick={() => {
               setNavIsOpen(false)
               setNotificationsIsOpen(true)
+
+              setTimeout(() => {
+                newNotifications && visualizeNotifications()
+              }, 10000)
             }}
           >
             <BellSimple size={'24'} />
+            {newNotifications && (
+              <NewNotificationAlert>
+                <Text size="sm" family="body">
+                  {newNotificationsNumber}
+                </Text>
+              </NewNotificationAlert>
+            )}
           </button>
 
           <button

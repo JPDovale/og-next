@@ -19,8 +19,14 @@ import { InterfaceContext } from '../../contexts/interface'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useWindowSize } from '../../hooks/useWindow'
+import { UserContext } from '../../contexts/user'
 
 export function NavigationBar() {
+  const { user, visualizeNotifications } = useContext(UserContext)
+  const newNotifications = user?.notifications?.filter(
+    (notification) => notification.isVisualized === false,
+  )
+
   const {
     navIsOpen,
     setNavIsOpen,
@@ -78,11 +84,21 @@ export function NavigationBar() {
 
             <Button
               type="button"
-              label="Notificações"
+              label={`Notificações${
+                newNotifications && newNotifications[0]
+                  ? ' ( ' + newNotifications.length + ' ) '
+                  : ''
+              }`}
               icon={<BellSimple />}
               onClick={() => {
                 setNotificationsIsOpen(true)
                 setNavIsOpen(false)
+
+                setTimeout(() => {
+                  newNotifications &&
+                    newNotifications[0] &&
+                    visualizeNotifications()
+                }, 10000)
               }}
             />
 

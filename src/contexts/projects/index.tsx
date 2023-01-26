@@ -338,8 +338,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     getProjects()
   }, [userLogged])
 
-  console.log(errorUser)
-
   return (
     <ProjectsContext.Provider
       value={{
@@ -376,7 +374,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteImagePerson,
       }}
     >
-      {!loadingUser && !userLogged && error?.title === 'Access denied' ? (
+      {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (
         <Error isRedirectable />
       ) : (
         children

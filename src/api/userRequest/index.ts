@@ -145,3 +145,12 @@ export async function recoveryPasswordRequest(password: string, token: string) {
     return err.response.data
   }
 }
+
+export async function visualizeNotificationsRequest() {
+  try {
+    const response = await api.patch('/users/notifications/visualize')
+    return response.data
+  } catch (err: any) {
+    return err.response
+  }
+}

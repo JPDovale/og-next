@@ -26,6 +26,7 @@ import { deleteAvatarFunction } from './functions/deleteAvatarFunction'
 import { ISuccess } from '../../@types/success/ISuccess'
 import { sendMailForgotPasswordFunction } from './functions/sendMailForgotPasswordFunction'
 import { recoveryPasswordFunction } from './functions/recoveryPasswordFunction'
+import { visualizeNotificationsFunction } from './functions/visualizeNotificationsFunction'
 
 export const UserContext = createContext<IUserContext>(userDefaultValues)
 
@@ -134,6 +135,10 @@ export function UserProvider({ children }: IUserContextProps) {
     await recoveryPasswordFunction({ password, token, dispatch })
   }
 
+  async function visualizeNotifications() {
+    return await visualizeNotificationsFunction({ dispatch })
+  }
+
   useEffect(() => {
     getUser()
   }, [])
@@ -162,6 +167,7 @@ export function UserProvider({ children }: IUserContextProps) {
         deleteAvatar,
         sendMailForgotPassword,
         recoveryPassword,
+        visualizeNotifications,
       }}
     >
       {children}

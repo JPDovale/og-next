@@ -4,7 +4,8 @@ export interface INotification {
   id?: string
   title: string
   content: string
-  createAt?: string
+  isVisualized?: boolean
+  createAt: string
 }
 export interface IUserResponse {
   age: string

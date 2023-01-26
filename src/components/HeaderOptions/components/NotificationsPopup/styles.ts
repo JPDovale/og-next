@@ -70,7 +70,7 @@ export const HeaderNotifications = styled('header', {
 export const Notifications = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  gap: '$4',
+  gap: '$6',
 
   overflowY: 'scroll',
   padding: '$8 $4',
@@ -100,8 +100,9 @@ export const Notification = styled(Box, {
   flexDirection: 'column',
   gap: '$4',
 
-  background: '$purple700',
+  background: '$gray600',
   boxShadow: '$onActive',
+  transition: 'ease-in-out 250ms',
 
   button: {
     position: 'absolute',
@@ -123,8 +124,19 @@ export const Notification = styled(Box, {
 
   h4: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
 
-    justifyContent: 'space-between',
+    p: {
+      color: '$base600',
+    },
+  },
+
+  variants: {
+    isVisualized: {
+      false: {
+        boxShadow: '$inFocus',
+        background: '$blue800',
+      },
+    },
   },
 })

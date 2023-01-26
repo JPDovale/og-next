@@ -33,6 +33,7 @@ export interface IUserContext {
   deleteAvatar: () => Promise<void>
   sendMailForgotPassword: (email: string) => Promise<void>
   recoveryPassword: (password: string, token: string) => Promise<void>
+  visualizeNotifications: () => Promise<void>
 }
 
 export interface IUserContextProps {

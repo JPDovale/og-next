@@ -16,7 +16,6 @@ export async function deleteAvatarFunction(
     }
     return
   }
-  console.log(updatedUser)
 
   dispatch(setUserAction(updatedUser))
 }

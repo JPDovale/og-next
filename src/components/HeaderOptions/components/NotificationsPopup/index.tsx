@@ -26,6 +26,28 @@ export function NotificationsPopup({
   if (loading) return <Loading />
   if (!user) return <Error />
 
+  const notificationInHourOrd = user?.notifications?.slice().sort((a, b) =>
+    a.createAt
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') <
+    b.createAt
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      ? 1
+      : b.createAt
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') <
+        a.createAt
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+      ? -1
+      : 0,
+  )
+
   return (
     <NotificationPopupContainer onWindow={notificationsIsOpen}>
       <HeaderNotifications>
@@ -42,15 +64,20 @@ export function NotificationsPopup({
       </HeaderNotifications>
       <Notifications isEmpty={user.notifications && !user.notifications[0]}>
         {user.notifications ? (
-          user.notifications.map((notification) => {
+          notificationInHourOrd.map((notification, i) => {
             const [pre, comment] = notification.content.split(':')
             const commentedIn = reverbKeys(pre.split('|')[1])
             const prefix = `${pre.split('|')[0]} ${commentedIn}`
 
             return (
-              <Notification key={notification.id}>
-                <Text as={'h4'} weight={'bold'} spacing={'medium'}>
-                  <Text weight="bold">{notification.title}</Text>
+              <Notification
+                key={notification.id}
+                isVisualized={notification.isVisualized}
+              >
+                <Text as="h4">
+                  <Text as="span" size="sm" spacing="minimus">
+                    {notification.title}
+                  </Text>
                   <Text size="xxs">{notification?.createAt}</Text>
                 </Text>
                 <Text family={'body'} height={'short'}>
