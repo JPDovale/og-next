@@ -161,6 +161,26 @@ export async function deleteObjectGenericRequest(toDelete: IGenericObject) {
   }
 }
 
+interface IDeleteObjetiveRequest {
+  personId: string
+  objectiveId: string
+}
+
+export async function deleteObjectiveRequest({
+  objectiveId,
+  personId,
+}: IDeleteObjetiveRequest) {
+  try {
+    const response = await api.patch(`/persons/objectives/delete`, {
+      objectiveId,
+      personId,
+    })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 export async function updatePersonRequest(
   person: ICreatePersonDTO,
   personId: string,
