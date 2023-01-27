@@ -15,6 +15,7 @@ import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
 import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './interfaceFunctions/IDeleteImageProject'
+import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './interfaceFunctions/IQuitProject'
 
 export interface IProjectsContext {
@@ -104,6 +105,10 @@ export interface IProjectsContext {
   deleteImageProject: ({ projectId }: IDeleteImageProject) => Promise<void>
   deleteImagePerson: ({ personId }: IDeleteImagePerson) => Promise<void>
   quitProject: ({ projectId }: IQuitProject) => Promise<void>
+  deleteObjective: ({
+    objectiveId,
+    personId,
+  }: IDeleteObjective) => Promise<void>
 }
 
 export interface IProjectsContextProps {

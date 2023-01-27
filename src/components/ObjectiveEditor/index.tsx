@@ -1,5 +1,5 @@
 import { FormEvent, useState, useContext } from 'react'
-import { Button, Text, Textarea, TextInput } from '@og-ui/react'
+import { Box, Button, Text, Textarea, TextInput } from '@og-ui/react'
 import {
   CaretCircleDoubleLeft,
   Crosshair,
@@ -8,14 +8,18 @@ import {
   Skull,
   SmileyXEyes,
   Textbox,
+  Trash,
   UserMinus,
   UsersThree,
+  XSquare,
 } from 'phosphor-react'
 import {
+  DeletePopUp,
   EditorHeader,
   FormContainer,
   InputContainer,
   ObjectiveEditorContainer,
+  ShadowPopUp,
 } from './styles'
 import {
   IObjective,
@@ -28,6 +32,7 @@ import { ListEmpty } from '../../components/ListEmpty'
 import { Refs } from '../../components/Refs'
 import { InputRadio } from '../../components/InputRadio'
 import { Avatares } from '../../components/Avatares'
+import { ResponseInfoApi } from '../ResponseInfoApi'
 
 interface IObjetiveEditorProps {
   isNew?: boolean
@@ -62,9 +67,16 @@ export function ObjectiveEditor({
   const [objectified, setObjectified] = useState<boolean | undefined>(undefined)
   const [errorIn, setErrorIn] = useState('')
   const [refSelected, setRefSelected] = useState('')
+  const [onOpenDelete, setOnOpenDelete] = useState(false)
 
-  const { updateObjective, error, createObjective, saveRefObjective } =
-    useContext(ProjectsContext)
+  const {
+    updateObjective,
+    error,
+    createObjective,
+    saveRefObjective,
+    setError,
+    deleteObjective,
+  } = useContext(ProjectsContext)
 
   const router = useRouter()
 
@@ -276,173 +288,237 @@ export function ObjectiveEditor({
     }
   }
 
+  async function handleDeleteObjective() {
+    if (!objective) return
+
+    setOnOpenDelete(false)
+    router.push(`/project/${projectId}/persons/${personId}`)
+
+    await deleteObjective({ objectiveId: objective?.id as string, personId })
+  }
+
   return (
-    <ObjectiveEditorContainer>
-      {permission !== 'edit' && isNew ? (
-        <ListEmpty
-          message="OPA! Parece que você caiu em um lugar que você não tem acesso..."
-          icon={<SmileyXEyes size={80} />}
-        />
-      ) : (
-        <>
-          <EditorHeader>
-            <Text as="span">
-              <Textbox size={24} />
-              {isNew ? 'Criar objetivo' : `Editar objetivo`}
-            </Text>
-            <Button
-              type="button"
-              className="goBack"
-              wid="hug"
-              icon={<CaretCircleDoubleLeft weight="bold" />}
-              onClick={() =>
-                router.push(`/project/${projectId}/persons/${personId}`)
-              }
-            />
-          </EditorHeader>
-          {isNew && filteredRefs && filteredRefs[0] && !refSelected && (
-            <Refs
-              onSelectRef={handleSelectRef}
-              refs={filteredRefs}
-              title="Reaproveite objetivos já criados"
-            />
-          )}
-          <Text
-            size="md"
-            css={{
-              color: '$errorDefault',
-            }}
-            weight="bold"
-            family="body"
-          >
-            {error?.message}
-          </Text>
-          <FormContainer onSubmit={handleSubmitForm}>
-            <InputContainer as="label" family="body">
-              <p>Titulo do objetivo</p>
-              <TextInput
-                variant={errorIn === 'title' ? 'denied' : 'default'}
-                value={title}
-                icon={<Crosshair />}
-                placeholder={objective?.title}
-                onChange={(e) => {
-                  if (refSelected) setRefSelected('')
-                  permission === 'edit' && setTitle(e.target.value)
-                }}
-                disabled={permission !== 'edit'}
-              />
-            </InputContainer>
-
-            <InputContainer as="label" family="body">
-              <p>Descrição</p>
-              <Textarea
-                variant={errorIn === 'description' ? 'denied' : 'default'}
-                value={description}
-                onChange={(e) => {
-                  if (refSelected) setRefSelected('')
-                  permission === 'edit' && setDescription(e.target.value)
-                }}
-                placeholder={objective?.description}
-                disabled={permission !== 'edit'}
-              />
-            </InputContainer>
-
-            <InputContainer as="label" family="body">
-              <p>O objetivo será concretizado?</p>
-              {permission === 'edit' && (
-                <InputRadio
-                  values={[
-                    { label: 'Sim', value: true },
-                    { label: 'Não', value: false },
-                  ]}
-                  setState={setObjectified}
-                  state={objectified}
-                />
-              )}
-            </InputContainer>
-            {permission !== 'edit' && (
-              <Text
-                css={{
-                  color: objective?.objectified
-                    ? '$successDefault'
-                    : '$errorDefault',
-                  marginTop: '-$4',
-                }}
-              >
-                {objective?.objectified ? 'Sim' : 'Não'}
-              </Text>
-            )}
-
-            <InputContainer as="label" family="body">
-              <p>
-                Apoiadores <UsersThree size={18} />
-              </p>
-            </InputContainer>
-
-            <Avatares
-              persons={initialSupporters || []}
-              functionInternalButton={handleRemoveSupporter}
-              internalButtonIcon={
-                permission === 'edit' && <UserMinus weight="bold" />
-              }
-              listEmptyMessage="Nenhum personagem foi adicionado aos apoiadores ainda"
-              listEmptyIcon={<UsersThree size={32} />}
-            />
-
-            <InputContainer as="label" family="body">
-              <p>
-                Contras <Skull size={18} />
-              </p>
-            </InputContainer>
-            <Avatares
-              persons={initialAvoiders || []}
-              functionInternalButton={handleRemoveAvoider}
-              internalButtonIcon={
-                permission === 'edit' && <UserMinus weight="bold" />
-              }
-              listEmptyMessage="Nenhum personagem foi adicionado aos contras ainda"
-              listEmptyIcon={<Skull size={32} />}
-            />
-
-            {permission === 'edit' && (
-              <>
-                <InputContainer as="label" family="body">
-                  <p>Todos os personagens</p>
-                </InputContainer>
-                <Avatares
-                  persons={filteredPersons}
-                  firstButtonIcon={<UsersThree weight="bold" />}
-                  firstButtonFunction={handleAddPersonOnOne}
-                  firstButtonKey={'supporting'}
-                  secondaryButtonIcon={<Skull weight="bold" />}
-                  secondaryButtonFunction={handleAddPersonOnOne}
-                  secondButtonKey={'avoider'}
-                  listEmptyMessage="Nenhum personagem que possa ser adicionado"
-                />
-                <div className="buttons">
-                  <Button
-                    type="submit"
-                    align="center"
-                    className="save"
-                    label="Salvar"
-                    icon={<FileArrowUp weight="bold" />}
-                  />
-                  <Button
-                    type="button"
-                    align="center"
-                    className="cancel"
-                    label="Cancelar"
-                    icon={<FileX weight="bold" />}
-                    onClick={() =>
-                      router.push(`/project/${projectId}/persons/${personId}`)
-                    }
-                  />
-                </div>
-              </>
-            )}
-          </FormContainer>
-        </>
+    <>
+      {error && (
+        <ShadowPopUp>
+          <ResponseInfoApi
+            error={error}
+            onClosePopUp={() => setError(undefined)}
+            isPopUp
+          />
+        </ShadowPopUp>
       )}
-    </ObjectiveEditorContainer>
+
+      <ObjectiveEditorContainer>
+        {permission !== 'edit' && isNew ? (
+          <ListEmpty
+            message="OPA! Parece que você caiu em um lugar que você não tem acesso..."
+            icon={<SmileyXEyes size={80} />}
+          />
+        ) : (
+          <>
+            <EditorHeader>
+              <Text as="span">
+                <Textbox size={24} />
+                {isNew ? 'Criar objetivo' : `Editar objetivo`}
+              </Text>
+              <Button
+                type="button"
+                className="goBack"
+                wid="hug"
+                icon={<CaretCircleDoubleLeft weight="bold" />}
+                onClick={() =>
+                  router.push(`/project/${projectId}/persons/${personId}`)
+                }
+              />
+            </EditorHeader>
+            {isNew && filteredRefs && filteredRefs[0] && !refSelected && (
+              <Refs
+                onSelectRef={handleSelectRef}
+                refs={filteredRefs}
+                title="Reaproveite objetivos já criados"
+              />
+            )}
+            <Text
+              size="md"
+              css={{
+                color: '$errorDefault',
+              }}
+              weight="bold"
+              family="body"
+            >
+              {error?.message}
+            </Text>
+            <FormContainer onSubmit={handleSubmitForm}>
+              <InputContainer as="label" family="body">
+                <p>Titulo do objetivo</p>
+                <TextInput
+                  variant={errorIn === 'title' ? 'denied' : 'default'}
+                  value={title}
+                  icon={<Crosshair />}
+                  placeholder={objective?.title}
+                  onChange={(e) => {
+                    if (refSelected) setRefSelected('')
+                    permission === 'edit' && setTitle(e.target.value)
+                  }}
+                  disabled={permission !== 'edit'}
+                />
+              </InputContainer>
+
+              <InputContainer as="label" family="body">
+                <p>Descrição</p>
+                <Textarea
+                  variant={errorIn === 'description' ? 'denied' : 'default'}
+                  value={description}
+                  onChange={(e) => {
+                    if (refSelected) setRefSelected('')
+                    permission === 'edit' && setDescription(e.target.value)
+                  }}
+                  placeholder={objective?.description}
+                  disabled={permission !== 'edit'}
+                />
+              </InputContainer>
+
+              <InputContainer as="label" family="body">
+                <p>O objetivo será concretizado?</p>
+                {permission === 'edit' && (
+                  <InputRadio
+                    values={[
+                      { label: 'Sim', value: true },
+                      { label: 'Não', value: false },
+                    ]}
+                    setState={setObjectified}
+                    state={objectified}
+                  />
+                )}
+              </InputContainer>
+              {permission !== 'edit' && (
+                <Text
+                  css={{
+                    color: objective?.objectified
+                      ? '$successDefault'
+                      : '$errorDefault',
+                    marginTop: '-$4',
+                  }}
+                >
+                  {objective?.objectified ? 'Sim' : 'Não'}
+                </Text>
+              )}
+
+              <InputContainer as="label" family="body">
+                <p>
+                  Apoiadores <UsersThree size={18} />
+                </p>
+              </InputContainer>
+
+              <Avatares
+                persons={initialSupporters || []}
+                functionInternalButton={handleRemoveSupporter}
+                internalButtonIcon={
+                  permission === 'edit' && <UserMinus weight="bold" />
+                }
+                listEmptyMessage="Nenhum personagem foi adicionado aos apoiadores ainda"
+                listEmptyIcon={<UsersThree size={32} />}
+              />
+
+              <InputContainer as="label" family="body">
+                <p>
+                  Contras <Skull size={18} />
+                </p>
+              </InputContainer>
+              <Avatares
+                persons={initialAvoiders || []}
+                functionInternalButton={handleRemoveAvoider}
+                internalButtonIcon={
+                  permission === 'edit' && <UserMinus weight="bold" />
+                }
+                listEmptyMessage="Nenhum personagem foi adicionado aos contras ainda"
+                listEmptyIcon={<Skull size={32} />}
+              />
+
+              {permission === 'edit' && (
+                <>
+                  <InputContainer as="label" family="body">
+                    <p>Todos os personagens</p>
+                  </InputContainer>
+                  <Avatares
+                    persons={filteredPersons}
+                    firstButtonIcon={<UsersThree weight="bold" />}
+                    firstButtonFunction={handleAddPersonOnOne}
+                    firstButtonKey={'supporting'}
+                    secondaryButtonIcon={<Skull weight="bold" />}
+                    secondaryButtonFunction={handleAddPersonOnOne}
+                    secondButtonKey={'avoider'}
+                    listEmptyMessage="Nenhum personagem que possa ser adicionado"
+                  />
+                  <div className="buttons">
+                    <Button
+                      type="submit"
+                      align="center"
+                      className="save"
+                      label="Salvar"
+                      icon={<FileArrowUp weight="bold" />}
+                    />
+                    <Button
+                      type="button"
+                      align="center"
+                      className="cancel"
+                      label="Cancelar"
+                      icon={<FileX weight="bold" />}
+                      onClick={() =>
+                        router.push(`/project/${projectId}/persons/${personId}`)
+                      }
+                    />
+                  </div>
+                </>
+              )}
+            </FormContainer>
+
+            {permission === 'edit' && !isNew && objective && (
+              <Button
+                type="button"
+                label="Apagar"
+                icon={<Trash />}
+                align="center"
+                css={{
+                  marginTop: '$20',
+                  background: 'DarkRed',
+                  padding: '$2',
+                }}
+                onClick={() => setOnOpenDelete(true)}
+              />
+            )}
+          </>
+        )}
+
+        {!isNew && onOpenDelete && objective && (
+          <DeletePopUp>
+            <Box as="div">
+              <Text size="sm">
+                Tem certeza que quer apagar o objetivo: {objective?.title}? Será
+                impossível desfazer isso.
+              </Text>
+              <Button
+                type="button"
+                css={{
+                  background: 'DarkRed',
+                }}
+                align="center"
+                icon={<Trash weight="bold" />}
+                label="Apagar permanentemente"
+                onClick={() => handleDeleteObjective()}
+              />
+              <Button
+                type="button"
+                align="center"
+                icon={<XSquare weight="bold" />}
+                label="Cancelar"
+                onClick={() => setOnOpenDelete(false)}
+              />
+            </Box>
+          </DeletePopUp>
+        )}
+      </ObjectiveEditorContainer>
+    </>
   )
 }

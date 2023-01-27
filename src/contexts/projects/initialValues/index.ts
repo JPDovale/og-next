@@ -9,6 +9,7 @@ import { IUpdatePlotDTO } from '../../../api/dtos/IUpdatePlotDTO'
 import { IObjective } from '../../../api/responsesTypes/IPersonsResponse'
 import { IDeleteImagePerson } from '../types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from '../types/interfaceFunctions/IDeleteImageProject'
+import { IDeleteObjective } from '../types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from '../types/interfaceFunctions/IQuitProject'
 import { IProjectsContext } from '../types/IProjectContext'
 
@@ -96,4 +97,5 @@ export const projectsDefaultValues: IProjectsContext = {
   deleteImageProject: async ({ projectId }: IDeleteImageProject) => {},
   deleteImagePerson: async ({ personId }: IDeleteImagePerson) => {},
   quitProject: async ({ projectId }: IQuitProject) => {},
+  deleteObjective: async ({ objectiveId, personId }: IDeleteObjective) => {},
 }

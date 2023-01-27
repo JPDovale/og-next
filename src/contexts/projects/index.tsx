@@ -22,6 +22,7 @@ import { createObjectGenericFunction } from './functions/personsFunctions/create
 import { createObjetiveOfPersonFunction } from './functions/personsFunctions/createObjetiveOfPersonFunction'
 import { deleteImagePersonFunction } from './functions/personsFunctions/deleteImagePersonFunction'
 import { deleteObjectGenericFunction } from './functions/personsFunctions/deleteObjectGenericFunction'
+import { deleteObjectiveFunction } from './functions/personsFunctions/deleteObjectiveFunction'
 import { responseCommentInPersonFunction } from './functions/personsFunctions/responseCommentInPersonFunction'
 import { saveRefObjectGenericFunction } from './functions/personsFunctions/saveRefObjectGenericFunction'
 import { saveRefObjectiveFunction } from './functions/personsFunctions/saveRefObjectiveFunction'
@@ -45,6 +46,7 @@ import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
 import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
+import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './types/interfaceFunctions/IQuitProject'
 import {
   IProjectsContext,
@@ -348,6 +350,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     await quitProjectFunction({ projectId, dispatch })
   }
 
+  async function deleteObjective({ objectiveId, personId }: IDeleteObjective) {
+    await deleteObjectiveFunction({ objectiveId, personId, dispatch })
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -388,6 +394,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteImageProject,
         deleteImagePerson,
         quitProject,
+        deleteObjective,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

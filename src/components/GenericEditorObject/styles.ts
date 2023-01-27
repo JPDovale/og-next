@@ -226,3 +226,21 @@ export const DeletePopUp = styled('div', {
     },
   },
 })
+
+export const ShadowPopUp = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'absolute',
+  zIndex: 3,
+  padding: '$4',
+
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: '100%',
+  height: '100%',
+
+  background: '#000000de',
+})
