@@ -2,7 +2,6 @@ import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
 import { Projects } from '../../components/Projects'
 import { ProjectsContext } from '../../contexts/projects'
-import { UserContext } from '../../contexts/user'
 import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'
 
@@ -12,26 +11,21 @@ export default function ProjectsPage() {
   const [query, setQuery] = useState('')
 
   const { projects, loading } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-
-  const projectsThisUser = projects?.filter(
-    (project) => project.createdPerUser === user?.id,
-  )
 
   return (
     <>
-      <NextSeo title="Meus projetos | Ognare" noindex />
+      <NextSeo title="Projetos | Ognare" noindex />
 
       <DashboardPageLayout
-        window="Meus projetos"
+        window="Projetos"
         query={query}
         setQuery={setQuery}
         loading={loading}
-        queryless={projectsThisUser && !!projectsThisUser[0]}
+        queryless={projects && !!projects[0]}
       >
         <Projects
           listEmptyMessage="Você ainda não criou nenhum projeto"
-          projects={projectsThisUser}
+          projects={projects}
           query={query}
           isLoading={loading}
         />

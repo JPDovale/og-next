@@ -4,6 +4,7 @@ import LogoToLeft from '../../assets/logos/logo.svg'
 import { Button, Text } from '@og-ui/react'
 import {
   BellSimple,
+  Bookmark,
   DotsNine,
   FilePlus,
   // Clock,
@@ -131,6 +132,16 @@ export function NavigationBar() {
           icon={<ProjectorScreenChart />}
           onClick={() => {
             router.push('/projects')
+            smallWindow && setNavIsOpen(false)
+          }}
+        />
+        <Button
+          type="button"
+          label="Meus projetos"
+          variant={location === 'myProjects' ? 'active' : 'default'}
+          icon={<Bookmark />}
+          onClick={() => {
+            router.push('/myProjects')
             smallWindow && setNavIsOpen(false)
           }}
         />

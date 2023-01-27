@@ -1,13 +1,12 @@
 import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
-import { Loading } from '../../components/Loading'
 import { Projects } from '../../components/Projects'
 import { ProjectsContext } from '../../contexts/projects'
 import { UserContext } from '../../contexts/user'
 import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'
 
-export default function SharedPage() {
+export default function ProjectsPage() {
   usePreventBack()
 
   const [query, setQuery] = useState('')
@@ -15,24 +14,24 @@ export default function SharedPage() {
   const { projects, loading } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
 
-  if (loading) return <Loading />
-
-  const projectsSharedWhitUser =
-    projects?.filter((project) => project.createdPerUser !== user?.id) || []
+  const projectsThisUser = projects?.filter(
+    (project) => project.createdPerUser === user?.id,
+  )
 
   return (
     <>
-      <NextSeo title="Projetos compartilhados comigo | Ognare" noindex />
+      <NextSeo title="Meus projetos | Ognare" noindex />
 
       <DashboardPageLayout
-        window="Compartilhados"
+        window="Meus projetos"
         query={query}
         setQuery={setQuery}
-        queryless={!!projectsSharedWhitUser[0]}
+        loading={loading}
+        queryless={projectsThisUser && !!projectsThisUser[0]}
       >
         <Projects
-          projects={projectsSharedWhitUser}
-          listEmptyMessage="Nenhum projeto foi compartilhado com você ainda"
+          listEmptyMessage="Você ainda não criou nenhum projeto"
+          projects={projectsThisUser}
           query={query}
           isLoading={loading}
         />

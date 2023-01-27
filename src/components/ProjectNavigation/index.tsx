@@ -34,6 +34,7 @@ import {
   XSquare,
   House,
   TreeStructure,
+  UserMinus,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { ProjectsContext } from '../../contexts/projects'
@@ -50,8 +51,10 @@ export function ProjectNavigation({
   isFullDisabled = false,
 }: IProjectNavigationProps) {
   const [onOpenDelete, setOnOpenDelete] = useState(false)
+  const [onOpenQuit, setOnOpenQuit] = useState(false)
 
-  const { deleteProject, projects, loading } = useContext(ProjectsContext)
+  const { deleteProject, projects, loading, quitProject } =
+    useContext(ProjectsContext)
   const { user } = useContext(UserContext)
   const {
     navigatorProjectIsOpen,
@@ -73,6 +76,11 @@ export function ProjectNavigation({
   async function handleDeleteProject() {
     router.push('/projects')
     await deleteProject(id as string)
+  }
+
+  async function handleQuitProject() {
+    router.push('/projects')
+    await quitProject({ projectId: id as string })
   }
 
   return (
@@ -208,13 +216,7 @@ export function ProjectNavigation({
           <Text css={{ color: '$base700' }}>Opções do projeto</Text>
         )}
         <Options isOpen={navigatorProjectIsOpen}>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Projeto
             <Button
               disabled={isFullDisabled || !!loading}
@@ -222,15 +224,13 @@ export function ProjectNavigation({
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
               icon={<House weight="bold" />}
+              onClick={() => {
+                router.push(`/project/${id}`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/plot`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Plot
             <Button
               disabled={isFullDisabled || !!loading}
@@ -239,15 +239,13 @@ export function ProjectNavigation({
               align="center"
               icon={<BookOpen weight="bold" />}
               variant={onWindow === 'plot' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/plot`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/books`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Livros
             <Button
               type="button"
@@ -256,15 +254,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Books weight="bold" />}
               variant={onWindow === 'books' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/books`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/planets`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Planetas
             <Button
               type="button"
@@ -273,15 +269,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Planet weight="bold" />}
               variant={onWindow === 'planets' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/planets`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/nations`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Nações
             <Button
               type="button"
@@ -290,16 +284,13 @@ export function ProjectNavigation({
               align="center"
               icon={<MapTrifold weight="bold" />}
               variant={onWindow === 'nations' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/nations`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/persons`)
-
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Personagens
             <Button
               disabled={isFullDisabled || !!loading}
@@ -308,15 +299,13 @@ export function ProjectNavigation({
               align="center"
               icon={<UserFocus weight="bold" />}
               variant={onWindow === 'persons' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/persons`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/cities`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Cidades
             <Button
               type="button"
@@ -325,15 +314,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Buildings weight="bold" />}
               variant={onWindow === 'cities' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/cities`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/races`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Raças
             <Button
               type="button"
@@ -342,15 +329,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Alien weight="bold" />}
               variant={onWindow === 'races' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/races`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/religions`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Religiões
             <Button
               type="button"
@@ -359,15 +344,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Atom weight="bold" />}
               variant={onWindow === 'religions' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/religions`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/powers`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Poderes
             <Button
               type="button"
@@ -376,15 +359,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Lightning weight="bold" />}
               variant={onWindow === 'powers' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/powers`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/familys`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Famílias
             <Button
               type="button"
@@ -393,15 +374,13 @@ export function ProjectNavigation({
               align="center"
               icon={<UsersFour weight="bold" />}
               variant={onWindow === 'familys' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/familys`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/languages`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Linguagens
             <Button
               type="button"
@@ -410,15 +389,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Translate weight="bold" />}
               variant={onWindow === 'languages' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/languages`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/institutions`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Instituições
             <Button
               type="button"
@@ -427,15 +404,13 @@ export function ProjectNavigation({
               align="center"
               icon={<Bank weight="bold" />}
               variant={onWindow === 'institutions' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/institutions`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/timelines`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Time lines
             <Button
               type="button"
@@ -444,16 +419,14 @@ export function ProjectNavigation({
               align="center"
               icon={<Clock weight="bold" />}
               variant={onWindow === 'timelines' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/timelines`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
 
-          <Label
-            size="xxs"
-            onClick={() => {
-              router.push(`/project/${id}/mindMap`)
-              setNavigatorProjectIsOpen(false)
-            }}
-          >
+          <Label size="xxs">
             Mind map
             <Button
               type="button"
@@ -461,6 +434,10 @@ export function ProjectNavigation({
               align="center"
               icon={<TreeStructure weight="bold" />}
               variant={onWindow === 'mindMap' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/mindMap`)
+                setNavigatorProjectIsOpen(false)
+              }}
             />
           </Label>
 
@@ -479,6 +456,22 @@ export function ProjectNavigation({
               variant={onWindow === 'settings' ? 'active' : 'default'}
             />
           </Label>
+          {project?.createdPerUser !== user?.id && (
+            <Label size="xxs">
+              Sair
+              <Button
+                disabled={isFullDisabled || !!loading}
+                type="button"
+                css={{
+                  background: 'DarkRed',
+                }}
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                icon={<UserMinus weight="bold" />}
+                onClick={() => setOnOpenQuit(true)}
+              />
+            </Label>
+          )}
           {project?.createdPerUser === user?.id && (
             <>
               <Label
@@ -522,6 +515,36 @@ export function ProjectNavigation({
               icon={<Trash weight="bold" />}
               label="Apagar permanentemente"
               onClick={() => handleDeleteProject()}
+            />
+            <Button
+              disabled={isFullDisabled || !!loading}
+              type="button"
+              align="center"
+              icon={<XSquare weight="bold" />}
+              label="Cancelar"
+              onClick={() => setOnOpenDelete(false)}
+            />
+          </Box>
+        </DeletePopUp>
+      )}
+
+      {onOpenQuit && project?.createdPerUser !== user?.id && (
+        <DeletePopUp>
+          <Box as="div">
+            <Text size="sm">
+              Tem certeza que quer sair do projeto? Será impossível desfazer
+              isso. Você não poderá mais ver o projeto na sua aba de projetos.
+            </Text>
+            <Button
+              disabled={isFullDisabled || !!loading}
+              type="button"
+              css={{
+                background: 'DarkRed',
+              }}
+              align="center"
+              icon={<UserMinus weight="bold" />}
+              label="Sair do projeto."
+              onClick={handleQuitProject}
             />
             <Button
               disabled={isFullDisabled || !!loading}
