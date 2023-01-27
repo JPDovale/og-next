@@ -34,6 +34,7 @@ import { createProjectFunction } from './functions/projectFunctions/createProjec
 import { deleteImageProjectFunction } from './functions/projectFunctions/deleteImageProjectFunction'
 import { deleteProjectFunction } from './functions/projectFunctions/deleteProjectFunction'
 import { getProjectsFunction } from './functions/projectFunctions/getProjectsFunction'
+import { quitProjectFunction } from './functions/projectFunctions/quitProjectFunction'
 import { responseCommentInPlotFunction } from './functions/projectFunctions/responseCommentInPlotFunction'
 import { shareProjectFunction } from './functions/projectFunctions/shareProjectFunction'
 import { unshareProjectFunction } from './functions/projectFunctions/unshareProjectFunction'
@@ -44,6 +45,7 @@ import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
 import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
+import { IQuitProject } from './types/interfaceFunctions/IQuitProject'
 import {
   IProjectsContext,
   IProjectsContextProps,
@@ -84,6 +86,15 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   async function createProject(newProjectInfos: ICreateProjectDTO) {
     setLoading(true)
     const newProjectId = await createProjectFunction(newProjectInfos, dispatch)
+
+    const welcomeProjectId = projects.find(
+      (p) => p.id === '1242545b-56c9-41c0-9f98-addc9b5c5c65',
+    )?.id
+    if (welcomeProjectId) {
+      console.log('ola')
+      await quitProject({ projectId: welcomeProjectId })
+    }
+
     setLoading(false)
     return newProjectId
   }
@@ -333,6 +344,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     setLoading(false)
   }
 
+  async function quitProject({ projectId }: IQuitProject) {
+    await quitProjectFunction({ projectId, dispatch })
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -372,6 +387,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updatePerson,
         deleteImageProject,
         deleteImagePerson,
+        quitProject,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

@@ -133,3 +133,16 @@ export async function deleteImageProjectRequest({
     return err.response.data
   }
 }
+
+interface IQuitProjectRequest {
+  projectId: string
+}
+
+export async function quitProjectRequest({ projectId }: IQuitProjectRequest) {
+  try {
+    const response = await api.put('projects/quit', { projectId })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

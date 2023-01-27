@@ -9,11 +9,12 @@ export enum ProjectsActionsType {
   UpdateProjectImage = 'updateProjectImage',
   UpdateProject = 'updateProject',
   DeleteProject = 'deleteProject',
-  AddPerson = 'AddPerson',
-  UpdatePersonImage = 'UpdatePersonImage',
-  UpdatePerson = 'UpdatePerson',
+  AddPerson = 'addPerson',
+  UpdatePersonImage = 'updatePersonImage',
+  UpdatePerson = 'updatePerson',
+  RemoveProject = 'removeProject',
 
-  SetPersons = 'SetPersons',
+  SetPersons = 'setPersons',
 
   SetProjects = 'setProjects',
   SetError = 'setError',
@@ -117,6 +118,15 @@ export function setPersonsAction(persons: IPersonsResponse[]) {
     type: ProjectsActionsType.SetPersons,
     payload: {
       persons,
+    },
+  }
+}
+
+export function removeProjectAction(projectId: string) {
+  return {
+    type: ProjectsActionsType.RemoveProject,
+    payload: {
+      projectId,
     },
   }
 }

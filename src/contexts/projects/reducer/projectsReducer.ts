@@ -117,6 +117,15 @@ export function projectsReducer(state: IProjectState, action: any) {
       })
     }
 
+    case ProjectsActionsType.RemoveProject: {
+      return produce(state, (draft) => {
+        draft.projects = state.projects.filter(
+          (project) => project.id !== action.payload.projectId,
+        )
+        draft.error = undefined
+      })
+    }
+
     default:
       return state
   }

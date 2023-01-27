@@ -45,8 +45,12 @@ const loginFormSchema = z.object({
 type LoginFormData = z.infer<typeof loginFormSchema>
 
 export default function LoginPage() {
-  const { createSession, userLogged, error, setError, setSuccess } =
-    useContext(UserContext)
+  const {
+    createSession,
+    userLogged,
+    error,
+    // setError, setSuccess
+  } = useContext(UserContext)
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
@@ -76,10 +80,10 @@ export default function LoginPage() {
   //   setUser(session?.data?.loggedUser!)
   // }, [session, setUser])
 
-  useEffect(() => {
-    setError(undefined)
-    setSuccess(undefined)
-  }, [setSuccess, setError])
+  // useEffect(() => {
+  //   setError(undefined)
+  //   setSuccess(undefined)
+  // }, [setSuccess, setError])
 
   return (
     <>
