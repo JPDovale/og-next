@@ -112,7 +112,7 @@ export function GenericCardObject({
                 Personagem
               </Text>
               <Relational>
-                <AvatarWeb src={relationalPerson?.image.url} size="lg" />
+                <AvatarWeb src={relationalPerson?.image?.url} size="lg" />
                 <RelationalInfos>
                   <Text as="label" size="lg" family="body" height="shorter">
                     {relationalPerson?.name}

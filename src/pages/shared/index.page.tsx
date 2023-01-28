@@ -25,7 +25,9 @@ export default function SharedPage() {
       <NextSeo title="Projetos compartilhados comigo | Ognare" noindex />
 
       <DashboardPageLayout
-        window="Compartilhados"
+        window={`Compartilhados: ${
+          projectsSharedWhitUser ? projectsSharedWhitUser.length : 0
+        }`}
         query={query}
         setQuery={setQuery}
         queryless={!!projectsSharedWhitUser[0]}

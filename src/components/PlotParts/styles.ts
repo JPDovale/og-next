@@ -1,16 +1,17 @@
 import { styled } from '@og-ui/react'
 
 export const PlotPartsContainer = styled('div', {
-  display: 'flex',
-  padding: '$6',
-  background: '$gray900',
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
+  // padding: '$6',
+  // background: '$gray900',
   gap: '$4',
-  overflowX: 'scroll',
-  boxShadow: '$onActive',
+  // overflowX: 'scroll',
+  // boxShadow: '$onActive',
   borderRadius: '$sm',
 
   '@media screen and (max-width: 768px)': {
-    padding: '$4',
+    gridTemplateColumns: '1fr ',
   },
 
   variants: {
@@ -18,6 +19,7 @@ export const PlotPartsContainer = styled('div', {
       false: {
         display: 'grid',
         gap: '$8',
+        padding: '$6',
         gridTemplateColumns: '1fr 1fr',
 
         borderRadius: '0',
