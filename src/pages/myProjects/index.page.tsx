@@ -23,7 +23,9 @@ export default function ProjectsPage() {
       <NextSeo title="Meus projetos | Ognare" noindex />
 
       <DashboardPageLayout
-        window="Meus projetos"
+        window={`Meus projetos: ${
+          projectsThisUser ? projectsThisUser.length : 0
+        }`}
         query={query}
         setQuery={setQuery}
         loading={loading}

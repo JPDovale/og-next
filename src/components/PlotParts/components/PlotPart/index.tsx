@@ -112,7 +112,11 @@ export function PlotPart({
           <Text
             as="span"
             size="xs"
-            css={{ alignSelf: 'center', color: '$base700' }}
+            css={{
+              alignSelf: 'center',
+              color: isPreview ? '$black' : '$white',
+              paddingBottom: 16,
+            }}
           >
             Clique para definir
           </Text>

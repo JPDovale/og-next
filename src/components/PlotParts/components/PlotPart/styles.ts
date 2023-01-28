@@ -3,24 +3,27 @@ import { Box, styled } from '@og-ui/react'
 export const PlotPartContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
-  background: '$purple800',
+  background: '$base600',
   gap: '$4',
   padding: '$4',
 
-  width: 420,
-  minWidth: 420,
+  width: '100%',
   maxHeight: 400,
+  minHeight: 300,
 
   outline: 'none',
   border: 'none',
   cursor: 'pointer',
   overflow: 'hidden',
   transition: 'ease-in 250ms',
+  boxShadow: '$onActive',
 
   header: {
     borderBottom: '1px solid $base900',
     width: '100%',
     textAlign: 'start',
+    color: '$black',
+    fontWeight: 'bold',
   },
 
   div: {
@@ -38,18 +41,20 @@ export const PlotPartContainer = styled(Box, {
     width: '100%',
     height: '100%',
     flexDirection: 'column',
+    color: '$black',
 
     span: {
       textAlign: 'center',
       fontSize: '12px',
-      color: '$base600',
+      color: '$black',
       marginTop: '8px',
     },
   },
 
   '@media screen and (max-width: 768px)': {
-    minWidth: 300,
-    maxHeight: 500,
+    minWidth: 'unset',
+    maxHeight: 400,
+    minHeight: 'unset',
 
     header: {
       fontSize: '18px',
@@ -90,10 +95,11 @@ export const PlotPartContainer = styled(Box, {
         width: '100%',
         maxHeight: 'none',
         minHeight: 580,
-        padding: '0',
+        padding: 0,
 
         background: '$gray900',
         borderRadius: '$sm',
+        boxShadow: '$default',
 
         '&:hover': {
           boxShadow: '$default',
@@ -108,6 +114,8 @@ export const PlotPartContainer = styled(Box, {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '$3 $4',
+          color: '$white',
+          fontWeight: '$regular',
 
           button: {
             padding: '$2',
@@ -117,6 +125,7 @@ export const PlotPartContainer = styled(Box, {
         p: {
           padding: '$2 $4',
           marginTop: '-1rem',
+          color: '$white',
         },
 
         '@media screen and (max-width: 768px)': {
@@ -126,7 +135,7 @@ export const PlotPartContainer = styled(Box, {
       },
 
       true: {
-        div: { alignItems: 'center', paddingBottom: '$4' },
+        div: { alignItems: 'center' },
       },
     },
   },
