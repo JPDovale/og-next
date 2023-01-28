@@ -36,7 +36,7 @@ export default function PlotPage() {
   async function handleEditUrlOfText(e: FocusEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    const updatedPlot: IUpdatePlotDTO = { ...project.plot, urlOfText }
+    const updatedPlot: IUpdatePlotDTO = { urlOfText }
 
     await updatePlot(updatedPlot, project?.id as string)
 
