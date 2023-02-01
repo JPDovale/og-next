@@ -85,7 +85,7 @@ export function Avatares({
       {persons.map((person) => {
         return (
           <PersonAvatar
-            key={person.id}
+            key={person?.id}
             onClick={() => {
               isClickable && router.push(`/project/${id}/persons/${person.id}`)
             }}
@@ -131,12 +131,12 @@ export function Avatares({
               <AvatarWeb
                 size={size}
                 src={person?.image?.url}
-                selected={personSelected === person.id && true}
+                selected={personSelected === person?.id && true}
                 error={!personSelected && error && true}
                 isClickable={isClickable}
               />
 
-              <p>{person.name}</p>
+              <p>{person?.name}</p>
             </Header>
           </PersonAvatar>
         )

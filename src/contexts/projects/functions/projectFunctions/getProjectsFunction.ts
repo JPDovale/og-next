@@ -19,6 +19,11 @@ export async function getProjectsFunction(
   }
 
   dispatch(
-    setProjectsAction(response.projects, response.users, response.persons),
+    setProjectsAction(
+      response.projects,
+      response.users,
+      response.persons,
+      response.books,
+    ),
   )
 }

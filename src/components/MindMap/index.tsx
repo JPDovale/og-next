@@ -119,6 +119,7 @@ export function MindMap({ project }: IMindMapProps) {
 
                     {tags.map((tag) => {
                       if (tag.type === 'persons') return ''
+                      if (tag.type === 'books') return ''
 
                       return (
                         <Tag key={tag.id}>
@@ -135,23 +136,23 @@ export function MindMap({ project }: IMindMapProps) {
                               const personsInThisRef = ref.references.map(
                                 (r) => {
                                   const personFind = personsThisProject.find(
-                                    (person) => person.id === r,
+                                    (person) => person?.id === r,
                                   )
                                   return personFind
                                 },
                               ) as IPersonsResponse[]
 
                               return (
-                                <Reference key={ref.object.id}>
+                                <Reference key={ref.object?.id}>
                                   <div>
-                                    <Text>{ref.object.title}</Text>
+                                    <Text>{ref.object?.title}</Text>
 
                                     <Text
                                       as="span"
                                       family="body"
                                       height="short"
                                     >
-                                      {ref.object.description}
+                                      {ref.object?.description}
                                     </Text>
                                   </div>
 

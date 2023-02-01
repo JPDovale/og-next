@@ -7,7 +7,7 @@ import { Comments, PlotPartContainer } from './styles'
 
 interface IPlotPartProps {
   term: 'o' | 'a' | 'os' | 'as'
-  projectId: string
+  idObject: string
   to: string
   last?: string
   lastTerm?: 'o' | 'a' | 'os' | 'as'
@@ -18,11 +18,12 @@ interface IPlotPartProps {
   comments?: IComment[]
   keyValue: string
   isInitialized: boolean
+  isToProject: boolean
 }
 
 export function PlotPart({
   to,
-  projectId,
+  idObject,
   last,
   lastTerm,
   element,
@@ -33,6 +34,7 @@ export function PlotPart({
   comments,
   keyValue,
   isInitialized,
+  isToProject,
 }: IPlotPartProps) {
   const router = useRouter()
   const { id } = router.query
@@ -40,6 +42,9 @@ export function PlotPart({
   const comment = comments?.filter((comment) => comment.to === keyValue)[0]
 
   const elementLineBraked = element?.split('\n')
+  const pathToRedirect = isToProject
+    ? `/project/${id}/plot/${keyValue}`
+    : `/project/${id}/books/${idObject}/${keyValue}`
 
   return (
     <PlotPartContainer
@@ -56,7 +61,7 @@ export function PlotPart({
             disabled={!element && isInitialized && disabled}
             onClick={() => {
               if (!element && isInitialized && disabled) return
-              router.push(`/project/${id}/plot/${keyValue}`)
+              router.push(pathToRedirect)
             }}
           />
         )}
@@ -67,7 +72,7 @@ export function PlotPart({
         size="lg"
         onClick={() => {
           if (!element && isInitialized && disabled) return
-          router.push(`/project/${id}/plot/${keyValue}`)
+          router.push(pathToRedirect)
         }}
       >
         {!element ? (
@@ -122,13 +127,13 @@ export function PlotPart({
           </Text>
         )}
       </Text>
-      {!isPreview && comment && (
+      {!isPreview && !isToProject && comment && (
         <Comments>
           <Heading as="header" size="sm">
             Comentários
           </Heading>
 
-          <Comment projectId={projectId} comment={comment} isPreview />
+          <Comment projectId={idObject} comment={comment} isPreview />
         </Comments>
       )}
     </PlotPartContainer>

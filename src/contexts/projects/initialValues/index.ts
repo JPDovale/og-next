@@ -18,6 +18,7 @@ export const projectsDefaultValues: IProjectsContext = {
   projects: [],
   users: [],
   persons: [],
+  books: [],
 
   error: undefined,
   setError: (newState: IError | undefined) => {},

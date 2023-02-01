@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { IError } from '../../../@types/errors/IError'
+import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
@@ -70,6 +71,7 @@ export function setProjectsAction(
   projects: IProjectResponse[],
   users: IUserResponse[],
   persons: IPersonsResponse[],
+  books: IBooksResponse[],
 ) {
   return {
     type: ProjectsActionsType.SetProjects,
@@ -77,6 +79,7 @@ export function setProjectsAction(
       projects,
       users,
       persons,
+      books,
     },
   }
 }

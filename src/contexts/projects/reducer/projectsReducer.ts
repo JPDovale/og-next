@@ -1,6 +1,7 @@
 import { produce } from 'immer'
 
 import { IError } from '../../../@types/errors/IError'
+import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
@@ -10,6 +11,7 @@ export interface IProjectState {
   projects: IProjectResponse[]
   persons: IPersonsResponse[]
   users: IUserResponse[]
+  books: IBooksResponse[]
   error: IError | undefined
 }
 
@@ -71,6 +73,7 @@ export function projectsReducer(state: IProjectState, action: any) {
         draft.projects = action.payload.projects
         draft.users = action.payload.users
         draft.persons = action.payload.persons
+        draft.books = action.payload.books
         draft.error = undefined
       })
     }

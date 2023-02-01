@@ -7,6 +7,7 @@ import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
 import { IShareProjectDTO } from '../../../api/dtos/IShareProjectDTO'
 import { IUpdatePlotDTO } from '../../../api/dtos/IUpdatePlotDTO'
+import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import {
   IObjective,
   IPersonsResponse,
@@ -23,6 +24,7 @@ export interface IProjectsContext {
   projects: IProjectResponse[]
   users: IUserResponse[]
   persons: IPersonsResponse[]
+  books: IBooksResponse[]
 
   error: IError | undefined
   setError: (newState: IError | undefined) => void

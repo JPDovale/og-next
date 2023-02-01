@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import {
   BookOpen,
+  Books,
   Image as ImageIco,
   Pencil,
   Trash,
@@ -12,7 +13,9 @@ import {
 import { useContext, useState } from 'react'
 import { IPersonsResponse } from '../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../api/responsesTypes/IProjcetResponse'
+import { CardBook } from '../../components/BooksComponents/CardBook'
 import { CardPerson } from '../../components/CardPerson'
+import { ListEmpty } from '../../components/ListEmpty'
 import { Loading } from '../../components/Loading'
 import { PlotParts } from '../../components/PlotParts'
 import { ProjectsContext } from '../../contexts/projects'
@@ -21,6 +24,7 @@ import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { useWindowSize } from '../../hooks/useWindow'
 import { ProjectPageLayout } from '../../layouts/ProjectPageLayout'
 import {
+  BooksContainer,
   EditImgForm,
   HeaderProjectInfos,
   HeadingPart,
@@ -38,9 +42,15 @@ export default function ProjectPage() {
 
   const [onEditImg, setOnEditImg] = useState(false)
 
-  const { projects, updateImageProject, persons, loading, deleteImageProject } =
-    useContext(ProjectsContext)
   const { user } = useContext(UserContext)
+  const {
+    projects,
+    updateImageProject,
+    persons,
+    loading,
+    deleteImageProject,
+    books,
+  } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -52,12 +62,15 @@ export default function ProjectPage() {
   const personsThisProject = persons?.filter(
     (person) => person.defaultProject === project?.id,
   )
+  const booksThisProject = books?.filter(
+    (book) => book.defaultProject === project?.id,
+  )
+
   const permissionThisUserInProject = project?.users.find(
     (u) => user?.id === u.id,
   )?.permission
 
   const windowSize = useWindowSize()
-
   const smallWindow = windowSize.width! < 786
   const largeWindow = windowSize.width! > 1700
 
@@ -190,7 +203,7 @@ export default function ProjectPage() {
                   Livros:
                 </Text>
                 <Text as="p" size="sm">
-                  Em breve
+                  {booksThisProject?.length || 0}
                 </Text>
               </Info>
               <Info>
@@ -212,17 +225,36 @@ export default function ProjectPage() {
             </Infos>
           </InfosContainer>
         </HeaderProjectInfos>
+
         <PlotProjectContainer>
           <HeadingPart
-            size="md"
+            onClick={() => router.push(`/project/${project.id}/books`)}
+          >
+            <Books size={40} />
+            Livros
+          </HeadingPart>
+          <BooksContainer isEmpty={!booksThisProject[0]}>
+            {booksThisProject[0] ? (
+              booksThisProject.map((book) => (
+                <CardBook key={book.id} book={book} isPreview />
+              ))
+            ) : (
+              <ListEmpty
+                message="Você ainda não criou nenhum livro para esse projeto."
+                icon={<Books size={48} />}
+              />
+            )}
+          </BooksContainer>
+
+          <HeadingPart
             onClick={() => router.push(`/project/${project.id}/plot`)}
           >
             <BookOpen size={40} />
             PLOT
           </HeadingPart>
           {loading ? <Loading /> : <PlotParts project={project} isPreview />}
+
           <HeadingPart
-            size="md"
             onClick={() => router.push(`/project/${project.id}/persons`)}
           >
             <UserFocus size={40} />

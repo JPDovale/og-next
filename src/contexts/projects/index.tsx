@@ -65,6 +65,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     users: [],
     error: undefined,
     persons: [],
+    books: [],
   })
 
   const {
@@ -73,7 +74,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     error: errorUser,
   } = useContext(UserContext)
 
-  const { projects, error, users, persons } = projectState
+  const { projects, error, users, persons, books } = projectState
 
   function setError(error: IError | undefined) {
     dispatch(setErrorAction(error))
@@ -93,7 +94,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       (p) => p.id === '1242545b-56c9-41c0-9f98-addc9b5c5c65',
     )?.id
     if (welcomeProjectId) {
-      console.log('ola')
       await quitProject({ projectId: welcomeProjectId })
     }
 
@@ -366,6 +366,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         projects,
         users,
         persons,
+        books,
 
         error,
         setError,
