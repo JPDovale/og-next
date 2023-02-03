@@ -1,5 +1,6 @@
 import { Text } from '@og-ui/react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'
 import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { PlotParts } from '../../PlotParts'
@@ -20,8 +21,14 @@ interface ICardBookProps {
 }
 
 export function CardBook({ book, isPreview = false }: ICardBookProps) {
+  const router = useRouter()
+  const { id } = router.query
+
   return (
-    <CardBookContainer as="button">
+    <CardBookContainer
+      as="button"
+      onClick={() => router.push(`/project/${id}/books/${book.id}`)}
+    >
       <PreviewContainer isPreview={isPreview}>
         <ImageContainer>
           {book.frontCover?.url ? (
@@ -70,7 +77,7 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
             </Info>
           </InfoContainer>
 
-          <InfoContainer columns={3}>
+          <InfoContainer columns={4}>
             <Info>
               <Text as="span" family="body" size="sm" height="shorter">
                 Gêneros:
@@ -90,6 +97,13 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
                 Capítulos:
               </Text>
               <Text size="xs">{book.capitules.length}</Text>
+            </Info>
+
+            <Info>
+              <Text as="span" family="body" size="sm" height="shorter">
+                Personagens:
+              </Text>
+              <Text size="xs">{book.plot.persons.length}</Text>
             </Info>
           </InfoContainer>
 

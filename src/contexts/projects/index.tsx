@@ -16,6 +16,7 @@ import { IUpdatePlotDTO } from '../../api/dtos/IUpdatePlotDTO'
 import { IObjective } from '../../api/responsesTypes/IPersonsResponse'
 import { Error } from '../../components/Error'
 import { UserContext } from '../user'
+import { createBookFunction } from './functions/booksFunctions/createBookFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
@@ -44,6 +45,7 @@ import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunct
 import { projectsDefaultValues } from './initialValues'
 import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
+import { ICreateBook } from './types/interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
@@ -70,6 +72,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
 
   const {
     userLogged,
+    user,
     loading: loadingUser,
     error: errorUser,
   } = useContext(UserContext)
@@ -354,6 +357,19 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     await deleteObjectiveFunction({ objectiveId, personId, dispatch })
   }
 
+  async function createBook({ newBook, project }: ICreateBook) {
+    setLoading(true)
+    const response = await createBookFunction({
+      dispatch,
+      newBook,
+      project,
+      users,
+      user: user!,
+    })
+    setLoading(false)
+    return response
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -396,6 +412,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteImagePerson,
         quitProject,
         deleteObjective,
+        createBook,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

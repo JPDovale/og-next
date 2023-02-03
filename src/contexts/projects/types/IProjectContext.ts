@@ -14,6 +14,7 @@ import {
 } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
+import { ICreateBook } from './interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
@@ -111,6 +112,7 @@ export interface IProjectsContext {
     objectiveId,
     personId,
   }: IDeleteObjective) => Promise<void>
+  createBook: ({ newBook, project }: ICreateBook) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {
