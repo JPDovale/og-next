@@ -1,5 +1,22 @@
 import { IAvatar } from './ICreateResponse'
 
+export interface ICapitule {
+  id: string
+  name: string
+  sequence: string
+  objective: string
+  complete: boolean
+  words?: string
+  structure?: {
+    act1?: string
+    act2?: string
+    act3?: string
+  }
+  scenes?: string[]
+  createdAt: string
+  updatedAt: string
+}
+
 export interface IBooksResponse {
   id: string
   title: string
@@ -33,7 +50,7 @@ export interface IBooksResponse {
     }
     urlOfText: string
   }
-  capitules: any[]
+  capitules: ICapitule[]
   words?: string
   writtenWords?: string
   comments: any[]

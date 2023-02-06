@@ -112,7 +112,7 @@ export default function PlotPage() {
           </BoxInputUrlOfTextContainer>
         )}
 
-        {!loading && <PlotParts project={project} />}
+        {!loading && <PlotParts project={project} columns={2} />}
       </ProjectPageLayout>
     </>
   )

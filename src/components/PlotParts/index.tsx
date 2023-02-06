@@ -10,12 +10,14 @@ interface IPlotPartsProps {
   project?: IProjectResponse
   book?: IBooksResponse
   isPreview?: boolean
+  columns?: 2 | 3 | 4
 }
 
 export function PlotParts({
   project,
   book,
   isPreview = false,
+  columns = 4,
 }: IPlotPartsProps) {
   const { user } = useContext(UserContext)
 
@@ -27,7 +29,7 @@ export function PlotParts({
   const isToProject = !!project
 
   return (
-    <PlotPartsContainer isPreview={isPreview}>
+    <PlotPartsContainer isPreview={isPreview} columns={columns}>
       <PlotPart
         isInitialized={user?.isInitialized || false}
         isToProject={isToProject}

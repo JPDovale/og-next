@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'
 import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
-import { PlotParts } from '../../PlotParts'
 import { ProgressBar } from '../../usefull/ProgressBar'
 import {
   CardBookContainer,
@@ -11,7 +10,6 @@ import {
   Info,
   InfoContainer,
   InfosContainer,
-  PlotBook,
   PreviewContainer,
 } from './styles'
 
@@ -135,12 +133,6 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
           </InfoContainer>
         </InfosContainer>
       </PreviewContainer>
-
-      {!isPreview && (
-        <PlotBook>
-          <PlotParts book={book} isPreview />
-        </PlotBook>
-      )}
     </CardBookContainer>
   )
 }

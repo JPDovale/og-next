@@ -141,6 +141,17 @@ export function projectsReducer(state: IProjectState, action: any) {
       })
     }
 
+    case ProjectsActionsType.UpdateBook: {
+      return produce(state, (draft) => {
+        const indexOfBook = state.books.findIndex(
+          (book) => book.id === action.payload.book.id,
+        )
+
+        draft.books[indexOfBook] = action.payload.book
+        draft.error = undefined
+      })
+    }
+
     default:
       return state
   }

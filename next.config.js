@@ -6,6 +6,7 @@ const nextConfig = {
     domains: [
       'firebasestorage.googleapis.com',
       'https://googleusercontent.com',
+      'm.media-amazon.com',
     ],
   },
 }

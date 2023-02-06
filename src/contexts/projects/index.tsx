@@ -17,6 +17,8 @@ import { IObjective } from '../../api/responsesTypes/IPersonsResponse'
 import { Error } from '../../components/Error'
 import { UserContext } from '../user'
 import { createBookFunction } from './functions/booksFunctions/createBookFunction'
+import { removeFrontCoverFunction } from './functions/booksFunctions/removeFrontCoverFunction'
+import { updateFrontCoverFunction } from './functions/booksFunctions/updateFrontCoverFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
@@ -50,6 +52,7 @@ import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerso
 import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './types/interfaceFunctions/IQuitProject'
+import { IUpdateFrontCover } from './types/interfaceFunctions/IUpdateFrontCover'
 import {
   IProjectsContext,
   IProjectsContextProps,
@@ -370,6 +373,16 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return response
   }
 
+  async function updateFrontCover({ bookId, file }: IUpdateFrontCover) {
+    return updateFrontCoverFunction({ bookId, file, dispatch })
+  }
+
+  async function removeFrontCover(bookId: string) {
+    setLoading(true)
+    await removeFrontCoverFunction({ bookId, dispatch })
+    setLoading(false)
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -413,6 +426,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         quitProject,
         deleteObjective,
         createBook,
+        updateFrontCover,
+        removeFrontCover,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

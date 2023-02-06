@@ -12,6 +12,7 @@ import { IDeleteImagePerson } from '../types/interfaceFunctions/IDeleteImagePers
 import { IDeleteImageProject } from '../types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from '../types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from '../types/interfaceFunctions/IQuitProject'
+import { IUpdateFrontCover } from '../types/interfaceFunctions/IUpdateFrontCover'
 import { IProjectsContext } from '../types/IProjectContext'
 
 export const projectsDefaultValues: IProjectsContext = {
@@ -101,4 +102,6 @@ export const projectsDefaultValues: IProjectsContext = {
   quitProject: async ({ projectId }: IQuitProject) => {},
   deleteObjective: async ({ objectiveId, personId }: IDeleteObjective) => {},
   createBook: async ({ newBook, project }: ICreateBook) => false,
+  updateFrontCover: async ({ bookId, file }: IUpdateFrontCover) => {},
+  removeFrontCover: async (bookId: string) => {},
 }
