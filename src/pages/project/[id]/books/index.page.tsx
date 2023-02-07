@@ -3,45 +3,30 @@ import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Books } from 'phosphor-react'
 import { useContext } from 'react'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { CardBook } from '../../../../components/BooksComponents/CardBook'
 import { DefaultError } from '../../../../components/DefaultError'
 import { ListEmpty } from '../../../../components/ListEmpty'
-import { InterfaceContext } from '../../../../contexts/interface'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
+import { useProject } from '../../../../hooks/useProject'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
-import { orderElements } from '../../../../services/orderElements'
 import { BooksContainer, NewBookButtonContainer } from './styles'
 
 export default function BooksPage() {
-  const { projects, loading, books, error, setError } =
-    useContext(ProjectsContext)
-  const { orderBy } = useContext(InterfaceContext)
+  const { loading, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
   usePreventBack(`/project/${id}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-  const booksThisProject = books?.filter(
-    (book) => book.defaultProject === project?.id,
-  )
-
-  const booksOrd = orderElements(booksThisProject, orderBy) as IBooksResponse[]
+  const { project, projectName, booksThisProject } = useProject(id as string)
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Livros | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Livros | Ognare`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros']}
         loading={loading}
@@ -68,7 +53,9 @@ export default function BooksPage() {
 
         <BooksContainer>
           {booksThisProject[0] ? (
-            booksOrd.map((book) => <CardBook key={book.id} book={book} />)
+            booksThisProject.map((book) => (
+              <CardBook key={book.id} book={book} />
+            ))
           ) : (
             <ListEmpty
               message="Você ainda não criou nenhum livro para esse projeto."

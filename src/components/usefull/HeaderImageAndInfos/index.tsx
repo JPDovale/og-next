@@ -7,8 +7,9 @@ import {
   Pencil,
   Trash,
 } from 'phosphor-react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
+import { UserContext } from '../../../contexts/user'
 import { AvatarWeb } from '../../Avatar'
 import { Loading } from '../../Loading'
 import { ContainerGrid } from '../ContainerGrid'
@@ -41,7 +42,6 @@ interface IHeaderImageAndInfosProps {
   withProgressBar?: boolean
   withAvatares?: boolean
   avatares?: IUserResponse[]
-  creator: IUserResponse
   initialValeu?: number
   finalValue?: number
 
@@ -59,13 +59,14 @@ export function HeaderImageAndInfos({
   withProgressBar = false,
   withAvatares = false,
   avatares = [],
-  creator,
   initialValeu = 0,
   finalValue = 0,
 
   onUpdateCalled,
   onRemoveCalled,
 }: IHeaderImageAndInfosProps) {
+  const { user: creator } = useContext(UserContext)
+
   const [onUpdateImage, setOnUpdateImage] = useState(false)
   const [onEditImg, setOnEditImg] = useState(false)
 

@@ -1,32 +1,27 @@
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { Loading } from '../../../../components/Loading'
 import { MindMap } from '../../../../components/MindMap'
 import { ProjectsContext } from '../../../../contexts/projects'
+import { useProject } from '../../../../hooks/useProject'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
 import { MindMapPageContainer } from './styles'
 
 export default function MindMapPage() {
-  const { projects, loading } = useContext(ProjectsContext)
+  const { loading } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
+  const { project, projectName } = useProject(id as string)
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Mind map view | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Mind map view | Ognare`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Mind map view']}
         loading={loading}
@@ -34,7 +29,7 @@ export default function MindMapPage() {
         isFullScreen
       >
         <MindMapPageContainer>
-          {loading ? <Loading /> : <MindMap project={project} />}
+          {loading ? <Loading /> : <MindMap />}
         </MindMapPageContainer>
       </ProjectPageLayout>
     </>

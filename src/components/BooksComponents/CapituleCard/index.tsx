@@ -12,12 +12,19 @@ import {
 
 interface ICapituleCardProps {
   capitule: ICapitule
+  redirectFunction?: () => void
 }
 
-export function CapituleCard({ capitule }: ICapituleCardProps) {
+export function CapituleCard({
+  capitule,
+  redirectFunction,
+}: ICapituleCardProps) {
   return (
-    <CapituleCardContainer>
-      <CapituleName>
+    <CapituleCardContainer
+      type="button"
+      onClick={redirectFunction && redirectFunction}
+    >
+      <CapituleName as="div">
         {capitule.name}
         <Text size="sm" family="body" css={{ color: '$base800' }}>
           Clique para abrir a grade de cenas

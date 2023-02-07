@@ -12,15 +12,14 @@ import {
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { CardBook } from '../../../components/BooksComponents/CardBook'
 import { CardPerson } from '../../../components/CardPerson'
 import { ListEmpty } from '../../../components/ListEmpty'
 import { Loading } from '../../../components/Loading'
 import { PlotParts } from '../../../components/PlotParts'
 import { ProjectsContext } from '../../../contexts/projects'
-import { UserContext } from '../../../contexts/user'
 import { usePreventBack } from '../../../hooks/usePreventDefaultBack'
+import { useProject } from '../../../hooks/useProject'
 import { useWindowSize } from '../../../hooks/useWindow'
 import { ProjectPageLayout } from '../../../layouts/ProjectPageLayout'
 import {
@@ -42,33 +41,14 @@ export default function ProjectPage() {
 
   const [onEditImg, setOnEditImg] = useState(false)
 
-  const { user } = useContext(UserContext)
-  const {
-    projects,
-    updateImageProject,
-    persons,
-    loading,
-    deleteImageProject,
-    books,
-  } = useContext(ProjectsContext)
+  const { updateImageProject, loading, deleteImageProject } =
+    useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
 
-  const project = projects?.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const personsThisProject = persons?.filter(
-    (person) => person.defaultProject === project?.id,
-  )
-  const booksThisProject = books?.filter(
-    (book) => book.defaultProject === project?.id,
-  )
-
-  const permissionThisUserInProject = project?.users.find(
-    (u) => user?.id === u.id,
-  )?.permission
+  const { project, booksThisProject, personsThisProject, permission } =
+    useProject(id as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -261,12 +241,12 @@ export default function ProjectPage() {
             Personagens
           </HeadingPart>
           <PersonsContainer>
-            {permissionThisUserInProject === 'edit' && (
+            {permission === 'edit' && (
               <CardPerson person={{} as IPersonsResponse} key="--" isAdd />
             )}
 
             {personsThisProject.map((person, i) => {
-              const index = permissionThisUserInProject === 'edit' ? i : i - 1
+              const index = permission === 'edit' ? i : i - 1
 
               if (largeWindow && index >= 14) return null
               if (!largeWindow && index >= 11) return null

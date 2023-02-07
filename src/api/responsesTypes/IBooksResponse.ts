@@ -1,5 +1,19 @@
 import { IAvatar } from './ICreateResponse'
 
+export interface IScene {
+  id: string
+  sequence: string
+  objective: string
+  complete: boolean
+  writtenWords?: string
+  structure: {
+    act1: string
+    act2: string
+    act3: string
+  }
+  persons: string[]
+}
+
 export interface ICapitule {
   id: string
   name: string
@@ -12,7 +26,7 @@ export interface ICapitule {
     act2?: string
     act3?: string
   }
-  scenes?: string[]
+  scenes?: IScene[]
   createdAt: string
   updatedAt: string
 }

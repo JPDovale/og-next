@@ -6,12 +6,12 @@ import { X } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
 import { DefaultError } from '../../../../../components/DefaultError'
 import { ListEmpty } from '../../../../../components/ListEmpty'
 import { TextInput } from '../../../../../components/TextInput'
 import { ProjectsContext } from '../../../../../contexts/projects'
 import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
+import { useProject } from '../../../../../hooks/useProject'
 import { useWindowSize } from '../../../../../hooks/useWindow'
 import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
 import {
@@ -71,8 +71,7 @@ type newBookFormData = z.infer<typeof newBookSchema>
 export default function NewBookPage() {
   const [genere, setGenere] = useState('')
 
-  const { projects, loading, error, setError, createBook } =
-    useContext(ProjectsContext)
+  const { loading, error, setError, createBook } = useContext(ProjectsContext)
 
   const {
     register,
@@ -90,12 +89,10 @@ export default function NewBookPage() {
   const { id } = router.query
   usePreventBack(`/project/${id}/books`)
 
+  const { project, projectName } = useProject(id as string)
+
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
-
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
 
   function handleAddGenere() {
     const generesNow = generes || []
@@ -139,13 +136,10 @@ export default function NewBookPage() {
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Novo livro | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Novo livro | Ognare`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros', 'Novo']}
         loading={loading}

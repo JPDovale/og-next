@@ -4,11 +4,10 @@ import { useRouter } from 'next/router'
 import { Link, Pencil } from 'phosphor-react'
 import { FocusEvent, useContext, useState } from 'react'
 import { IUpdatePlotDTO } from '../../../../api/dtos/IUpdatePlotDTO'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { PlotParts } from '../../../../components/PlotParts'
 import { ProjectsContext } from '../../../../contexts/projects'
-import { UserContext } from '../../../../contexts/user'
 import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
+import { useProject } from '../../../../hooks/useProject'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
 import {
   BoxInput,
@@ -21,17 +20,13 @@ import {
 export default function PlotPage() {
   const [urlOfText, setUrlOfText] = useState('')
 
-  const { projects, loading, updatePlot, error } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, updatePlot, error } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
   usePreventBack(`/project/${id}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
+  const { project, projectName, permission } = useProject(id as string)
 
   async function handleEditUrlOfText(e: FocusEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -45,12 +40,9 @@ export default function PlotPage() {
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Plot | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Plot | Ognare`} noindex />
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Plot']}
         loading={loading}

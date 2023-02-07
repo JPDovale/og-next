@@ -21,9 +21,19 @@ export const SubContainer = styled('div', {
       },
       3: {
         gridTemplateColumns: 'repeat(3, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: 'repeat(1, 1fr)',
+        },
       },
       4: {
         gridTemplateColumns: 'repeat(4, 1fr)',
+      },
+      5: {
+        gridTemplateColumns: 'repeat(5, 1fr)',
+      },
+      6: {
+        gridTemplateColumns: 'repeat(6, 1fr)',
       },
     },
   },
