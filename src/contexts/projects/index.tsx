@@ -40,6 +40,7 @@ import { responseCommentInPlotFunction } from './functions/projectFunctions/resp
 import { shareProjectFunction } from './functions/projectFunctions/shareProjectFunction'
 import { unshareProjectFunction } from './functions/projectFunctions/unshareProjectFunction'
 import { updateImageProjectFunction } from './functions/projectFunctions/updateImageProjectFunction'
+import { updateNameProjectFunction } from './functions/projectFunctions/updateNameProjectFunction'
 import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunction'
 import { projectsDefaultValues } from './initialValues'
 import { setErrorAction } from './reducer/actionsProjectsReducer'
@@ -48,6 +49,7 @@ import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerso
 import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './types/interfaceFunctions/IQuitProject'
+import { IUpdateNameProject } from './types/interfaceFunctions/IUpdateNameProject'
 import {
   IProjectsContext,
   IProjectsContextProps,
@@ -354,6 +356,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     await deleteObjectiveFunction({ objectiveId, personId, dispatch })
   }
 
+  async function updateNameProject({ name, projectId }: IUpdateNameProject) {
+    setLoading(true)
+    await updateNameProjectFunction({ dispatch, name, projectId })
+    setLoading(false)
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -395,6 +403,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteImagePerson,
         quitProject,
         deleteObjective,
+        updateNameProject,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (
