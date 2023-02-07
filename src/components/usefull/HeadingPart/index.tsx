@@ -9,7 +9,7 @@ interface IHeadingPartProps {
   label: string
   isToAdd?: boolean
   redirectPathToAdd?: string
-  customFunctionToAd?: () => void
+  customFunctionToAdd?: () => void
 }
 
 export function HeadingPart({
@@ -18,7 +18,7 @@ export function HeadingPart({
   redirectPath,
   isToAdd = false,
   redirectPathToAdd,
-  customFunctionToAd,
+  customFunctionToAdd,
 }: IHeadingPartProps) {
   const router = useRouter()
 
@@ -32,8 +32,8 @@ export function HeadingPart({
         <PlusCircle
           size={40}
           onClick={() => {
-            customFunctionToAd
-              ? customFunctionToAd()
+            customFunctionToAdd
+              ? customFunctionToAdd()
               : router.push(redirectPathToAdd!)
           }}
         />

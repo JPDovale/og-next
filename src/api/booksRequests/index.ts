@@ -1,11 +1,21 @@
 import { api } from '..'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
+import { ICreateCapituleRequest } from './types/ICreateCapituleRequest'
 import { IUpdateFrontCoverRequest } from './types/IUpdateFrontCoverRequest'
 
 // POST
 export async function createBookRequest(bookDataRequest: ICreateBookRequest) {
   try {
     const response = await api.post('/books', bookDataRequest)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function createCapituleRequest(capitule: ICreateCapituleRequest) {
+  try {
+    const response = await api.post('/books/capitules', capitule)
     return response.data
   } catch (err: any) {
     return err.response.data

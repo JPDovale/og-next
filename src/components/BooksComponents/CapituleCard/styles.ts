@@ -20,6 +20,7 @@ export const CapituleInfos = styled('div', {
   gap: '$4',
 
   padding: '$4',
+  height: '100%',
 })
 
 export const CapituleComplete = styled(Text, {

@@ -133,7 +133,9 @@ export default function BookPage() {
   return (
     <>
       <NextSeo
-        title={`${project?.name || 'Carregando...'}-Livros | Ognare`}
+        title={`${project?.name || 'Carregando...'}-${
+          bookName || 'Carregando...'
+        } | Ognare`}
         noindex
       />
 
@@ -180,7 +182,7 @@ export default function BookPage() {
             <HeadingPart
               icon={<Brain size={40} />}
               label="Gêneros"
-              customFunctionToAd={() => {}}
+              customFunctionToAdd={() => {}}
               isToAdd
             />
 
@@ -204,7 +206,7 @@ export default function BookPage() {
             <HeadingPart
               icon={<Bookmarks size={40} />}
               label="Capítulos"
-              customFunctionToAd={() => {}}
+              redirectPathToAdd={`/project/${id}/books/${bookId}/capitule/new`}
               isToAdd
             />
 

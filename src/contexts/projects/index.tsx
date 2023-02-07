@@ -8,6 +8,7 @@ import {
 import { IEditorTo } from '../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../@types/editores/IGenericObject'
 import { IError } from '../../@types/errors/IError'
+import { ICreateCapituleRequest } from '../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateCommentDTO } from '../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../api/dtos/ICreateProjectDTO'
@@ -17,6 +18,7 @@ import { IObjective } from '../../api/responsesTypes/IPersonsResponse'
 import { Error } from '../../components/Error'
 import { UserContext } from '../user'
 import { createBookFunction } from './functions/booksFunctions/createBookFunction'
+import { createCapituleFunction } from './functions/booksFunctions/createCapituleFunction'
 import { removeFrontCoverFunction } from './functions/booksFunctions/removeFrontCoverFunction'
 import { updateFrontCoverFunction } from './functions/booksFunctions/updateFrontCoverFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
@@ -383,6 +385,16 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     setLoading(false)
   }
 
+  async function createCapitule(capitule: ICreateCapituleRequest) {
+    setLoading(true)
+    const response = await createCapituleFunction({
+      newCapitule: capitule,
+      dispatch,
+    })
+    setLoading(false)
+    return response
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -428,6 +440,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         createBook,
         updateFrontCover,
         removeFrontCover,
+        createCapitule,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

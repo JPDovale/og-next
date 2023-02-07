@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
+import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
@@ -116,6 +117,7 @@ export interface IProjectsContext {
   createBook: ({ newBook, project }: ICreateBook) => Promise<boolean>
   updateFrontCover: ({ bookId, file }: IUpdateFrontCover) => Promise<void>
   removeFrontCover: (bookId: string) => Promise<void>
+  createCapitule: (capitule: ICreateCapituleRequest) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

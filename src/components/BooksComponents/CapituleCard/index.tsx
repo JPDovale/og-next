@@ -45,6 +45,28 @@ export function CapituleCard({ capitule }: ICapituleCardProps) {
               {capitule.objective}
             </CapituleObjective>
           </InfoDefault>
+
+          <Text size="xxs" css={{ marginBottom: '-$4' }}>
+            Estrutura de 3 atos:
+          </Text>
+
+          <InfoDefault title="Ato 1">
+            <CapituleObjective family="body">
+              {capitule.structure?.act1 || 'Não definido'}
+            </CapituleObjective>
+          </InfoDefault>
+
+          <InfoDefault title="Ato 2">
+            <CapituleObjective family="body">
+              {capitule.structure?.act2 || 'Não definido'}
+            </CapituleObjective>
+          </InfoDefault>
+
+          <InfoDefault title="Ato 3">
+            <CapituleObjective family="body">
+              {capitule.structure?.act3 || 'Não definido'}
+            </CapituleObjective>
+          </InfoDefault>
         </ContainerGrid>
       </CapituleInfos>
     </CapituleCardContainer>
