@@ -36,6 +36,7 @@ import { useRouter } from 'next/router'
 // import { GetServerSideProps } from 'next'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
+import { Loading } from '../../components/Loading'
 
 const registerFormSchema = z.object({
   name: z
@@ -68,7 +69,7 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function RegisterPage() {
-  const { createUser, userLogged, error } = useContext(UserContext)
+  const { createUser, userLogged, error, loading } = useContext(UserContext)
 
   const { handleSubmit, register, formState, setError } =
     useForm<RegisterFormData>({
@@ -102,6 +103,10 @@ export default function RegisterPage() {
   // useEffect(() => {
   //   if (session?.data?.loggedUser!) setUser(session?.data?.loggedUser!)
   // }, [session, setUser])
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <>
