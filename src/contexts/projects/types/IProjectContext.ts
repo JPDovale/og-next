@@ -17,6 +17,7 @@ import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './interfaceFunctions/IQuitProject'
+import { IUpdateNameProject } from './interfaceFunctions/IUpdateNameProject'
 
 export interface IProjectsContext {
   loading: boolean
@@ -109,6 +110,7 @@ export interface IProjectsContext {
     objectiveId,
     personId,
   }: IDeleteObjective) => Promise<void>
+  updateNameProject: ({ name, projectId }: IUpdateNameProject) => Promise<void>
 }
 
 export interface IProjectsContextProps {

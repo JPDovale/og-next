@@ -56,6 +56,18 @@ export async function responseCommentInPlotRequest(
   }
 }
 
+export async function updateNameProjectRequest(
+  name: string,
+  projectId: string,
+) {
+  try {
+    const response = await api.patch('/projects/name', { name, projectId })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 export async function updateImageProjectRequest(projectId: string, file: File) {
   try {
     const response = await api.patch(
