@@ -1,4 +1,5 @@
 import {
+  Button,
   //  Button,
   Text,
   TextInput,
@@ -6,6 +7,7 @@ import {
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
 import {
+  ArchiveBox,
   Crosshair,
   HeartBreak,
   Lightning,
@@ -26,7 +28,7 @@ import {
 } from '../../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../../api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '../../../../components/Avatar'
-import { ResponseInfoApi } from '../../../../components/ResponseInfoApi'
+import { DefaultError } from '../../../../components/DefaultError'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { UserContext } from '../../../../contexts/user'
 import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
@@ -50,9 +52,18 @@ interface IObjects {
 
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
+  const [name, setName] = useState('')
 
-  const { projects, users, loading, persons, unshareProject, error } =
-    useContext(ProjectsContext)
+  const {
+    projects,
+    users,
+    loading,
+    persons,
+    unshareProject,
+    error,
+    setError,
+    updateNameProject,
+  } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
 
   const router = useRouter()
@@ -163,6 +174,11 @@ export default function SettingsPage() {
     return unshareProject(userToRemove.email, project?.id)
   }
 
+  async function handleUpdateNameProject() {
+    await updateNameProject({ projectId: id as string, name })
+    setName('')
+  }
+
   return (
     <>
       <NextSeo
@@ -178,7 +194,13 @@ export default function SettingsPage() {
         isScrolling
       >
         <SettingsProject>
-          {error && <ResponseInfoApi error={error} />}
+          {error && (
+            <DefaultError
+              title={error.title}
+              message={error.message}
+              close={() => setError(undefined)}
+            />
+          )}
 
           <Info isCard>
             <Text family="body" as="label">
@@ -186,11 +208,18 @@ export default function SettingsPage() {
               <TextInput
                 icon={<Presentation />}
                 placeholder={project?.name || 'Carregando...'}
-                disabled
+                onChange={(e) => setName(e.target.value)}
+                value={name}
               />
-              A alteração estará disponível em breve para os criadores do
-              projeto
             </Text>
+            <Button
+              label="Alterar"
+              wid="hug"
+              icon={<ArchiveBox />}
+              css={{ padding: '$3 $8', marginTop: '$3', boxShadow: 'none' }}
+              disabled={!name}
+              onClick={handleUpdateNameProject}
+            />
           </Info>
 
           <Info isCard>

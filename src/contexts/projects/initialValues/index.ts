@@ -11,6 +11,7 @@ import { IDeleteImagePerson } from '../types/interfaceFunctions/IDeleteImagePers
 import { IDeleteImageProject } from '../types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from '../types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from '../types/interfaceFunctions/IQuitProject'
+import { IUpdateNameProject } from '../types/interfaceFunctions/IUpdateNameProject'
 import { IProjectsContext } from '../types/IProjectContext'
 
 export const projectsDefaultValues: IProjectsContext = {
@@ -98,4 +99,5 @@ export const projectsDefaultValues: IProjectsContext = {
   deleteImagePerson: async ({ personId }: IDeleteImagePerson) => {},
   quitProject: async ({ projectId }: IQuitProject) => {},
   deleteObjective: async ({ objectiveId, personId }: IDeleteObjective) => {},
+  updateNameProject: async ({ name, projectId }: IUpdateNameProject) => {},
 }

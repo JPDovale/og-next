@@ -34,6 +34,7 @@ import { UserContext } from '../../contexts/user'
 // import { loginWithGoogleRequest } from '../../api/userRequest'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
+import { Loading } from '../../components/Loading'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -49,6 +50,7 @@ export default function LoginPage() {
     createSession,
     userLogged,
     error,
+    loading,
     // setError, setSuccess
   } = useContext(UserContext)
 
@@ -84,6 +86,10 @@ export default function LoginPage() {
   //   setError(undefined)
   //   setSuccess(undefined)
   // }, [setSuccess, setError])
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <>
