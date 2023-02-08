@@ -45,6 +45,7 @@ import { responseCommentInPlotFunction } from './functions/projectFunctions/resp
 import { shareProjectFunction } from './functions/projectFunctions/shareProjectFunction'
 import { unshareProjectFunction } from './functions/projectFunctions/unshareProjectFunction'
 import { updateImageProjectFunction } from './functions/projectFunctions/updateImageProjectFunction'
+import { updateNameProjectFunction } from './functions/projectFunctions/updateNameProjectFunction'
 import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunction'
 import { projectsDefaultValues } from './initialValues'
 import { setErrorAction } from './reducer/actionsProjectsReducer'
@@ -55,6 +56,7 @@ import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProj
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './types/interfaceFunctions/IQuitProject'
 import { IUpdateFrontCover } from './types/interfaceFunctions/IUpdateFrontCover'
+import { IUpdateNameProject } from './types/interfaceFunctions/IUpdateNameProject'
 import {
   IProjectsContext,
   IProjectsContextProps,
@@ -393,6 +395,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     })
     setLoading(false)
     return response
+  async function updateNameProject({ name, projectId }: IUpdateNameProject) {
+    setLoading(true)
+    await updateNameProjectFunction({ dispatch, name, projectId })
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -441,6 +447,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updateFrontCover,
         removeFrontCover,
         createCapitule,
+        updateNameProject,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

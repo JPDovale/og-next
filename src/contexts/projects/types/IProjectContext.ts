@@ -21,6 +21,7 @@ import { IDeleteImageProject } from './interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './interfaceFunctions/IQuitProject'
 import { IUpdateFrontCover } from './interfaceFunctions/IUpdateFrontCover'
+import { IUpdateNameProject } from './interfaceFunctions/IUpdateNameProject'
 
 export interface IProjectsContext {
   loading: boolean
@@ -118,6 +119,7 @@ export interface IProjectsContext {
   updateFrontCover: ({ bookId, file }: IUpdateFrontCover) => Promise<void>
   removeFrontCover: (bookId: string) => Promise<void>
   createCapitule: (capitule: ICreateCapituleRequest) => Promise<boolean>
+  updateNameProject: ({ name, projectId }: IUpdateNameProject) => Promise<void>
 }
 
 export interface IProjectsContextProps {

@@ -14,6 +14,7 @@ import { IDeleteImageProject } from '../types/interfaceFunctions/IDeleteImagePro
 import { IDeleteObjective } from '../types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from '../types/interfaceFunctions/IQuitProject'
 import { IUpdateFrontCover } from '../types/interfaceFunctions/IUpdateFrontCover'
+import { IUpdateNameProject } from '../types/interfaceFunctions/IUpdateNameProject'
 import { IProjectsContext } from '../types/IProjectContext'
 
 export const projectsDefaultValues: IProjectsContext = {
@@ -106,4 +107,5 @@ export const projectsDefaultValues: IProjectsContext = {
   updateFrontCover: async ({ bookId, file }: IUpdateFrontCover) => {},
   removeFrontCover: async (bookId: string) => {},
   createCapitule: async (capitule: ICreateCapituleRequest) => false,
+  updateNameProject: async ({ name, projectId }: IUpdateNameProject) => {},
 }

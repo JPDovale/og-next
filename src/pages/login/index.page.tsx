@@ -65,6 +65,10 @@ export default function LoginPage() {
     return <Loading />
   }
 
+  if (loading) {
+    return <Loading />
+  }
+
   return (
     <>
       <NextSeo title="Faça o login | Ognare" />
