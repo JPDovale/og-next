@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
 
-import { SessionProvider } from 'next-auth/react'
+// import { SessionProvider } from 'next-auth/react'
 
 import { InterfaceProvider } from '../contexts/interface'
 import { ProjectsProvider } from '../contexts/projects'
@@ -12,31 +12,34 @@ globalStyles()
 
 export default function App({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: {
+    // session,
+    ...pageProps
+  },
 }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <InterfaceProvider>
-        <UserProvider>
-          <ProjectsProvider>
-            <DefaultSeo
-              openGraph={{
-                type: 'website',
-                locale: 'pt-br',
-                url: 'https://ognare.com',
-                siteName: 'Ognare',
-                title: 'Ognare',
-                description: 'A origem das suas ideias...',
-              }}
-              defaultTitle="Ognare"
-              description="A origem das suas ideias..."
-              title="Ognare"
-            />
+    // <SessionProvider session={session}>
+    <InterfaceProvider>
+      <UserProvider>
+        <ProjectsProvider>
+          <DefaultSeo
+            openGraph={{
+              type: 'website',
+              locale: 'pt-br',
+              url: 'https://ognare.com',
+              siteName: 'Ognare',
+              title: 'Ognare',
+              description: 'A origem das suas ideias...',
+            }}
+            defaultTitle="Ognare"
+            description="A origem das suas ideias..."
+            title="Ognare"
+          />
 
-            <Component {...pageProps} />
-          </ProjectsProvider>
-        </UserProvider>
-      </InterfaceProvider>
-    </SessionProvider>
+          <Component {...pageProps} />
+        </ProjectsProvider>
+      </UserProvider>
+    </InterfaceProvider>
+    // </SessionProvider>
   )
 }

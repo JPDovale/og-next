@@ -8,6 +8,7 @@ import {
 import { IEditorTo } from '../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../@types/editores/IGenericObject'
 import { IError } from '../../@types/errors/IError'
+import { ICreateCapituleRequest } from '../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateCommentDTO } from '../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../api/dtos/ICreateProjectDTO'
@@ -16,6 +17,10 @@ import { IUpdatePlotDTO } from '../../api/dtos/IUpdatePlotDTO'
 import { IObjective } from '../../api/responsesTypes/IPersonsResponse'
 import { Error } from '../../components/Error'
 import { UserContext } from '../user'
+import { createBookFunction } from './functions/booksFunctions/createBookFunction'
+import { createCapituleFunction } from './functions/booksFunctions/createCapituleFunction'
+import { removeFrontCoverFunction } from './functions/booksFunctions/removeFrontCoverFunction'
+import { updateFrontCoverFunction } from './functions/booksFunctions/updateFrontCoverFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
@@ -45,10 +50,12 @@ import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunct
 import { projectsDefaultValues } from './initialValues'
 import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
+import { ICreateBook } from './types/interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './types/interfaceFunctions/IQuitProject'
+import { IUpdateFrontCover } from './types/interfaceFunctions/IUpdateFrontCover'
 import { IUpdateNameProject } from './types/interfaceFunctions/IUpdateNameProject'
 import {
   IProjectsContext,
@@ -67,15 +74,17 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     users: [],
     error: undefined,
     persons: [],
+    books: [],
   })
 
   const {
     userLogged,
+    user,
     loading: loadingUser,
     error: errorUser,
   } = useContext(UserContext)
 
-  const { projects, error, users, persons } = projectState
+  const { projects, error, users, persons, books } = projectState
 
   function setError(error: IError | undefined) {
     dispatch(setErrorAction(error))
@@ -95,7 +104,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       (p) => p.id === '1242545b-56c9-41c0-9f98-addc9b5c5c65',
     )?.id
     if (welcomeProjectId) {
-      console.log('ola')
       await quitProject({ projectId: welcomeProjectId })
     }
 
@@ -356,6 +364,37 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     await deleteObjectiveFunction({ objectiveId, personId, dispatch })
   }
 
+  async function createBook({ newBook, project }: ICreateBook) {
+    setLoading(true)
+    const response = await createBookFunction({
+      dispatch,
+      newBook,
+      project,
+      users,
+      user: user!,
+    })
+    setLoading(false)
+    return response
+  }
+
+  async function updateFrontCover({ bookId, file }: IUpdateFrontCover) {
+    return updateFrontCoverFunction({ bookId, file, dispatch })
+  }
+
+  async function removeFrontCover(bookId: string) {
+    setLoading(true)
+    await removeFrontCoverFunction({ bookId, dispatch })
+    setLoading(false)
+  }
+
+  async function createCapitule(capitule: ICreateCapituleRequest) {
+    setLoading(true)
+    const response = await createCapituleFunction({
+      newCapitule: capitule,
+      dispatch,
+    })
+    setLoading(false)
+    return response
   async function updateNameProject({ name, projectId }: IUpdateNameProject) {
     setLoading(true)
     await updateNameProjectFunction({ dispatch, name, projectId })
@@ -374,6 +413,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         projects,
         users,
         persons,
+        books,
 
         error,
         setError,
@@ -403,6 +443,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteImagePerson,
         quitProject,
         deleteObjective,
+        createBook,
+        updateFrontCover,
+        removeFrontCover,
+        createCapitule,
         updateNameProject,
       }}
     >

@@ -7,6 +7,7 @@ import {
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
 import {
+  Books,
   ArchiveBox,
   Crosshair,
   HeartBreak,
@@ -52,18 +53,12 @@ interface IObjects {
 
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
+
+const { projects, users, loading, persons, unshareProject, error, books } =
+    useContext(ProjectsContext)
   const [name, setName] = useState('')
 
-  const {
-    projects,
-    users,
-    loading,
-    persons,
-    unshareProject,
-    error,
-    setError,
-    updateNameProject,
-  } = useContext(ProjectsContext)
+  
   const { user } = useContext(UserContext)
 
   const router = useRouter()
@@ -77,6 +72,9 @@ export default function SettingsPage() {
 
   const personsOfProject = persons.filter(
     (person) => person.defaultProject === project?.id,
+  )
+  const booksOfProject = books.filter(
+    (book) => book.defaultProject === project?.id,
   )
 
   const userCreatorFinde = users?.find(
@@ -324,6 +322,14 @@ export default function SettingsPage() {
                 Personagens
               </header>
               <Text>{personsOfProject?.length || 0}</Text>
+            </Text>
+
+            <Text family="body" as="label">
+              <header>
+                <Books />
+                Livros
+              </header>
+              <Text>{booksOfProject?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">

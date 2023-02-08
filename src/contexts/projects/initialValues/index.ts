@@ -1,16 +1,19 @@
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
+import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
 import { IShareProjectDTO } from '../../../api/dtos/IShareProjectDTO'
 import { IUpdatePlotDTO } from '../../../api/dtos/IUpdatePlotDTO'
 import { IObjective } from '../../../api/responsesTypes/IPersonsResponse'
+import { ICreateBook } from '../types/interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from '../types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from '../types/interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from '../types/interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from '../types/interfaceFunctions/IQuitProject'
+import { IUpdateFrontCover } from '../types/interfaceFunctions/IUpdateFrontCover'
 import { IUpdateNameProject } from '../types/interfaceFunctions/IUpdateNameProject'
 import { IProjectsContext } from '../types/IProjectContext'
 
@@ -19,6 +22,7 @@ export const projectsDefaultValues: IProjectsContext = {
   projects: [],
   users: [],
   persons: [],
+  books: [],
 
   error: undefined,
   setError: (newState: IError | undefined) => {},
@@ -99,5 +103,9 @@ export const projectsDefaultValues: IProjectsContext = {
   deleteImagePerson: async ({ personId }: IDeleteImagePerson) => {},
   quitProject: async ({ projectId }: IQuitProject) => {},
   deleteObjective: async ({ objectiveId, personId }: IDeleteObjective) => {},
+  createBook: async ({ newBook, project }: ICreateBook) => false,
+  updateFrontCover: async ({ bookId, file }: IUpdateFrontCover) => {},
+  removeFrontCover: async (bookId: string) => {},
+  createCapitule: async (capitule: ICreateCapituleRequest) => false,
   updateNameProject: async ({ name, projectId }: IUpdateNameProject) => {},
 }

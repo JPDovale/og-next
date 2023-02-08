@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { IError } from '../../../@types/errors/IError'
+import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
@@ -13,6 +14,8 @@ export enum ProjectsActionsType {
   UpdatePersonImage = 'updatePersonImage',
   UpdatePerson = 'updatePerson',
   RemoveProject = 'removeProject',
+  AddBook = 'addBook',
+  UpdateBook = 'updateBook',
 
   SetPersons = 'setPersons',
 
@@ -70,6 +73,7 @@ export function setProjectsAction(
   projects: IProjectResponse[],
   users: IUserResponse[],
   persons: IPersonsResponse[],
+  books: IBooksResponse[],
 ) {
   return {
     type: ProjectsActionsType.SetProjects,
@@ -77,6 +81,7 @@ export function setProjectsAction(
       projects,
       users,
       persons,
+      books,
     },
   }
 }
@@ -127,6 +132,25 @@ export function removeProjectAction(projectId: string) {
     type: ProjectsActionsType.RemoveProject,
     payload: {
       projectId,
+    },
+  }
+}
+
+export function addBookAction(book: IBooksResponse, project: IProjectResponse) {
+  return {
+    type: ProjectsActionsType.AddBook,
+    payload: {
+      book,
+      project,
+    },
+  }
+}
+
+export function updateBookAction(book: IBooksResponse) {
+  return {
+    type: ProjectsActionsType.UpdateBook,
+    payload: {
+      book,
     },
   }
 }

@@ -13,13 +13,9 @@ import {
   X,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { DefaultError } from '../../../../components/DefaultError'
-import { InterfaceContext } from '../../../../contexts/interface'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
-import { orderElements } from '../../../../services/orderElements'
 import {
   FastAccessPersons,
   InfosBasics,
@@ -40,6 +36,7 @@ import { Avatares } from '../../../../components/Avatares'
 import { useWindowSize } from '../../../../hooks/useWindow'
 import { NextSeo } from 'next-seo'
 import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
+import { useProject } from '../../../../hooks/useProject'
 
 const newPersonFormSchema = z.object({
   name: z
@@ -65,9 +62,8 @@ export default function PersonsPage() {
   const [success, setSuccess] = useState('')
   const [query, setQuery] = useState('')
 
-  const { projects, loading, persons, createNewPerson, error, setError } =
+  const { loading, createNewPerson, error, setError } =
     useContext(ProjectsContext)
-  const { orderBy } = useContext(InterfaceContext)
 
   const { register, handleSubmit, formState, reset } =
     useForm<NewPersonFormData>({
@@ -81,26 +77,8 @@ export default function PersonsPage() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const personsThisProject = persons?.filter(
-    (person) => person.defaultProject === project?.id,
-  )
-
-  const personsOrd = orderElements(
-    personsThisProject,
-    orderBy,
-  ) as IPersonsResponse[]
-
-  const finalPersonsToShow = query
-    ? personsOrd?.filter(
-        (person) =>
-          person.name.toLowerCase().includes(query.toLowerCase()) ||
-          person.lastName.toLowerCase().includes(query.toLowerCase()),
-      )
-    : personsOrd
+  const { project, projectName, queryPerson } = useProject(id as string)
+  const finalPersonsToShow = queryPerson(query)
 
   async function handleNewPerson(data: NewPersonFormData) {
     const newPerson = {
@@ -124,13 +102,10 @@ export default function PersonsPage() {
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Personagens | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Personagens | Ognare`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Personagens']}
         loading={loading}
