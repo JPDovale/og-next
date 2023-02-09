@@ -16,9 +16,10 @@ interface IAvataresProps {
   firstButtonIcon?: ReactNode
   secondaryButtonIcon?: ReactNode
   internalButtonIcon?: ReactNode
-  columns?: 5 | 7 | 12 | 15 | 18
-  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full'
+  columns?: 5 | 7 | 10 | 12 | 15 | 18
+  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full' | '2xs'
   isClickable?: boolean
+  additionalKey?: string
 
   firstButtonKey?: 'supporting' | 'avoider'
   secondButtonKey?: 'supporting' | 'avoider'
@@ -44,6 +45,7 @@ export function Avatares({
   internalButtonIcon,
   size = 'sm',
   isClickable = false,
+  additionalKey,
 
   firstButtonKey,
   secondButtonKey,
@@ -63,21 +65,19 @@ export function Avatares({
   const { id } = router.query
 
   function findPersonAndReturn(id: string) {
-    return functionInternalButton && functionInternalButton(id)
+    if (functionInternalButton) return functionInternalButton(id)
+
+    return console.log('Função ausente')
   }
 
   function handleFirstButton(id: string) {
-    return (
-      firstButtonFunction &&
+    firstButtonFunction &&
       firstButtonFunction(firstButtonKey || 'supporting', id)
-    )
   }
 
   function handleSecondaryButton(id: string) {
-    return (
-      secondaryButtonFunction &&
+    secondaryButtonFunction &&
       secondaryButtonFunction(secondButtonKey || 'avoider', id)
-    )
   }
 
   return (
@@ -85,7 +85,7 @@ export function Avatares({
       {persons.map((person) => {
         return (
           <PersonAvatar
-            key={person?.id}
+            key={`${person?.id}-${additionalKey || 'last'}`}
             onClick={() => {
               isClickable && router.push(`/project/${id}/persons/${person.id}`)
             }}

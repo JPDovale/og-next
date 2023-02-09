@@ -3,6 +3,9 @@ import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
+import { ICreateSceneRequest } from '../../../api/booksRequests/types/ICreateSceneRequest'
+import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
+import { IUpdateCapituleRequest } from '../../../api/booksRequests/types/IUpdateCapituleRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
@@ -120,6 +123,11 @@ export interface IProjectsContext {
   removeFrontCover: (bookId: string) => Promise<void>
   createCapitule: (capitule: ICreateCapituleRequest) => Promise<boolean>
   updateNameProject: ({ name, projectId }: IUpdateNameProject) => Promise<void>
+  updateCapitule: (capitule: IUpdateCapituleRequest) => Promise<void>
+  createScene: (scene: ICreateSceneRequest) => Promise<boolean>
+  setSceneToComplete: (
+    sceneToComplete: ISetSceneToCompleteRequest,
+  ) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

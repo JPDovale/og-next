@@ -1,12 +1,12 @@
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { Bookmarks, BookOpen, Brain } from 'phosphor-react'
+import { Bookmarks, Brain } from 'phosphor-react'
 import { useContext } from 'react'
 import { BookGenere } from '../../../../../components/BooksComponents/BookGenere'
 import { CapituleCard } from '../../../../../components/BooksComponents/CapituleCard'
 import { DefaultError } from '../../../../../components/DefaultError'
 import { ListEmpty } from '../../../../../components/ListEmpty'
-import { PlotParts } from '../../../../../components/PlotParts'
+// import { PlotParts } from '../../../../../components/PlotParts'
 import { HeaderImageAndInfos } from '../../../../../components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '../../../../../components/usefull/HeadingPart'
 import { ProjectsContext } from '../../../../../contexts/projects'
@@ -82,17 +82,17 @@ export default function BookPage() {
             withProgressBar
           />
 
-          <Container>
+          {/* <Container>
             <HeadingPart icon={<BookOpen size={40} />} label="Plot do livro" />
             <PlotParts book={book} isPreview />
-          </Container>
+          </Container> */}
 
           <Container>
             <HeadingPart
               icon={<Brain size={40} />}
               label="Gêneros"
               customFunctionToAdd={() => {}}
-              isToAdd
+              // isToAdd
             />
 
             <SubContainer columns={smallWindow ? 2 : 6}>
@@ -102,7 +102,10 @@ export default function BookPage() {
                     <BookGenere
                       key={genere.name}
                       genere={genere.name}
-                      isNotRemovable={book.generes.length === 1}
+                      isNotRemovable={
+                        true
+                        // book.generes.length === 1
+                      }
                       onRemove={() => {}}
                     />
                   ))}
