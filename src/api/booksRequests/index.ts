@@ -1,6 +1,8 @@
 import { api } from '..'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
 import { ICreateCapituleRequest } from './types/ICreateCapituleRequest'
+import { ICreateSceneRequest } from './types/ICreateSceneRequest'
+import { IUpdateCapituleRequest } from './types/IUpdateCapituleRequest'
 import { IUpdateFrontCoverRequest } from './types/IUpdateFrontCoverRequest'
 
 // POST
@@ -16,6 +18,26 @@ export async function createBookRequest(bookDataRequest: ICreateBookRequest) {
 export async function createCapituleRequest(capitule: ICreateCapituleRequest) {
   try {
     const response = await api.post('/books/capitules', capitule)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function createSceneRequest(scene: ICreateSceneRequest) {
+  try {
+    const response = await api.post('/books/capitules/scenes', scene)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+// PUT
+
+export async function updateCapituleRequest(capitule: IUpdateCapituleRequest) {
+  try {
+    const response = await api.put('/books/capitules', capitule)
     return response.data
   } catch (err: any) {
     return err.response.data

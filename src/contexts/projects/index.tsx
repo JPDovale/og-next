@@ -9,6 +9,8 @@ import { IEditorTo } from '../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../@types/editores/IGenericObject'
 import { IError } from '../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../api/booksRequests/types/ICreateCapituleRequest'
+import { ICreateSceneRequest } from '../../api/booksRequests/types/ICreateSceneRequest'
+import { IUpdateCapituleRequest } from '../../api/booksRequests/types/IUpdateCapituleRequest'
 import { ICreateCommentDTO } from '../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../api/dtos/ICreateProjectDTO'
@@ -19,7 +21,9 @@ import { Error } from '../../components/Error'
 import { UserContext } from '../user'
 import { createBookFunction } from './functions/booksFunctions/createBookFunction'
 import { createCapituleFunction } from './functions/booksFunctions/createCapituleFunction'
+import { createSceneFunction } from './functions/booksFunctions/createSceneFunction'
 import { removeFrontCoverFunction } from './functions/booksFunctions/removeFrontCoverFunction'
+import { updateCapituleFunction } from './functions/booksFunctions/updateCapituleFunction'
 import { updateFrontCoverFunction } from './functions/booksFunctions/updateFrontCoverFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
@@ -395,10 +399,31 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     })
     setLoading(false)
     return response
+  }
+
   async function updateNameProject({ name, projectId }: IUpdateNameProject) {
     setLoading(true)
     await updateNameProjectFunction({ dispatch, name, projectId })
     setLoading(false)
+  }
+
+  async function updateCapitule(capitule: IUpdateCapituleRequest) {
+    setLoading(true)
+    await updateCapituleFunction({
+      updatedCapitule: capitule,
+      dispatch,
+    })
+    setLoading(false)
+  }
+
+  async function createScene(scene: ICreateSceneRequest) {
+    setLoading(true)
+    const response = await createSceneFunction({
+      newScene: scene,
+      dispatch,
+    })
+    setLoading(false)
+    return response
   }
 
   useEffect(() => {
@@ -448,6 +473,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         removeFrontCover,
         createCapitule,
         updateNameProject,
+        updateCapitule,
+        createScene,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

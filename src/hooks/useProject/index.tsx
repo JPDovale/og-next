@@ -22,6 +22,10 @@ interface IFindBookResponse {
   findCapitule: (id: string) => IFindCapituleResponse
 }
 
+interface IFindManyPersonsOptions {
+  reverse: boolean
+}
+
 export function useProject(id: string) {
   const { projects, books, persons } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
@@ -67,6 +71,19 @@ export function useProject(id: string) {
     return final
   }
 
+  function findManyPersons(ids: string[], options?: IFindManyPersonsOptions) {
+    const isReverse = options?.reverse || false
+
+    const personsSelected = personsThisProject.filter((person) => {
+      const personIn = ids?.find((p) => p === person.id)
+
+      if (personIn) return !isReverse
+      return !!isReverse
+    })
+
+    return personsSelected
+  }
+
   return {
     project,
     projectName,
@@ -76,6 +93,7 @@ export function useProject(id: string) {
 
     personsThisProject: personsOrd,
     queryPerson,
+    findManyPersons,
 
     permission,
     useBook,

@@ -1,22 +1,23 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Textarea } from '@og-ui/react'
+import { Button, Text, Textarea } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { ArchiveBox, Info, ProjectorScreen } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { IUpdateCapituleRequest } from '../../../../../../../api/booksRequests/types/IUpdateCapituleRequest'
 import { DefaultError } from '../../../../../../../components/DefaultError'
 import { ListEmpty } from '../../../../../../../components/ListEmpty'
 import { TextInput } from '../../../../../../../components/TextInput'
 import { ContainerGrid } from '../../../../../../../components/usefull/ContainerGrid'
 import { HeadingPart } from '../../../../../../../components/usefull/HeadingPart'
-import { InfoDefault } from '../../../../../../../components/usefull/InfoDefault'
 import { ProjectsContext } from '../../../../../../../contexts/projects'
 import { usePreventBack } from '../../../../../../../hooks/usePreventDefaultBack'
 import { useProject } from '../../../../../../../hooks/useProject'
 import { ProjectPageLayout } from '../../../../../../../layouts/ProjectPageLayout'
-import { CapituleContainer, CapituleInfos } from './styles'
+import { AddScene } from './components/AddScene'
+import { CapituleContainer, CapituleInfos, InputContainer } from './styles'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -32,25 +33,31 @@ const updateCapituleSchema = z.object({
   act1: z
     .string()
     .max(10000, { message: 'O campo não pode exceder 10000 caracteres' })
-    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' })
     .optional(),
   act2: z
     .string()
     .max(10000, { message: 'O campo não pode exceder 10000 caracteres' })
-    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' })
     .optional(),
   act3: z
     .string()
     .max(10000, { message: 'O campo não pode exceder 10000 caracteres' })
-    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' }),
+    .optional(),
 })
 
 type updateCapituleBodyData = z.infer<typeof updateCapituleSchema>
 
 export default function CapitulePage() {
-  const { loading, error, setError } = useContext(ProjectsContext)
+  const [isAddingScene, setIsAddingScene] = useState(false)
 
-  const { register, handleSubmit } = useForm<updateCapituleBodyData>({
+  const { loading, error, setError, updateCapitule } =
+    useContext(ProjectsContext)
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm<updateCapituleBodyData>({
     resolver: zodResolver(updateCapituleSchema),
   })
 
@@ -62,7 +69,26 @@ export default function CapitulePage() {
   const { book, bookName, findCapitule } = useBook(bookId as string)
   const { capitule, capituleName } = findCapitule(capituleId as string)
 
-  async function handleUpdateCapitule(data: updateCapituleBodyData) {}
+  async function handleUpdateCapitule(data: updateCapituleBodyData) {
+    if (data.act1 === ' ') data.act1 = ''
+    if (data.act2 === ' ') data.act2 = ''
+    if (data.act3 === ' ') data.act3 = ''
+
+    const capitule: IUpdateCapituleRequest = {
+      bookId: bookId as string,
+      capituleId: capituleId as string,
+      name: data.name,
+      objective: data.objective,
+      structure: {
+        act1: data.act1 || undefined,
+        act2: data.act2 || undefined,
+        act3: data.act3 || undefined,
+      },
+    }
+
+    await updateCapitule(capitule)
+    reset()
+  }
 
   return (
     <>
@@ -90,45 +116,89 @@ export default function CapitulePage() {
           <HeadingPart icon={<Info size={40} />} label="Informações:" />
 
           <CapituleInfos onSubmit={handleSubmit(handleUpdateCapitule)}>
-            <InfoDefault title="Nome do capítulo">
+            <InputContainer>
+              <Text family="body" size="sm">
+                Nome do capítulo
+                <Text as="span" family="body" size="sm">
+                  {errors.name?.message}
+                </Text>
+              </Text>
+
               <TextInput
                 register={register}
                 label="name"
-                value={capitule?.name || 'Carregando...'}
+                placeholder={capitule?.name || 'Carregando...'}
               />
-            </InfoDefault>
+            </InputContainer>
+
+            <InputContainer>
+              <Text family="body" size="sm">
+                Objetivo do capítulo
+                <Text as="span" family="body" size="sm">
+                  {errors.objective?.message}
+                </Text>
+              </Text>
+
+              <Textarea
+                css={{ width: '100%', boxShadow: 'none' }}
+                placeholder={capitule?.objective || 'Carregando...'}
+                {...register('objective')}
+              />
+            </InputContainer>
 
             <ContainerGrid columns={3}>
-              <InfoDefault title="Ato 1">
-                <Textarea
-                  css={{ width: '100%', boxShadow: 'none' }}
-                  value={capitule?.structure?.act1 || 'Não definido'}
-                  {...register('act1')}
-                />
-              </InfoDefault>
+              <InputContainer>
+                <Text family="body" size="sm">
+                  Estrutura do capítulo: Ato 1
+                  <Text as="span" family="body" size="sm">
+                    {errors.act1?.message}
+                  </Text>
+                </Text>
 
-              <InfoDefault title="Ato 2">
                 <Textarea
                   css={{ width: '100%', boxShadow: 'none' }}
-                  value={capitule?.structure?.act2 || 'Não definido'}
+                  placeholder={capitule?.structure?.act1 || 'Não definido'}
                   {...register('act1')}
                 />
-              </InfoDefault>
+              </InputContainer>
 
-              <InfoDefault title="Ato 3">
+              <InputContainer>
+                <Text family="body" size="sm">
+                  Estrutura do capítulo: Ato 2
+                  <Text as="span" family="body" size="sm">
+                    {errors.act2?.message}
+                  </Text>
+                </Text>
+
                 <Textarea
                   css={{ width: '100%', boxShadow: 'none' }}
-                  value={capitule?.structure?.act3 || 'Não definido'}
-                  {...register('act1')}
+                  placeholder={capitule?.structure?.act2 || 'Não definido'}
+                  {...register('act2')}
                 />
-              </InfoDefault>
+              </InputContainer>
+
+              <InputContainer>
+                <Text family="body" size="sm">
+                  Estrutura do capítulo: Ato 3
+                  <Text as="span" family="body" size="sm">
+                    {errors.act3?.message}
+                  </Text>
+                </Text>
+
+                <Textarea
+                  css={{ width: '100%', boxShadow: 'none' }}
+                  placeholder={capitule?.structure?.act3 || 'Não definido'}
+                  {...register('act3')}
+                />
+              </InputContainer>
             </ContainerGrid>
 
             <Button
               type="submit"
               label="Salvar"
               align="center"
-              css={{ padding: '$3' }}
+              disabled={isSubmitting || !isDirty}
+              css={{ padding: '$3', boxShadow: 'none' }}
               icon={<ArchiveBox />}
             />
           </CapituleInfos>
@@ -136,19 +206,29 @@ export default function CapitulePage() {
           <HeadingPart
             icon={<ProjectorScreen size={40} />}
             label="Cenas"
+            customFunctionToAdd={() => setIsAddingScene(true)}
             isToAdd
           />
 
-          <ContainerGrid>
-            {capitule?.scenes && capitule.scenes[0] ? (
-              capitule?.scenes?.map((scene) => <>{scene.sequence}</>)
-            ) : (
-              <ListEmpty
-                message="Nenhuma cena foi criada ainda."
-                icon={<ProjectorScreen size={40} />}
-              />
-            )}
-          </ContainerGrid>
+          {isAddingScene ? (
+            <AddScene
+              onClose={() => setIsAddingScene(false)}
+              projectId={project.id}
+              bookId={book?.id!}
+              capitule={capitule!}
+            />
+          ) : (
+            <ContainerGrid>
+              {capitule?.scenes && capitule.scenes[0] ? (
+                capitule?.scenes?.map((scene) => <>{scene.sequence}</>)
+              ) : (
+                <ListEmpty
+                  message="Nenhuma cena foi criada ainda."
+                  icon={<ProjectorScreen size={40} />}
+                />
+              )}
+            </ContainerGrid>
+          )}
         </CapituleContainer>
       </ProjectPageLayout>
     </>

@@ -31,6 +31,7 @@ export function HeadingPart({
       {isToAdd && (
         <PlusCircle
           size={40}
+          type="button"
           onClick={() => {
             customFunctionToAdd
               ? customFunctionToAdd()

@@ -2,6 +2,8 @@ import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
+import { ICreateSceneRequest } from '../../../api/booksRequests/types/ICreateSceneRequest'
+import { IUpdateCapituleRequest } from '../../../api/booksRequests/types/IUpdateCapituleRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
@@ -108,4 +110,6 @@ export const projectsDefaultValues: IProjectsContext = {
   removeFrontCover: async (bookId: string) => {},
   createCapitule: async (capitule: ICreateCapituleRequest) => false,
   updateNameProject: async ({ name, projectId }: IUpdateNameProject) => {},
+  updateCapitule: async (capitule: IUpdateCapituleRequest) => {},
+  createScene: async (scene: ICreateSceneRequest) => false,
 }

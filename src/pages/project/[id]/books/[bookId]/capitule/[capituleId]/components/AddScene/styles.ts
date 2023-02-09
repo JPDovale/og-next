@@ -1,13 +1,8 @@
 import { styled } from '@og-ui/react'
 
-export const CapituleContainer = styled('div', {
-  position: 'relative',
-  padding: '$4',
-  paddingTop: 0,
-})
-
-export const CapituleInfos = styled('form', {
+export const AddSceneContainer = styled('form', {
   display: 'flex',
+  position: 'relative',
   flexDirection: 'column',
   gap: '$4',
 
@@ -17,7 +12,7 @@ export const CapituleInfos = styled('form', {
   borderRadius: '$sm',
 })
 
-export const InputContainer = styled('label', {
+export const AvataresContainer = styled('div', {
   width: '100%',
 
   p: {
@@ -36,4 +31,13 @@ export const InputContainer = styled('label', {
   div: {
     padding: '$3',
   },
+})
+
+export const CloseButton = styled('button', {
+  all: 'unset',
+  lineHeight: 0,
+
+  position: 'absolute',
+  right: '$4',
+  cursor: 'pointer',
 })
