@@ -33,7 +33,7 @@ export function CardPerson({
 
   return (
     <CardPersonContainer
-      as={!isNotPreview ? 'button' : 'div'}
+      as={isNotPreview ? 'div' : 'button'}
       isAdd={isAdd}
       isNotPreview={isNotPreview}
       onClick={() =>
@@ -52,7 +52,12 @@ export function CardPerson({
         <>
           <div className="person-image">
             {person?.image?.url ? (
-              <Image src={person.image.url} alt="" width={400} height={400} />
+              <Image
+                src={person.image.url}
+                alt={`${person.name} ${person.lastName}`}
+                width={400}
+                height={400}
+              />
             ) : (
               <ImageIco weight="thin" size={64} alt="" color="#e3e3e3" />
             )}

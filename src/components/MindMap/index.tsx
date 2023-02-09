@@ -1,11 +1,11 @@
 // import { Text } from '@og-ui/react'
 import { Text } from '@og-ui/react'
+import { useRouter } from 'next/router'
 import { ArrowCircleUp } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { IPersonsResponse } from '../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../api/responsesTypes/IProjcetResponse'
-import { ProjectsContext } from '../../contexts/projects'
+import { useProject } from '../../hooks/useProject'
 import { Avatares } from '../Avatares'
 import { CardProject } from '../CardProject'
 
@@ -23,21 +23,14 @@ import {
   TagsOfProject,
 } from './styles'
 
-interface IMindMapProps {
-  project: IProjectResponse
-}
-
-export function MindMap({ project }: IMindMapProps) {
+export function MindMap() {
   const [tagsIsColapse, setTagsIsColapse] = useState(false)
   const [personsIsColapse, setPersonsIsColapse] = useState(false)
 
-  const { persons } = useContext(ProjectsContext)
+  const router = useRouter()
+  const { id } = router.query
 
-  const personsThisProject = persons?.filter(
-    (person) => person.defaultProject === project.id,
-  )
-
-  const tags = project?.tags
+  const { project, personsThisProject, tags } = useProject(id as string)
 
   return (
     <MindMapContainer>
@@ -119,6 +112,7 @@ export function MindMap({ project }: IMindMapProps) {
 
                     {tags.map((tag) => {
                       if (tag.type === 'persons') return ''
+                      if (tag.type === 'books') return ''
 
                       return (
                         <Tag key={tag.id}>
@@ -135,23 +129,23 @@ export function MindMap({ project }: IMindMapProps) {
                               const personsInThisRef = ref.references.map(
                                 (r) => {
                                   const personFind = personsThisProject.find(
-                                    (person) => person.id === r,
+                                    (person) => person?.id === r,
                                   )
                                   return personFind
                                 },
                               ) as IPersonsResponse[]
 
                               return (
-                                <Reference key={ref.object.id}>
+                                <Reference key={ref.object?.id}>
                                   <div>
-                                    <Text>{ref.object.title}</Text>
+                                    <Text>{ref.object?.title}</Text>
 
                                     <Text
                                       as="span"
                                       family="body"
                                       height="short"
                                     >
-                                      {ref.object.description}
+                                      {ref.object?.description}
                                     </Text>
                                   </div>
 

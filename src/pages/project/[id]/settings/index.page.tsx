@@ -7,6 +7,7 @@ import {
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
 import {
+  Books,
   ArchiveBox,
   Crosshair,
   HeartBreak,
@@ -52,7 +53,6 @@ interface IObjects {
 
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
-  const [name, setName] = useState('')
 
   const {
     projects,
@@ -61,9 +61,12 @@ export default function SettingsPage() {
     persons,
     unshareProject,
     error,
-    setError,
+    books,
     updateNameProject,
+    setError,
   } = useContext(ProjectsContext)
+  const [name, setName] = useState('')
+
   const { user } = useContext(UserContext)
 
   const router = useRouter()
@@ -77,6 +80,9 @@ export default function SettingsPage() {
 
   const personsOfProject = persons.filter(
     (person) => person.defaultProject === project?.id,
+  )
+  const booksOfProject = books.filter(
+    (book) => book.defaultProject === project?.id,
   )
 
   const userCreatorFinde = users?.find(
@@ -271,7 +277,7 @@ export default function SettingsPage() {
                 </div>
               </Creator>
             </Text>
-            <Text family="body" as="label">
+            <Text family="body" as="div">
               Usuários com acesso: {project?.users.length}
               <Text family="body" as="label" height="shorter">
                 A opção de alterar a permissão em breve estará disponível... Se
@@ -324,6 +330,14 @@ export default function SettingsPage() {
                 Personagens
               </header>
               <Text>{personsOfProject?.length || 0}</Text>
+            </Text>
+
+            <Text family="body" as="label">
+              <header>
+                <Books />
+                Livros
+              </header>
+              <Text>{booksOfProject?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">

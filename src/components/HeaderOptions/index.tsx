@@ -71,10 +71,10 @@ export function HeaderOptions({
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const newNotifications = !!user?.notifications.find(
+  const newNotifications = !!user?.notifications?.find(
     (notification) => notification.isVisualized === false,
   )
-  const newNotificationsNumber = user?.notifications.filter(
+  const newNotificationsNumber = user?.notifications?.filter(
     (notification) => notification.isVisualized === false,
   ).length
 
