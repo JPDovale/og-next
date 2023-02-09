@@ -11,20 +11,22 @@ export function orderElements(
   switch (option) {
     case 'a-z': {
       const elementsOrd = elements?.slice().sort((a, b) =>
-        a.name
+        a.name ||
+        a.title
           .toLowerCase()
           .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') >
-        b.name
+          .replace(/[\u0300-\u036f]/g, '') > b.name ||
+        a.title
           .toLowerCase()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           ? 1
-          : b.name
+          : b.name ||
+            a.title
               .toLowerCase()
               .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') >
-            a.name
+              .replace(/[\u0300-\u036f]/g, '') > a.name ||
+            a.title
               .toLowerCase()
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')
@@ -37,20 +39,22 @@ export function orderElements(
 
     case 'z-a': {
       const elementsOrd = elements?.slice().sort((a, b) =>
-        a.name
+        a.name ||
+        a.title
           .toLowerCase()
           .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') <
-        b.name
+          .replace(/[\u0300-\u036f]/g, '') < b.name ||
+        a.title
           .toLowerCase()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           ? 1
-          : b.name
+          : b.name ||
+            a.title
               .toLowerCase()
               .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') <
-            a.name
+              .replace(/[\u0300-\u036f]/g, '') < a.name ||
+            a.title
               .toLowerCase()
               .normalize('NFD')
               .replace(/[\u0300-\u036f]/g, '')

@@ -178,3 +178,27 @@ export const PersonsContainer = styled('div', {
     flexDirection: 'column',
   },
 })
+
+export const BooksContainer = styled('div', {
+  display: 'grid',
+  gap: '$8',
+
+  gridTemplateColumns: '1fr 1fr ',
+
+  '@media screen and (min-width: 1700px)': {
+    gridTemplateColumns: ' 1fr 1fr 1fr',
+  },
+
+  '@media screen and (max-width: 768px)': {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  variants: {
+    isEmpty: {
+      true: {
+        gridTemplateColumns: ' 1fr ',
+      },
+    },
+  },
+})

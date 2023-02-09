@@ -68,6 +68,7 @@ export function CardProject({
   )
 
   const persons = project?.tags?.find((tag) => tag.type === 'persons')
+  const books = project?.tags?.find((tag) => tag.type === 'books')
 
   async function handleShareProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -187,7 +188,14 @@ export function CardProject({
             </InfosContainer>
 
             {isList === false && (
-              <InfosContainer>
+              <InfosContainer columns={3}>
+                <Text as="p" height={'shorter'} size={'sm'}>
+                  <Text as="span" family="body" size="sm" height="shorter">
+                    Livros
+                  </Text>
+                  {books?.refs[0].references.length || 0}
+                </Text>
+
                 <Text as="p" height={'shorter'} size={'sm'}>
                   <Text as="span" family="body" size="sm" height="shorter">
                     Personagens

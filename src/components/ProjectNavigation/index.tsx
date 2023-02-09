@@ -119,7 +119,7 @@ export function ProjectNavigation({
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<SortDescending weight="bold" />}
+                  icon={<SortDescending />}
                   variant={orderBy === 'a-z' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
@@ -135,7 +135,7 @@ export function ProjectNavigation({
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<SortAscending weight="bold" />}
+                  icon={<SortAscending />}
                   variant={orderBy === 'z-a' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
@@ -151,7 +151,7 @@ export function ProjectNavigation({
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowFatLinesUp weight="bold" />}
+                  icon={<ArrowFatLinesUp />}
                   variant={orderBy === 'time-asc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
@@ -167,7 +167,7 @@ export function ProjectNavigation({
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowFatLinesDown weight="bold" />}
+                  icon={<ArrowFatLinesDown />}
                   variant={orderBy === 'time-desc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
@@ -183,7 +183,7 @@ export function ProjectNavigation({
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowLineUp weight="bold" />}
+                  icon={<ArrowLineUp />}
                   variant={orderBy === 'update-asc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
@@ -199,7 +199,7 @@ export function ProjectNavigation({
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowLineDown weight="bold" />}
+                  icon={<ArrowLineDown />}
                   variant={orderBy === 'update-desc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
@@ -223,36 +223,21 @@ export function ProjectNavigation({
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<House weight="bold" />}
+              icon={<House />}
               onClick={() => {
                 router.push(`/project/${id}`)
                 setNavigatorProjectIsOpen(false)
               }}
             />
           </Label>
-          <Label size="xxs">
-            Plot
-            <Button
-              disabled={isFullDisabled || !!loading}
-              type="button"
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              icon={<BookOpen weight="bold" />}
-              variant={onWindow === 'plot' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/plot`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            />
-          </Label>
+
           <Label size="xxs">
             Livros
             <Button
               type="button"
-              disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Books weight="bold" />}
+              icon={<Books />}
               variant={onWindow === 'books' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/books`)
@@ -260,6 +245,23 @@ export function ProjectNavigation({
               }}
             />
           </Label>
+
+          <Label size="xxs">
+            Plot
+            <Button
+              disabled={isFullDisabled || !!loading}
+              type="button"
+              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+              align="center"
+              icon={<BookOpen />}
+              variant={onWindow === 'plot' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/plot`)
+                setNavigatorProjectIsOpen(false)
+              }}
+            />
+          </Label>
+
           <Label size="xxs">
             Planetas
             <Button
@@ -267,7 +269,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Planet weight="bold" />}
+              icon={<Planet />}
               variant={onWindow === 'planets' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/planets`)
@@ -282,7 +284,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<MapTrifold weight="bold" />}
+              icon={<MapTrifold />}
               variant={onWindow === 'nations' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/nations`)
@@ -297,7 +299,7 @@ export function ProjectNavigation({
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<UserFocus weight="bold" />}
+              icon={<UserFocus />}
               variant={onWindow === 'persons' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/persons`)
@@ -312,7 +314,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Buildings weight="bold" />}
+              icon={<Buildings />}
               variant={onWindow === 'cities' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/cities`)
@@ -327,7 +329,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Alien weight="bold" />}
+              icon={<Alien />}
               variant={onWindow === 'races' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/races`)
@@ -342,7 +344,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Atom weight="bold" />}
+              icon={<Atom />}
               variant={onWindow === 'religions' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/religions`)
@@ -357,7 +359,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Lightning weight="bold" />}
+              icon={<Lightning />}
               variant={onWindow === 'powers' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/powers`)
@@ -372,7 +374,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<UsersFour weight="bold" />}
+              icon={<UsersFour />}
               variant={onWindow === 'familys' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/familys`)
@@ -387,7 +389,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Translate weight="bold" />}
+              icon={<Translate />}
               variant={onWindow === 'languages' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/languages`)
@@ -402,7 +404,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Bank weight="bold" />}
+              icon={<Bank />}
               variant={onWindow === 'institutions' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/institutions`)
@@ -417,7 +419,7 @@ export function ProjectNavigation({
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Clock weight="bold" />}
+              icon={<Clock />}
               variant={onWindow === 'timelines' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/timelines`)
@@ -432,7 +434,7 @@ export function ProjectNavigation({
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<TreeStructure weight="bold" />}
+              icon={<TreeStructure />}
               variant={onWindow === 'mindMap' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/mindMap`)
@@ -448,7 +450,7 @@ export function ProjectNavigation({
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Gear weight="bold" />}
+              icon={<Gear />}
               onClick={() => {
                 router.push(`/project/${id}/settings`)
                 setNavigatorProjectIsOpen(false)
@@ -467,7 +469,7 @@ export function ProjectNavigation({
                 }}
                 wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                 align="center"
-                icon={<UserMinus weight="bold" />}
+                icon={<UserMinus />}
                 onClick={() => setOnOpenQuit(true)}
               />
             </Label>
@@ -490,7 +492,7 @@ export function ProjectNavigation({
                   }}
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<Trash weight="bold" />}
+                  icon={<Trash />}
                   onClick={() => setOnOpenDelete(true)}
                 />
               </Label>
@@ -512,7 +514,7 @@ export function ProjectNavigation({
                 background: 'DarkRed',
               }}
               align="center"
-              icon={<Trash weight="bold" />}
+              icon={<Trash />}
               label="Apagar permanentemente"
               onClick={() => handleDeleteProject()}
             />
@@ -520,7 +522,7 @@ export function ProjectNavigation({
               disabled={isFullDisabled || !!loading}
               type="button"
               align="center"
-              icon={<XSquare weight="bold" />}
+              icon={<XSquare />}
               label="Cancelar"
               onClick={() => setOnOpenDelete(false)}
             />
@@ -542,7 +544,7 @@ export function ProjectNavigation({
                 background: 'DarkRed',
               }}
               align="center"
-              icon={<UserMinus weight="bold" />}
+              icon={<UserMinus />}
               label="Sair do projeto."
               onClick={handleQuitProject}
             />
@@ -550,7 +552,7 @@ export function ProjectNavigation({
               disabled={isFullDisabled || !!loading}
               type="button"
               align="center"
-              icon={<XSquare weight="bold" />}
+              icon={<XSquare />}
               label="Cancelar"
               onClick={() => setOnOpenDelete(false)}
             />

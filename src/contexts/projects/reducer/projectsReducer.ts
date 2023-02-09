@@ -1,6 +1,7 @@
 import { produce } from 'immer'
 
 import { IError } from '../../../@types/errors/IError'
+import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
@@ -10,6 +11,7 @@ export interface IProjectState {
   projects: IProjectResponse[]
   persons: IPersonsResponse[]
   users: IUserResponse[]
+  books: IBooksResponse[]
   error: IError | undefined
 }
 
@@ -71,6 +73,7 @@ export function projectsReducer(state: IProjectState, action: any) {
         draft.projects = action.payload.projects
         draft.users = action.payload.users
         draft.persons = action.payload.persons
+        draft.books = action.payload.books
         draft.error = undefined
       })
     }
@@ -122,6 +125,29 @@ export function projectsReducer(state: IProjectState, action: any) {
         draft.projects = state.projects.filter(
           (project) => project.id !== action.payload.projectId,
         )
+        draft.error = undefined
+      })
+    }
+
+    case ProjectsActionsType.AddBook: {
+      return produce(state, (draft) => {
+        const indexOfProject = state.projects.findIndex(
+          (project) => project.id === action.payload.project.id,
+        )
+
+        draft.projects[indexOfProject] = action.payload.project
+        draft.books.push(action.payload.book)
+        draft.error = undefined
+      })
+    }
+
+    case ProjectsActionsType.UpdateBook: {
+      return produce(state, (draft) => {
+        const indexOfBook = state.books.findIndex(
+          (book) => book.id === action.payload.book.id,
+        )
+
+        draft.books[indexOfBook] = action.payload.book
         draft.error = undefined
       })
     }
