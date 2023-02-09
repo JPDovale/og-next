@@ -9,6 +9,15 @@ import {
 } from '../responsesTypes/ICreateResponse'
 import { IInitResponse } from '../responsesTypes/IInitResponse'
 
+export async function verifyRequest() {
+  try {
+    const response = await api.get('/users/verify')
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 export async function getUserRequest() {
   try {
     const response = await api.get('/users')
@@ -24,6 +33,15 @@ export async function createSessionRequest(
 ): Promise<ICreateSessionResponse> {
   try {
     const response = await api.post('/sessions/create', { email, password })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function notifyUsersRequest(title: string, content: string) {
+  try {
+    const response = await api.post('/users/notify', { title, content })
     return response.data
   } catch (err: any) {
     return err.response.data

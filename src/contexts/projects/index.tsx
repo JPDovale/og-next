@@ -10,6 +10,7 @@ import { IGenericObject } from '../../@types/editores/IGenericObject'
 import { IError } from '../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from '../../api/booksRequests/types/ICreateSceneRequest'
+import { ISetSceneToCompleteRequest } from '../../api/booksRequests/types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from '../../api/booksRequests/types/IUpdateCapituleRequest'
 import { ICreateCommentDTO } from '../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../api/dtos/ICreatePersonDTO'
@@ -23,6 +24,7 @@ import { createBookFunction } from './functions/booksFunctions/createBookFunctio
 import { createCapituleFunction } from './functions/booksFunctions/createCapituleFunction'
 import { createSceneFunction } from './functions/booksFunctions/createSceneFunction'
 import { removeFrontCoverFunction } from './functions/booksFunctions/removeFrontCoverFunction'
+import { setSceneToCompleteFunction } from './functions/booksFunctions/setSceneToCompleteFunction'
 import { updateCapituleFunction } from './functions/booksFunctions/updateCapituleFunction'
 import { updateFrontCoverFunction } from './functions/booksFunctions/updateFrontCoverFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
@@ -426,6 +428,18 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return response
   }
 
+  async function setSceneToComplete(
+    sceneToComplete: ISetSceneToCompleteRequest,
+  ) {
+    setLoading(true)
+    const response = await setSceneToCompleteFunction({
+      sceneToComplete,
+      dispatch,
+    })
+    setLoading(false)
+    return response
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -475,6 +489,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updateNameProject,
         updateCapitule,
         createScene,
+        setSceneToComplete,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

@@ -53,7 +53,7 @@ export default function NewCapitule() {
 
   const router = useRouter()
   const { id, bookId } = router.query
-  usePreventBack(`/project/${id}`)
+  const { GoBackButton } = usePreventBack(`/project/${id}/books/${bookId}`)
 
   const {
     register,
@@ -124,6 +124,8 @@ export default function NewCapitule() {
 
         <NewCapituleContainer>
           <NewCapituleForm onSubmit={handleSubmit(handleCreateCapitule)}>
+            <GoBackButton topDistance={4} />
+
             <Heading size="sm">
               Vamos criar um novo capítulo para o livro {bookName}...
             </Heading>

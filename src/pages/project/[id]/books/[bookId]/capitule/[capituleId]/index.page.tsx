@@ -7,6 +7,7 @@ import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { IUpdateCapituleRequest } from '../../../../../../../api/booksRequests/types/IUpdateCapituleRequest'
+import { SceneCard } from '../../../../../../../components/BooksComponents/SceneCard'
 import { DefaultError } from '../../../../../../../components/DefaultError'
 import { ListEmpty } from '../../../../../../../components/ListEmpty'
 import { TextInput } from '../../../../../../../components/TextInput'
@@ -65,7 +66,7 @@ export default function CapitulePage() {
   const { id, bookId, capituleId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/books/${bookId}`)
 
-  const { project, useBook } = useProject(id as string)
+  const { project, useBook, findManyPersons } = useProject(id as string)
   const { book, bookName, findCapitule } = useBook(bookId as string)
   const { capitule, capituleName } = findCapitule(capituleId as string)
 
@@ -206,7 +207,7 @@ export default function CapitulePage() {
           <HeadingPart
             icon={<ProjectorScreen size={40} />}
             label="Cenas"
-            customFunctionToAdd={() => setIsAddingScene(true)}
+            customFunctionToAdd={() => setIsAddingScene(!isAddingScene)}
             isToAdd
           />
 
@@ -218,9 +219,21 @@ export default function CapitulePage() {
               capitule={capitule!}
             />
           ) : (
-            <ContainerGrid>
+            <ContainerGrid columns={2}>
               {capitule?.scenes && capitule.scenes[0] ? (
-                capitule?.scenes?.map((scene) => <>{scene.sequence}</>)
+                capitule?.scenes?.map((scene) => {
+                  const personsInThisScene = findManyPersons(scene.persons)
+
+                  return (
+                    <SceneCard
+                      key={scene.id}
+                      bookId={book?.id!}
+                      capituleId={capitule.id!}
+                      scene={scene}
+                      persons={personsInThisScene}
+                    />
+                  )
+                })
               ) : (
                 <ListEmpty
                   message="Nenhuma cena foi criada ainda."

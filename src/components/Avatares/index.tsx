@@ -16,8 +16,8 @@ interface IAvataresProps {
   firstButtonIcon?: ReactNode
   secondaryButtonIcon?: ReactNode
   internalButtonIcon?: ReactNode
-  columns?: 5 | 7 | 12 | 15 | 18
-  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full'
+  columns?: 5 | 7 | 10 | 12 | 15 | 18
+  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full' | '2xs'
   isClickable?: boolean
   additionalKey?: string
 

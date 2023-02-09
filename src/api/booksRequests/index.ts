@@ -2,6 +2,7 @@ import { api } from '..'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
 import { ICreateCapituleRequest } from './types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from './types/ICreateSceneRequest'
+import { ISetSceneToCompleteRequest } from './types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from './types/IUpdateCapituleRequest'
 import { IUpdateFrontCoverRequest } from './types/IUpdateFrontCoverRequest'
 
@@ -38,6 +39,17 @@ export async function createSceneRequest(scene: ICreateSceneRequest) {
 export async function updateCapituleRequest(capitule: IUpdateCapituleRequest) {
   try {
     const response = await api.put('/books/capitules', capitule)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function setSceneToCompleteRequest(
+  body: ISetSceneToCompleteRequest,
+) {
+  try {
+    const response = await api.put('/books/capitules/scenes/complete', body)
     return response.data
   } catch (err: any) {
     return err.response.data

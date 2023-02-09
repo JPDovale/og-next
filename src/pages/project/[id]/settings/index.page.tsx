@@ -54,11 +54,19 @@ interface IObjects {
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
 
-const { projects, users, loading, persons, unshareProject, error, books } =
-    useContext(ProjectsContext)
+  const {
+    projects,
+    users,
+    loading,
+    persons,
+    unshareProject,
+    error,
+    books,
+    updateNameProject,
+    setError,
+  } = useContext(ProjectsContext)
   const [name, setName] = useState('')
 
-  
   const { user } = useContext(UserContext)
 
   const router = useRouter()
@@ -269,7 +277,7 @@ const { projects, users, loading, persons, unshareProject, error, books } =
                 </div>
               </Creator>
             </Text>
-            <Text family="body" as="label">
+            <Text family="body" as="div">
               Usuários com acesso: {project?.users.length}
               <Text family="body" as="label" height="shorter">
                 A opção de alterar a permissão em breve estará disponível... Se

@@ -4,7 +4,7 @@ import { styled } from '@og-ui/react'
 
 interface IAvatarProps {
   src: string | undefined
-  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full'
+  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full' | '2xs'
   selected?: boolean
   error?: boolean
   whitShadow?: boolean
@@ -70,6 +70,19 @@ const AvatarRoot = styled(Avatar.Root, {
         minHeight: '100%',
         width: '100%',
         minWidth: '100%',
+      },
+      '2xs': {
+        minWidth: 32,
+        minHeight: 32,
+        maxWidth: 32,
+        maxHeight: 32,
+
+        svg: {
+          minWidth: 32,
+          minHeight: 32,
+          maxWidth: 32,
+          maxHeight: 32,
+        },
       },
       xsm: {
         minWidth: 40,
@@ -187,6 +200,12 @@ const AvatarImage = styled(Avatar.Image, {
         width: '100%',
         minWidth: '100%',
       },
+      '2xs': {
+        minWidth: 32,
+        minHeight: 32,
+        maxWidth: 32,
+        maxHeight: 32,
+      },
       xsm: {
         minWidth: 40,
         minHeight: 40,
@@ -261,6 +280,12 @@ const AvatarFallback = styled(Avatar.Fallback, {
           width: '50%',
           height: '50%',
         },
+      },
+      '2xs': {
+        minWidth: 32,
+        minHeight: 32,
+        maxWidth: 32,
+        maxHeight: 32,
       },
       xsm: {
         minWidth: 40,
