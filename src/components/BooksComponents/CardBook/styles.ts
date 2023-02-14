@@ -46,10 +46,11 @@ export const ImageContainer = styled('div', {
 
   borderRadius: '$sm 0 0 $sm',
   borderRight: '0.3px $base900 solid',
+  overflow: 'hidden',
 
   img: {
     width: '100%',
-    height: '100%',
+    minHeight: '100%',
     objectFit: 'cover',
     borderRadius: '$sm 0 0 $sm',
   },

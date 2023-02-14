@@ -18,6 +18,8 @@ interface IFindBookResponse {
   bookName: string
   bookInfos: IInfos[]
   bookAuthors: IUserResponse[]
+  bookWords: number
+  bookWrittenWords: number
 
   findCapitule: (id: string) => IFindCapituleResponse
 }
@@ -54,10 +56,25 @@ export function useProject(id: string) {
   const permission = project?.users.find((u) => u.id === user?.id)?.permission
 
   function useBook(id: string): IFindBookResponse {
-    const { book, bookName, bookInfos, bookAuthors, findCapitule } =
-      useBookInternal(books, id)
+    const {
+      book,
+      bookName,
+      bookInfos,
+      bookAuthors,
+      findCapitule,
+      bookWords,
+      bookWrittenWords,
+    } = useBookInternal(books, id)
 
-    return { book, bookName, bookInfos, bookAuthors, findCapitule }
+    return {
+      book,
+      bookName,
+      bookInfos,
+      bookAuthors,
+      findCapitule,
+      bookWords,
+      bookWrittenWords,
+    }
   }
 
   function queryPerson(query: string) {

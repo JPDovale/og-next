@@ -2,9 +2,12 @@ import { api } from '..'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
 import { ICreateCapituleRequest } from './types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from './types/ICreateSceneRequest'
+import { IDeleteSceneRequest } from './types/IDeleteSceneRequest'
+import { IReorderScenesRequest } from './types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from './types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from './types/IUpdateCapituleRequest'
 import { IUpdateFrontCoverRequest } from './types/IUpdateFrontCoverRequest'
+import { IUpdateSceneRequest } from './types/IUpdateSceneRequest'
 
 // POST
 export async function createBookRequest(bookDataRequest: ICreateBookRequest) {
@@ -56,6 +59,24 @@ export async function setSceneToCompleteRequest(
   }
 }
 
+export async function reorderScenesRequest(body: IReorderScenesRequest) {
+  try {
+    const response = await api.put('/books/capitules/scenes/reorder', body)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function updateSceneRequest(body: IUpdateSceneRequest) {
+  try {
+    const response = await api.put('/books/capitules/scenes', body)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 // PATCH
 export async function updateFrontCoverRequest({
   bookId,
@@ -82,6 +103,21 @@ export async function updateFrontCoverRequest({
 export async function removeFrontCoverRequest(bookId: string) {
   try {
     const response = await api.delete(`/books/front-cover/${bookId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function deleteSceneRequest({
+  bookId,
+  capituleId,
+  sceneId,
+}: IDeleteSceneRequest) {
+  try {
+    const response = await api.delete(
+      `/books/${bookId}/capitules/${capituleId}/scenes/${sceneId}`,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data

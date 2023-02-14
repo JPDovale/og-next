@@ -4,11 +4,16 @@ import { ReactNode } from 'react'
 interface IContainerGrid {
   columns?: 1 | 2 | 3 | 4
   children?: ReactNode
+  darkBackground?: boolean
 }
 
-export function ContainerGrid({ columns = 1, children }: IContainerGrid) {
+export function ContainerGrid({
+  columns = 1,
+  children,
+  darkBackground = false,
+}: IContainerGrid) {
   return (
-    <ContainerGridContainer columns={columns}>
+    <ContainerGridContainer columns={columns} darkBackground={darkBackground}>
       {children}
     </ContainerGridContainer>
   )
@@ -43,6 +48,14 @@ const ContainerGridContainer = styled('div', {
           gridTemplateColumns: '1fr 1fr',
         },
       },
+    },
+    darkBackground: {
+      true: {
+        background: '$gray900',
+        padding: '$6 $4',
+        borderRadius: '$md',
+      },
+      false: {},
     },
   },
 })
