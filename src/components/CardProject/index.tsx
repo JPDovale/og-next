@@ -113,6 +113,7 @@ export function CardProject({
     <>
       <CardProjectContainer isList={isList}>
         <Preview
+          title={project?.name}
           as={isList !== 'example' && 'button'}
           onClick={() => {
             router.push(`/project/${project.id}`)
@@ -124,13 +125,13 @@ export function CardProject({
               {project?.image?.url ? (
                 <Image
                   src={project?.image.url}
-                  alt=""
+                  alt={project?.name}
                   width={300}
                   height={300}
                   priority
                 />
               ) : (
-                <ImageIco weight="thin" size={64} alt="" />
+                <ImageIco weight="thin" size={64} alt={project?.name} />
               )}
             </div>
           )}
@@ -237,6 +238,7 @@ export function CardProject({
         </Preview>
         {isList !== 'example' && isSharable && (
           <ShareButton
+            title="Compartilhar projeto"
             disabled={project.users.length >= 5}
             isList={isList}
             icon={<Share />}
