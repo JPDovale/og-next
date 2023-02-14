@@ -18,6 +18,7 @@ export interface IInfos {
 export interface IFindCapituleResponse {
   capitule: ICapitule | undefined
   capituleName: string
+  capituleWords: number
 
   findScene: (id: string) => IScene | undefined
 }
@@ -92,6 +93,8 @@ export function useBook(books: IBooksResponse[], id: string) {
       columns: 4,
     },
   ]
+  const bookWords = Number(book?.words)
+  const bookWrittenWords = Number(book?.writtenWords)
 
   const authorsIncludeCreator = users.filter((user) => {
     const userAccess = !!book?.authors?.find((u) => u.id === user.id)
@@ -102,6 +105,7 @@ export function useBook(books: IBooksResponse[], id: string) {
   function findCapitule(id: string): IFindCapituleResponse {
     const capitule = book?.capitules.find((capitule) => capitule.id === id)
     const capituleName = capitule?.name || 'Carregando...'
+    const capituleWords = Number(capitule?.words)
 
     function findScene(id: string) {
       const scene = capitule?.scenes?.find((s) => s.id === id)
@@ -109,8 +113,16 @@ export function useBook(books: IBooksResponse[], id: string) {
       return scene
     }
 
-    return { capitule, capituleName, findScene }
+    return { capitule, capituleName, findScene, capituleWords }
   }
 
-  return { book, bookName, bookInfos, bookAuthors, findCapitule }
+  return {
+    book,
+    bookName,
+    bookInfos,
+    bookAuthors,
+    findCapitule,
+    bookWords,
+    bookWrittenWords,
+  }
 }
