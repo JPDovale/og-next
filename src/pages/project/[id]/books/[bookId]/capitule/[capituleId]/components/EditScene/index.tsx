@@ -1,58 +1,81 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Heading, Text, Textarea } from '@og-ui/react'
-import { FilePlus, UserCircleMinus, UserCirclePlus, X } from 'phosphor-react'
-import { useContext } from 'react'
+import { Button, Checkbox, Heading, Text, Textarea } from '@og-ui/react'
+import {
+  FileArrowDown,
+  UserCircleMinus,
+  UserCirclePlus,
+  X,
+} from 'phosphor-react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { ICreateSceneRequest } from '../../../../../../../../../api/booksRequests/types/ICreateSceneRequest'
-import { ICapitule } from '../../../../../../../../../api/responsesTypes/IBooksResponse'
+import { IUpdateSceneRequest } from '../../../../../../../../../api/booksRequests/types/IUpdateSceneRequest'
+import {
+  ICapitule,
+  IScene,
+} from '../../../../../../../../../api/responsesTypes/IBooksResponse'
 import { Avatares } from '../../../../../../../../../components/Avatares'
 import { ContainerGrid } from '../../../../../../../../../components/usefull/ContainerGrid'
 import { ProjectsContext } from '../../../../../../../../../contexts/projects'
 import { useProject } from '../../../../../../../../../hooks/useProject'
 import { InputContainer } from '../../styles'
-import { AddSceneContainer, AvataresContainer, CloseButton } from './styles'
+import { EditSceneContainer, AvataresContainer, CloseButton } from './styles'
 
-interface IAddSceneProps {
+interface IEditSceneProps {
   capitule: ICapitule
+  scene: IScene
   bookId: string
   projectId: string
   onClose: () => void
 }
 
-const createSceneSchema = z.object({
-  objective: z.string().min(1, { message: 'O campo é obrigatório!' }).max(600, {
-    message: 'O objetivo do capítulo não pode exceder 600 caracteres',
-  }),
+const editSceneSchema = z.object({
+  objective: z
+    .string()
+    .max(600, {
+      message: 'O objetivo do capítulo não pode exceder 600 caracteres',
+    })
+    .optional(),
   act1: z
     .string()
-    .min(1, { message: 'O campo é obrigatório!' })
     .max(10000, { message: 'O campo não pode exceder 10000 caracteres' })
-    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' }),
+    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' })
+    .optional(),
   act2: z
     .string()
-    .min(1, { message: 'O campo é obrigatório!' })
     .max(10000, { message: 'O campo não pode exceder 10000 caracteres' })
-    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' }),
+    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' })
+    .optional(),
   act3: z
     .string()
-    .min(1, { message: 'O campo é obrigatório!' })
     .max(10000, { message: 'O campo não pode exceder 10000 caracteres' })
-    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' }),
+    .regex(/^[^<>{}\\]+$/, { message: 'Não coloque caracteres especiais' })
+    .optional(),
   persons: z
     .array(z.string().min(6).max(100))
     .min(1, { message: 'Você precisa selecionar pelo menos um personagem!' }),
+  writtenWords: z
+    .string()
+    .regex(/^([0-9]+)$/, {
+      message: 'Coloque apenas números na idade do personagem.',
+    })
+    .max(10, { message: 'O valor é muito grande. Sugestão: Crie outras cenas' })
+    .optional(),
+  complete: z.boolean(),
 })
 
-type createSceneBodyData = z.infer<typeof createSceneSchema>
+type editSceneBodyData = z.infer<typeof editSceneSchema>
 
-export function AddScene({
+export function EditScene({
   projectId,
   bookId,
   capitule,
+  scene,
   onClose,
-}: IAddSceneProps) {
-  const { createScene } = useContext(ProjectsContext)
+}: IEditSceneProps) {
+  const [formUpdated, setFormUpdated] = useState(false)
+
+  const { updateScene } = useContext(ProjectsContext)
 
   const {
     register,
@@ -60,33 +83,47 @@ export function AddScene({
     watch,
     setValue,
     formState: { isSubmitting, errors, isDirty },
-  } = useForm<createSceneBodyData>({
-    resolver: zodResolver(createSceneSchema),
+  } = useForm<editSceneBodyData>({
+    resolver: zodResolver(editSceneSchema),
+    defaultValues: {
+      act1: scene.structure.act1,
+      act2: scene.structure.act2,
+      act3: scene.structure.act3,
+      objective: scene.objective,
+      persons: scene.persons || [],
+      writtenWords: scene.writtenWords || '0',
+      complete: scene.complete,
+    },
   })
   const selectedPersonsIds = watch('persons')
+  const complete = watch('complete')
 
   const { personsThisProject, findManyPersons } = useProject(projectId)
 
-  const selectedPersons = findManyPersons(selectedPersonsIds)
-  const unselectedPersons = findManyPersons(selectedPersonsIds, {
+  const selectedPersons = findManyPersons(selectedPersonsIds as string[])
+  const unselectedPersons = findManyPersons(selectedPersonsIds as string[], {
     reverse: true,
   })
 
-  async function handleCreateScene(data: createSceneBodyData) {
-    const newScene: ICreateSceneRequest = {
+  async function handleUpdateScene(data: editSceneBodyData) {
+    const updatedScene: IUpdateSceneRequest = {
       bookId,
-      capituleId: capitule.id!,
-      objective: data.objective,
+      capituleId: capitule.id,
+      complete: data.complete,
       persons: data.persons,
+      sceneId: scene.id,
+      objective: data.objective,
       structure: {
         act1: data.act1,
         act2: data.act2,
         act3: data.act3,
       },
+      writtenWords: data.writtenWords,
     }
 
-    const isCreated = await createScene(newScene)
-    if (isCreated) {
+    const isUpdated = await updateScene(updatedScene)
+
+    if (isUpdated) {
       onClose()
     }
   }
@@ -94,18 +131,33 @@ export function AddScene({
   function handleSelectPerson(id: string) {
     const ids = selectedPersonsIds || []
 
+    setFormUpdated(true)
     setValue('persons', [...ids, id])
   }
 
   function handleRemovePerson(id: string) {
-    const filteredPersonsIds = selectedPersonsIds.filter((i) => i !== id)
+    const filteredPersonsIds = selectedPersonsIds?.filter((i) => i !== id) || []
 
+    setFormUpdated(true)
     setValue('persons', [...filteredPersonsIds])
   }
 
+  function handleUpdateComplete() {
+    const updatedComplete = !complete
+
+    setValue('complete', updatedComplete)
+    setFormUpdated(true)
+
+    if (updatedComplete) {
+      setValue('writtenWords', scene.writtenWords)
+    } else {
+      setValue('writtenWords', '0')
+    }
+  }
+
   return (
-    <AddSceneContainer onSubmit={handleSubmit(handleCreateScene)}>
-      <Heading size="sm">Cena {capitule.scenes?.length! + 1}</Heading>
+    <EditSceneContainer onSubmit={handleSubmit(handleUpdateScene)}>
+      <Heading size="sm">Cena {scene.sequence}</Heading>
       <CloseButton type="button" onClick={onClose}>
         <X size={24} />
       </CloseButton>
@@ -123,6 +175,36 @@ export function AddScene({
           {...register('objective')}
         />
       </InputContainer>
+
+      <InputContainer>
+        <Text family="body" size="sm">
+          Marcar como concluído
+          <Text as="span" family="body" size="sm">
+            {errors.objective?.message}
+          </Text>
+        </Text>
+
+        <Checkbox
+          checked={complete}
+          onCheckedChange={() => handleUpdateComplete()}
+        />
+      </InputContainer>
+
+      {complete && (
+        <InputContainer>
+          <Text family="body" size="sm">
+            Palavras escritas
+            <Text as="span" family="body" size="sm">
+              {errors.writtenWords?.message}
+            </Text>
+          </Text>
+
+          <Textarea
+            css={{ width: '100%', boxShadow: 'none' }}
+            {...register('writtenWords')}
+          />
+        </InputContainer>
+      )}
 
       <ContainerGrid columns={3}>
         <InputContainer>
@@ -206,12 +288,12 @@ export function AddScene({
 
       <Button
         type="submit"
-        label="Criar cena"
+        label="Atualizar cena"
         align="center"
-        disabled={isSubmitting || !isDirty}
+        disabled={isSubmitting || (!isDirty && !formUpdated)}
         css={{ padding: '$3', boxShadow: 'none' }}
-        icon={<FilePlus />}
+        icon={<FileArrowDown />}
       />
-    </AddSceneContainer>
+    </EditSceneContainer>
   )
 }

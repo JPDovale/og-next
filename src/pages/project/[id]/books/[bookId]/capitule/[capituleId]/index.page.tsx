@@ -2,7 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text, Textarea } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { ArchiveBox, Info, ProjectorScreen } from 'phosphor-react'
+import {
+  ArchiveBox,
+  ArrowClockwise,
+  Info,
+  ProjectorScreen,
+} from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -13,11 +18,15 @@ import { ListEmpty } from '../../../../../../../components/ListEmpty'
 import { TextInput } from '../../../../../../../components/TextInput'
 import { ContainerGrid } from '../../../../../../../components/usefull/ContainerGrid'
 import { HeadingPart } from '../../../../../../../components/usefull/HeadingPart'
+import { InfoDefault } from '../../../../../../../components/usefull/InfoDefault'
+import { ProgressBar } from '../../../../../../../components/usefull/ProgressBar'
 import { ProjectsContext } from '../../../../../../../contexts/projects'
 import { usePreventBack } from '../../../../../../../hooks/usePreventDefaultBack'
 import { useProject } from '../../../../../../../hooks/useProject'
+import { useWindowSize } from '../../../../../../../hooks/useWindow'
 import { ProjectPageLayout } from '../../../../../../../layouts/ProjectPageLayout'
 import { AddScene } from './components/AddScene'
+import { EditScene } from './components/EditScene'
 import { CapituleContainer, CapituleInfos, InputContainer } from './styles'
 
 const updateCapituleSchema = z.object({
@@ -49,6 +58,7 @@ type updateCapituleBodyData = z.infer<typeof updateCapituleSchema>
 
 export default function CapitulePage() {
   const [isAddingScene, setIsAddingScene] = useState(false)
+  const [onEditScene, setOnEditScene] = useState('')
 
   const { loading, error, setError, updateCapitule } =
     useContext(ProjectsContext)
@@ -67,8 +77,16 @@ export default function CapitulePage() {
   const { GoBackButton } = usePreventBack(`/project/${id}/books/${bookId}`)
 
   const { project, useBook, findManyPersons } = useProject(id as string)
-  const { book, bookName, findCapitule } = useBook(bookId as string)
-  const { capitule, capituleName } = findCapitule(capituleId as string)
+  const { book, bookName, findCapitule, bookWords, bookWrittenWords } = useBook(
+    bookId as string,
+  )
+  const { capitule, capituleName, findScene, capituleWords } = findCapitule(
+    capituleId as string,
+  )
+  const sceneToUpdate = findScene(onEditScene)
+
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
 
   async function handleUpdateCapitule(data: updateCapituleBodyData) {
     if (data.act1 === ' ') data.act1 = ''
@@ -204,6 +222,21 @@ export default function CapitulePage() {
             />
           </CapituleInfos>
 
+          <HeadingPart label="Progresso" icon={<ArrowClockwise size={40} />} />
+          <ContainerGrid darkBackground>
+            <InfoDefault
+              title={`Referente ao livro: ${bookWrittenWords} palavras escritas de ${bookWords}`}
+            >
+              <ProgressBar actual={bookWrittenWords} final={bookWords} />
+            </InfoDefault>
+
+            <InfoDefault
+              title={`${capituleWords} palavras escritas nesse capítulo`}
+            >
+              <ProgressBar actual={capituleWords} final={capituleWords} />
+            </InfoDefault>
+          </ContainerGrid>
+
           <HeadingPart
             icon={<ProjectorScreen size={40} />}
             label="Cenas"
@@ -218,14 +251,23 @@ export default function CapitulePage() {
               bookId={book?.id!}
               capitule={capitule!}
             />
+          ) : onEditScene ? (
+            <EditScene
+              projectId={project.id}
+              bookId={book?.id!}
+              capitule={capitule!}
+              scene={sceneToUpdate!}
+              onClose={() => setOnEditScene('')}
+            />
           ) : (
-            <ContainerGrid columns={2}>
+            <ContainerGrid columns={smallWindow ? 1 : 2}>
               {capitule?.scenes && capitule.scenes[0] ? (
                 capitule?.scenes?.map((scene) => {
                   const personsInThisScene = findManyPersons(scene.persons)
 
                   return (
                     <SceneCard
+                      setOnEditScene={setOnEditScene}
                       key={scene.id}
                       bookId={book?.id!}
                       capituleId={capitule.id!}
