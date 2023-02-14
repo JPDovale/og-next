@@ -10,8 +10,11 @@ import { IGenericObject } from '../../@types/editores/IGenericObject'
 import { IError } from '../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from '../../api/booksRequests/types/ICreateSceneRequest'
+import { IDeleteSceneRequest } from '../../api/booksRequests/types/IDeleteSceneRequest'
+import { IReorderScenesRequest } from '../../api/booksRequests/types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from '../../api/booksRequests/types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from '../../api/booksRequests/types/IUpdateCapituleRequest'
+import { IUpdateSceneRequest } from '../../api/booksRequests/types/IUpdateSceneRequest'
 import { ICreateCommentDTO } from '../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../api/dtos/ICreateProjectDTO'
@@ -23,10 +26,13 @@ import { UserContext } from '../user'
 import { createBookFunction } from './functions/booksFunctions/createBookFunction'
 import { createCapituleFunction } from './functions/booksFunctions/createCapituleFunction'
 import { createSceneFunction } from './functions/booksFunctions/createSceneFunction'
+import { deleteSceneFunction } from './functions/booksFunctions/deleteSceneFunction'
 import { removeFrontCoverFunction } from './functions/booksFunctions/removeFrontCoverFunction'
+import { reorderScenesFunction } from './functions/booksFunctions/reorderScenesFunction'
 import { setSceneToCompleteFunction } from './functions/booksFunctions/setSceneToCompleteFunction'
 import { updateCapituleFunction } from './functions/booksFunctions/updateCapituleFunction'
 import { updateFrontCoverFunction } from './functions/booksFunctions/updateFrontCoverFunction'
+import { updateSceneFunction } from './functions/booksFunctions/updateSceneFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
@@ -440,6 +446,43 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return response
   }
 
+  async function deleteScene({
+    bookId,
+    capituleId,
+    sceneId,
+  }: IDeleteSceneRequest) {
+    setLoading(true)
+    await deleteSceneFunction({ bookId, capituleId, sceneId, dispatch })
+    setLoading(false)
+  }
+
+  async function reorderScenes({
+    bookId,
+    capituleId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderScenesRequest) {
+    setLoading(true)
+    await reorderScenesFunction({
+      bookId,
+      capituleId,
+      sequenceFrom,
+      sequenceTo,
+      dispatch,
+    })
+    setLoading(false)
+  }
+
+  async function updateScene(sceneUpdate: IUpdateSceneRequest) {
+    setLoading(true)
+    const response = await updateSceneFunction({
+      sceneUpdate,
+      dispatch,
+    })
+    setLoading(false)
+    return response
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -490,6 +533,9 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updateCapitule,
         createScene,
         setSceneToComplete,
+        deleteScene,
+        reorderScenes,
+        updateScene,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

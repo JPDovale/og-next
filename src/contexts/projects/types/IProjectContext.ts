@@ -4,8 +4,11 @@ import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from '../../../api/booksRequests/types/ICreateSceneRequest'
+import { IDeleteSceneRequest } from '../../../api/booksRequests/types/IDeleteSceneRequest'
+import { IReorderScenesRequest } from '../../../api/booksRequests/types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from '../../../api/booksRequests/types/IUpdateCapituleRequest'
+import { IUpdateSceneRequest } from '../../../api/booksRequests/types/IUpdateSceneRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
@@ -128,6 +131,18 @@ export interface IProjectsContext {
   setSceneToComplete: (
     sceneToComplete: ISetSceneToCompleteRequest,
   ) => Promise<boolean>
+  deleteScene: ({
+    bookId,
+    capituleId,
+    sceneId,
+  }: IDeleteSceneRequest) => Promise<void>
+  reorderScenes: ({
+    bookId,
+    capituleId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderScenesRequest) => Promise<void>
+  updateScene: (sceneUpdate: IUpdateSceneRequest) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

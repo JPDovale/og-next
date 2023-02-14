@@ -13,6 +13,41 @@ export const SceneHeading = styled(Text, {
   justifyContent: 'space-between',
   padding: '$4',
   borderBottom: '$base800 1px solid',
+
+  '.buttons': {
+    display: 'flex',
+    gap: '$2',
+  },
+})
+
+export const HeaderButton = styled('button', {
+  all: 'unset',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  width: 24,
+  height: 24,
+
+  lineHeight: 0,
+
+  background: '$gray700',
+  borderRadius: '$xs',
+  cursor: 'pointer',
+  transition: 'ease-in-out 250ms',
+
+  '&:focus': {
+    boxShadow: '$inFocus',
+  },
+
+  variants: {
+    toDelete: {
+      true: {
+        background: '#ff2030',
+      },
+      false: {},
+    },
+  },
 })
 
 export const SceneContent = styled('div', {
@@ -46,7 +81,7 @@ export const SceneCompleteAndObjective = styled('div', {
   },
 })
 
-export const CheckedScene = styled('div', {
+export const AlternativeFormContainer = styled('div', {
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',

@@ -3,8 +3,11 @@ import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
 import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from '../../../api/booksRequests/types/ICreateSceneRequest'
+import { IDeleteSceneRequest } from '../../../api/booksRequests/types/IDeleteSceneRequest'
+import { IReorderScenesRequest } from '../../../api/booksRequests/types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from '../../../api/booksRequests/types/IUpdateCapituleRequest'
+import { IUpdateSceneRequest } from '../../../api/booksRequests/types/IUpdateSceneRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
@@ -115,4 +118,16 @@ export const projectsDefaultValues: IProjectsContext = {
   createScene: async (scene: ICreateSceneRequest) => false,
   setSceneToComplete: async (sceneToComplete: ISetSceneToCompleteRequest) =>
     false,
+  deleteScene: async ({
+    bookId,
+    capituleId,
+    sceneId,
+  }: IDeleteSceneRequest) => {},
+  reorderScenes: async ({
+    bookId,
+    capituleId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderScenesRequest) => {},
+  updateScene: async (sceneUpdate: IUpdateSceneRequest) => false,
 }
