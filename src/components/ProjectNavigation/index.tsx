@@ -92,8 +92,9 @@ export function ProjectNavigation({
             width={50}
             className="logo"
             src={logoSvg}
-            alt=""
+            alt="Ognare"
             onClick={() => router.push('/projects')}
+            priority
           />
         </Logo>
         {navigatorProjectIsOpen && (

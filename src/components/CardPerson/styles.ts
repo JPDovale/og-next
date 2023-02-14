@@ -36,6 +36,7 @@ export const CardPersonContainer = styled(Box, {
       overflow: 'hidden',
 
       width: '100%',
+      height: 'auto',
       maxHeight: '280px',
       objectFit: 'cover',
 
@@ -70,10 +71,14 @@ export const CardPersonContainer = styled(Box, {
 
         '.person-image': {
           minHeight: '400px',
+          width: 'auto',
+          height: 'auto',
 
           img: {
             maxHeight: '400px',
             minHeight: '400px',
+            width: 'auto',
+            height: 'auto',
           },
         },
 

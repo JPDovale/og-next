@@ -48,11 +48,12 @@ export function NavigationBar() {
     <NavigationBarContainer navIsOpen={navIsOpen}>
       <Image
         src={LogoToLeft}
-        alt=""
+        alt="Ognare"
         onClick={() => {
           router.push('/projects')
           setNavIsOpen(false)
         }}
+        priority
       />
       <button
         className="close"
