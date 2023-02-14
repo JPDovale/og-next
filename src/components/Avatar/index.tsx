@@ -188,6 +188,8 @@ const AvatarImage = styled(Avatar.Image, {
   maxWidth: 58,
   minHeight: 58,
   maxHeight: 58,
+  width: 'auto',
+  height: 'auto',
 
   borderRadius: '$full',
   objectFit: 'cover',
@@ -205,18 +207,24 @@ const AvatarImage = styled(Avatar.Image, {
         minHeight: 32,
         maxWidth: 32,
         maxHeight: 32,
+        width: 'auto',
+        height: 'auto',
       },
       xsm: {
         minWidth: 40,
         minHeight: 40,
         maxWidth: 40,
         maxHeight: 40,
+        width: 'auto',
+        height: 'auto',
       },
       sm: {
         minWidth: 48,
         minHeight: 48,
         maxWidth: 48,
         maxHeight: 48,
+        width: 'auto',
+        height: 'auto',
       },
       md: {},
       lg: {
@@ -224,18 +232,24 @@ const AvatarImage = styled(Avatar.Image, {
         minHeight: 64,
         maxWidth: 64,
         maxHeight: 64,
+        width: 'auto',
+        height: 'auto',
       },
       '2xl': {
         minWidth: 80,
         minHeight: 80,
         maxWidth: 80,
         maxHeight: 80,
+        width: 'auto',
+        height: 'auto',
       },
       '4xl': {
         minWidth: 160,
         minHeight: 160,
         maxWidth: 160,
         maxHeight: 160,
+        width: 'auto',
+        height: 'auto',
       },
     },
     whitShadow: {
@@ -261,6 +275,8 @@ const AvatarFallback = styled(Avatar.Fallback, {
   maxWidth: 58,
   minHeight: 58,
   maxHeight: 58,
+  width: 'auto',
+  height: 'auto',
 
   color: 'white',
 
@@ -286,6 +302,8 @@ const AvatarFallback = styled(Avatar.Fallback, {
         minHeight: 32,
         maxWidth: 32,
         maxHeight: 32,
+        width: 'auto',
+        height: 'auto',
       },
       xsm: {
         minWidth: 40,
