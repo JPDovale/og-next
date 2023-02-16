@@ -29,6 +29,7 @@ export const CardProjectContainer = styled(Box, {
 
     img: {
       width: '100%',
+      height: 'auto',
       objectFit: 'cover',
     },
   },

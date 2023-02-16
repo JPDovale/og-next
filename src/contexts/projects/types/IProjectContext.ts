@@ -2,27 +2,39 @@ import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
+import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
+import { ICreateSceneRequest } from '../../../api/booksRequests/types/ICreateSceneRequest'
+import { IDeleteSceneRequest } from '../../../api/booksRequests/types/IDeleteSceneRequest'
+import { IReorderScenesRequest } from '../../../api/booksRequests/types/IReorderScenesRequest'
+import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
+import { IUpdateCapituleRequest } from '../../../api/booksRequests/types/IUpdateCapituleRequest'
+import { IUpdateSceneRequest } from '../../../api/booksRequests/types/IUpdateSceneRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { ICreateProjectDTO } from '../../../api/dtos/ICreateProjectDTO'
 import { IShareProjectDTO } from '../../../api/dtos/IShareProjectDTO'
 import { IUpdatePlotDTO } from '../../../api/dtos/IUpdatePlotDTO'
+import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import {
   IObjective,
   IPersonsResponse,
 } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
+import { ICreateBook } from './interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
 import { IDeleteImageProject } from './interfaceFunctions/IDeleteImageProject'
 import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './interfaceFunctions/IQuitProject'
+import { IUpdateFrontCover } from './interfaceFunctions/IUpdateFrontCover'
+import { IUpdateNameProject } from './interfaceFunctions/IUpdateNameProject'
 
 export interface IProjectsContext {
   loading: boolean
   projects: IProjectResponse[]
   users: IUserResponse[]
   persons: IPersonsResponse[]
+  books: IBooksResponse[]
 
   error: IError | undefined
   setError: (newState: IError | undefined) => void
@@ -109,6 +121,28 @@ export interface IProjectsContext {
     objectiveId,
     personId,
   }: IDeleteObjective) => Promise<void>
+  createBook: ({ newBook, project }: ICreateBook) => Promise<boolean>
+  updateFrontCover: ({ bookId, file }: IUpdateFrontCover) => Promise<void>
+  removeFrontCover: (bookId: string) => Promise<void>
+  createCapitule: (capitule: ICreateCapituleRequest) => Promise<boolean>
+  updateNameProject: ({ name, projectId }: IUpdateNameProject) => Promise<void>
+  updateCapitule: (capitule: IUpdateCapituleRequest) => Promise<void>
+  createScene: (scene: ICreateSceneRequest) => Promise<boolean>
+  setSceneToComplete: (
+    sceneToComplete: ISetSceneToCompleteRequest,
+  ) => Promise<boolean>
+  deleteScene: ({
+    bookId,
+    capituleId,
+    sceneId,
+  }: IDeleteSceneRequest) => Promise<void>
+  reorderScenes: ({
+    bookId,
+    capituleId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderScenesRequest) => Promise<void>
+  updateScene: (sceneUpdate: IUpdateSceneRequest) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

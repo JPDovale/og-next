@@ -1,11 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Text } from '@og-ui/react'
 import Link from 'next/link'
-import {
-  Envelope,
-  // GoogleLogo,
-  LockKey,
-} from 'phosphor-react'
+import { Envelope, LockKey } from 'phosphor-react'
 import {
   BackgroundLogin,
   InputContainer,
@@ -26,14 +22,10 @@ import { z } from 'zod'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { UserContext } from '../../contexts/user'
-// import { signIn, useSession } from 'next-auth/react'
-// import { GetServerSideProps } from 'next'
-// import { unstable_getServerSession } from 'next-auth'
 
-// import { authOptions } from '../api/auth/[...nextauth].api'
-// import { loginWithGoogleRequest } from '../../api/userRequest'
 import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
+import { Loading } from '../../components/Loading'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -45,18 +37,12 @@ const loginFormSchema = z.object({
 type LoginFormData = z.infer<typeof loginFormSchema>
 
 export default function LoginPage() {
-  const {
-    createSession,
-    userLogged,
-    error,
-    // setError, setSuccess
-  } = useContext(UserContext)
+  const { createSession, userLogged, loading, error } = useContext(UserContext)
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
   })
 
-  // const session = useSession()
   const router = useRouter()
 
   async function handleLogin(data: LoginFormData) {
@@ -75,15 +61,13 @@ export default function LoginPage() {
     }
   }, [userLogged, router])
 
-  // useEffect(() => {
-  //   if (session?.data?.loggedUser?.errorTitle) return
-  //   setUser(session?.data?.loggedUser!)
-  // }, [session, setUser])
+  if (loading) {
+    return <Loading />
+  }
 
-  // useEffect(() => {
-  //   setError(undefined)
-  //   setSuccess(undefined)
-  // }, [setSuccess, setError])
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <>
@@ -98,17 +82,6 @@ export default function LoginPage() {
           <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
             Efetue o login
           </Text>
-
-          {/* <InputContainer>
-            <Button
-              type="button"
-              label="Fazer login com o google"
-              icon={<GoogleLogo weight="bold" />}
-              css={{ padding: '$3' }}
-              align="center"
-              onClick={() => signIn('google')}
-            />
-          </InputContainer> */}
 
           {error && <ResponseInfoApi error={error} />}
 
@@ -178,17 +151,3 @@ export default function LoginPage() {
     </>
   )
 }
-
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   const session = await unstable_getServerSession(req, res, authOptions)
-//   const loggedUser = session && (await loginWithGoogleRequest(session?.user))
-
-//   return {
-//     props: {
-//       session: {
-//         ...session,
-//         loggedUser,
-//       },
-//     },
-//   }
-// }

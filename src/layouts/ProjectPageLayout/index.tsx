@@ -39,7 +39,7 @@ export function ProjectPageLayout({
         {inError ? (
           <Error
             statusCode={404}
-            errorMessage="Não foi possível encontrar o projeto. Volte a tela inicial e tente novamente..."
+            errorMessage="Não foi possível encontrar o recurso. Volte a tela inicial e tente novamente..."
           />
         ) : (
           <ProjectContainer

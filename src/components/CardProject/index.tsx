@@ -68,6 +68,7 @@ export function CardProject({
   )
 
   const persons = project?.tags?.find((tag) => tag.type === 'persons')
+  const books = project?.tags?.find((tag) => tag.type === 'books')
 
   async function handleShareProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -112,6 +113,7 @@ export function CardProject({
     <>
       <CardProjectContainer isList={isList}>
         <Preview
+          title={project?.name}
           as={isList !== 'example' && 'button'}
           onClick={() => {
             router.push(`/project/${project.id}`)
@@ -123,13 +125,13 @@ export function CardProject({
               {project?.image?.url ? (
                 <Image
                   src={project?.image.url}
-                  alt=""
+                  alt={project?.name}
                   width={300}
                   height={300}
                   priority
                 />
               ) : (
-                <ImageIco weight="thin" size={64} alt="" />
+                <ImageIco weight="thin" size={64} alt={project?.name} />
               )}
             </div>
           )}
@@ -187,7 +189,14 @@ export function CardProject({
             </InfosContainer>
 
             {isList === false && (
-              <InfosContainer>
+              <InfosContainer columns={3}>
+                <Text as="p" height={'shorter'} size={'sm'}>
+                  <Text as="span" family="body" size="sm" height="shorter">
+                    Livros
+                  </Text>
+                  {books?.refs[0].references.length || 0}
+                </Text>
+
                 <Text as="p" height={'shorter'} size={'sm'}>
                   <Text as="span" family="body" size="sm" height="shorter">
                     Personagens
@@ -229,6 +238,7 @@ export function CardProject({
         </Preview>
         {isList !== 'example' && isSharable && (
           <ShareButton
+            title="Compartilhar projeto"
             disabled={project.users.length >= 5}
             isList={isList}
             icon={<Share />}

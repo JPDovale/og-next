@@ -1,4 +1,5 @@
 import {
+  Button,
   //  Button,
   Text,
   TextInput,
@@ -6,6 +7,8 @@ import {
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
 import {
+  Books,
+  ArchiveBox,
   Crosshair,
   HeartBreak,
   Lightning,
@@ -26,7 +29,7 @@ import {
 } from '../../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../../api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '../../../../components/Avatar'
-import { ResponseInfoApi } from '../../../../components/ResponseInfoApi'
+import { DefaultError } from '../../../../components/DefaultError'
 import { ProjectsContext } from '../../../../contexts/projects'
 import { UserContext } from '../../../../contexts/user'
 import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
@@ -51,8 +54,19 @@ interface IObjects {
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
 
-  const { projects, users, loading, persons, unshareProject, error } =
-    useContext(ProjectsContext)
+  const {
+    projects,
+    users,
+    loading,
+    persons,
+    unshareProject,
+    error,
+    books,
+    updateNameProject,
+    setError,
+  } = useContext(ProjectsContext)
+  const [name, setName] = useState('')
+
   const { user } = useContext(UserContext)
 
   const router = useRouter()
@@ -66,6 +80,9 @@ export default function SettingsPage() {
 
   const personsOfProject = persons.filter(
     (person) => person.defaultProject === project?.id,
+  )
+  const booksOfProject = books.filter(
+    (book) => book.defaultProject === project?.id,
   )
 
   const userCreatorFinde = users?.find(
@@ -163,6 +180,11 @@ export default function SettingsPage() {
     return unshareProject(userToRemove.email, project?.id)
   }
 
+  async function handleUpdateNameProject() {
+    await updateNameProject({ projectId: id as string, name })
+    setName('')
+  }
+
   return (
     <>
       <NextSeo
@@ -178,7 +200,13 @@ export default function SettingsPage() {
         isScrolling
       >
         <SettingsProject>
-          {error && <ResponseInfoApi error={error} />}
+          {error && (
+            <DefaultError
+              title={error.title}
+              message={error.message}
+              close={() => setError(undefined)}
+            />
+          )}
 
           <Info isCard>
             <Text family="body" as="label">
@@ -186,11 +214,18 @@ export default function SettingsPage() {
               <TextInput
                 icon={<Presentation />}
                 placeholder={project?.name || 'Carregando...'}
-                disabled
+                onChange={(e) => setName(e.target.value)}
+                value={name}
               />
-              A alteração estará disponível em breve para os criadores do
-              projeto
             </Text>
+            <Button
+              label="Alterar"
+              wid="hug"
+              icon={<ArchiveBox />}
+              css={{ padding: '$3 $8', marginTop: '$3', boxShadow: 'none' }}
+              disabled={!name}
+              onClick={handleUpdateNameProject}
+            />
           </Info>
 
           <Info isCard>
@@ -242,7 +277,7 @@ export default function SettingsPage() {
                 </div>
               </Creator>
             </Text>
-            <Text family="body" as="label">
+            <Text family="body" as="div">
               Usuários com acesso: {project?.users.length}
               <Text family="body" as="label" height="shorter">
                 A opção de alterar a permissão em breve estará disponível... Se
@@ -295,6 +330,14 @@ export default function SettingsPage() {
                 Personagens
               </header>
               <Text>{personsOfProject?.length || 0}</Text>
+            </Text>
+
+            <Text family="body" as="label">
+              <header>
+                <Books />
+                Livros
+              </header>
+              <Text>{booksOfProject?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">

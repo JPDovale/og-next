@@ -21,7 +21,7 @@ import { setErrorAction, setSuccessAction } from './reducer/actionsUserReducer'
 import { userReducer } from './reducer/userReducer'
 import { IUserContext, IUserContextProps } from './types/IPersonContext'
 import { setUserFunction } from './functions/setUserFunction'
-import { signOut } from 'next-auth/react'
+// import { signOut } from 'next-auth/react'
 import { deleteAvatarFunction } from './functions/deleteAvatarFunction'
 import { ISuccess } from '../../@types/success/ISuccess'
 import { sendMailForgotPasswordFunction } from './functions/sendMailForgotPasswordFunction'
@@ -86,10 +86,10 @@ export function UserProvider({ children }: IUserContextProps) {
 
     await logoutFunction(dispatch)
 
-    signOut({
-      redirect: true,
-      callbackUrl: 'http://localhost:3000/login',
-    })
+    // signOut({
+    //   redirect: true,
+    //   callbackUrl: 'http://localhost:3000/login',
+    // })
     setLoading(false)
     router.push('/login')
   }

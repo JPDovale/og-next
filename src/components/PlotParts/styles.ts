@@ -32,5 +32,31 @@ export const PlotPartsContainer = styled('div', {
         },
       },
     },
+    columns: {
+      undefined: {},
+      2: {
+        gridTemplateColumns: '1fr 1fr',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr ',
+        },
+      },
+      3: {
+        gridTemplateColumns: '1fr 1fr 1fr',
+        gap: '$4',
+        padding: '$4',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr ',
+        },
+      },
+      4: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr ',
+        },
+      },
+    },
   },
 })
