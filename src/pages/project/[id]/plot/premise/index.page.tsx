@@ -1,57 +1,45 @@
+import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
+import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
-import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
-import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { ProjectsContext } from '../../../../../contexts/projects'
-import { UserContext } from '../../../../../contexts/user'
-import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
 
 export default function PremisePage() {
   const [premise, setPremise] = useState('')
   const [message, setMessage] = useState('')
 
-  const { projects, loading, updatePlot } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, updatePlot } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
   usePreventBack(`/project/${id}/plot`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
+  const { project, projectName, permission } = useProject(id as string)
   const commentsPremise = project?.plot?.comments?.filter(
     (comment) => comment.to === 'premise',
   )
 
-  const userInProject = project?.users.find((u) => u.id === user?.id)
-
   async function handleUpdatePremise() {
     setMessage('')
-
     if (premise === project.plot.premise) return
-
     const updatedPlotPremise: IUpdatePlotDTO = {
       premise,
     }
 
     await updatePlot(updatedPlotPremise, project.id as string)
-
     setMessage('Premissa Alterada com sucesso')
   }
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Premissa | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Premissa | Ognare`} noindex />
+
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['plot', 'Premissa']}
         loading={loading}
@@ -63,7 +51,7 @@ export default function PremisePage() {
           updateValue={handleUpdatePremise}
           value={premise}
           preValue={project?.plot?.premise}
-          permission={userInProject?.permission}
+          permission={permission}
           comments={commentsPremise}
           projectCreatedPerUser={project?.createdPerUser}
           projectId={project?.id as string}
