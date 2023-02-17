@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { PlusCircle } from 'phosphor-react'
+import { PencilCircle, PlusCircle } from 'phosphor-react'
 import { ReactNode } from 'react'
 import { HeadingPartContainer } from './styles'
 
@@ -8,8 +8,10 @@ interface IHeadingPartProps {
   icon: ReactNode
   label: string
   isToAdd?: boolean
+  isToEdit?: boolean
   redirectPathToAdd?: string
-  customFunctionToAdd?: () => void
+  permission: 'edit' | 'view' | 'comment' | undefined
+  customFunctionOnClickSideButton?: () => void
 }
 
 export function HeadingPart({
@@ -17,8 +19,10 @@ export function HeadingPart({
   label,
   redirectPath,
   isToAdd = false,
+  isToEdit = false,
+  permission,
   redirectPathToAdd,
-  customFunctionToAdd,
+  customFunctionOnClickSideButton,
 }: IHeadingPartProps) {
   const router = useRouter()
 
@@ -28,13 +32,25 @@ export function HeadingPart({
     >
       {icon}
       {label}
-      {isToAdd && (
+      {isToAdd && !isToEdit && permission === 'edit' && (
         <PlusCircle
           size={40}
           type="button"
           onClick={() => {
-            customFunctionToAdd
-              ? customFunctionToAdd()
+            customFunctionOnClickSideButton
+              ? customFunctionOnClickSideButton()
+              : router.push(redirectPathToAdd!)
+          }}
+        />
+      )}
+
+      {isToEdit && !isToAdd && permission === 'edit' && (
+        <PencilCircle
+          size={40}
+          type="button"
+          onClick={() => {
+            customFunctionOnClickSideButton
+              ? customFunctionOnClickSideButton()
               : router.push(redirectPathToAdd!)
           }}
         />

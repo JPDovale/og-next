@@ -1,16 +1,14 @@
 import { useContext } from 'react'
 import { Text } from '@og-ui/react'
 import { EnvelopeOpen, XCircle } from 'phosphor-react'
-import { UserContext } from '../../../../contexts/user'
 import {
   HeaderNotifications,
   Notification,
   NotificationPopupContainer,
   Notifications,
 } from './styles'
-import { Error } from '../../../Error'
-import { reverbKeys } from '../../../../services/reverbKeys'
-import { Loading } from '../../../Loading'
+import { UserContext } from '@contexts/user'
+import { reverbKeys } from '@services/reverbKeys'
 
 interface INotificationsPopupProps {
   notificationsIsOpen: boolean
@@ -21,10 +19,7 @@ export function NotificationsPopup({
   notificationsIsOpen,
   setNotificationsIsOpen,
 }: INotificationsPopupProps) {
-  const { user, loading } = useContext(UserContext)
-
-  if (loading) return <Loading />
-  if (!user) return <Error />
+  const { user } = useContext(UserContext)
 
   const notificationInHourOrd = user?.notifications?.slice().sort((a, b) =>
     a.createAt
@@ -62,9 +57,9 @@ export function NotificationsPopup({
           Notificações
         </Text>
       </HeaderNotifications>
-      <Notifications isEmpty={user.notifications && !user.notifications[0]}>
-        {user.notifications ? (
-          notificationInHourOrd.map((notification, i) => {
+      <Notifications isEmpty={user?.notifications && !user?.notifications[0]}>
+        {user?.notifications ? (
+          notificationInHourOrd?.map((notification, i) => {
             const [pre, comment] = notification.content.split(':')
             const commentedIn = reverbKeys(pre.split('|')[1])
             const prefix = `${pre.split('|')[0]} ${commentedIn}`

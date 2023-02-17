@@ -1,46 +1,31 @@
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { EditorAndCommentsToGenerics } from '@components/PersonsComponents/EditorAndCommentsToGenerics'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
-import {
-  IProjectResponse,
-  ITag,
-} from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-
-import { ProjectsContext } from '../../../../../../contexts/projects'
-import { UserContext } from '../../../../../../contexts/user'
-import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function FearPage() {
-  const { projects, loading, persons, commentInPerson } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, persons, commentInPerson } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId, fearId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const tag = project?.tags.find((tag) => tag.type === 'persons/fears') as ITag
-
-  const refs = tag && tag.refs
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
-  const person = persons.find((person) => person.id === personId)
-
-  const exiteFear = person?.fears?.find((fear) => fear.id === fearId)
-
-  const commentsInThisFear = person?.comments?.filter(
-    (comment) => comment.to === `fears/${fearId}`,
+  const { project, projectName, permission, usePerson } = useProject(
+    id as string,
   )
+  const { person, personName, tags, findFear } = usePerson(personId as string)
+  const { commentsInThisFear, fear, keysFear } = findFear(fearId as string)
+
+  const tag = tags.fears
+  const refs = tag && tag.refs
 
   const inError =
-    !loading && ((fearId !== 'new' && !exiteFear) || !project || !person)
+    !loading && ((fearId !== 'new' && !fear) || !project || !person)
 
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -51,19 +36,20 @@ export default function FearPage() {
   return (
     <>
       <NextSeo
-        title={`${person?.name || 'Carregando...'}-${
+        title={`${personName}-${
           fearId === 'new' ? 'Novo' : 'Editar'
         } medo | Ognare`}
         noindex
       />
+
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={[
           'Personagens',
-          `${person?.name || 'Carregando...'}`,
+          `${personName}`,
           'Medos',
-          exiteFear ? 'Edição' : 'Novo',
+          fear ? 'Edição' : 'Novo',
         ]}
         loading={loading}
         inError={inError}
@@ -72,14 +58,14 @@ export default function FearPage() {
           persons={persons}
           refs={refs}
           isNew={fearId === 'new'}
-          editorTo="medo"
+          editorTo={keysFear.label}
           projectId={project?.id}
           personId={person?.id!}
-          object={exiteFear}
+          object={fear}
           permission={permission}
           projectCreatedPerUser={project?.createdPerUser}
           onNewComment={CommentInPerson}
-          to={`fears/${fearId}`}
+          to={keysFear.keyPath}
           comments={commentsInThisFear}
         />
       </ProjectPageLayout>

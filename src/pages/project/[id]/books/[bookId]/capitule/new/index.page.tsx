@@ -1,17 +1,17 @@
+import { DefaultError } from '@components/usefull/DefaultError'
+import { TextInput } from '@components/usefull/TextInput'
+import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { useWindowSize } from '@hooks/useWindow'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Heading, Text, Textarea } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { IProjectResponse } from '../../../../../../../api/responsesTypes/IProjcetResponse'
-import { DefaultError } from '../../../../../../../components/DefaultError'
-import { TextInput } from '../../../../../../../components/TextInput'
-import { ProjectsContext } from '../../../../../../../contexts/projects'
-import { usePreventBack } from '../../../../../../../hooks/usePreventDefaultBack'
-import { useWindowSize } from '../../../../../../../hooks/useWindow'
-import { ProjectPageLayout } from '../../../../../../../layouts/ProjectPageLayout'
 import {
   InputGroup,
   NewCapituleContainer,
@@ -48,7 +48,7 @@ const newCapituleSchema = z.object({
 type newCapituleFormData = z.infer<typeof newCapituleSchema>
 
 export default function NewCapitule() {
-  const { projects, loading, books, error, setError, createCapitule } =
+  const { loading, error, setError, createCapitule } =
     useContext(ProjectsContext)
 
   const router = useRouter()
@@ -71,14 +71,8 @@ export default function NewCapitule() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const project = projects?.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const book = books?.find((book) => book.id === bookId)
-  const bookName = loading
-    ? 'Carregando...'
-    : `${book?.title} ${book?.subtitle ? ' - ' + book.subtitle : ''}`
+  const { project, useBook } = useProject(id as string)
+  const { book, bookName } = useBook(bookId as string)
 
   async function handleCreateCapitule(data: newCapituleFormData) {
     const newCapitule = {

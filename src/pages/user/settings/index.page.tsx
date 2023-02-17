@@ -22,10 +22,13 @@ import {
   Warning,
   X,
 } from 'phosphor-react'
-import { IRef } from '../../../api/responsesTypes/IProjcetResponse'
-import { UserContext } from '../../../contexts/user'
-import { ProjectsContext } from '../../../contexts/projects'
-import { DashboardPageLayout } from '../../../layouts/DashboardPageLayout'
+import { IRef } from '@api/responsesTypes/IProjcetResponse'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useWindowSize } from '@hooks/useWindow'
+import { ProjectsContext } from '@contexts/projects'
+import { UserContext } from '@contexts/user'
+import { NextSeo } from 'next-seo'
+import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import {
   Avatar,
   Info,
@@ -34,11 +37,8 @@ import {
   UserSettings,
   UserSettingsPageContainer,
 } from './styles'
-import { ResponseInfoApi } from '../../../components/ResponseInfoApi'
-import { AvatarWeb } from '../../../components/Avatar'
-import { useWindowSize } from '../../../hooks/useWindow'
-import { NextSeo } from 'next-seo'
-import { usePreventBack } from '../../../hooks/usePreventDefaultBack'
+import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
+import { AvatarWeb } from '@components/usefull/Avatar'
 
 interface IObjects {
   objectives: IRef[]
@@ -53,12 +53,9 @@ interface IObjects {
 }
 
 export default function UserSettingsPage() {
-  usePreventBack('/projects')
-
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
-
   const [oldPassword, setOldPassword] = useState('')
   const [password, setPassword] = useState('')
 
@@ -76,6 +73,8 @@ export default function UserSettingsPage() {
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
+
+  usePreventBack('/projects')
 
   const objects = useMemo(() => {
     const findeObjectives: IObjects = {

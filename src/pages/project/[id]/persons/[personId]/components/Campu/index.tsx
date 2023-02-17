@@ -1,10 +1,10 @@
+import { GenericCardObject } from '@components/PersonsComponents/GenericCardObject'
+import { Error } from '@components/usefull/Error'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { Loading } from '@components/usefull/Loading'
 import { useRouter } from 'next/router'
 import { PlusCircle } from 'phosphor-react'
 import { ReactNode } from 'react'
-import { Error } from '../../../../../../../components/Error'
-import { GenericCardObject } from '../../../../../../../components/GenericCardObject'
-import { ListEmpty } from '../../../../../../../components/ListEmpty'
-import { Loading } from '../../../../../../../components/Loading'
 import { CampuContainer, CampuContent, HeadingCampu } from './styles'
 
 interface ISubObject {
@@ -56,7 +56,7 @@ export function Campu({
         <>
           <HeadingCampu size="sm">
             {icon}
-            {title}:
+            {title}
             {permission === 'edit' && (
               <PlusCircle
                 size={40}

@@ -1,16 +1,12 @@
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { EditorAndCommentsToGenerics } from '@components/PersonsComponents/EditorAndCommentsToGenerics'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
-import {
-  IProjectResponse,
-  ITag,
-} from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { ProjectsContext } from '../../../../../../contexts/projects'
-import { UserContext } from '../../../../../../contexts/user'
-import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 interface ISubObject {
   title: string
@@ -25,39 +21,27 @@ interface IGenericObject {
 }
 
 export default function PersonalityPage() {
-  const { projects, loading, persons, commentInPerson } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, persons, commentInPerson } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId, personalityId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
+  const { project, projectName, permission, usePerson } = useProject(
+    id as string,
+  )
+  const { person, tags, personName, findPersonality } = usePerson(
+    personId as string,
+  )
+  const { commentsInThisPersonality, personality, keysPersonality } =
+    findPersonality(personalityId as string)
 
-  const tag = project?.tags.find(
-    (tag) => tag.type === 'persons/personality',
-  ) as ITag
-
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
+  const tag = tags.personality
   const refs = tag && tag.refs
-
-  const person = persons.find((person) => person.id === personId)
-
-  const exitePersonality = person?.personality?.find(
-    (personality) => personality.id === personalityId,
-  )
-
-  const commentsInThisPersonality = person?.comments?.filter(
-    (comment) => comment.to === `personality/${personalityId}`,
-  )
 
   const inError =
     !loading &&
-    ((personalityId !== 'new' && !exitePersonality) || !project || !person)
+    ((personalityId !== 'new' && !personality) || !project || !person)
 
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -67,19 +51,19 @@ export default function PersonalityPage() {
   return (
     <>
       <NextSeo
-        title={`${person?.name || 'Carregando...'}-${
+        title={`${personName}-${
           personalityId === 'new' ? 'Nova' : 'Editar'
         } personalidade | Ognare`}
         noindex
       />
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={[
           'Personagens',
-          `${person?.name || 'Carregando...'}`,
+          `${personName}`,
           'Personalidade',
-          exitePersonality ? 'Edição' : 'Novo',
+          personality ? 'Edição' : 'Novo',
         ]}
         loading={loading}
         inError={inError}
@@ -88,20 +72,20 @@ export default function PersonalityPage() {
           persons={persons}
           refs={refs}
           isNew={personalityId === 'new'}
-          editorTo="personalidade"
+          editorTo={keysPersonality.label}
           projectId={project?.id}
           personId={person?.id!}
           object={
             {
-              ...exitePersonality,
-              subObjects: exitePersonality?.consequences || [],
+              ...personality,
+              subObjects: personality?.consequences || [],
             } as IGenericObject
           }
-          withSubObjects="consequências"
+          withSubObjects={keysPersonality.subObjects}
           permission={permission}
           projectCreatedPerUser={project?.createdPerUser}
           onNewComment={CommentInPerson}
-          to={`personality/${personalityId}`}
+          to={keysPersonality.keyPath}
           comments={commentsInThisPersonality}
         />
       </ProjectPageLayout>

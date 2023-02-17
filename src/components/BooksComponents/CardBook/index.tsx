@@ -1,9 +1,10 @@
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { ProgressBar } from '@components/usefull/ProgressBar'
 import { Text } from '@og-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'
-import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
-import { ProgressBar } from '../../usefull/ProgressBar'
+
 import {
   CardBookContainer,
   ImageContainer,

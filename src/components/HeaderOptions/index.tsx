@@ -1,3 +1,7 @@
+import { AvatarWeb } from '@components/usefull/Avatar'
+import { InterfaceContext } from '@contexts/interface'
+import { UserContext } from '@contexts/user'
+import { useWindowSize } from '@hooks/useWindow'
 import { Heading, Text, TextInput } from '@og-ui/react'
 import {
   ArrowFatLinesRight,
@@ -8,10 +12,6 @@ import {
   XCircle,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
-import { InterfaceContext } from '../../contexts/interface'
-import { UserContext } from '../../contexts/user'
-import { useWindowSize } from '../../hooks/useWindow'
-import { AvatarWeb } from '../Avatar'
 import { NewProjectPopup } from './components/NewProjectPopup'
 import { NotificationsPopup } from './components/NotificationsPopup'
 import { PreferenciesPopup } from './components/PreferenciesPopup'

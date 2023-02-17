@@ -1,15 +1,17 @@
+import { useContext } from 'react'
+import Image from 'next/image'
+
 import { ButtonsContent, HeaderContainer, ImageContent } from './styles'
 
+import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
 import logoImg from '../../assets/logos/logo.svg'
-import Image from 'next/image'
+
 import { Button } from '@og-ui/react'
 import { ProjectorScreen, SignIn, UserCirclePlus } from 'phosphor-react'
-import { useContext } from 'react'
-import { UserContext } from '../../contexts/user'
-import { AvatarWeb } from '../Avatar'
+import { AvatarWeb } from '@components/usefull/Avatar'
 import { useRouter } from 'next/router'
-import { useWindowSize } from '../../hooks/useWindow'
-import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
+import { useWindowSize } from '@hooks/useWindow'
+import { UserContext } from '@contexts/user'
 
 export function Header() {
   const { userLogged, user } = useContext(UserContext)
