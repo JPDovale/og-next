@@ -1,17 +1,12 @@
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { EditorAndCommentsToGenerics } from '@components/PersonsComponents/EditorAndCommentsToGenerics'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
-import {
-  IProjectResponse,
-  ITag,
-} from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { ProjectsContext } from '../../../../../../contexts/projects'
-import { UserContext } from '../../../../../../contexts/user'
-import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
-
 interface ISubObject {
   title: string
   description: string
@@ -25,33 +20,23 @@ interface IGenericObject {
 }
 
 export default function ValuePage() {
-  const { projects, loading, persons, commentInPerson } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, persons, commentInPerson } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId, valueId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const tag = project?.tags.find((tag) => tag.type === 'persons/values') as ITag
-
-  const refs = tag && tag.refs
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
-  const person = persons.find((person) => person.id === personId)
-
-  const exiteValue = person?.values?.find((value) => value.id === valueId)
-
-  const commentsInThisValue = person?.comments?.filter(
-    (comment) => comment.to === `values/${valueId}`,
+  const { project, permission, projectName, usePerson } = useProject(
+    id as string,
   )
+  const { person, personName, findValue, tags } = usePerson(personId as string)
+  const { value, keysValue, commentsInThisValue } = findValue(valueId as string)
+
+  const tag = tags.values
+  const refs = tag && tag.refs
 
   const inError =
-    !loading && ((valueId !== 'new' && !exiteValue) || !project || !person)
+    !loading && ((valueId !== 'new' && !value) || !project || !person)
 
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -62,19 +47,19 @@ export default function ValuePage() {
   return (
     <>
       <NextSeo
-        title={`${person?.name || 'Carregando...'}-${
+        title={`${personName}-${
           valueId === 'new' ? 'Novo' : 'Editar'
         } valor | Ognare`}
         noindex
       />
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={[
           'Personagens',
-          `${person?.name || 'Carregando...'}`,
+          `${personName}`,
           'Valor',
-          exiteValue ? 'Edição' : 'Novo',
+          value ? 'Edição' : 'Novo',
         ]}
         loading={loading}
         inError={inError}
@@ -83,20 +68,20 @@ export default function ValuePage() {
           persons={persons}
           refs={refs}
           isNew={valueId === 'new'}
-          editorTo="valor"
+          editorTo={keysValue.label}
           projectId={project?.id}
           personId={person?.id!}
           object={
             {
-              ...exiteValue,
-              subObjects: exiteValue?.exceptions || [],
+              ...value,
+              subObjects: value?.exceptions || [],
             } as IGenericObject
           }
-          withSubObjects="exceções"
+          withSubObjects={keysValue.subObjects}
           permission={permission}
           projectCreatedPerUser={project?.createdPerUser}
           onNewComment={CommentInPerson}
-          to={`value/${valueId}`}
+          to={keysValue.keyPath}
           comments={commentsInThisValue}
         />
       </ProjectPageLayout>

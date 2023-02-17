@@ -1,6 +1,6 @@
 import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
-import { Projects } from '../../components/Projects'
+import { Projects } from '@components/ProjectsComponents/Projects'
 import { ProjectsContext } from '../../contexts/projects'
 import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'

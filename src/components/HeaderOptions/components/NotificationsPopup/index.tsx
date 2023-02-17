@@ -1,16 +1,15 @@
+import lodash from 'lodash'
 import { useContext } from 'react'
 import { Text } from '@og-ui/react'
 import { EnvelopeOpen, XCircle } from 'phosphor-react'
-import { UserContext } from '../../../../contexts/user'
 import {
   HeaderNotifications,
   Notification,
   NotificationPopupContainer,
   Notifications,
 } from './styles'
-import { Error } from '../../../Error'
-import { reverbKeys } from '../../../../services/reverbKeys'
-import { Loading } from '../../../Loading'
+import { UserContext } from '@contexts/user'
+import { IReverbKeys, reverbKeys } from '@services/reverbKeys'
 
 interface INotificationsPopupProps {
   notificationsIsOpen: boolean
@@ -21,32 +20,24 @@ export function NotificationsPopup({
   notificationsIsOpen,
   setNotificationsIsOpen,
 }: INotificationsPopupProps) {
-  const { user, loading } = useContext(UserContext)
+  const { user } = useContext(UserContext)
 
-  if (loading) return <Loading />
-  if (!user) return <Error />
+  const notificationInHourOrd = lodash
+    .sortBy(user?.notifications, (notification) => {
+      const dateSepare = notification.createAt.split(' ')[0].split('/')
+      const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
 
-  const notificationInHourOrd = user?.notifications?.slice().sort((a, b) =>
-    a.createAt
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') <
-    b.createAt
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      ? 1
-      : b.createAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') <
-        a.createAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-      ? -1
-      : 0,
-  )
+      return new Date(dateInFormat)
+    })
+    .reverse()
+
+  // notificationInHourOrd.forEach((not) => {
+  //   const dateOfElement = dayjs(not.createAt.split(' ')[0])
+  //   const date = dateOfElement.format('MM/DD/YYYY')
+
+  //   console.log(date, dateOfElement)
+  //   console.log(new Date(date))
+  // })
 
   return (
     <NotificationPopupContainer onWindow={notificationsIsOpen}>
@@ -62,11 +53,12 @@ export function NotificationsPopup({
           Notificações
         </Text>
       </HeaderNotifications>
-      <Notifications isEmpty={user.notifications && !user.notifications[0]}>
-        {user.notifications ? (
-          notificationInHourOrd.map((notification, i) => {
+      <Notifications isEmpty={user?.notifications && !user?.notifications[0]}>
+        {user?.notifications ? (
+          notificationInHourOrd?.map((notification, i) => {
             const [pre, comment] = notification.content.split(':')
-            const commentedIn = reverbKeys(pre.split('|')[1])
+            const commentedIn =
+              reverbKeys[`${pre.split('|')[1]}` as IReverbKeys]
             const prefix = `${pre.split('|')[0]} ${commentedIn}`
 
             return (

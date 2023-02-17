@@ -1,9 +1,11 @@
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { ProgressBar } from '@components/usefull/ProgressBar'
 import { Text } from '@og-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'
-import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
-import { ProgressBar } from '../../usefull/ProgressBar'
+
 import {
   CardBookContainer,
   ImageContainer,
@@ -42,37 +44,24 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
         </ImageContainer>
 
         <InfosContainer>
-          <InfoContainer>
-            <Info>
-              <Text as="span" family="body" size="sm" height="shorter">
-                Nome:
-              </Text>
-              <Text size="xs">
-                {book.title} {book?.subtitle}
-              </Text>
-            </Info>
-          </InfoContainer>
+          <InfoDefault size={isPreview ? 'sm' : 'md'} title="Nome:">
+            {book.title} {book?.subtitle}
+          </InfoDefault>
+
+          <InfoDefault size={isPreview ? 'sm' : 'md'} title="Gênero literário:">
+            {book.literaryGenere}
+          </InfoDefault>
 
           <InfoContainer>
-            <Info>
-              <Text as="span" family="body" size="sm" height="shorter">
-                Gênero literário:
-              </Text>
-              <Text size="xs">{book.literaryGenere}</Text>
-            </Info>
-          </InfoContainer>
-
-          <InfoContainer>
-            <Info>
-              <Text as="span" family="body" size="sm" height="shorter">
-                Progresso: {book?.writtenWords} de {book?.words} palavras
-                escritas
-              </Text>
+            <InfoDefault
+              size={isPreview ? 'sm' : 'md'}
+              title={`Progresso: ${book?.writtenWords} de ${book?.words} palavras escritas`}
+            >
               <ProgressBar
                 final={Number(book?.words)}
                 actual={Number(book?.writtenWords)}
               />
-            </Info>
+            </InfoDefault>
           </InfoContainer>
 
           <InfoContainer columns={4}>

@@ -1,3 +1,14 @@
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { CardBook } from '@components/BooksComponents/CardBook'
+import { CardPerson } from '@components/PersonsComponents/CardPerson'
+import { PlotParts } from '@components/ProjectsComponents/PlotParts'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { Loading } from '@components/usefull/Loading'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { useWindowSize } from '@hooks/useWindow'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Button, Text } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image'
@@ -11,17 +22,7 @@ import {
   UserFocus,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
-import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
-import { CardBook } from '../../../components/BooksComponents/CardBook'
-import { CardPerson } from '../../../components/CardPerson'
-import { ListEmpty } from '../../../components/ListEmpty'
-import { Loading } from '../../../components/Loading'
-import { PlotParts } from '../../../components/PlotParts'
-import { ProjectsContext } from '../../../contexts/projects'
-import { usePreventBack } from '../../../hooks/usePreventDefaultBack'
-import { useProject } from '../../../hooks/useProject'
-import { useWindowSize } from '../../../hooks/useWindow'
-import { ProjectPageLayout } from '../../../layouts/ProjectPageLayout'
+
 import {
   BooksContainer,
   EditImgForm,
@@ -37,8 +38,6 @@ import {
 } from './styles'
 
 export default function ProjectPage() {
-  usePreventBack('/projects')
-
   const [onEditImg, setOnEditImg] = useState(false)
 
   const { updateImageProject, loading, deleteImageProject } =
@@ -53,6 +52,8 @@ export default function ProjectPage() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
   const largeWindow = windowSize.width! > 1700
+
+  usePreventBack('/projects')
 
   async function handleUpdateImage(files: FileList | null) {
     setOnEditImg(false)

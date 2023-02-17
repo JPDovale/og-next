@@ -1,9 +1,10 @@
+import { HeaderOptions } from '@components/HeaderOptions'
+import { NavigationBar } from '@components/Navigation'
+import { InterfaceContext } from '@contexts/interface'
+import { UserContext } from '@contexts/user'
 import { useRouter } from 'next/router'
 import { ReactNode, useContext, useEffect } from 'react'
-import { HeaderOptions } from '../../components/HeaderOptions'
-import { NavigationBar } from '../../components/Navigation'
-import { InterfaceContext } from '../../contexts/interface'
-import { UserContext } from '../../contexts/user'
+
 import { DashboardPageLayoutContainer } from './styles'
 
 interface IDashboardPageLayoutProps {

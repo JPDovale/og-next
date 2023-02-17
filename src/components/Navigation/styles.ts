@@ -19,6 +19,7 @@ export const NavigationBarContainer = styled('nav', {
   img: {
     objectFit: 'fill',
     height: 80,
+    width: 'auto',
     cursor: 'pointer',
   },
 

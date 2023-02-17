@@ -1,45 +1,31 @@
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { EditorAndCommentsToGenerics } from '@components/PersonsComponents/EditorAndCommentsToGenerics'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
-import {
-  IProjectResponse,
-  ITag,
-} from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-import { ProjectsContext } from '../../../../../../contexts/projects'
-import { UserContext } from '../../../../../../contexts/user'
-import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function WishePage() {
-  const { projects, loading, persons, commentInPerson } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, persons, commentInPerson } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId, wisheId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const tag = project?.tags.find((tag) => tag.type === 'persons/wishes') as ITag
-
-  const refs = tag && tag.refs
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
-  const person = persons.find((person) => person.id === personId)
-
-  const exiteWishe = person?.wishes?.find((wishe) => wishe.id === wisheId)
-
-  const commentsInThisWishe = person?.comments?.filter(
-    (comment) => comment.to === `wishes/${wisheId}`,
+  const { project, projectName, permission, usePerson } = useProject(
+    id as string,
   )
+  const { person, personName, tags, findWishe } = usePerson(personId as string)
+  const { commentsInThisWishe, keysWishe, wishe } = findWishe(wisheId as string)
+
+  const tag = tags.wishes
+  const refs = tag && tag.refs
 
   const inError =
-    !loading && ((wisheId !== 'new' && !exiteWishe) || !project || !person)
+    !loading && ((wisheId !== 'new' && !wishe) || !project || !person)
 
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -50,19 +36,20 @@ export default function WishePage() {
   return (
     <>
       <NextSeo
-        title={`${person?.name || 'Carregando...'}-${
+        title={`${personName}-${
           wisheId === 'new' ? 'Novo' : 'Editar'
         } desejo | Ognare`}
         noindex
       />
+
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={[
           'Personagens',
-          `${person?.name || 'Carregando...'}`,
+          `${personName}`,
           'Desejos',
-          exiteWishe ? 'Edição' : 'Novo',
+          wishe ? 'Edição' : 'Novo',
         ]}
         loading={loading}
         inError={inError}
@@ -71,14 +58,14 @@ export default function WishePage() {
           persons={persons}
           refs={refs}
           isNew={wisheId === 'new'}
-          editorTo="desejo"
+          editorTo={keysWishe.label}
           projectId={project?.id}
           personId={person?.id!}
-          object={exiteWishe}
+          object={wishe}
           permission={permission}
           projectCreatedPerUser={project?.createdPerUser}
           onNewComment={CommentInPerson}
-          to={`wishes/${wisheId}`}
+          to={keysWishe.keyPath}
           comments={commentsInThisWishe}
         />
       </ProjectPageLayout>
