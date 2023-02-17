@@ -2,7 +2,9 @@ import { api } from '..'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
 import { ICreateCapituleRequest } from './types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from './types/ICreateSceneRequest'
+import { IDeleteCapituleRequest } from './types/IDeleteCapituleRequest'
 import { IDeleteSceneRequest } from './types/IDeleteSceneRequest'
+import { IReorderCapitulesRequest } from './types/IReorderCapitulesRequest'
 import { IReorderScenesRequest } from './types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from './types/ISetSceneToCompleteRequest'
 import { IUpdateCapituleRequest } from './types/IUpdateCapituleRequest'
@@ -68,6 +70,15 @@ export async function reorderScenesRequest(body: IReorderScenesRequest) {
   }
 }
 
+export async function reorderCapitulesRequest(body: IReorderCapitulesRequest) {
+  try {
+    const response = await api.put('/books/capitules/reorder', body)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 export async function updateSceneRequest(body: IUpdateSceneRequest) {
   try {
     const response = await api.put('/books/capitules/scenes', body)
@@ -117,6 +128,20 @@ export async function deleteSceneRequest({
   try {
     const response = await api.delete(
       `/books/${bookId}/capitules/${capituleId}/scenes/${sceneId}`,
+    )
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function deleteCapituleRequest({
+  bookId,
+  capituleId,
+}: IDeleteCapituleRequest) {
+  try {
+    const response = await api.delete(
+      `/books/${bookId}/capitules/${capituleId}/`,
     )
     return response.data
   } catch (err: any) {
