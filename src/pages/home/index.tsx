@@ -1,32 +1,39 @@
 import { NextSeo } from 'next-seo'
-import { HomePageContainer } from './styles'
+import { HomeContent, HomePageContainer, SideInfo } from './styles'
 
-import logo from '../../assets/logos/logoToDown.svg'
+import { Heading, Text } from '@og-ui/react'
+
+import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
 import Image from 'next/image'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { Header } from '@components/Header'
 
 export default function HomePage() {
-  const router = useRouter()
-
-  useEffect(() => {
-    router.push('/login')
-  }, [router])
-
   return (
     <>
       <NextSeo
-        title="Dando origem as suas ideias | Ognare"
+        title="Ognare | Dando origem as suas ideias"
         description="Um lugar organizado para você criar as suas histórias"
       />
       <HomePageContainer>
-        <Image
-          width={300}
-          src={logo}
-          alt="Garota segurando uma pena abaixo de uma noite estrelada seguido pelo texto 'Ognare'"
-          quality={100}
-          priority
-        />
+        <Header />
+
+        <HomeContent>
+          <SideInfo>
+            <Heading>
+              Bem-vindo(a) ao lugar onde todas as suas histórias se originam.
+            </Heading>
+
+            <Image src={aloneLogoImg} alt="" />
+
+            <Text>
+              Crie mundos inteiros com o poder da criatividade. Não deixe que o
+              silêncio cale as suas origens.
+            </Text>
+
+            <Text size="3xl">Um mundo inteiro feito de histórias.</Text>
+            <Text size="lg">Crie a sua com a gente!</Text>
+          </SideInfo>
+        </HomeContent>
       </HomePageContainer>
     </>
   )

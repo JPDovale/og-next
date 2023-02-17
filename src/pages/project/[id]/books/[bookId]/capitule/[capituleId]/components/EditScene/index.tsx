@@ -1,4 +1,10 @@
+import { IUpdateSceneRequest } from '@api/booksRequests/types/IUpdateSceneRequest'
+import { ICapitule, IScene } from '@api/responsesTypes/IBooksResponse'
+import { Avatares } from '@components/usefull/Avatares'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useProject } from '@hooks/useProject'
 import { Button, Checkbox, Heading, Text, Textarea } from '@og-ui/react'
 import {
   FileArrowDown,
@@ -9,15 +15,6 @@ import {
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { IUpdateSceneRequest } from '../../../../../../../../../api/booksRequests/types/IUpdateSceneRequest'
-import {
-  ICapitule,
-  IScene,
-} from '../../../../../../../../../api/responsesTypes/IBooksResponse'
-import { Avatares } from '../../../../../../../../../components/Avatares'
-import { ContainerGrid } from '../../../../../../../../../components/usefull/ContainerGrid'
-import { ProjectsContext } from '../../../../../../../../../contexts/projects'
-import { useProject } from '../../../../../../../../../hooks/useProject'
 import { InputContainer } from '../../styles'
 import { EditSceneContainer, AvataresContainer, CloseButton } from './styles'
 

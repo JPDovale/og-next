@@ -16,17 +16,14 @@ import {
   XCircle,
 } from 'phosphor-react'
 import { useContext } from 'react'
-import { InterfaceContext } from '../../contexts/interface'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useWindowSize } from '../../hooks/useWindow'
-import { UserContext } from '../../contexts/user'
+import { UserContext } from '@contexts/user'
+import { InterfaceContext } from '@contexts/interface'
+import { useWindowSize } from '@hooks/useWindow'
 
 export function NavigationBar() {
   const { user, visualizeNotifications } = useContext(UserContext)
-  const newNotifications = user?.notifications?.filter(
-    (notification) => notification.isVisualized === false,
-  )
 
   const {
     navIsOpen,
@@ -37,22 +34,26 @@ export function NavigationBar() {
     setNewProjectIsOpen,
   } = useContext(InterfaceContext)
 
+  const newNotifications = user?.notifications?.filter(
+    (notification) => notification.isVisualized === false,
+  )
+
   const router = useRouter()
   const location = router.pathname.split('/')[1]
 
   const windowSize = useWindowSize()
-
   const smallWindow = windowSize.width! < 786
 
   return (
     <NavigationBarContainer navIsOpen={navIsOpen}>
       <Image
         src={LogoToLeft}
-        alt=""
+        alt="Ognare"
         onClick={() => {
           router.push('/projects')
           setNavIsOpen(false)
         }}
+        priority
       />
       <button
         className="close"

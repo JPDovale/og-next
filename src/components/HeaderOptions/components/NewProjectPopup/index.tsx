@@ -1,8 +1,8 @@
+import { ProjectsContext } from '@contexts/projects'
 import { Text, TextInput } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { FilePlus, XCircle } from 'phosphor-react'
 import { FormEvent, useContext, useState } from 'react'
-import { ProjectsContext } from '../../../../contexts/projects'
 // import { InputRadio } from '../../../InputRadio'
 import {
   HeaderNewProject,

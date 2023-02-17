@@ -1,39 +1,26 @@
-export function reverbKeys(key: string) {
-  switch (key) {
-    case 'onePhrase': {
-      return 'Ideia central'
-    }
-    case 'premise': {
-      return 'Premissa'
-    }
-    case 'storyteller': {
-      return 'Narrador'
-    }
-    case 'literaryGenere': {
-      return 'Gênero literário'
-    }
-    case 'subgenre': {
-      return 'Subgênero'
-    }
-    case 'ambient': {
-      return 'Ambiente'
-    }
-    case 'countTime': {
-      return 'Tempo em que se passa'
-    }
-    case 'historicalFact': {
-      return 'Fator histórico'
-    }
-    case 'details': {
-      return 'Detalhes'
-    }
-    case 'summary': {
-      return 'Resumo'
-    }
-    case 'structure': {
-      return 'Estrutura'
-    }
-    default:
-      return ''
-  }
+export const reverbKeys = {
+  onePhrase: 'Ideia central',
+  premise: 'Premissa',
+  storyteller: 'Narrador',
+  literaryGenere: 'Gênero literário',
+  subgenre: 'Subgênero',
+  ambient: 'Ambiente',
+  countTime: 'Tempo em que se passa',
+  historicalFact: 'Fator histórico',
+  details: 'Detalhes',
+  summary: 'Resumo',
+  structure: 'Estrutura',
 }
+
+export type IReverbKeys =
+  | 'onePhrase'
+  | 'premise'
+  | 'storyteller'
+  | 'literaryGenere'
+  | 'subgenre'
+  | 'ambient'
+  | 'countTime'
+  | 'historicalFact'
+  | 'details'
+  | 'summary'
+  | 'structure'

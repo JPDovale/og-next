@@ -1,3 +1,6 @@
+import lodash from 'lodash'
+import dayjs from 'dayjs'
+
 export function orderElements(
   elements: any[],
   option:
@@ -10,164 +13,64 @@ export function orderElements(
 ) {
   switch (option) {
     case 'a-z': {
-      const elementsOrd = elements?.slice().sort((a, b) =>
-        a.name ||
-        a.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') > b.name ||
-        a.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          ? 1
-          : b.name ||
-            a.title
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') > a.name ||
-            a.title
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          ? -1
-          : 0,
+      const elementsOrd = lodash.sortBy(elements, (object) =>
+        lodash.deburr(object.name),
       )
-
       return elementsOrd === undefined ? [] : elementsOrd
     }
 
     case 'z-a': {
-      const elementsOrd = elements?.slice().sort((a, b) =>
-        a.name ||
-        a.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') < b.name ||
-        a.title
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          ? 1
-          : b.name ||
-            a.title
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') < a.name ||
-            a.title
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          ? -1
-          : 0,
+      const elementsOrd = lodash.sortBy(elements, (object) =>
+        lodash.deburr(object.name),
       )
-
-      return elementsOrd === undefined ? [] : elementsOrd
+      return elementsOrd.reverse() === undefined ? [] : elementsOrd
     }
 
     case 'time-asc': {
-      const elementsOrd = elements?.slice().sort((a, b) =>
-        a.createAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') <
-        b.createAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          ? 1
-          : b.createAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') <
-            a.createAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          ? -1
-          : 0,
-      )
+      const elementsOrd = lodash.sortBy(elements, (object) => {
+        const dateSepare = object.createAt.split(' ')[0].split('/')
+        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
+        const date = dayjs(dateInFormat).valueOf()
 
-      return elementsOrd === undefined ? [] : elementsOrd
+        return date
+      })
+
+      return elementsOrd.reverse() === undefined ? [] : elementsOrd
     }
 
     case 'time-desc': {
-      const elementsOrd = elements?.slice().sort((a, b) =>
-        a.createAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') >
-        b.createAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          ? 1
-          : b.createAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') >
-            a.createAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          ? -1
-          : 0,
-      )
+      const elementsOrd = lodash.sortBy(elements, (object) => {
+        const dateSepare = object.createAt.split(' ')[0].split('/')
+        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
+        const date = dayjs(dateInFormat).valueOf()
 
+        return date
+      })
       return elementsOrd === undefined ? [] : elementsOrd
     }
 
     case 'update-asc': {
-      const elementsOrd = elements?.slice().sort((a, b) =>
-        a.updateAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') <
-        b.updateAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          ? 1
-          : b.updateAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') <
-            a.updateAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          ? -1
-          : 0,
-      )
+      const elementsOrd = lodash.sortBy(elements, (object) => {
+        const dateSepare = object.updateAt.split(' ')[0].split('/')
+        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
+        const date = dayjs(dateInFormat).valueOf()
 
-      return elementsOrd === undefined ? [] : elementsOrd
+        return date
+      })
+      return elementsOrd.reverse() === undefined ? [] : elementsOrd
     }
 
     case 'update-desc': {
-      const elementsOrd = elements?.slice().sort((a, b) =>
-        a.updateAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '') >
-        b.updateAt
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          ? 1
-          : b.updateAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '') >
-            a.updateAt
-              .toLowerCase()
-              .normalize('NFD')
-              .replace(/[\u0300-\u036f]/g, '')
-          ? -1
-          : 0,
-      )
+      const elementsOrd = lodash.sortBy(elements, (object) => {
+        const dateSepare = object.updateAt.split(' ')[0].split('/')
+        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
+        const date = dayjs(dateInFormat).valueOf()
 
+        return date
+      })
       return elementsOrd === undefined ? [] : elementsOrd
     }
+
     default:
       return []
   }

@@ -4,16 +4,21 @@ import { ReactNode } from 'react'
 interface IInfoDefaultProps {
   children?: ReactNode
   title: string
+  size?: 'md' | 'lg' | 'sm'
 }
 
-export function InfoDefault({ children, title }: IInfoDefaultProps) {
+export function InfoDefault({
+  children,
+  title,
+  size = 'md',
+}: IInfoDefaultProps) {
   return (
     <InfoContainer>
-      <Text as="span" size="sm" family="body" height="shorter">
+      <Text as="span" size={size} family="body" height="shorter">
         {title}
       </Text>
 
-      <Text as="div" size="sm">
+      <Text as="div" size={size}>
         {children}
       </Text>
     </InfoContainer>
@@ -26,6 +31,6 @@ const InfoContainer = styled('div', {
   width: '100%',
 
   span: {
-    color: '$base900',
+    color: '$base800',
   },
 })

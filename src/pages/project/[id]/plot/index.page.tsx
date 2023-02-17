@@ -1,14 +1,15 @@
+import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
+import { PlotParts } from '@components/ProjectsComponents/PlotParts'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Link, Pencil } from 'phosphor-react'
 import { FocusEvent, useContext, useState } from 'react'
-import { IUpdatePlotDTO } from '../../../../api/dtos/IUpdatePlotDTO'
-import { PlotParts } from '../../../../components/PlotParts'
-import { ProjectsContext } from '../../../../contexts/projects'
-import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
-import { useProject } from '../../../../hooks/useProject'
-import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
+
 import {
   BoxInput,
   BoxInputUrlOfText,
