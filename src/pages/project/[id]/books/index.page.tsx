@@ -1,15 +1,16 @@
+import { CardBook } from '@components/BooksComponents/CardBook'
+import { DefaultError } from '@components/usefull/DefaultError'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Button } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Books } from 'phosphor-react'
 import { useContext } from 'react'
-import { CardBook } from '../../../../components/BooksComponents/CardBook'
-import { DefaultError } from '../../../../components/DefaultError'
-import { ListEmpty } from '../../../../components/ListEmpty'
-import { ProjectsContext } from '../../../../contexts/projects'
-import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
-import { useProject } from '../../../../hooks/useProject'
-import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
+
 import { BooksContainer, NewBookButtonContainer } from './styles'
 
 export default function BooksPage() {

@@ -1,7 +1,8 @@
+import { ICapitule } from '@api/responsesTypes/IBooksResponse'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@og-ui/react'
-import { ICapitule } from '../../../api/responsesTypes/IBooksResponse'
-import { ContainerGrid } from '../../usefull/ContainerGrid'
-import { InfoDefault } from '../../usefull/InfoDefault'
+
 import {
   CapituleCardContainer,
   CapituleComplete,

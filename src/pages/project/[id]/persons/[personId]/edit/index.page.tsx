@@ -4,11 +4,6 @@ import { useForm } from 'react-hook-form'
 import { Button, Text, Textarea } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { IProjectResponse } from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { ResponseInfoApi } from '../../../../../../components/ResponseInfoApi'
-import { TextInput } from '../../../../../../components/TextInput'
-import { ProjectsContext } from '../../../../../../contexts/projects'
-import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 import { EditContainer, Info } from './styles'
 import {
   Chats,
@@ -24,10 +19,15 @@ import {
   Users,
   Warning,
 } from 'phosphor-react'
-import { ICreatePersonDTO } from '../../../../../../api/dtos/ICreatePersonDTO'
-import { useWindowSize } from '../../../../../../hooks/useWindow'
 import { NextSeo } from 'next-seo'
-import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { useWindowSize } from '@hooks/useWindow'
+import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
+import { TextInput } from '@components/usefull/TextInput'
 
 const personFormSchema = z.object({
   name: z.string(),
@@ -39,8 +39,7 @@ const personFormSchema = z.object({
 type PersonFormData = z.infer<typeof personFormSchema>
 
 export default function EditPersonPage() {
-  const { projects, loading, persons, error, updatePerson } =
-    useContext(ProjectsContext)
+  const { loading, error, updatePerson } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId } = router.query
@@ -56,11 +55,8 @@ export default function EditPersonPage() {
   const age = watch('age')
   const history = watch('history')
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const person = persons.find((person) => person?.id === personId)
+  const { project, projectName, usePerson } = useProject(id as string)
+  const { person, personName } = usePerson(personId as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -80,14 +76,12 @@ export default function EditPersonPage() {
 
   return (
     <>
-      <NextSeo
-        title={`${person?.name || 'Carregando...'}-Editar | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${personName}-Editar | Ognare`} noindex />
+
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
-        paths={['Personagens', `${person?.name || 'Carregando...'}`, 'Edição']}
+        paths={['Personagens', `${personName}`, 'Edição']}
         loading={loading}
         inError={!loading && (!person || !project)}
         isScrolling
@@ -99,7 +93,7 @@ export default function EditPersonPage() {
             <Text family="body" as="label">
               Nome
               <TextInput
-                placeholder={person?.name || 'Carregando...'}
+                placeholder={personName}
                 label="name"
                 register={register}
               />

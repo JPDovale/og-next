@@ -13,9 +13,7 @@ import {
   X,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
-import { DefaultError } from '../../../../components/DefaultError'
-import { ProjectsContext } from '../../../../contexts/projects'
-import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
+
 import {
   FastAccessPersons,
   InfosBasics,
@@ -29,14 +27,18 @@ import {
   QueryInputContainer,
   ShowFormButton,
 } from './styles'
-import { TextInput } from '../../../../components/TextInput'
-import { CardPerson } from '../../../../components/CardPerson'
-import { ListEmpty } from '../../../../components/ListEmpty'
-import { Avatares } from '../../../../components/Avatares'
-import { useWindowSize } from '../../../../hooks/useWindow'
+
 import { NextSeo } from 'next-seo'
-import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
-import { useProject } from '../../../../hooks/useProject'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useWindowSize } from '@hooks/useWindow'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { DefaultError } from '@components/usefull/DefaultError'
+import { TextInput } from '@components/usefull/TextInput'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { CardPerson } from '@components/PersonsComponents/CardPerson'
+import { Avatares } from '@components/usefull/Avatares'
 
 const newPersonFormSchema = z.object({
   name: z

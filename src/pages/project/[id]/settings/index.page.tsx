@@ -1,9 +1,11 @@
-import {
-  Button,
-  //  Button,
-  Text,
-  TextInput,
-} from '@og-ui/react'
+import { AvatarWeb } from '@components/usefull/Avatar'
+import { DefaultError } from '@components/usefull/DefaultError'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { useWindowSize } from '@hooks/useWindow'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
 import {
@@ -12,7 +14,6 @@ import {
   Crosshair,
   HeartBreak,
   Lightning,
-  // PencilLine,
   Person,
   Presentation,
   RainbowCloud,
@@ -22,158 +23,37 @@ import {
   UserFocus,
   Warning,
 } from 'phosphor-react'
-import { useContext, useMemo, useState } from 'react'
-import {
-  IProjectResponse,
-  IRef,
-} from '../../../../api/responsesTypes/IProjcetResponse'
-import { IUserResponse } from '../../../../api/responsesTypes/IUserResponse'
-import { AvatarWeb } from '../../../../components/Avatar'
-import { DefaultError } from '../../../../components/DefaultError'
-import { ProjectsContext } from '../../../../contexts/projects'
-import { UserContext } from '../../../../contexts/user'
-import { usePreventBack } from '../../../../hooks/usePreventDefaultBack'
-import { useWindowSize } from '../../../../hooks/useWindow'
-import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
+import { useContext, useState } from 'react'
 
 import { CardUserWithAccess } from './components/CardUserWithAccess'
 import { Creator, Info, SettingsProject } from './styles'
 
-interface IObjects {
-  objectives: IRef[]
-  dreams: IRef[]
-  fears: IRef[]
-  appearance: IRef[]
-  personality: IRef[]
-  powers: IRef[]
-  traumas: IRef[]
-  values: IRef[]
-  wishes: IRef[]
-}
-
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
-
-  const {
-    projects,
-    users,
-    loading,
-    persons,
-    unshareProject,
-    error,
-    books,
-    updateNameProject,
-    setError,
-  } = useContext(ProjectsContext)
   const [name, setName] = useState('')
 
-  const { user } = useContext(UserContext)
+  const { loading, unshareProject, error, updateNameProject, setError } =
+    useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
 
   usePreventBack(`/project/${id}`)
 
-  const project = projects?.find(
-    (project) => project?.id === id,
-  ) as IProjectResponse
-
-  const personsOfProject = persons.filter(
-    (person) => person.defaultProject === project?.id,
-  )
-  const booksOfProject = books.filter(
-    (book) => book.defaultProject === project?.id,
-  )
-
-  const userCreatorFinde = users?.find(
-    (user) => user.id === project?.createdPerUser,
-  )
-  const userCreator = userCreatorFinde || (user as IUserResponse)
-
-  const usersWithAccess = users.filter((u) => {
-    return project?.users.find((user) => user.id === u.id)
-  })
-  const allUsersWithAccess = [
-    ...usersWithAccess,
-    userCreator,
-    user,
-  ] as IUserResponse[]
+  const {
+    project,
+    personsThisProject,
+    booksThisProject,
+    creator,
+    usersWithAccess,
+    objectsCreatedInProject,
+  } = useProject(id as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const objects = useMemo(() => {
-    const findeObjectives: IObjects = {
-      objectives: [],
-      dreams: [],
-      fears: [],
-      appearance: [],
-      personality: [],
-      powers: [],
-      traumas: [],
-      values: [],
-      wishes: [],
-    }
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/objectives')
-      ?.refs.map((ref) => {
-        return findeObjectives.objectives.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/dreams')
-      ?.refs.map((ref) => {
-        return findeObjectives.dreams.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/fears')
-      ?.refs.map((ref) => {
-        return findeObjectives.fears.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/appearance')
-      ?.refs.map((ref) => {
-        return findeObjectives.appearance.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/personality')
-      ?.refs.map((ref) => {
-        return findeObjectives.personality.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/powers')
-      ?.refs.map((ref) => {
-        return findeObjectives.powers.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/traumas')
-      ?.refs.map((ref) => {
-        return findeObjectives.traumas.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/values')
-      ?.refs.map((ref) => {
-        return findeObjectives.values.push(ref)
-      })
-
-    project?.tags
-      .find((tag) => tag.type === 'persons/wishes')
-      ?.refs.map((ref) => {
-        return findeObjectives.wishes.push(ref)
-      })
-
-    return findeObjectives
-  }, [project?.tags])
-
   function handleUnshare() {
-    const userToRemove = users.find((u) => u.id === unshare)
+    const userToRemove = usersWithAccess.find((u) => u.id === unshare)
 
     if (!userToRemove) return
 
@@ -260,19 +140,19 @@ export default function SettingsPage() {
             <Text family="body" as="label">
               Criador
               <Creator>
-                <AvatarWeb size="4xl" src={userCreator?.avatar?.url} />
+                <AvatarWeb size="4xl" src={creator?.avatar?.url} />
                 <div>
                   <Text family="body" as="label">
                     Nome
-                    <Text>{userCreator?.name || 'Carregando...'}</Text>
+                    <Text>{creator?.name || 'Carregando...'}</Text>
                   </Text>
                   <Text family="body" as="label">
                     Nome de usuário
-                    <Text>{userCreator?.username || 'Carregando...'}</Text>
+                    <Text>{creator?.username || 'Carregando...'}</Text>
                   </Text>
                   <Text family="body" as="label">
                     Email
-                    <Text>{userCreator?.email || 'Carregando...'}</Text>
+                    <Text>{creator?.email || 'Carregando...'}</Text>
                   </Text>
                 </div>
               </Creator>
@@ -285,8 +165,8 @@ export default function SettingsPage() {
                 permissão desejada.
               </Text>
               <Info columns={smallWindow ? 1 : 2}>
-                {allUsersWithAccess?.map((userWithAccess) => {
-                  if (userWithAccess?.id !== userCreator?.id) {
+                {usersWithAccess?.map((userWithAccess) => {
+                  if (userWithAccess?.id !== creator?.id) {
                     return (
                       <CardUserWithAccess
                         key={userWithAccess.id}
@@ -329,7 +209,7 @@ export default function SettingsPage() {
                 <UserFocus />
                 Personagens
               </header>
-              <Text>{personsOfProject?.length || 0}</Text>
+              <Text>{personsThisProject?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -337,7 +217,7 @@ export default function SettingsPage() {
                 <Books />
                 Livros
               </header>
-              <Text>{booksOfProject?.length || 0}</Text>
+              <Text>{booksThisProject?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -345,7 +225,7 @@ export default function SettingsPage() {
                 <Crosshair />
                 Objetivos criados
               </header>
-              <Text>{objects?.objectives.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.objectives.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -353,7 +233,7 @@ export default function SettingsPage() {
                 <RainbowCloud />
                 Sonhos criados
               </header>
-              <Text>{objects?.dreams.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.dreams.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -361,7 +241,7 @@ export default function SettingsPage() {
                 <Warning />
                 Medos criados
               </header>
-              <Text>{objects?.fears.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.fears.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -369,7 +249,7 @@ export default function SettingsPage() {
                 <Person />
                 Aparências criadas
               </header>
-              <Text>{objects?.appearance.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.appearance.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -377,7 +257,7 @@ export default function SettingsPage() {
                 <UserCircleGear />
                 Personalidades criadas
               </header>
-              <Text>{objects?.personality.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.personality.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -385,7 +265,7 @@ export default function SettingsPage() {
                 <Lightning />
                 Poderes criados
               </header>
-              <Text>{objects?.powers.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.powers.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -393,7 +273,7 @@ export default function SettingsPage() {
                 <HeartBreak />
                 Traumas criados
               </header>
-              <Text>{objects?.traumas.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.traumas.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -401,7 +281,7 @@ export default function SettingsPage() {
                 <TreeStructure />
                 Valores criados
               </header>
-              <Text>{objects?.values.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.values.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -409,7 +289,7 @@ export default function SettingsPage() {
                 <SketchLogo />
                 Desejos criados
               </header>
-              <Text>{objects?.wishes.length || 0}</Text>
+              <Text>{objectsCreatedInProject?.wishes.length || 0}</Text>
             </Text>
           </Info>
         </SettingsProject>
