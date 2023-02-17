@@ -71,13 +71,13 @@ export const CardPersonContainer = styled(Box, {
 
         '.person-image': {
           minHeight: '400px',
-          width: 'auto',
+          width: '100%',
           height: 'auto',
 
           img: {
             maxHeight: '400px',
             minHeight: '400px',
-            width: 'auto',
+            width: '100%',
             height: 'auto',
           },
         },

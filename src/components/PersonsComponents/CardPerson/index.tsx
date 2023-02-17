@@ -34,7 +34,9 @@ export function CardPerson({
   return (
     <CardPersonContainer
       as={isNotPreview ? 'div' : 'button'}
-      title={`${person.name} ${person.lastName}`}
+      title={
+        isAdd ? 'Adicionar personagem' : `${person.name} ${person.lastName}`
+      }
       isAdd={isAdd}
       isNotPreview={isNotPreview}
       onClick={() =>
