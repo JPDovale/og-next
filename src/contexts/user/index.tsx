@@ -1,5 +1,11 @@
 import { useRouter } from 'next/router'
-import { createContext, useReducer, useState, useEffect } from 'react'
+import {
+  createContext,
+  useReducer,
+  useState,
+  useEffect,
+  useContext,
+} from 'react'
 import { IError } from '../../@types/errors/IError'
 import { api } from '../../api'
 import { ICreateUserDTO } from '../../api/dtos/ICreateUserDTO'
@@ -27,6 +33,7 @@ import { ISuccess } from '../../@types/success/ISuccess'
 import { sendMailForgotPasswordFunction } from './functions/sendMailForgotPasswordFunction'
 import { recoveryPasswordFunction } from './functions/recoveryPasswordFunction'
 import { visualizeNotificationsFunction } from './functions/visualizeNotificationsFunction'
+import { InterfaceContext } from '@contexts/interface'
 
 export const UserContext = createContext<IUserContext>(userDefaultValues)
 
@@ -38,6 +45,8 @@ export function UserProvider({ children }: IUserContextProps) {
     user: undefined,
     success: undefined,
   })
+
+  const { resetInterface } = useContext(InterfaceContext)
 
   const { error, user, success } = userInfos
   const router = useRouter()
@@ -85,6 +94,7 @@ export function UserProvider({ children }: IUserContextProps) {
     setLoading(true)
 
     await logoutFunction(dispatch)
+    resetInterface()
 
     // signOut({
     //   redirect: true,

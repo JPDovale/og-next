@@ -1,13 +1,13 @@
+import { Error } from '@components/usefull/Error'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { notifyUsersFunction } from '@contexts/user/functions/notifyUsersFunction'
+import { verifyFunction } from '@contexts/user/functions/verifyFunction'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Textarea } from '@og-ui/react'
 import { Share } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Error } from '../../components/Error'
-import { InfoDefault } from '../../components/usefull/InfoDefault'
-import { notifyUsersFunction } from '../../contexts/user/functions/notifyUsersFunction'
-import { verifyFunction } from '../../contexts/user/functions/verifyFunction'
 import { NotifyContainer, NotifyForm } from './styles'
 
 const notifyBodySchema = z.object({

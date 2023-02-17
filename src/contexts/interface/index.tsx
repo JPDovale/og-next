@@ -42,6 +42,8 @@ interface IInterfaceContext {
       | 'update-asc'
       | 'update-desc',
   ) => void
+
+  resetInterface: () => void
 }
 
 const interfaceDefaultsValues: IInterfaceContext = {
@@ -76,6 +78,8 @@ const interfaceDefaultsValues: IInterfaceContext = {
       | 'update-asc'
       | 'update-desc',
   ) => {},
+
+  resetInterface: () => {},
 }
 
 export const InterfaceContext = createContext(interfaceDefaultsValues)
@@ -92,6 +96,15 @@ export function InterfaceProvider({ children }: IInterfaceContextProps) {
   const [isList, setIsList] = useState(interfaceDefaultsValues.isList)
   const [orderBy, setOrderBy] = useState(interfaceDefaultsValues.orderBy)
   const [navigatorProjectIsOpen, setNavigatorProjectIsOpen] = useState(false)
+
+  function resetInterface() {
+    setNavIsOpen(false)
+    setUserOptionsIsOpen(false)
+    setNotificationsIsOpen(false)
+    setPreferenciesIsOpen(false)
+    setNewProjectIsOpen(false)
+    setNavigatorProjectIsOpen(false)
+  }
 
   useEffect(() => {
     const configInString = localStorage.getItem('@og-interface-config')
@@ -138,6 +151,8 @@ export function InterfaceProvider({ children }: IInterfaceContextProps) {
 
         navigatorProjectIsOpen,
         setNavigatorProjectIsOpen,
+
+        resetInterface,
       }}
     >
       {children}

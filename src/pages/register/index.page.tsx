@@ -15,7 +15,6 @@ import LogoToDown from '../../assets/logos/logoToDown.svg'
 import Logo from '../../assets/logos/logo.svg'
 import Image from 'next/image'
 import { Button, Text } from '@og-ui/react'
-import { TextInput } from '../../components/TextInput'
 import Link from 'next/link'
 import {
   At,
@@ -25,18 +24,19 @@ import {
   UserCircle,
 } from 'phosphor-react'
 import { z } from 'zod'
-import { ICreateUserDTO } from '../../api/dtos/ICreateUserDTO'
 import { useContext, useEffect } from 'react'
-import { UserContext } from '../../contexts/user'
 import { useRouter } from 'next/router'
 // import { signIn, useSession } from 'next-auth/react'
 // import { unstable_getServerSession } from 'next-auth'
 // import { loginWithGoogleRequest } from '../../api/userRequest'
 // import { authOptions } from '../api/auth/[...nextauth].api'
 // import { GetServerSideProps } from 'next'
-import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
-import { Loading } from '../../components/Loading'
+import { UserContext } from '@contexts/user'
+import { Loading } from '@components/usefull/Loading'
+import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
+import { TextInput } from '@components/usefull/TextInput'
+import { ICreateUserDTO } from '@api/dtos/ICreateUserDTO'
 
 const registerFormSchema = z.object({
   name: z

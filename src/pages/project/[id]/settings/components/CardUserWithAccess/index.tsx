@@ -8,10 +8,10 @@ import {
   UnshareButton,
   UnshareConfirm,
 } from './styles'
-import { UserContext } from '../../../../../../contexts/user'
-import { AvatarWeb } from '../../../../../../components/Avatar'
-import { IProjectResponse } from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { IUserResponse } from '../../../../../../api/responsesTypes/IUserResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+import { IUserResponse } from '@api/responsesTypes/IUserResponse'
+import { AvatarWeb } from '@components/usefull/Avatar'
+import { UserContext } from '@contexts/user'
 
 interface ICardUserWithAccessContainerProps {
   project: IProjectResponse

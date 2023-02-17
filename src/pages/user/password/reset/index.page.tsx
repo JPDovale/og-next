@@ -14,15 +14,15 @@ import {
   ResetPasswordPageContainer,
 } from './styles'
 import { Button, Text } from '@og-ui/react'
-import { ResponseInfoApi } from '../../../../components/ResponseInfoApi'
-import { UserContext } from '../../../../contexts/user'
 import { LockKey } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TextInput } from '../../../../components/TextInput'
 import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
+import { UserContext } from '@contexts/user'
+import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
+import { TextInput } from '@components/usefull/TextInput'
 
 const resetPasswordFormSchema = z.object({
   password: z
