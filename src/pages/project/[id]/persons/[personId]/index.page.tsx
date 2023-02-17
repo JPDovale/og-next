@@ -1,27 +1,3 @@
-import { Button, Text } from '@og-ui/react'
-import { NextSeo } from 'next-seo'
-import Image from 'next/image'
-import { useRouter } from 'next/router'
-import {
-  CaretCircleDoubleLeft,
-  Crosshair,
-  HeartBreak,
-  Image as ImageIco,
-  Lightning,
-  Pencil,
-  PencilCircle,
-  Person,
-  PlusCircle,
-  Quotes,
-  RainbowCloud,
-  SketchLogo,
-  Trash,
-  TreeStructure,
-  UserCircleGear,
-  Users,
-  Warning,
-} from 'phosphor-react'
-import { useContext, useState } from 'react'
 import {
   IAppearance,
   ICouple,
@@ -32,69 +8,65 @@ import {
   ITrauma,
   IValue,
   IWishe,
-} from '../../../../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
-import { CardObjective } from '../../../../../components/CardObjective'
-import { ListEmpty } from '../../../../../components/ListEmpty'
-import { Loading } from '../../../../../components/Loading'
-import { ProjectsContext } from '../../../../../contexts/projects'
-import { UserContext } from '../../../../../contexts/user'
-import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
+} from '@api/responsesTypes/IPersonsResponse'
+import { CardObjective } from '@components/PersonsComponents/CardObjective'
+import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
+import { HeadingPart } from '@components/usefull/HeadingPart'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { Text } from '@og-ui/react'
+import { NextSeo } from 'next-seo'
+import { useRouter } from 'next/router'
+import {
+  Crosshair,
+  HeartBreak,
+  Lightning,
+  Person,
+  Quotes,
+  RainbowCloud,
+  SketchLogo,
+  TreeStructure,
+  UserCircleGear,
+  Users,
+  Warning,
+} from 'phosphor-react'
+import { useContext } from 'react'
 import { Campu } from './components/Campu'
 import {
-  EditImgForm,
-  HeaderPersonInfos,
-  HeadingPart,
   History,
   HistoryContent,
-  Info,
-  Infos,
-  InfosContainer,
-  Input,
   ObjectContainer,
   ObjectivesContent,
 } from './styles'
 
 export default function PersonPage() {
-  const [onEditImg, setOnEditImg] = useState(false)
-  const [onUpdateImg, setOnUpdateImg] = useState(false)
-
-  const {
-    projects,
-    loading,
-    persons,
-    updateImageFromPerson,
-    deleteImagePerson,
-  } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, updateImageFromPerson, deleteImagePerson } =
+    useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId } = router.query
   usePreventBack(`/project/${id}/persons`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
+  const { project, permission, usePerson } = useProject(id as string)
+  const { person, historyPersons, objectives, personInfos } = usePerson(
+    personId as string,
+  )
 
-  const person = persons.find((person) => person?.id === personId)
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
-  const historyLineBreaks = person?.history.split('\n')
-
-  async function handleUpdateImage(files: FileList | null) {
-    setOnEditImg(false)
-
+  async function handleUpdateImage(files: FileList | null): Promise<void> {
     if (!files) return
 
-    setOnEditImg(false)
-    setOnUpdateImg(true)
     const file = files[0]
 
-    if (file.type !== 'image/jpeg' && file.type !== 'image/png') return ''
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png') return
 
     await updateImageFromPerson(personId as string, file)
-    setOnUpdateImg(false)
+  }
+
+  async function handleDeleteImage(id: string) {
+    return deleteImagePerson({ personId: id })
   }
 
   return (
@@ -108,223 +80,28 @@ export default function PersonPage() {
         inError={!loading && (!project?.id || !person?.name)}
         isScrolling
       >
-        <HeaderPersonInfos>
-          {onUpdateImg ? (
-            <div className="image">
-              <Loading />
-            </div>
-          ) : !person?.image?.url ? (
-            <ImageIco
-              className="image"
-              weight="thin"
-              size={64}
-              alt=""
-              onClick={() => setOnEditImg(!onEditImg)}
-            />
-          ) : (
-            <Image
-              className="image"
-              src={person?.image.url}
-              alt=""
-              onClick={() => setOnEditImg(!onEditImg)}
-              height={800}
-              width={800}
-              priority
-            />
-          )}
-
-          {permission === 'edit' && (
-            <EditImgForm visible={onEditImg} encType="multipart/form-data">
-              <Input htmlFor="file">
-                <Pencil />
-                EDITAR
-                <input
-                  type="file"
-                  id="file"
-                  accept="image/png, image/jpeg"
-                  onChange={(e) => {
-                    handleUpdateImage(e.target.files)
-                  }}
-                />
-              </Input>
-              {person?.image?.url && (
-                <Button
-                  type="button"
-                  icon={<Trash />}
-                  wid="middle"
-                  align="center"
-                  label="REMOVER"
-                  onClick={() => {
-                    deleteImagePerson({ personId: person?.id! })
-                    setOnEditImg(false)
-                  }}
-                />
-              )}
-            </EditImgForm>
-          )}
-
-          <InfosContainer>
-            <Button
-              type="button"
-              className="goBack"
-              wid="hug"
-              icon={<CaretCircleDoubleLeft weight="bold" />}
-              onClick={() => router.push(`/project/${id}/persons`)}
-            />
-
-            <Infos>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Nome:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.name || 'Carregando...'} {person?.lastName}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Idade:
-                </Text>
-                <Text as="p" size="sm">
-                  {`${person?.age} anos` || 'Carregando...'}
-                </Text>
-              </Info>
-            </Infos>
-
-            <Infos>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Criado:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.createAt || 'Carregando...'}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Última atualização:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.updateAt || 'Carregando...'}
-                </Text>
-              </Info>
-            </Infos>
-
-            <Infos columns={4}>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Objetivos:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.objectives.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Personalidade:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.personality.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Valores:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.values.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Traumas:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.traumas.length || 0}
-                </Text>
-              </Info>
-            </Infos>
-
-            <Infos columns={4}>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Aparência:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.appearance.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Sonhos:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.dreams.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Medos:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.fears.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Desejos:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.wishes.length || 0}
-                </Text>
-              </Info>
-            </Infos>
-
-            <Infos columns={4}>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Casais:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.couples.length || 0}
-                </Text>
-              </Info>
-
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Poderes:
-                </Text>
-                <Text as="p" size="sm">
-                  {person?.powers.length || 0}
-                </Text>
-              </Info>
-            </Infos>
-          </InfosContainer>
-        </HeaderPersonInfos>
+        <HeaderImageAndInfos
+          idObject={person?.id as string}
+          onUpdateCalled={handleUpdateImage}
+          onRemoveCalled={handleDeleteImage}
+          url={person?.image.url}
+          pathGoBack={`/project/${id}/persons`}
+          permission={permission}
+          allInfos={personInfos}
+        />
 
         <History>
-          <HeadingPart size="sm">
-            <Quotes size={40} />
-            História
-            {permission === 'edit' && (
-              <PencilCircle
-                size={40}
-                onClick={() =>
-                  router.push(`/project/${id}/persons/${personId}/edit`)
-                }
-              />
-            )}
-          </HeadingPart>
+          <HeadingPart
+            label="História"
+            icon={<Quotes size={40} />}
+            permission={permission}
+            customFunctionOnClickSideButton={() =>
+              router.push(`/project/${id}/persons/${personId}/edit`)
+            }
+            isToEdit
+          />
           <HistoryContent>
-            {historyLineBreaks?.map((line) => {
+            {historyPersons?.map((line) => {
               if (line) {
                 return (
                   <Text family="body" key={line}>
@@ -339,47 +116,24 @@ export default function PersonPage() {
         </History>
 
         <ObjectContainer>
-          <HeadingPart size="sm">
-            <Crosshair size={40} />
-            Objetivos:
-            {permission === 'edit' && (
-              <PlusCircle
-                size={40}
-                onClick={() =>
-                  router.push(
-                    `/project/${id}/persons/${personId}/objectives/new`,
-                  )
-                }
-              />
-            )}
-          </HeadingPart>
+          <HeadingPart
+            label="Objetivos"
+            icon={<Crosshair size={40} />}
+            permission={permission}
+            redirectPathToAdd={`/project/${id}/persons/${personId}/objectives/new`}
+            isToAdd
+          />
 
           <ObjectivesContent>
-            {person?.objectives && person?.objectives[0] ? (
-              person?.objectives.map((objective) => {
-                const avoiders = persons.filter((person) => {
-                  const isAvoider = !!objective.avoiders.find(
-                    (avoider) => avoider === person?.id,
-                  )
-
-                  return isAvoider
-                })
-
-                const supporters = persons.filter((person) => {
-                  const isSupporter = !!objective.supporting.find(
-                    (support) => support === person?.id,
-                  )
-
-                  return isSupporter
-                })
-
+            {objectives && objectives[0] ? (
+              objectives.map((objective) => {
                 return (
                   <CardObjective
                     permission={permission}
                     key={objective.id}
-                    objective={objective}
-                    avoiders={avoiders}
-                    supporters={supporters}
+                    objective={objective.objectiveDefault}
+                    avoiders={objective.avoiders}
+                    supporters={objective.supporting}
                   />
                 )
               })

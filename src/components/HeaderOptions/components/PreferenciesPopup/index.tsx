@@ -16,7 +16,7 @@ import {
   Options,
   PreferenciesPopupContainer,
 } from './styles'
-import { InterfaceContext } from '../../../../contexts/interface'
+import { InterfaceContext } from '@contexts/interface'
 
 interface IPreferenciesPopupProps {
   preferenciesIsOpen: boolean

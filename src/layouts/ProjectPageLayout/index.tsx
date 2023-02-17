@@ -1,7 +1,8 @@
+import { HeaderProject } from '@components/ProjectsComponents/HeaderProject'
+import { ProjectNavigation } from '@components/ProjectsComponents/ProjectNavigation'
+import { Error } from '@components/usefull/Error'
 import { ReactNode } from 'react'
-import { Error } from '../../components/Error'
-import { HeaderProject } from '../../components/HeaderProject'
-import { ProjectNavigation } from '../../components/ProjectNavigation'
+
 import { ProjectContainer, ProjectPageLayoutContainer } from './styles'
 
 interface IProjectPageLayout {

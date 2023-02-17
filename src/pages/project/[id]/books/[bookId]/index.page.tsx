@@ -1,19 +1,19 @@
+import { BookGenere } from '@components/BooksComponents/BookGenere'
+import { CapituleCard } from '@components/BooksComponents/CapituleCard'
+import { DefaultError } from '@components/usefull/DefaultError'
+import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
+import { HeadingPart } from '@components/usefull/HeadingPart'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { useWindowSize } from '@hooks/useWindow'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Bookmarks, Brain } from 'phosphor-react'
 import { useContext } from 'react'
-import { BookGenere } from '../../../../../components/BooksComponents/BookGenere'
-import { CapituleCard } from '../../../../../components/BooksComponents/CapituleCard'
-import { DefaultError } from '../../../../../components/DefaultError'
-import { ListEmpty } from '../../../../../components/ListEmpty'
-// import { PlotParts } from '../../../../../components/PlotParts'
-import { HeaderImageAndInfos } from '../../../../../components/usefull/HeaderImageAndInfos'
-import { HeadingPart } from '../../../../../components/usefull/HeadingPart'
-import { ProjectsContext } from '../../../../../contexts/projects'
-import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
-import { useProject } from '../../../../../hooks/useProject'
-import { useWindowSize } from '../../../../../hooks/useWindow'
-import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
+
 import { BookContainer, Container, SubContainer } from './styles'
 
 export default function BookPage() {
@@ -91,7 +91,8 @@ export default function BookPage() {
             <HeadingPart
               icon={<Brain size={40} />}
               label="Gêneros"
-              customFunctionToAdd={() => {}}
+              customFunctionOnClickSideButton={() => {}}
+              permission={permission}
               // isToAdd
             />
 
@@ -119,6 +120,7 @@ export default function BookPage() {
               icon={<Bookmarks size={40} />}
               label="Capítulos"
               redirectPathToAdd={`/project/${id}/books/${bookId}/capitule/new`}
+              permission={permission}
               isToAdd
             />
 

@@ -1,3 +1,5 @@
+import { IUserResponse } from '@api/responsesTypes/IUserResponse'
+import { UserContext } from '@contexts/user'
 import { Button, Text } from '@og-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -8,13 +10,12 @@ import {
   Trash,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
-import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
-import { UserContext } from '../../../contexts/user'
-import { AvatarWeb } from '../../Avatar'
-import { Loading } from '../../Loading'
+import { AvatarWeb } from '../Avatar'
 import { ContainerGrid } from '../ContainerGrid'
 import { InfoDefault } from '../InfoDefault'
+import { Loading } from '../Loading'
 import { ProgressBar } from '../ProgressBar'
+
 import {
   EditImgForm,
   HeaderImageAndInfosContainer,
@@ -65,10 +66,10 @@ export function HeaderImageAndInfos({
   onUpdateCalled,
   onRemoveCalled,
 }: IHeaderImageAndInfosProps) {
-  const { user: creator } = useContext(UserContext)
-
   const [onUpdateImage, setOnUpdateImage] = useState(false)
   const [onEditImg, setOnEditImg] = useState(false)
+
+  const { user: creator } = useContext(UserContext)
 
   const router = useRouter()
 

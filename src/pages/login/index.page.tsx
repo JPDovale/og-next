@@ -17,15 +17,15 @@ import Logo from '../../assets/logos/logo.svg'
 
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
-import { TextInput } from '../../components/TextInput'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { UserContext } from '../../contexts/user'
 
-import { ResponseInfoApi } from '../../components/ResponseInfoApi'
 import { NextSeo } from 'next-seo'
-import { Loading } from '../../components/Loading'
+import { Loading } from '@components/usefull/Loading'
+import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
+import { TextInput } from '@components/usefull/TextInput'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -60,10 +60,6 @@ export default function LoginPage() {
       router.push('/projects')
     }
   }, [userLogged, router])
-
-  if (loading) {
-    return <Loading />
-  }
 
   if (loading) {
     return <Loading />

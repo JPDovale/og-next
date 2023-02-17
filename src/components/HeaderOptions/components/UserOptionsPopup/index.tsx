@@ -1,3 +1,6 @@
+import { AvatarWeb } from '@components/usefull/Avatar'
+import { InterfaceContext } from '@contexts/interface'
+import { UserContext } from '@contexts/user'
 import { Button, Text } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import {
@@ -9,22 +12,15 @@ import {
   XCircle,
 } from 'phosphor-react'
 import { useContext } from 'react'
-import { InterfaceContext } from '../../../../contexts/interface'
-import { UserContext } from '../../../../contexts/user'
-import { AvatarWeb } from '../../../Avatar'
-import { Error } from '../../../Error'
-import { Loading } from '../../../Loading'
+
 import { Options, UserInfos, UserOptionsPopupContainer } from './style'
 
 export function UserOptionsPopup() {
-  const { user, logout, loading } = useContext(UserContext)
+  const { user, logout } = useContext(UserContext)
   const { userOptionsIsOpen, setUserOptionsIsOpen } =
     useContext(InterfaceContext)
 
   const router = useRouter()
-
-  if (loading) return <Loading />
-  if (!user) return <Error />
 
   return (
     <UserOptionsPopupContainer onWindow={userOptionsIsOpen}>
@@ -39,10 +35,10 @@ export function UserOptionsPopup() {
         <AvatarWeb src={user?.avatar?.url as string} />
         <div>
           <Text as={'h3'} size={'lg'} weight={'bold'} spacing={'maximum'}>
-            {user.username}
+            {user?.username}
           </Text>
           <Text as={'span'} family={'body'} size={'md'}>
-            {user.email}
+            {user?.email}
           </Text>
         </div>
       </UserInfos>

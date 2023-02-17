@@ -1,15 +1,16 @@
+import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
+import { IScene } from '@api/responsesTypes/IBooksResponse'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { Avatares } from '@components/usefull/Avatares'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { ProjectsContext } from '@contexts/projects'
+import { useProject } from '@hooks/useProject'
 import { Button, Checkbox, Text } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { List, PencilLine, Trash, X } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { z } from 'zod'
-import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
-import { IScene } from '../../../api/responsesTypes/IBooksResponse'
-import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
-import { ProjectsContext } from '../../../contexts/projects'
-import { useProject } from '../../../hooks/useProject'
-import { Avatares } from '../../Avatares'
-import { InfoDefault } from '../../usefull/InfoDefault'
+
 import {
   AlternativeFormContainer,
   HeaderButton,

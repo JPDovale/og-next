@@ -1,4 +1,18 @@
+import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
+import { SceneCard } from '@components/BooksComponents/SceneCard'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { DefaultError } from '@components/usefull/DefaultError'
+import { HeadingPart } from '@components/usefull/HeadingPart'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { ListEmpty } from '@components/usefull/ListEmpty'
+import { ProgressBar } from '@components/usefull/ProgressBar'
+import { TextInput } from '@components/usefull/TextInput'
+import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { useWindowSize } from '@hooks/useWindow'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Button, Text, Textarea } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
@@ -11,20 +25,6 @@ import {
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { IUpdateCapituleRequest } from '../../../../../../../api/booksRequests/types/IUpdateCapituleRequest'
-import { SceneCard } from '../../../../../../../components/BooksComponents/SceneCard'
-import { DefaultError } from '../../../../../../../components/DefaultError'
-import { ListEmpty } from '../../../../../../../components/ListEmpty'
-import { TextInput } from '../../../../../../../components/TextInput'
-import { ContainerGrid } from '../../../../../../../components/usefull/ContainerGrid'
-import { HeadingPart } from '../../../../../../../components/usefull/HeadingPart'
-import { InfoDefault } from '../../../../../../../components/usefull/InfoDefault'
-import { ProgressBar } from '../../../../../../../components/usefull/ProgressBar'
-import { ProjectsContext } from '../../../../../../../contexts/projects'
-import { usePreventBack } from '../../../../../../../hooks/usePreventDefaultBack'
-import { useProject } from '../../../../../../../hooks/useProject'
-import { useWindowSize } from '../../../../../../../hooks/useWindow'
-import { ProjectPageLayout } from '../../../../../../../layouts/ProjectPageLayout'
 import { AddScene } from './components/AddScene'
 import { EditScene } from './components/EditScene'
 import { CapituleContainer, CapituleInfos, InputContainer } from './styles'
@@ -76,7 +76,9 @@ export default function CapitulePage() {
   const { id, bookId, capituleId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/books/${bookId}`)
 
-  const { project, useBook, findManyPersons } = useProject(id as string)
+  const { project, useBook, findManyPersons, permission } = useProject(
+    id as string,
+  )
   const { book, bookName, findCapitule, bookWords, bookWrittenWords } = useBook(
     bookId as string,
   )
@@ -132,7 +134,11 @@ export default function CapitulePage() {
         <CapituleContainer>
           <GoBackButton />
 
-          <HeadingPart icon={<Info size={40} />} label="Informações:" />
+          <HeadingPart
+            permission={permission}
+            icon={<Info size={40} />}
+            label="Informações:"
+          />
 
           <CapituleInfos onSubmit={handleSubmit(handleUpdateCapitule)}>
             <InputContainer>
@@ -222,7 +228,11 @@ export default function CapitulePage() {
             />
           </CapituleInfos>
 
-          <HeadingPart label="Progresso" icon={<ArrowClockwise size={40} />} />
+          <HeadingPart
+            label="Progresso"
+            icon={<ArrowClockwise size={40} />}
+            permission={permission}
+          />
           <ContainerGrid darkBackground>
             <InfoDefault
               title={`Referente ao livro: ${bookWrittenWords} palavras escritas de ${bookWords}`}
@@ -240,7 +250,10 @@ export default function CapitulePage() {
           <HeadingPart
             icon={<ProjectorScreen size={40} />}
             label="Cenas"
-            customFunctionToAdd={() => setIsAddingScene(!isAddingScene)}
+            customFunctionOnClickSideButton={() =>
+              setIsAddingScene(!isAddingScene)
+            }
+            permission={permission}
             isToAdd
           />
 

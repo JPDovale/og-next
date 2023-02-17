@@ -1,11 +1,12 @@
+import { MindMap } from '@components/ProjectsComponents/MindMap'
+import { Loading } from '@components/usefull/Loading'
+import { ProjectsContext } from '@contexts/projects'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { Loading } from '../../../../components/Loading'
-import { MindMap } from '../../../../components/MindMap'
-import { ProjectsContext } from '../../../../contexts/projects'
-import { useProject } from '../../../../hooks/useProject'
-import { ProjectPageLayout } from '../../../../layouts/ProjectPageLayout'
+
 import { MindMapPageContainer } from './styles'
 
 export default function MindMapPage() {

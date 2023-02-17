@@ -1,46 +1,31 @@
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { EditorAndCommentsToGenerics } from '@components/PersonsComponents/EditorAndCommentsToGenerics'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
-import { ICreateCommentDTO } from '../../../../../../api/dtos/ICreateNewCommentDTO'
-import {
-  IProjectResponse,
-  ITag,
-} from '../../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndCommentsToGenerics } from '../../../../../../components/EditorAndCommentsToGenerics'
-
-import { ProjectsContext } from '../../../../../../contexts/projects'
-import { UserContext } from '../../../../../../contexts/user'
-import { usePreventBack } from '../../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../../layouts/ProjectPageLayout'
 
 export default function PowerPage() {
-  const { projects, loading, persons, commentInPerson } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, persons, commentInPerson } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId, powerId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
-  const tag = project?.tags.find((tag) => tag.type === 'persons/powers') as ITag
-
-  const refs = tag && tag.refs
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
-  const person = persons.find((person) => person.id === personId)
-
-  const exitePower = person?.powers?.find((power) => power.id === powerId)
-
-  const commentsInThisPower = person?.comments?.filter(
-    (comment) => comment.to === `powers/${powerId}`,
+  const { project, projectName, permission, usePerson } = useProject(
+    id as string,
   )
+  const { person, tags, personName, findPower } = usePerson(personId as string)
+  const { commentsInThisPower, keysPower, power } = findPower(powerId as string)
+
+  const tag = tags.powers
+  const refs = tag && tag.refs
 
   const inError =
-    !loading && ((powerId !== 'new' && !exitePower) || !project || !person)
+    !loading && ((powerId !== 'new' && !power) || !project || !person)
 
   async function CommentInPerson(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -51,19 +36,20 @@ export default function PowerPage() {
   return (
     <>
       <NextSeo
-        title={`${person?.name || 'Carregando...'}-${
+        title={`${personName}-${
           powerId === 'new' ? 'Novo' : 'Editar'
         } poder | Ognare`}
         noindex
       />
+
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={[
           'Personagens',
-          `${person?.name || 'Carregando...'}`,
+          `${personName}`,
           'Poderes',
-          exitePower ? 'Edição' : 'Novo',
+          power ? 'Edição' : 'Novo',
         ]}
         loading={loading}
         inError={inError}
@@ -72,14 +58,14 @@ export default function PowerPage() {
           persons={persons}
           refs={refs}
           isNew={powerId === 'new'}
-          editorTo="poder"
+          editorTo={keysPower.label}
           projectId={project?.id}
           personId={person?.id!}
-          object={exitePower}
+          object={power}
           permission={permission}
           projectCreatedPerUser={project?.createdPerUser}
           onNewComment={CommentInPerson}
-          to={`powers/${powerId}`}
+          to={keysPower.keyPath}
           comments={commentsInThisPower}
         />
       </ProjectPageLayout>
