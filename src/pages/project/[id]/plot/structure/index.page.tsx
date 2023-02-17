@@ -1,13 +1,12 @@
+import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
+import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { ProjectsContext } from '@contexts/projects'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
-import { IUpdatePlotDTO } from '../../../../../api/dtos/IUpdatePlotDTO'
-import { IProjectResponse } from '../../../../../api/responsesTypes/IProjcetResponse'
-import { EditorAndComments } from '../../../../../components/EditorAndComments'
-import { ProjectsContext } from '../../../../../contexts/projects'
-import { UserContext } from '../../../../../contexts/user'
-import { usePreventBack } from '../../../../../hooks/usePreventDefaultBack'
-import { ProjectPageLayout } from '../../../../../layouts/ProjectPageLayout'
 
 interface IStructure {
   key: 'act1' | 'act2' | 'act3'
@@ -23,17 +22,13 @@ export default function StructurePage() {
   ])
   const [message, setMessage] = useState('')
 
-  const { projects, loading, updatePlot } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, updatePlot } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
   usePreventBack(`/project/${id}/plot`)
 
-  const project = projects.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
-
+  const { project, projectName, permission } = useProject(id as string)
   const commentsStructure = project?.plot.comments?.filter(
     (comment) => comment.to === 'structure',
   )
@@ -42,13 +37,9 @@ export default function StructurePage() {
   const act2 = structure.find((i) => i.key === 'act2') as IStructure
   const act3 = structure.find((i) => i.key === 'act3') as IStructure
 
-  const userInProject = project?.users.find((u) => u.id === user?.id)
-
   async function handleUpdateStructure() {
     setMessage('')
-
     if (structure === project.plot.structure) return
-
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
         act1: act1.changed ? act1?.value : project.plot.structure?.act1,
@@ -58,20 +49,15 @@ export default function StructurePage() {
     }
 
     await updatePlot(updatedPlotStructure, project.id as string)
-
     setMessage('Estrutura atualizada com sucesso.')
   }
 
   return (
     <>
-      <NextSeo
-        title={`${
-          project?.name || 'Carregando...'
-        }-Estrutura de 3 atos | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Estrutura de 3 atos | Ognare`} noindex />
+
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Plot', 'Estrutura']}
         loading={loading}
@@ -93,7 +79,7 @@ export default function StructurePage() {
           updateValue={handleUpdateStructure}
           value={structure}
           preValue={project?.plot.structure?.act1}
-          permission={userInProject?.permission}
+          permission={permission}
           comments={commentsStructure}
           projectCreatedPerUser={project?.createdPerUser}
           projectId={project?.id as string}
