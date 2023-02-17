@@ -7,6 +7,7 @@ import { findCoupleUtil } from './utils/findCouple'
 import { findDreamUtil } from './utils/findDreams'
 import { findFearUtil } from './utils/findFear'
 import { findObjectiveUtil } from './utils/findObjective'
+import { findPersonalityUtil } from './utils/findPersonality'
 import { findPowerUtil } from './utils/findPower'
 import { findTraumaUtil } from './utils/findTrauma'
 import { findValueUtil } from './utils/findValue'
@@ -44,7 +45,7 @@ export function usePerson(
   }
 
   function findPersonality(id: string) {
-    return findObjectiveUtil({ person, id })
+    return findPersonalityUtil({ person, id })
   }
 
   function findValue(id: string) {
