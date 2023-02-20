@@ -1,82 +1,193 @@
 import { ICapitule } from '@api/responsesTypes/IBooksResponse'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
-import { Text } from '@og-ui/react'
+import { ProjectsContext } from '@contexts/projects'
+import { Button, Text } from '@og-ui/react'
+import { List, X } from 'phosphor-react'
+import { useContext, useState } from 'react'
+import { z } from 'zod'
+import { HeaderButton } from '../SceneCard/styles'
 
 import {
+  AlternativeFormContainer,
   CapituleCardContainer,
   CapituleComplete,
   CapituleInfos,
   CapituleName,
   CapituleObjective,
+  InputContainer,
+  WrittenWordsInput,
 } from './styles'
 
 interface ICapituleCardProps {
   capitule: ICapitule
+  maxLengthToReorder: number
+  bookId: string
   redirectFunction?: () => void
 }
 
+const writtenWordsInput = z.string().regex(/^([0-9]+)$/, {
+  message: 'Coloque apenas números na idade do personagem.',
+})
+
 export function CapituleCard({
   capitule,
+  maxLengthToReorder,
+  bookId,
   redirectFunction,
 }: ICapituleCardProps) {
+  const [reOrderSelected, setReOrderSelected] = useState(false)
+  const [toSequenceSet, setToSequenceSet] = useState('')
+  const [errorIn, setErrorIn] = useState('')
+
+  const { reorderCapitules } = useContext(ProjectsContext)
+
+  async function handleReorderCapitules() {
+    setErrorIn('')
+
+    try {
+      writtenWordsInput.parse(toSequenceSet)
+    } catch (err) {
+      return setErrorIn('reorder')
+    }
+
+    const number = Number(toSequenceSet)
+
+    if (maxLengthToReorder < number) {
+      return setErrorIn('reorder-max')
+    }
+
+    if (number <= 0) {
+      return setErrorIn('reorder-min')
+    }
+
+    if (toSequenceSet === capitule.sequence) {
+      setToSequenceSet('')
+      setErrorIn('')
+      return setReOrderSelected(false)
+    }
+
+    setErrorIn('')
+    await reorderCapitules({
+      bookId,
+      sequenceFrom: capitule.sequence,
+      sequenceTo: toSequenceSet,
+    })
+
+    setReOrderSelected(false)
+    setToSequenceSet('')
+  }
+
   return (
-    <CapituleCardContainer
-      type="button"
-      onClick={redirectFunction && redirectFunction}
-    >
+    <CapituleCardContainer>
       <CapituleName as="div">
-        {capitule.name}
-        <Text size="sm" family="body" css={{ color: '$base800' }}>
-          Clique para abrir a grade de cenas
-        </Text>
+        <div>
+          {capitule.name}
+          <Text size="sm" family="body" css={{ color: '$base800' }}>
+            Clique para abrir a grade de cenas
+          </Text>
+        </div>
+
+        <HeaderButton
+          title="Reordenar capitulo"
+          onClick={() => {
+            setReOrderSelected(!reOrderSelected)
+          }}
+        >
+          {reOrderSelected ? (
+            <X size={16} weight="duotone" />
+          ) : (
+            <List size={16} weight="duotone" />
+          )}
+        </HeaderButton>
       </CapituleName>
 
-      <CapituleInfos>
-        <ContainerGrid columns={4}>
-          <InfoDefault title="Completo">
-            <CapituleComplete size="sm" complete={capitule.complete}>
-              {capitule.complete ? 'Completo' : 'Incompleto'}
-            </CapituleComplete>
-          </InfoDefault>
+      {!reOrderSelected && (
+        <CapituleInfos
+          type="button"
+          onClick={redirectFunction && redirectFunction}
+        >
+          <ContainerGrid columns={4}>
+            <InfoDefault title="Completo">
+              <CapituleComplete size="sm" complete={capitule.complete}>
+                {capitule.complete ? 'Completo' : 'Incompleto'}
+              </CapituleComplete>
+            </InfoDefault>
 
-          <InfoDefault title="Capítulo">{capitule.sequence}</InfoDefault>
+            <InfoDefault title="Capítulo">{capitule.sequence}</InfoDefault>
 
-          <InfoDefault title="Cenas">{capitule.scenes?.length}</InfoDefault>
+            <InfoDefault title="Cenas">{capitule.scenes?.length}</InfoDefault>
 
-          <InfoDefault title="Palavras">{capitule.words || 0}</InfoDefault>
-        </ContainerGrid>
+            <InfoDefault title="Palavras">{capitule.words || 0}</InfoDefault>
+          </ContainerGrid>
 
-        <ContainerGrid>
-          <InfoDefault title="Objetivo do capítulo">
-            <CapituleObjective family="body">
-              {capitule.objective}
-            </CapituleObjective>
-          </InfoDefault>
+          <ContainerGrid>
+            <InfoDefault title="Objetivo do capítulo">
+              <CapituleObjective family="body">
+                {capitule.objective}
+              </CapituleObjective>
+            </InfoDefault>
 
-          <Text size="xxs" css={{ marginBottom: '-$4' }}>
-            Estrutura de 3 atos:
-          </Text>
+            <Text size="xxs" css={{ marginBottom: '-$4' }}>
+              Estrutura de 3 atos:
+            </Text>
 
-          <InfoDefault title="Ato 1">
-            <CapituleObjective family="body">
-              {capitule.structure?.act1 || 'Não definido'}
-            </CapituleObjective>
-          </InfoDefault>
+            <InfoDefault title="Ato 1">
+              <CapituleObjective family="body">
+                {capitule.structure?.act1 || 'Não definido'}
+              </CapituleObjective>
+            </InfoDefault>
 
-          <InfoDefault title="Ato 2">
-            <CapituleObjective family="body">
-              {capitule.structure?.act2 || 'Não definido'}
-            </CapituleObjective>
-          </InfoDefault>
+            <InfoDefault title="Ato 2">
+              <CapituleObjective family="body">
+                {capitule.structure?.act2 || 'Não definido'}
+              </CapituleObjective>
+            </InfoDefault>
 
-          <InfoDefault title="Ato 3">
-            <CapituleObjective family="body">
-              {capitule.structure?.act3 || 'Não definido'}
-            </CapituleObjective>
-          </InfoDefault>
-        </ContainerGrid>
-      </CapituleInfos>
+            <InfoDefault title="Ato 3">
+              <CapituleObjective family="body">
+                {capitule.structure?.act3 || 'Não definido'}
+              </CapituleObjective>
+            </InfoDefault>
+          </ContainerGrid>
+        </CapituleInfos>
+      )}
+
+      {reOrderSelected && (
+        <AlternativeFormContainer>
+          <div className="form">
+            <InputContainer title="">
+              <Text family="body" size="sm">
+                Reordenar cena de {capitule.sequence} ---&gt;{' '}
+                {toSequenceSet && toSequenceSet}
+                <Text as="span" family="body" size="sm">
+                  {errorIn === 'reorder'
+                    ? 'Coloque apenas números'
+                    : errorIn === 'reorder-max'
+                    ? 'Valor máximo ultrapassado'
+                    : errorIn === 'reorder-min'
+                    ? 'O mínimo é de 1'
+                    : ''}
+                </Text>
+              </Text>
+
+              <WrittenWordsInput
+                variant={errorIn === 'reorder' ? 'denied' : 'default'}
+                onChange={(e) => setToSequenceSet(e.target.value)}
+                placeholder={`Máximo: ${maxLengthToReorder}`}
+                value={toSequenceSet}
+              />
+            </InputContainer>
+
+            <Button
+              align="center"
+              label="Reordenar capitulo"
+              onClick={handleReorderCapitules}
+              disabled={!toSequenceSet}
+            />
+          </div>
+        </AlternativeFormContainer>
+      )}
     </CapituleCardContainer>
   )
 }
