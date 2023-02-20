@@ -8,6 +8,9 @@ import { UserProvider } from '../contexts/user'
 import { globalStyles } from '../styles/global'
 import { DefaultSeo } from 'next-seo'
 
+import LogRocket from 'logrocket'
+LogRocket.init('iaiad2/og')
+
 globalStyles()
 
 export default function App({
