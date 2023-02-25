@@ -21,13 +21,20 @@ import {
   ArrowClockwise,
   Info,
   ProjectorScreen,
+  Trash,
+  X,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { AddScene } from './components/AddScene'
 import { EditScene } from './components/EditScene'
-import { CapituleContainer, CapituleInfos, InputContainer } from './styles'
+import {
+  CapituleContainer,
+  CapituleInfos,
+  DeleteContainer,
+  InputContainer,
+} from './styles'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -59,8 +66,9 @@ type updateCapituleBodyData = z.infer<typeof updateCapituleSchema>
 export default function CapitulePage() {
   const [isAddingScene, setIsAddingScene] = useState(false)
   const [onEditScene, setOnEditScene] = useState('')
+  const [isSelectedDelete, setIsSelectedDelete] = useState(false)
 
-  const { loading, error, setError, updateCapitule } =
+  const { loading, error, setError, updateCapitule, deleteCapitule } =
     useContext(ProjectsContext)
 
   const {
@@ -74,7 +82,8 @@ export default function CapitulePage() {
 
   const router = useRouter()
   const { id, bookId, capituleId } = router.query
-  const { GoBackButton } = usePreventBack(`/project/${id}/books/${bookId}`)
+  const pathGoBack = `/project/${id}/books/${bookId}`
+  const { GoBackButton } = usePreventBack(pathGoBack)
 
   const { project, useBook, findManyPersons, permission } = useProject(
     id as string,
@@ -111,6 +120,15 @@ export default function CapitulePage() {
     reset()
   }
 
+  async function handleDeleteCapitule() {
+    router.push(pathGoBack)
+
+    await deleteCapitule({
+      bookId: book?.id!,
+      capituleId: capitule?.id!,
+    })
+  }
+
   return (
     <>
       <NextSeo title={`${bookName}-${capituleName} | Ognare`} noindex />
@@ -140,92 +158,142 @@ export default function CapitulePage() {
             label="Informações:"
           />
 
-          <CapituleInfos onSubmit={handleSubmit(handleUpdateCapitule)}>
-            <InputContainer>
-              <Text family="body" size="sm">
-                Nome do capítulo
-                <Text as="span" family="body" size="sm">
-                  {errors.name?.message}
-                </Text>
-              </Text>
-
-              <TextInput
-                register={register}
-                label="name"
-                placeholder={capitule?.name || 'Carregando...'}
-              />
-            </InputContainer>
-
-            <InputContainer>
-              <Text family="body" size="sm">
-                Objetivo do capítulo
-                <Text as="span" family="body" size="sm">
-                  {errors.objective?.message}
-                </Text>
-              </Text>
-
-              <Textarea
-                css={{ width: '100%', boxShadow: 'none' }}
-                placeholder={capitule?.objective || 'Carregando...'}
-                {...register('objective')}
-              />
-            </InputContainer>
-
-            <ContainerGrid columns={3}>
-              <InputContainer>
-                <Text family="body" size="sm">
-                  Estrutura do capítulo: Ato 1
-                  <Text as="span" family="body" size="sm">
-                    {errors.act1?.message}
+          <CapituleInfos
+            onDeleteSelected={isSelectedDelete}
+            onSubmit={handleSubmit(handleUpdateCapitule)}
+          >
+            {!isSelectedDelete && (
+              <>
+                <InputContainer>
+                  <Text family="body" size="sm">
+                    Nome do capítulo
+                    <Text as="span" family="body" size="sm">
+                      {errors.name?.message}
+                    </Text>
                   </Text>
-                </Text>
 
-                <Textarea
-                  css={{ width: '100%', boxShadow: 'none' }}
-                  placeholder={capitule?.structure?.act1 || 'Não definido'}
-                  {...register('act1')}
-                />
-              </InputContainer>
-
-              <InputContainer>
-                <Text family="body" size="sm">
-                  Estrutura do capítulo: Ato 2
-                  <Text as="span" family="body" size="sm">
-                    {errors.act2?.message}
+                  <TextInput
+                    register={register}
+                    label="name"
+                    placeholder={capitule?.name || 'Carregando...'}
+                  />
+                </InputContainer>
+                <InputContainer>
+                  <Text family="body" size="sm">
+                    Objetivo do capítulo
+                    <Text as="span" family="body" size="sm">
+                      {errors.objective?.message}
+                    </Text>
                   </Text>
+
+                  <Textarea
+                    css={{ width: '100%', boxShadow: 'none' }}
+                    placeholder={capitule?.objective || 'Carregando...'}
+                    {...register('objective')}
+                  />
+                </InputContainer>
+                <ContainerGrid columns={3}>
+                  <InputContainer>
+                    <Text family="body" size="sm">
+                      Estrutura do capítulo: Ato 1
+                      <Text as="span" family="body" size="sm">
+                        {errors.act1?.message}
+                      </Text>
+                    </Text>
+
+                    <Textarea
+                      css={{ width: '100%', boxShadow: 'none' }}
+                      placeholder={capitule?.structure?.act1 || 'Não definido'}
+                      {...register('act1')}
+                    />
+                  </InputContainer>
+
+                  <InputContainer>
+                    <Text family="body" size="sm">
+                      Estrutura do capítulo: Ato 2
+                      <Text as="span" family="body" size="sm">
+                        {errors.act2?.message}
+                      </Text>
+                    </Text>
+
+                    <Textarea
+                      css={{ width: '100%', boxShadow: 'none' }}
+                      placeholder={capitule?.structure?.act2 || 'Não definido'}
+                      {...register('act2')}
+                    />
+                  </InputContainer>
+
+                  <InputContainer>
+                    <Text family="body" size="sm">
+                      Estrutura do capítulo: Ato 3
+                      <Text as="span" family="body" size="sm">
+                        {errors.act3?.message}
+                      </Text>
+                    </Text>
+
+                    <Textarea
+                      css={{ width: '100%', boxShadow: 'none' }}
+                      placeholder={capitule?.structure?.act3 || 'Não definido'}
+                      {...register('act3')}
+                    />
+                  </InputContainer>
+                </ContainerGrid>
+                <Button
+                  type="submit"
+                  label="Salvar"
+                  align="center"
+                  disabled={isSubmitting || !isDirty}
+                  css={{ padding: '$3', boxShadow: 'none' }}
+                  icon={<ArchiveBox />}
+                />
+                <Button
+                  type="button"
+                  label="Excluir"
+                  align="center"
+                  css={{
+                    padding: '$2',
+                    boxShadow: 'none',
+                    marginTop: '$4',
+                    background: '$fullError',
+                  }}
+                  icon={<Trash />}
+                  onClick={() => setIsSelectedDelete(true)}
+                />
+              </>
+            )}
+
+            {isSelectedDelete && (
+              <DeleteContainer>
+                <Text family="body" size="lg">
+                  Tem certeza que quer excluir esse capitulo? Todas as cenas e o
+                  progresso de palavras serão perdidos e não será possível
+                  desfazer isso depois.
                 </Text>
 
-                <Textarea
-                  css={{ width: '100%', boxShadow: 'none' }}
-                  placeholder={capitule?.structure?.act2 || 'Não definido'}
-                  {...register('act2')}
-                />
-              </InputContainer>
-
-              <InputContainer>
-                <Text family="body" size="sm">
-                  Estrutura do capítulo: Ato 3
-                  <Text as="span" family="body" size="sm">
-                    {errors.act3?.message}
-                  </Text>
-                </Text>
-
-                <Textarea
-                  css={{ width: '100%', boxShadow: 'none' }}
-                  placeholder={capitule?.structure?.act3 || 'Não definido'}
-                  {...register('act3')}
-                />
-              </InputContainer>
-            </ContainerGrid>
-
-            <Button
-              type="submit"
-              label="Salvar"
-              align="center"
-              disabled={isSubmitting || !isDirty}
-              css={{ padding: '$3', boxShadow: 'none' }}
-              icon={<ArchiveBox />}
-            />
+                <div className="buttons">
+                  <Button
+                    type="button"
+                    label="Canelar"
+                    align="center"
+                    css={{ padding: '$3', boxShadow: 'none' }}
+                    icon={<X />}
+                    onClick={() => setIsSelectedDelete(false)}
+                  />
+                  <Button
+                    type="button"
+                    label="Excluir"
+                    align="center"
+                    css={{
+                      padding: '$3',
+                      boxShadow: 'none',
+                      background: '$fullError',
+                    }}
+                    icon={<Trash />}
+                    onClick={handleDeleteCapitule}
+                  />
+                </div>
+              </DeleteContainer>
+            )}
           </CapituleInfos>
 
           <HeadingPart
@@ -273,7 +341,15 @@ export default function CapitulePage() {
               onClose={() => setOnEditScene('')}
             />
           ) : (
-            <ContainerGrid columns={smallWindow ? 1 : 2}>
+            <ContainerGrid
+              columns={
+                capitule?.scenes && capitule.scenes[0]
+                  ? smallWindow
+                    ? 1
+                    : 2
+                  : 1
+              }
+            >
               {capitule?.scenes && capitule.scenes[0] ? (
                 capitule?.scenes?.map((scene) => {
                   const personsInThisScene = findManyPersons(scene.persons)

@@ -1,3 +1,5 @@
+import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
+import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
@@ -143,6 +145,15 @@ export interface IProjectsContext {
     sequenceTo,
   }: IReorderScenesRequest) => Promise<void>
   updateScene: (sceneUpdate: IUpdateSceneRequest) => Promise<boolean>
+  deleteCapitule: ({
+    bookId,
+    capituleId,
+  }: IDeleteCapituleRequest) => Promise<boolean>
+  reorderCapitules: ({
+    bookId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderCapitulesRequest) => Promise<void>
 }
 
 export interface IProjectsContextProps {

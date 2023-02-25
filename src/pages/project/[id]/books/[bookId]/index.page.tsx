@@ -131,6 +131,8 @@ export default function BookPage() {
                 <>
                   {book.capitules.map((capitule) => (
                     <CapituleCard
+                      maxLengthToReorder={book.capitules.length}
+                      bookId={book.id!}
                       key={capitule.id}
                       capitule={capitule}
                       redirectFunction={() =>

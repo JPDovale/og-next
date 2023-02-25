@@ -1,3 +1,5 @@
+import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
+import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
 import { IError } from '../../../@types/errors/IError'
@@ -130,4 +132,11 @@ export const projectsDefaultValues: IProjectsContext = {
     sequenceTo,
   }: IReorderScenesRequest) => {},
   updateScene: async (sceneUpdate: IUpdateSceneRequest) => false,
+  deleteCapitule: async ({ bookId, capituleId }: IDeleteCapituleRequest) =>
+    false,
+  reorderCapitules: async ({
+    bookId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderCapitulesRequest) => {},
 }
