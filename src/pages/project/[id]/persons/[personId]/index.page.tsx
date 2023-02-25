@@ -84,7 +84,7 @@ export default function PersonPage() {
           idObject={person?.id as string}
           onUpdateCalled={handleUpdateImage}
           onRemoveCalled={handleDeleteImage}
-          url={person?.image.url}
+          url={person?.image?.url}
           pathGoBack={`/project/${id}/persons`}
           permission={permission}
           allInfos={personInfos}
