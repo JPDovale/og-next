@@ -73,6 +73,10 @@ import {
   IProjectsContext,
   IProjectsContextProps,
 } from './types/IProjectContext'
+import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
+import { deleteCapituleFunction } from './functions/booksFunctions/deleteCapituleFunction'
+import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
+import { reorderCapitulesFunction } from './functions/booksFunctions/reorderCapitulesFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   projectsDefaultValues,
@@ -473,10 +477,39 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     setLoading(false)
   }
 
+  async function reorderCapitules({
+    bookId,
+    sequenceFrom,
+    sequenceTo,
+  }: IReorderCapitulesRequest) {
+    setLoading(true)
+    await reorderCapitulesFunction({
+      bookId,
+      sequenceFrom,
+      sequenceTo,
+      dispatch,
+    })
+    setLoading(false)
+  }
+
   async function updateScene(sceneUpdate: IUpdateSceneRequest) {
     setLoading(true)
     const response = await updateSceneFunction({
       sceneUpdate,
+      dispatch,
+    })
+    setLoading(false)
+    return response
+  }
+
+  async function deleteCapitule({
+    bookId,
+    capituleId,
+  }: IDeleteCapituleRequest) {
+    setLoading(true)
+    const response = await deleteCapituleFunction({
+      bookId,
+      capituleId,
       dispatch,
     })
     setLoading(false)
@@ -536,6 +569,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteScene,
         reorderScenes,
         updateScene,
+        deleteCapitule,
+        reorderCapitules,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (
