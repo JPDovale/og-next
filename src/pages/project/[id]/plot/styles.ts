@@ -62,3 +62,9 @@ export const LinkOfText = styled(Text, {
   wordBreak: 'break-all',
   marginTop: '$6',
 })
+
+export const Container = styled('div', {
+  overflowY: 'auto',
+  paddingBottom: '$40',
+  maxHeight: '100vh',
+})
