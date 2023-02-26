@@ -9,16 +9,28 @@ import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Bookmarks, Brain } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
-import { BookContainer, Container, SubContainer } from './styles'
+import { AddGenreForm, BookContainer, Container, SubContainer } from './styles'
 
 export default function BookPage() {
-  const { loading, error, setError, updateFrontCover, removeFrontCover } =
-    useContext(ProjectsContext)
+  const [genre, setGenre] = useState('')
+  const [errorIn, setErrorIn] = useState('')
+  const [addingGenre, setAddingGenre] = useState(false)
+
+  const {
+    loading,
+    error,
+    setError,
+    updateFrontCover,
+    removeFrontCover,
+    addGenre,
+    removeGenre,
+  } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, bookId } = router.query
@@ -38,6 +50,20 @@ export default function BookPage() {
     if (file.type !== 'image/jpeg' && file.type !== 'image/png') return
 
     await updateFrontCover({ bookId: bookId as string, file })
+  }
+
+  async function handleAddGenre() {
+    setErrorIn('')
+
+    if (!genre) return setErrorIn('genre')
+
+    await addGenre({ bookId: book?.id!, genre })
+    setGenre('')
+    setAddingGenre(false)
+  }
+
+  async function handleRemoveGenre(genre: string) {
+    await removeGenre({ bookId: book?.id!, genre })
   }
 
   return (
@@ -91,28 +117,45 @@ export default function BookPage() {
             <HeadingPart
               icon={<Brain size={40} />}
               label="Gêneros"
-              customFunctionOnClickSideButton={() => {}}
+              customFunctionOnClickSideButton={() => {
+                setAddingGenre(!addingGenre)
+              }}
               permission={permission}
-              // isToAdd
+              isToAdd
             />
 
-            <SubContainer columns={smallWindow ? 2 : 6}>
-              {book?.generes && (
-                <>
-                  {book.generes.map((genere, i) => (
-                    <BookGenere
-                      key={genere.name}
-                      genere={genere.name}
-                      isNotRemovable={
-                        true
-                        // book.generes.length === 1
-                      }
-                      onRemove={() => {}}
-                    />
-                  ))}
-                </>
-              )}
-            </SubContainer>
+            {addingGenre && (
+              <AddGenreForm>
+                <Text>Adicionar gênero</Text>
+                <TextInput
+                  variant={errorIn === 'genre' ? 'denied' : 'default'}
+                  onChange={(e) => setGenre(e.target.value)}
+                  value={genre}
+                />
+                <Button
+                  label="Adicionar"
+                  align="center"
+                  onClick={handleAddGenre}
+                />
+              </AddGenreForm>
+            )}
+
+            {!addingGenre && (
+              <SubContainer columns={smallWindow ? 2 : 6}>
+                {book?.generes && (
+                  <>
+                    {book.generes.map((genere, i) => (
+                      <BookGenere
+                        key={genere.name}
+                        genere={genere.name}
+                        isNotRemovable={book.generes.length === 1}
+                        onRemove={handleRemoveGenre}
+                      />
+                    ))}
+                  </>
+                )}
+              </SubContainer>
+            )}
           </Container>
 
           <Container>

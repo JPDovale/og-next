@@ -1,9 +1,11 @@
 import { api } from '..'
+import { IAddGenreRequest } from './types/IAddGenreRequest'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
 import { ICreateCapituleRequest } from './types/ICreateCapituleRequest'
 import { ICreateSceneRequest } from './types/ICreateSceneRequest'
 import { IDeleteCapituleRequest } from './types/IDeleteCapituleRequest'
 import { IDeleteSceneRequest } from './types/IDeleteSceneRequest'
+import { IRemoveGenreRequest } from './types/IRemoveGenreRequest'
 import { IReorderCapitulesRequest } from './types/IReorderCapitulesRequest'
 import { IReorderScenesRequest } from './types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from './types/ISetSceneToCompleteRequest'
@@ -33,6 +35,15 @@ export async function createCapituleRequest(capitule: ICreateCapituleRequest) {
 export async function createSceneRequest(scene: ICreateSceneRequest) {
   try {
     const response = await api.post('/books/capitules/scenes', scene)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function addGenreRequest(genreRequest: IAddGenreRequest) {
+  try {
+    const response = await api.post('/books/genres', genreRequest)
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -82,6 +93,15 @@ export async function reorderCapitulesRequest(body: IReorderCapitulesRequest) {
 export async function updateSceneRequest(body: IUpdateSceneRequest) {
   try {
     const response = await api.put('/books/capitules/scenes', body)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function removeGenreRequest(genreRequest: IRemoveGenreRequest) {
+  try {
+    const response = await api.put('/books/genres', genreRequest)
     return response.data
   } catch (err: any) {
     return err.response.data

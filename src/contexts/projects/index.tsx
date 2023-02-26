@@ -59,7 +59,6 @@ import { unshareProjectFunction } from './functions/projectFunctions/unshareProj
 import { updateImageProjectFunction } from './functions/projectFunctions/updateImageProjectFunction'
 import { updateNameProjectFunction } from './functions/projectFunctions/updateNameProjectFunction'
 import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunction'
-import { projectsDefaultValues } from './initialValues'
 import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
 import { ICreateBook } from './types/interfaceFunctions/ICreateBook'
@@ -77,13 +76,17 @@ import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapitule
 import { deleteCapituleFunction } from './functions/booksFunctions/deleteCapituleFunction'
 import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { reorderCapitulesFunction } from './functions/booksFunctions/reorderCapitulesFunction'
+import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
+import { addGenreFunction } from './functions/booksFunctions/addGenreFunction'
+import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
+import { removeGenreFunction } from './functions/booksFunctions/removeGenreFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
-  projectsDefaultValues,
+  {} as IProjectsContext,
 )
 
 export function ProjectsProvider({ children }: IProjectsContextProps) {
-  const [loading, setLoading] = useState(projectsDefaultValues.loading)
+  const [loading, setLoading] = useState(true)
 
   const [projectState, dispatch] = useReducer(projectsReducer, {
     projects: [],
@@ -516,6 +519,18 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return response
   }
 
+  async function addGenre(genreRequest: IAddGenreRequest) {
+    setLoading(true)
+    await addGenreFunction({ genreRequest, dispatch })
+    setLoading(false)
+  }
+
+  async function removeGenre(genreRequest: IRemoveGenreRequest) {
+    setLoading(true)
+    await removeGenreFunction({ genreRequest, dispatch })
+    setLoading(false)
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -571,6 +586,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updateScene,
         deleteCapitule,
         reorderCapitules,
+        addGenre,
+        removeGenre,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (
