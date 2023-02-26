@@ -38,3 +38,20 @@ export const SubContainer = styled('div', {
     },
   },
 })
+
+export const AddGenreForm = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '$6',
+
+  padding: '$6',
+
+  borderRadius: '$md',
+  background: '$gray900',
+
+  'div, button': {
+    padding: '$3',
+    width: '100%',
+  },
+})
