@@ -3,17 +3,26 @@ import { ReactNode } from 'react'
 
 interface IContainerGrid {
   columns?: 1 | 2 | 3 | 4
+  padding?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   children?: ReactNode
   darkBackground?: boolean
+  alignCenter?: boolean
 }
 
 export function ContainerGrid({
   columns = 1,
+  padding = 2,
   children,
   darkBackground = false,
+  alignCenter = false,
 }: IContainerGrid) {
   return (
-    <ContainerGridContainer columns={columns} darkBackground={darkBackground}>
+    <ContainerGridContainer
+      columns={columns}
+      darkBackground={darkBackground}
+      padding={padding}
+      alignCenter={alignCenter}
+    >
       {children}
     </ContainerGridContainer>
   )
@@ -27,6 +36,13 @@ const ContainerGridContainer = styled('div', {
   gap: '$4',
 
   variants: {
+    alignCenter: {
+      true: {
+        gridTemplateColumns: '1fr',
+        justifyContent: 'center',
+      },
+      false: {},
+    },
     columns: {
       1: {
         gridTemplateColumns: '1fr',
@@ -56,6 +72,42 @@ const ContainerGridContainer = styled('div', {
         borderRadius: '$md',
       },
       false: {},
+    },
+
+    padding: {
+      0: {
+        padding: 0,
+      },
+      1: {
+        padding: '$1',
+      },
+      2: {
+        padding: '$2',
+      },
+      3: {
+        padding: '$3',
+      },
+      4: {
+        padding: '$4',
+      },
+      5: {
+        padding: '$5',
+      },
+      6: {
+        padding: '$6',
+      },
+      7: {
+        padding: '$7',
+      },
+      8: {
+        padding: '$8',
+      },
+      9: {
+        padding: '$9',
+      },
+      10: {
+        padding: '$10',
+      },
     },
   },
 })

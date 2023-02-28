@@ -9,6 +9,7 @@ interface IAvatarProps {
   error?: boolean
   whitShadow?: boolean
   isClickable?: boolean
+  selfCenter?: boolean
 }
 
 export function AvatarWeb({
@@ -18,6 +19,7 @@ export function AvatarWeb({
   error = false,
   whitShadow = false,
   isClickable = false,
+  selfCenter = false,
 }: IAvatarProps) {
   return (
     <AvatarRoot
@@ -26,6 +28,7 @@ export function AvatarWeb({
       error={error}
       whitShadow={whitShadow}
       isClickable={isClickable}
+      selfCenter={selfCenter}
     >
       <AvatarImage
         size={size}
@@ -64,6 +67,12 @@ const AvatarRoot = styled(Avatar.Root, {
   },
 
   variants: {
+    selfCenter: {
+      true: {
+        justifySelf: 'center',
+      },
+      false: {},
+    },
     size: {
       full: {
         height: '100%',

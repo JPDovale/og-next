@@ -9,6 +9,7 @@ import { IRemoveGenreRequest } from './types/IRemoveGenreRequest'
 import { IReorderCapitulesRequest } from './types/IReorderCapitulesRequest'
 import { IReorderScenesRequest } from './types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from './types/ISetSceneToCompleteRequest'
+import { IUpdateBookRequest } from './types/IUpdateBookRequest'
 import { IUpdateCapituleRequest } from './types/IUpdateCapituleRequest'
 import { IUpdateFrontCoverRequest } from './types/IUpdateFrontCoverRequest'
 import { IUpdateSceneRequest } from './types/IUpdateSceneRequest'
@@ -108,6 +109,15 @@ export async function removeGenreRequest(genreRequest: IRemoveGenreRequest) {
   }
 }
 
+export async function updateBookRequest(bookToUpdate: IUpdateBookRequest) {
+  try {
+    const response = await api.put('/books', bookToUpdate)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 // PATCH
 export async function updateFrontCoverRequest({
   bookId,
@@ -163,6 +173,15 @@ export async function deleteCapituleRequest({
     const response = await api.delete(
       `/books/${bookId}/capitules/${capituleId}/`,
     )
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function deleteBookRequest(bookId: string) {
+  try {
+    const response = await api.delete(`/books/${bookId}`)
     return response.data
   } catch (err: any) {
     return err.response.data

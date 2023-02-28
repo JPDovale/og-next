@@ -2,6 +2,7 @@ import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
 import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
 import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
 import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
+import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
@@ -160,6 +161,8 @@ export interface IProjectsContext {
   addGenre: (genreRequest: IAddGenreRequest) => Promise<void>
 
   removeGenre: (genreRequest: IRemoveGenreRequest) => Promise<void>
+  updateBook: (bookInfosUpdated: IUpdateBookRequest) => Promise<void>
+  deleteBook: (bookId: string) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {
