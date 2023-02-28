@@ -80,6 +80,9 @@ import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
 import { addGenreFunction } from './functions/booksFunctions/addGenreFunction'
 import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
 import { removeGenreFunction } from './functions/booksFunctions/removeGenreFunction'
+import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
+import { updateBookFunction } from './functions/booksFunctions/updateBookFunction'
+import { deleteBookFunction } from './functions/booksFunctions/deleteBookFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   {} as IProjectsContext,
@@ -531,6 +534,20 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     setLoading(false)
   }
 
+  async function updateBook(bookInfosUpdated: IUpdateBookRequest) {
+    setLoading(true)
+    await updateBookFunction({ bookInfosUpdated, dispatch })
+    setLoading(false)
+  }
+
+  async function deleteBook(bookId: string) {
+    setLoading(true)
+    const isDeleted = await deleteBookFunction({ bookId, dispatch })
+    setLoading(false)
+
+    return isDeleted
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -588,6 +605,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         reorderCapitules,
         addGenre,
         removeGenre,
+        updateBook,
+        deleteBook,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (
