@@ -5,12 +5,14 @@ interface IInfoDefaultProps {
   children?: ReactNode
   title: string
   size?: 'md' | 'lg' | 'sm'
+  as?: 'div' | 'span' | 'label'
 }
 
 export function InfoDefault({
   children,
   title,
   size = 'md',
+  as = 'div',
 }: IInfoDefaultProps) {
   return (
     <InfoContainer>
@@ -18,7 +20,7 @@ export function InfoDefault({
         {title}
       </Text>
 
-      <Text as="div" size={size}>
+      <Text as={as} size={size}>
         {children}
       </Text>
     </InfoContainer>

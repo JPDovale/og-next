@@ -12,8 +12,9 @@ import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { Bookmarks, Brain } from 'phosphor-react'
+import { Bookmarks, Brain, Gear } from 'phosphor-react'
 import { useContext, useState } from 'react'
+import { UpdateBookForm } from './components/UpdateBookForm'
 
 import { AddGenreForm, BookContainer, Container, SubContainer } from './styles'
 
@@ -39,7 +40,9 @@ export default function BookPage() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const { project, useBook, permission } = useProject(id as string)
+  const { project, useBook, permission, usersWithAccess } = useProject(
+    id as string,
+  )
   const { book, bookName, bookInfos, bookAuthors } = useBook(bookId as string)
 
   async function handleUpdateFrontCover(files: FileList | null) {
@@ -193,6 +196,16 @@ export default function BookPage() {
                 />
               )}
             </SubContainer>
+          </Container>
+
+          <Container>
+            <HeadingPart
+              label="Configurações"
+              icon={<Gear size={40} />}
+              permission={permission}
+            />
+
+            <UpdateBookForm book={book} usersInProject={usersWithAccess} />
           </Container>
         </BookContainer>
       </ProjectPageLayout>

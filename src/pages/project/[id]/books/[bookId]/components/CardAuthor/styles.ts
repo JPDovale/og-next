@@ -1,6 +1,6 @@
 import { Button, styled } from '@og-ui/react'
 
-export const CardUserWithAccessContainer = styled('div', {
+export const CardAuthorContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -26,6 +26,7 @@ export const CardUserWithAccessContainer = styled('div', {
 })
 
 export const UnshareButton = styled(Button, {
+  zIndex: '1',
   position: 'absolute',
 
   left: '$1',
@@ -43,9 +44,11 @@ export const UnshareConfirm = styled('div', {
   flexDirection: 'column',
   gap: '$10',
 
-  width: '100%',
+  width: '90%',
   padding: '$3',
   top: '50%',
   left: '50%',
+  borderRadius: '$md',
   transform: 'translate(-50%, -50%)',
+  background: '$gray900',
 })
