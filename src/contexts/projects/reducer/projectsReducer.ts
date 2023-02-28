@@ -152,6 +152,16 @@ export function projectsReducer(state: IProjectState, action: any) {
       })
     }
 
+    case ProjectsActionsType.DeleteBook: {
+      return produce(state, (draft) => {
+        const filteredBooks = state.books.filter(
+          (book) => book.id !== action.payload.bookId,
+        )
+
+        draft.books = filteredBooks
+      })
+    }
+
     default:
       return state
   }
