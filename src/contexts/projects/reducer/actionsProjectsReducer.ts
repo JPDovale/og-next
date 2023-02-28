@@ -16,6 +16,7 @@ export enum ProjectsActionsType {
   RemoveProject = 'removeProject',
   AddBook = 'addBook',
   UpdateBook = 'updateBook',
+  DeleteBook = 'deleteBook',
 
   SetPersons = 'setPersons',
 
@@ -151,6 +152,15 @@ export function updateBookAction(book: IBooksResponse) {
     type: ProjectsActionsType.UpdateBook,
     payload: {
       book,
+    },
+  }
+}
+
+export function deleteBookAction(bookId: string) {
+  return {
+    type: ProjectsActionsType.DeleteBook,
+    payload: {
+      bookId,
     },
   }
 }

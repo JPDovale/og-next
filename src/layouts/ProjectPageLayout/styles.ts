@@ -4,7 +4,7 @@ export const ProjectContainer = styled('div', {
   height: '100%',
   paddingBottom: '$40',
 
-  overflowY: 'scroll',
+  overflowY: 'auto',
 
   variants: {
     isScrolling: {
@@ -12,14 +12,14 @@ export const ProjectContainer = styled('div', {
         overflowY: 'hidden',
 
         '@media screen and (max-width: 768px)': {
-          overflowY: 'scroll',
+          overflowY: 'auto',
         },
       },
       true: {
-        overflowY: 'scroll',
+        overflowY: 'auto',
 
         '@media screen and (max-width: 768px)': {
-          overflowY: 'scroll',
+          overflowY: 'auto',
         },
       },
     },
