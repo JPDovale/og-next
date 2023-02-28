@@ -59,7 +59,7 @@ export function NotificationsPopup({
             const [pre, comment] = notification.content.split(':')
             const commentedIn =
               reverbKeys[`${pre.split('|')[1]}` as IReverbKeys]
-            const prefix = `${pre.split('|')[0]} ${commentedIn}`
+            const prefix = `${pre.split('|')[0]} ${commentedIn || ''}`
 
             return (
               <Notification

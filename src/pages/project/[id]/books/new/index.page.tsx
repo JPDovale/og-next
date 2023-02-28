@@ -36,7 +36,9 @@ const newBookSchema = z.object({
   literaryGenere: z
     .string()
     .min(1, { message: 'O campo é obrigatório.' })
-    .max(200, { message: 'O titulo não pode ter mais de 100 caracteres.' }),
+    .max(200, {
+      message: 'O gênero literário não pode ter mais de 100 caracteres.',
+    }),
   words: z
     .string()
     .max(20, { message: 'Valor excede o limite aceito' })
