@@ -3,7 +3,7 @@ import { Box, styled } from '@og-ui/react'
 export const PlotPartContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
-  background: '$base600',
+  background: '$gray900',
   gap: '$4',
   padding: '$4',
 
@@ -16,13 +16,13 @@ export const PlotPartContainer = styled(Box, {
   cursor: 'pointer',
   overflow: 'hidden',
   transition: 'ease-in 250ms',
-  boxShadow: '$onActive',
+  boxShadow: 'none',
 
   header: {
     borderBottom: '1px solid $base900',
     width: '100%',
     textAlign: 'start',
-    color: '$black',
+    color: '$white',
     fontWeight: 'bold',
   },
 
@@ -41,13 +41,13 @@ export const PlotPartContainer = styled(Box, {
     width: '100%',
     height: '100%',
     flexDirection: 'column',
-    color: '$black',
+    color: '$white',
 
     span: {
       textAlign: 'center',
       fontSize: '12px',
-      color: '$black',
       marginTop: '8px',
+      color: '$black',
     },
   },
 
@@ -81,7 +81,7 @@ export const PlotPartContainer = styled(Box, {
       },
       false: {
         '&:hover': {
-          boxShadow: '$inFocus',
+          boxShadow: '$none',
         },
 
         '&:focus  ': {
@@ -94,12 +94,12 @@ export const PlotPartContainer = styled(Box, {
       false: {
         width: '100%',
         maxHeight: 'none',
-        minHeight: 580,
+        minHeight: 280,
         padding: 0,
 
         background: '$gray900',
         borderRadius: '$sm',
-        boxShadow: '$default',
+        boxShadow: 'none',
 
         '&:hover': {
           boxShadow: '$default',
@@ -149,5 +149,11 @@ export const Comments = styled('div', {
 
   header: {
     borderTop: '1px solid $base900',
+  },
+})
+
+export const ElementContent = styled('div', {
+  p: {
+    display: 'block',
   },
 })

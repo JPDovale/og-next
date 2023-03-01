@@ -15,6 +15,7 @@
     "@og-ui/tokens": "^1.1.0",
     "@radix-ui/react-radio-group": "^1.1.0",
     "@sentry/nextjs": "^7.33.0",
+    "@tinymce/tinymce-react": "^4.3.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",

@@ -4,11 +4,8 @@ import { CommentsOnPage } from '../CommentsOnPage'
 import { EditorContainer } from './styles'
 
 interface IEditorAndCommentsProps {
-  message: string
   to: string
-  label: string
   updateValue: () => void
-  value: any
   setValue: (value: any) => void
   preValue: any
   permission: 'edit' | 'view' | 'comment' | undefined
@@ -16,16 +13,11 @@ interface IEditorAndCommentsProps {
   personId?: string
   projectCreatedPerUser: string
   comments?: IComment[]
-  toMany?: any[]
-  preValueToMany?: any[]
 }
 
 export function EditorAndComments({
-  message,
   to,
-  label,
   updateValue,
-  value,
   setValue,
   preValue,
   permission,
@@ -33,21 +25,16 @@ export function EditorAndComments({
   personId = '',
   projectCreatedPerUser,
   comments = [],
-  toMany,
-  preValueToMany,
 }: IEditorAndCommentsProps) {
   return (
     <EditorContainer>
       <Editor
-        toMany={toMany}
-        preValueToMany={preValueToMany}
-        message={message}
-        to={label}
-        updateValue={updateValue}
-        setValue={setValue}
-        value={value}
-        preValue={preValue}
+        projectId={projectId}
+        to={to}
         permission={permission}
+        handleUpdate={updateValue}
+        preValue={preValue}
+        setValue={setValue}
       />
       <CommentsOnPage
         personId={personId}

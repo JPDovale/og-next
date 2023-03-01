@@ -1,4 +1,19 @@
-export const reverbKeys = {
+interface IReverbKeysR {
+  onePhrase: string
+  premise: string
+  storyteller: string
+  literaryGenere: string
+  subgenre: string
+  ambient: string
+  countTime: string
+  historicalFact: string
+  details: string
+  summary: string
+  structure: string
+  [x: string]: any
+}
+
+export const reverbKeys: IReverbKeysR = {
   onePhrase: 'Ideia central',
   premise: 'Premissa',
   storyteller: 'Narrador',
