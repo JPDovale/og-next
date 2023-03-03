@@ -1,11 +1,17 @@
 import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { InputRadio } from '@components/usefull/InputRadio'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 import { Loading } from '@components/usefull/Loading'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { UserContext } from '@contexts/user'
-import { Button, IBoxProps, Text, TextInput } from '@og-ui/react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import {
@@ -16,13 +22,13 @@ import {
   XCircle,
 } from 'phosphor-react'
 import { FormEvent, useContext, useState } from 'react'
+import { ShareProjectButton } from './components/ShareProjectButton'
 import {
   CardProjectContainer,
   HeaderShareForm,
   InfosContainer,
   Preview,
   ProjectInfos,
-  ShareButton,
   ShareForm,
   SharePopUp,
   SharePopUpContainer,
@@ -31,7 +37,7 @@ import {
   UsersWhitAccess,
 } from './styles'
 
-type ICardProject = IBoxProps & {
+interface ICardProjectProps {
   project: IProjectResponse
   isList?: boolean | 'example'
   isSharable?: boolean
@@ -41,8 +47,7 @@ export function CardProject({
   project,
   isList = false,
   isSharable = false,
-  ...rest
-}: ICardProject) {
+}: ICardProjectProps) {
   const { shareProject, users, error, setError } = useContext(ProjectsContext)
   const { user, success, setSuccess } = useContext(UserContext)
 
@@ -118,7 +123,6 @@ export function CardProject({
           onClick={() => {
             router.push(`/project/${project.id}`)
           }}
-          {...rest}
         >
           {isList === false && (
             <div className="project-image">
@@ -237,17 +241,20 @@ export function CardProject({
           </ProjectInfos>
         </Preview>
         {isList !== 'example' && isSharable && (
-          <ShareButton
+          <ShareProjectButton
             title="Compartilhar projeto"
             disabled={project.users.length >= 5}
             isList={isList}
-            icon={<Share />}
             wid="hug"
             onClick={() => {
               setError(undefined)
               setOnShareProject(`${project.id}`)
             }}
-          />
+          >
+            <ButtonIcon>
+              <Share />
+            </ButtonIcon>
+          </ShareProjectButton>
         )}
       </CardProjectContainer>
       {onShareProject === project.id && (
@@ -287,14 +294,20 @@ export function CardProject({
                   Informe o email do usuário que quer compartilhar o projeto
                 </Text>
 
-                <TextInput
-                  icon={<Envelope />}
-                  placeholder="jonas@ognare.com"
-                  type="email"
-                  onChange={(e) => setShareEmail(e.target.value)}
-                  value={shareEmail}
+                <TextInputRoot
                   variant={errorIn === 'email' ? 'denied' : 'default'}
-                />
+                >
+                  <TextInputIcon>
+                    <Envelope />
+                  </TextInputIcon>
+
+                  <TextInputInput
+                    placeholder="jonas@ognare.com"
+                    type="email"
+                    onChange={(e) => setShareEmail(e.target.value)}
+                    value={shareEmail}
+                  />
+                </TextInputRoot>
 
                 <Text size="xs">
                   Esse usuário poderá{' '}
@@ -317,13 +330,13 @@ export function CardProject({
                   withColorInBackground
                 />
 
-                <Button
-                  type="submit"
-                  label="Compartilhar"
-                  icon={<Share />}
-                  wid="middle"
-                  align="center"
-                />
+                <ButtonRoot type="submit" wid="middle" align="center">
+                  <ButtonIcon>
+                    <Share />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Compartilhar</ButtonLabel>
+                </ButtonRoot>
               </ShareForm>
             )}
           </SharePopUp>

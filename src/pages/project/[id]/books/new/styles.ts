@@ -1,5 +1,5 @@
-import { Button, styled } from '@og-ui/react'
-
+import { ButtonRoot } from '@components/usefull/Button'
+import { styled } from '@styles/index'
 export const NewBookContainer = styled('div', {
   padding: '$4',
   height: '90%',
@@ -58,7 +58,7 @@ export const InputContainer = styled('label', {
   },
 })
 
-export const AddButton = styled(Button, {
+export const AddButton = styled(ButtonRoot, {
   padding: '$2 $20',
   margin: 'auto',
   marginTop: '$4',

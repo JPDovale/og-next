@@ -20,6 +20,7 @@ const nextConfig = {
     config.resolve.alias['@layouts'] = path.join(__dirname, 'src/layouts')
     config.resolve.alias['@pages'] = path.join(__dirname, 'src/pages')
     config.resolve.alias['@services'] = path.join(__dirname, 'src/services')
+    config.resolve.alias['@styles'] = path.join(__dirname, 'src/styles')
 
     return config
   },

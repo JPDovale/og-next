@@ -14,7 +14,7 @@ import Back from '../../assets/back.svg'
 import LogoToDown from '../../assets/logos/logoToDown.svg'
 import Logo from '../../assets/logos/logo.svg'
 import Image from 'next/image'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
 import {
   At,
@@ -35,8 +35,13 @@ import { NextSeo } from 'next-seo'
 import { UserContext } from '@contexts/user'
 import { Loading } from '@components/usefull/Loading'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
 import { ICreateUserDTO } from '@api/dtos/ICreateUserDTO'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 const registerFormSchema = z.object({
   name: z
@@ -124,7 +129,7 @@ export default function RegisterPage() {
           </Text>
 
           {/* <InputContainer>
-            <Button
+            <ButtonRoot
               type="button"
               label="Fazer cadastro com o google"
               icon={<GoogleLogo weight="bold" />}
@@ -144,13 +149,18 @@ export default function RegisterPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="name"
-              register={register}
+            <TextInputRoot
               variant={formState.errors.name?.message ? 'denied' : 'default'}
-              icon={<UserCircle />}
-              placeholder="Ana Maria da Silva"
-            />
+            >
+              <TextInputIcon>
+                <UserCircle />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="Ana Maria da Silva"
+                {...register('name')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -161,15 +171,17 @@ export default function RegisterPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="username"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.username?.message ? 'denied' : 'default'
               }
-              icon={<At />}
-              placeholder="Aninha"
-            />
+            >
+              <TextInputIcon>
+                <At />
+              </TextInputIcon>
+
+              <TextInputInput placeholder="Aninha" {...register('username')} />
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -180,13 +192,18 @@ export default function RegisterPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="email"
-              register={register}
+            <TextInputRoot
               variant={formState.errors.email?.message ? 'denied' : 'default'}
-              icon={<Envelope />}
-              placeholder="exemplo@exemplo.com"
-            />
+            >
+              <TextInputIcon>
+                <Envelope />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="exemplo@exemplo.com"
+                {...register('email')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -197,16 +214,21 @@ export default function RegisterPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="password"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
               isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="***************"
+                {...register('password')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -217,24 +239,30 @@ export default function RegisterPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="confirmPassword"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.confirmPassword?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
               isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="***************"
+                {...register('confirmPassword')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Cadastrar"
             align="center"
             disabled={formState.isSubmitting}
-          />
+          >
+            <ButtonLabel>Cadastrar</ButtonLabel>
+          </ButtonRoot>
           <Text
             size="sm"
             family="body"

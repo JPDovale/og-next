@@ -1,11 +1,11 @@
 import { NextSeo } from 'next-seo'
 import { HomeContent, HomePageContainer, SideInfo } from './styles'
 
-import { Heading, Text } from '@og-ui/react'
-
 import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
 import Image from 'next/image'
 import { Header } from '@components/Header'
+import { Text } from '@components/usefull/Text'
+import { Heading } from '@components/usefull/Heading'
 
 export default function HomePage() {
   return (

@@ -1,6 +1,6 @@
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { UserContext } from '@contexts/user'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import {
@@ -11,6 +11,7 @@ import {
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { AvatarWeb } from '../Avatar'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '../Button'
 import { ContainerGrid } from '../ContainerGrid'
 import { InfoDefault } from '../InfoDefault'
 import { Loading } from '../Loading'
@@ -134,26 +135,33 @@ export function HeaderImageAndInfos({
             />
           </Input>
           {url && (
-            <Button
+            <ButtonRoot
               type="button"
-              icon={<Trash />}
               wid="middle"
               align="center"
-              label="REMOVER"
               onClick={onRemove}
-            />
+            >
+              <ButtonIcon>
+                <Trash />
+              </ButtonIcon>
+
+              <ButtonLabel>REMOVER</ButtonLabel>
+            </ButtonRoot>
           )}
         </EditImgForm>
       )}
 
       <InfosContainer typeImage={typeImage}>
-        <Button
+        <ButtonRoot
           type="button"
           className="goBack"
           wid="hug"
-          icon={<CaretCircleDoubleLeft weight="bold" />}
           onClick={() => router.push(pathGoBack)}
-        />
+        >
+          <ButtonIcon>
+            <CaretCircleDoubleLeft weight="bold" />
+          </ButtonIcon>
+        </ButtonRoot>
 
         {allInfos.map((infos) => (
           <ContainerGrid key={JSON.stringify(infos)} columns={infos.columns}>

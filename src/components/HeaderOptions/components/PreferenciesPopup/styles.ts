@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const PreferenciesPopupContainer = styled('div', {
   position: 'fixed',
   zIndex: 1,

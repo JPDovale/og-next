@@ -1,9 +1,10 @@
-import { Text, styled } from '@og-ui/react'
+import { styled } from '@styles/index'
+import { Text } from '../Text'
 
 export const AvataresContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr ',
-  gap: '$4',
+  gap: '$2',
   width: '100%',
   marginTop: '$4',
 
@@ -75,13 +76,6 @@ export const PersonAvatar = styled('div', {
   gap: '$2',
   transition: 'ease-in-out 250ms',
 
-  button: {
-    padding: '$1',
-    boxShadow: 'none',
-    background: '$purple400',
-    borderRadius: '$md',
-  },
-
   variants: {
     isClickable: {
       true: {
@@ -101,12 +95,11 @@ export const Header = styled(Text, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  height: '100%',
+  width: '100%',
 
   p: {
     color: '$base800',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '$2',
   },
 })
 
@@ -117,6 +110,12 @@ export const Buttons = styled('div', {
 
   width: '100%',
   paddingBottom: '$4',
+
+  button: {
+    padding: '$1',
+    background: '$purple400',
+    borderRadius: '$md',
+  },
 })
 
 export const ListEmpty = styled('div', {

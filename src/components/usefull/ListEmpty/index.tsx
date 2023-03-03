@@ -1,6 +1,7 @@
-import { Text, styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { ReactNode } from 'react'
 import { Loading } from '../Loading'
+import { Text } from '../Text'
 
 const ListEmptyContainer = styled('div', {
   display: 'flex',

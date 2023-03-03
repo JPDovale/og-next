@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
 import { Envelope, LockKey } from 'phosphor-react'
 import {
@@ -25,7 +25,12 @@ import { UserContext } from '../../contexts/user'
 import { NextSeo } from 'next-seo'
 import { Loading } from '@components/usefull/Loading'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -89,13 +94,18 @@ export default function LoginPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="email"
-              register={register}
+            <TextInputRoot
               variant={formState.errors.email?.message ? 'denied' : 'default'}
-              icon={<Envelope />}
-              placeholder="exemplo@exemplo.com"
-            />
+            >
+              <TextInputIcon>
+                <Envelope />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="exemplo@exemplo.com"
+                {...register('email')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -106,24 +116,30 @@ export default function LoginPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="password"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
               isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="***************"
+                {...register('password')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Entrar"
             align="center"
             disabled={formState.isSubmitting}
-          />
+          >
+            <ButtonLabel>Entrar</ButtonLabel>
+          </ButtonRoot>
 
           <Links>
             <Link href="/register">

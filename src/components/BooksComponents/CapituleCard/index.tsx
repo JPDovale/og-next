@@ -1,10 +1,12 @@
 import { ICapitule } from '@api/responsesTypes/IBooksResponse'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
+import { TextInputInput } from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
-import { Button, Text } from '@og-ui/react'
 import { List, X } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { ChangeEvent, useContext, useState } from 'react'
 import { z } from 'zod'
 import { HeaderButton } from '../SceneCard/styles'
 
@@ -173,18 +175,24 @@ export function CapituleCard({
 
               <WrittenWordsInput
                 variant={errorIn === 'reorder' ? 'denied' : 'default'}
-                onChange={(e) => setToSequenceSet(e.target.value)}
-                placeholder={`Máximo: ${maxLengthToReorder}`}
-                value={toSequenceSet}
-              />
+              >
+                <TextInputInput
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setToSequenceSet(e.target.value)
+                  }
+                  placeholder={`Máximo: ${maxLengthToReorder}`}
+                  value={toSequenceSet}
+                />
+              </WrittenWordsInput>
             </InputContainer>
 
-            <Button
+            <ButtonRoot
               align="center"
-              label="Reordenar capitulo"
               onClick={handleReorderCapitules}
               disabled={!toSequenceSet}
-            />
+            >
+              <ButtonLabel>Reordenar capitulo</ButtonLabel>
+            </ButtonRoot>
           </div>
         </AlternativeFormContainer>
       )}

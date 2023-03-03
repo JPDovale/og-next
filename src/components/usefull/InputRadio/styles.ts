@@ -1,5 +1,6 @@
-import { Text, styled } from '@og-ui/react'
 import * as RadioGroup from '@radix-ui/react-radio-group'
+import { styled } from '@styles/index'
+import { Text } from '../Text'
 
 export const RadioRoot = styled(RadioGroup.Root, {
   display: 'flex',

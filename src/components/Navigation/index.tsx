@@ -1,7 +1,6 @@
 import { ButtonsContainer, NavigationBarContainer } from './styles'
 
 import LogoToLeft from '../../assets/logos/logo.svg'
-import { Button, Text } from '@og-ui/react'
 import {
   BellSimple,
   Bookmark,
@@ -21,6 +20,8 @@ import { useRouter } from 'next/router'
 import { UserContext } from '@contexts/user'
 import { InterfaceContext } from '@contexts/interface'
 import { useWindowSize } from '@hooks/useWindow'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 
 export function NavigationBar() {
   const { user, visualizeNotifications } = useContext(UserContext)
@@ -74,24 +75,22 @@ export function NavigationBar() {
               Ferramentas
             </Text>
 
-            <Button
+            <ButtonRoot
               type="button"
-              label="Novo Projeto"
-              icon={<FilePlus />}
               onClick={() => {
                 setNewProjectIsOpen(true)
                 setNavIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <FilePlus />
+              </ButtonIcon>
 
-            <Button
+              <ButtonLabel>Novo Projeto</ButtonLabel>
+            </ButtonRoot>
+
+            <ButtonRoot
               type="button"
-              label={`Notificações${
-                newNotifications && newNotifications[0]
-                  ? ' ( ' + newNotifications.length + ' ) '
-                  : ''
-              }`}
-              icon={<BellSimple />}
               onClick={() => {
                 setNotificationsIsOpen(true)
                 setNavIsOpen(false)
@@ -102,17 +101,33 @@ export function NavigationBar() {
                     visualizeNotifications()
                 }, 10000)
               }}
-            />
+            >
+              <ButtonIcon>
+                <BellSimple />
+              </ButtonIcon>
 
-            <Button
+              <ButtonLabel>
+                {`Notificações${
+                  newNotifications && newNotifications[0]
+                    ? ' ( ' + newNotifications.length + ' ) '
+                    : ''
+                }`}
+              </ButtonLabel>
+            </ButtonRoot>
+
+            <ButtonRoot
               type="button"
-              label="Preferências"
-              icon={<DotsNine />}
               onClick={() => {
                 setPreferenciesIsOpen(true)
                 setNavIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <DotsNine />
+              </ButtonIcon>
+
+              <ButtonLabel>Preferências</ButtonLabel>
+            </ButtonRoot>
 
             <Text
               size="xs"
@@ -126,27 +141,38 @@ export function NavigationBar() {
           </>
         )}
 
-        <Button
+        <ButtonRoot
           type="button"
-          label="Projetos"
           variant={location === 'projects' ? 'active' : 'default'}
-          icon={<ProjectorScreenChart />}
           onClick={() => {
             router.push('/projects')
             smallWindow && setNavIsOpen(false)
           }}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <ProjectorScreenChart />
+          </ButtonIcon>
+
+          <ButtonLabel>Projetos</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
-          label="Meus projetos"
+          label=""
           variant={location === 'myProjects' ? 'active' : 'default'}
-          icon={<Bookmark />}
           onClick={() => {
             router.push('/myProjects')
             smallWindow && setNavIsOpen(false)
           }}
-        />
-        {/* <Button
+        >
+          <ButtonIcon>
+            <Bookmark />
+          </ButtonIcon>
+
+          <ButtonLabel>Meus projetos</ButtonLabel>
+        </ButtonRoot>
+
+        {/* <ButtonRoot
         type='button'
           label="Recentes"
           variant={location === 'recent' ? 'active' : 'default'}
@@ -156,28 +182,38 @@ export function NavigationBar() {
             smallWindow && setNavIsOpen(false)
           }}
         /> */}
-        <Button
+
+        <ButtonRoot
           type="button"
-          label="Compartilhados comigo"
           variant={location === 'shared' ? 'active' : 'default'}
-          icon={<UsersThree />}
           onClick={() => {
             router.push('/shared')
             smallWindow && setNavIsOpen(false)
           }}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <UsersThree />
+          </ButtonIcon>
+
+          <ButtonLabel>Compartilhados comigo</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
-          label="To-Do"
           variant={location === 'todo' ? 'active' : 'default'}
-          disabled
-          icon={<ListChecks />}
           onClick={() => {
             router.push('/todo')
             smallWindow && setNavIsOpen(false)
           }}
-        />
-        {/* <Button
+          disabled
+        >
+          <ButtonIcon>
+            <ListChecks />
+          </ButtonIcon>
+
+          <ButtonLabel>To-Do</ButtonLabel>
+        </ButtonRoot>
+        {/* <ButtonRoot
         type='button'
           label="Pro"
           disabled
@@ -195,15 +231,19 @@ export function NavigationBar() {
             >
               Informações do usuário
             </Text>
-            <Button
+            <ButtonRoot
               type="button"
-              label="Usuário"
-              icon={<UserCircle />}
               onClick={() => {
                 setUserOptionsIsOpen(true)
                 setNavIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <UserCircle />
+              </ButtonIcon>
+
+              <ButtonLabel>Usuário</ButtonLabel>
+            </ButtonRoot>
           </>
         )}
       </ButtonsContainer>

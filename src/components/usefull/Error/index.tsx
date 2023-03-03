@@ -1,6 +1,8 @@
-import { Heading, Text, styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { Heading } from '../Heading'
+import { Text } from '../Text'
 
 interface IErrorProps {
   isRedirectable?: boolean

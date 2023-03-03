@@ -1,4 +1,6 @@
-import { Box, Button, Text, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const CardProjectContainer = styled(Box, {
   display: 'flex',
@@ -106,6 +108,8 @@ export const ProjectInfos = styled('div', {
 
   textAlign: 'start',
 
+  background: '$gray600',
+
   span: {
     color: '$base800',
   },
@@ -154,36 +158,6 @@ export const ProjectInfos = styled('div', {
         },
       },
 
-      false: {},
-    },
-  },
-
-  defaultVariants: {
-    isList: false,
-  },
-})
-
-export const ShareButton = styled(Button, {
-  position: 'absolute',
-  padding: '$2 ',
-  alignSelf: 'center',
-  right: 12,
-  top: 12,
-
-  variants: {
-    isList: {
-      true: {
-        padding: '$3',
-        margin: 0,
-        position: 'absolute',
-
-        top: '50%',
-        transform: 'translateY(-50%)',
-
-        '@media screen and (max-width: 768px)': {
-          padding: '$2',
-        },
-      },
       false: {},
     },
   },

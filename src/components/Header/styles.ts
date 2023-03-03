@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const HeaderContainer = styled('header', {
   position: 'fixed',
   display: 'flex',

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { UserCircleMinus, X } from 'phosphor-react'
 
 import { Info } from '../../styles'
@@ -12,6 +12,7 @@ import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { UserContext } from '@contexts/user'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 
 interface ICardUserWithAccessContainerProps {
   project: IProjectResponse
@@ -45,14 +46,20 @@ export function CardUserWithAccess({
       {project.createdPerUser === user?.id && (
         <UnshareButton
           className="unshare"
-          icon={unshare === userWithAccess.id ? <X /> : <UserCircleMinus />}
           wid="hug"
-          label={unshare === userWithAccess.id ? 'Cancelar' : 'Remover'}
           onClick={() => {
             if (unshare === userWithAccess.id) return setUnshare('')
             setUnshare(userWithAccess.id)
           }}
-        />
+        >
+          <ButtonIcon>
+            {unshare === userWithAccess.id ? <X /> : <UserCircleMinus />}
+          </ButtonIcon>
+
+          <ButtonLabel>
+            {unshare === userWithAccess.id ? 'Cancelar' : 'Remover'}
+          </ButtonLabel>
+        </UnshareButton>
       )}
       <Text family="body" as="label">
         Nome:
@@ -82,14 +89,18 @@ export function CardUserWithAccess({
               relacionado a esse projeto.
             </Text>
 
-            <Button
+            <ButtonRoot
               type="button"
               className="unshare"
-              icon={<UserCircleMinus />}
               wid="full"
-              label="Confirmar"
               onClick={handleUnshare}
-            />
+            >
+              <ButtonIcon>
+                <UserCircleMinus />
+              </ButtonIcon>
+
+              <ButtonLabel>Confirmar</ButtonLabel>
+            </ButtonRoot>
           </Info>
         </UnshareConfirm>
       )}

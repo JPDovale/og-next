@@ -1,6 +1,5 @@
 import lodash from 'lodash'
 import { useContext } from 'react'
-import { Text } from '@og-ui/react'
 import { EnvelopeOpen, XCircle } from 'phosphor-react'
 import {
   HeaderNotifications,
@@ -10,6 +9,7 @@ import {
 } from './styles'
 import { UserContext } from '@contexts/user'
 import { IReverbKeys, reverbKeys } from '@services/reverbKeys'
+import { Text } from '@components/usefull/Text'
 
 interface INotificationsPopupProps {
   notificationsIsOpen: boolean

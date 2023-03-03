@@ -1,4 +1,4 @@
-import { styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { ReactNode } from 'react'
 
 interface IContainerGrid {

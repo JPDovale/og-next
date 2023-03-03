@@ -1,4 +1,5 @@
-import { styled, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const PlotPageContainer = styled('main', {
   zIndex: 1,
@@ -46,12 +47,7 @@ export const BoxInput = styled('form', {
   gap: '$2',
 
   div: {
-    padding: '$3',
     width: '100%',
-  },
-
-  button: {
-    padding: '$3',
   },
 })
 

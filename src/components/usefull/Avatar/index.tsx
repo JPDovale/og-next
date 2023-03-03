@@ -1,6 +1,6 @@
 import * as Avatar from '@radix-ui/react-avatar'
+import { styled } from '@styles/index'
 import { UserCircle } from 'phosphor-react'
-import { styled } from '@og-ui/react'
 
 interface IAvatarProps {
   src: string | undefined

@@ -1,4 +1,4 @@
-import { styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 
 export const PlotPartsContainer = styled('div', {
   display: 'grid',

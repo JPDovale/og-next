@@ -1,4 +1,5 @@
-import { Box, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { styled } from '@styles/index'
 
 export const PlotPartContainer = styled(Box, {
   display: 'flex',

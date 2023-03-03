@@ -1,4 +1,5 @@
-import { Button, styled } from '@og-ui/react'
+import { ButtonRoot } from '@components/usefull/Button'
+import { styled } from '@styles/index'
 
 export const CardUserWithAccessContainer = styled('div', {
   display: 'flex',
@@ -25,7 +26,7 @@ export const CardUserWithAccessContainer = styled('div', {
   },
 })
 
-export const UnshareButton = styled(Button, {
+export const UnshareButton = styled(ButtonRoot, {
   position: 'absolute',
 
   left: '$1',

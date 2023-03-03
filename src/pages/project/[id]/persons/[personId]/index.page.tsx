@@ -17,7 +17,7 @@ import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import {

@@ -1,4 +1,6 @@
-import { Box, styled, Text } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 import { X } from 'phosphor-react'
 
 interface IBookGenereProps {

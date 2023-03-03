@@ -1,4 +1,5 @@
-import { Button, styled } from '@og-ui/react'
+import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
+import { styled } from '@styles/index'
 import { useRouter } from 'next/router'
 import { CaretCircleDoubleLeft } from 'phosphor-react'
 import { useEffect } from 'react'
@@ -14,9 +15,12 @@ export function usePreventBack(path?: string) {
       topDistance={topDistance}
       type="button"
       wid="hug"
-      icon={<CaretCircleDoubleLeft weight="bold" />}
       onClick={() => router.push(path!)}
-    />
+    >
+      <ButtonIcon>
+        <CaretCircleDoubleLeft weight="bold" />
+      </ButtonIcon>
+    </GoBackButtonContainer>
   )
 
   useEffect(() => {
@@ -34,7 +38,7 @@ export function usePreventBack(path?: string) {
   return { GoBackButton }
 }
 
-const GoBackButtonContainer = styled(Button, {
+const GoBackButtonContainer = styled(ButtonRoot, {
   position: 'absolute',
   right: '$4',
   top: 0,

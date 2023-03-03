@@ -1,5 +1,6 @@
-import { Heading, keyframes, styled } from '@og-ui/react'
+import { keyframes, styled } from '@styles/index'
 import React from 'react'
+import { Heading } from '../Heading'
 
 export function Loading() {
   return (

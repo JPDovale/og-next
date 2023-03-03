@@ -1,4 +1,5 @@
-import { keyframes, styled, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
+import { keyframes, styled } from '@styles/index'
 
 const animation = keyframes({
   '0%': {

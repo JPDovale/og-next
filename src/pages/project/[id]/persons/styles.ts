@@ -1,4 +1,7 @@
-import { Button, styled, Text, TextInput } from '@og-ui/react'
+import { ButtonRoot } from '@components/usefull/Button'
+import { TextInputRoot } from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const PersonsContainer = styled('div', {
   display: 'flex',
@@ -67,7 +70,7 @@ export const InfosBasics = styled('div', {
   width: '100%',
 })
 
-export const ShowFormButton = styled(Button, {
+export const ShowFormButton = styled(ButtonRoot, {
   position: 'absolute',
 
   padding: '$2',
@@ -147,7 +150,7 @@ export const QueryInputContainer = styled('div', {
   },
 })
 
-export const QueryInput = styled(TextInput, {})
+export const QueryInput = styled(TextInputRoot, {})
 
 export const FastAccessPersons = styled('div', {
   padding: '$4',

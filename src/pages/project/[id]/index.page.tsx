@@ -2,6 +2,7 @@ import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { CardBook } from '@components/BooksComponents/CardBook'
 import { CardPerson } from '@components/PersonsComponents/CardPerson'
 import { PlotParts } from '@components/ProjectsComponents/PlotParts'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Loading } from '@components/usefull/Loading'
 import { ProjectsContext } from '@contexts/projects'
@@ -9,7 +10,7 @@ import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { NextSeo } from 'next-seo'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -116,17 +117,21 @@ export default function ProjectPage() {
               />
             </Input>
             {project?.image?.url && (
-              <Button
+              <ButtonRoot
                 type="button"
-                icon={<Trash />}
                 wid="middle"
                 align="center"
-                label="REMOVER"
                 onClick={() => {
                   deleteImageProject({ projectId: project.id! })
                   setOnEditImg(false)
                 }}
-              />
+              >
+                <ButtonIcon>
+                  <Trash />
+                </ButtonIcon>
+
+                <ButtonLabel>REMOVER</ButtonLabel>
+              </ButtonRoot>
             )}
           </EditImgForm>
           <InfosContainer>

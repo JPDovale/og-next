@@ -1,8 +1,15 @@
 import { AvatarWeb } from '@components/usefull/Avatar'
+import { ButtonIcon } from '@components/usefull/Button'
+import { Heading } from '@components/usefull/Heading'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
 import { InterfaceContext } from '@contexts/interface'
 import { UserContext } from '@contexts/user'
 import { useWindowSize } from '@hooks/useWindow'
-import { Heading, Text, TextInput } from '@og-ui/react'
 import {
   ArrowFatLinesRight,
   BellSimple,
@@ -117,13 +124,16 @@ export function HeaderOptions({
         </Title>
         <Options>
           <AddNewProjectButton
-            icon={<FilePlus />}
             wid="hug"
             onClick={() => {
               setNavIsOpen(false)
               setNewProjectIsOpen(true)
             }}
-          />
+          >
+            <ButtonIcon>
+              <FilePlus />
+            </ButtonIcon>
+          </AddNewProjectButton>
 
           <button
             type="button"
@@ -139,14 +149,19 @@ export function HeaderOptions({
           {!smallWindow && queryless && (
             <QueryContainer onQuery={queryIsOpen}>
               {queryIsOpen && (
-                <TextInput
-                  icon={<MagnifyingGlass size={24} />}
-                  placeholder={'Procure por um projeto'}
-                  value={query}
-                  onChange={(e) => {
-                    setQuery && setQuery(e.target.value)
-                  }}
-                />
+                <TextInputRoot>
+                  <TextInputIcon>
+                    <MagnifyingGlass size={24} />
+                  </TextInputIcon>
+
+                  <TextInputInput
+                    placeholder={'Procure por um projeto'}
+                    value={query}
+                    onChange={(e) => {
+                      setQuery && setQuery(e.target.value)
+                    }}
+                  />
+                </TextInputRoot>
               )}
               <button
                 type="button"
@@ -202,14 +217,19 @@ export function HeaderOptions({
         {smallWindow && queryless && (
           <QueryContainer onQuery={queryIsOpen}>
             {queryIsOpen && (
-              <TextInput
-                icon={<MagnifyingGlass size={24} />}
-                placeholder={'Procure por um projeto'}
-                value={query}
-                onChange={(e) => {
-                  setQuery && setQuery(e.target.value)
-                }}
-              />
+              <TextInputRoot>
+                <TextInputIcon>
+                  <MagnifyingGlass size={24} />
+                </TextInputIcon>
+
+                <TextInputInput
+                  placeholder={'Procure por um projeto'}
+                  value={query}
+                  onChange={(e) => {
+                    setQuery && setQuery(e.target.value)
+                  }}
+                />
+              </TextInputRoot>
             )}
             <button
               type="button"

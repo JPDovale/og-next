@@ -1,5 +1,6 @@
+import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
 import { InterfaceContext } from '@contexts/interface'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import { HouseLine, List, XCircle } from 'phosphor-react'
 import { useContext } from 'react'
@@ -63,13 +64,16 @@ export function HeaderProject({
           >
             <XCircle size={24} />
           </button>
-          <Button
+          <ButtonRoot
             type="button"
             wid="hug"
-            icon={<List />}
             className="showNavigator"
             onClick={() => setNavigatorProjectIsOpen(true)}
-          />
+          >
+            <ButtonIcon>
+              <List />
+            </ButtonIcon>
+          </ButtonRoot>
         </Buttons>
       </HeaderProjectContainer>
       <Space />

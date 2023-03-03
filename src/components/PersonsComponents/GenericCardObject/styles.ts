@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const GenericCardObjectContainer = styled('div', {
   position: 'relative',
   borderRadius: '$sm',

@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const UserSettingsPageContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '8fr 4fr',
