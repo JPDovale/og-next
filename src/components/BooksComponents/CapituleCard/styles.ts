@@ -80,6 +80,7 @@ export const AlternativeFormContainer = styled('div', {
 
 export const WrittenWordsInput = styled(TextInputRoot, {})
 
+
 export const InputContainer = styled('label', {
   width: '100%',
 

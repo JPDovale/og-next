@@ -1,5 +1,7 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { DefaultError } from '@components/usefull/DefaultError'
+import { Success } from '@components/usefull/Success'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -12,7 +14,7 @@ export default function LiteraryGenerePage() {
   const [literaryGenere, setLiteraryGenere] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -44,12 +46,25 @@ export default function LiteraryGenerePage() {
         paths={['Plot', 'Gênero literário']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
+        {message && (
+          <Success
+            title="Sucesso"
+            message={message}
+            close={() => setMessage('')}
+          />
+        )}
+        {error && (
+          <DefaultError
+            title={error.title}
+            message={error.message}
+            close={() => setError(undefined)}
+          />
+        )}
+
         <EditorAndComments
-          message={message}
-          label="Gênero literário"
           updateValue={handleUpdateLiteraryGenere}
-          value={literaryGenere}
           preValue={project?.plot.literaryGenere}
           permission={permission}
           comments={commentsLiteraryGenere}

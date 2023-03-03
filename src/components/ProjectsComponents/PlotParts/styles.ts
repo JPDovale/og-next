@@ -3,11 +3,8 @@ import { styled } from '@styles/index'
 export const PlotPartsContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr 1fr',
-  // padding: '$6',
-  // background: '$gray900',
   gap: '$4',
-  // overflowX: 'scroll',
-  // boxShadow: '$onActive',
+
   borderRadius: '$sm',
 
   '@media screen and (max-width: 768px)': {
@@ -20,7 +17,7 @@ export const PlotPartsContainer = styled('div', {
         display: 'grid',
         gap: '$8',
         padding: '$6',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: '1fr ',
 
         borderRadius: '0',
         background: '$gray400',

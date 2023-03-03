@@ -32,7 +32,6 @@ export function PlotParts({
   return (
     <PlotPartsContainer isPreview={isPreview} columns={columns}>
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -46,7 +45,6 @@ export function PlotParts({
       />
 
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -60,7 +58,6 @@ export function PlotParts({
         last="Ideia central"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -77,7 +74,6 @@ export function PlotParts({
       {project && (
         <>
           <PlotPart
-            isInitialized={user?.isInitialized || false}
             isToProject={isToProject}
             idObject={idObject}
             comments={comments}
@@ -91,7 +87,6 @@ export function PlotParts({
             last="Narrador"
           />
           <PlotPart
-            isInitialized={user?.isInitialized || false}
             isToProject={isToProject}
             idObject={idObject}
             comments={comments}
@@ -108,7 +103,6 @@ export function PlotParts({
       )}
 
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -122,7 +116,6 @@ export function PlotParts({
         last="Subgênero"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -136,7 +129,6 @@ export function PlotParts({
         last="Ambiente"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -150,7 +142,6 @@ export function PlotParts({
         last="Tempo em que se passa"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -164,7 +155,6 @@ export function PlotParts({
         last="Fato histórico"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -179,7 +169,6 @@ export function PlotParts({
         lastTerm="os"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -194,7 +183,6 @@ export function PlotParts({
         lastTerm="o"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
@@ -209,7 +197,6 @@ export function PlotParts({
         lastTerm="o"
       />
       <PlotPart
-        isInitialized={user?.isInitialized || false}
         isToProject={isToProject}
         idObject={idObject}
         comments={comments}
