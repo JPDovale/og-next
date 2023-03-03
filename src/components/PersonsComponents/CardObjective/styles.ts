@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const CardObjectiveContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '2fr 1fr 1fr',

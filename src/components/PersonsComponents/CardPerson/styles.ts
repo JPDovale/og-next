@@ -1,4 +1,6 @@
-import { Box, Button, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { ButtonRoot } from '@components/usefull/Button'
+import { styled } from '@styles/index'
 
 export const CardPersonContainer = styled(Box, {
   display: 'flex',
@@ -189,7 +191,7 @@ export const PersonHistory = styled('div', {
   },
 })
 
-export const EditPersonButton = styled(Button, {
+export const EditPersonButton = styled(ButtonRoot, {
   position: 'absolute',
 
   padding: '$3',

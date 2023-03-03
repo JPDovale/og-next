@@ -1,4 +1,5 @@
-import { Button, keyframes, styled } from '@og-ui/react'
+import { ButtonRoot } from '@components/usefull/Button'
+import { keyframes, styled } from '@styles/index'
 
 const loadingAnimation = keyframes({
   '0%': {
@@ -149,7 +150,7 @@ export const Options = styled('div', {
   },
 })
 
-export const AddNewProjectButton = styled(Button, {
+export const AddNewProjectButton = styled(ButtonRoot, {
   borderRadius: '$full',
   padding: '$3',
 

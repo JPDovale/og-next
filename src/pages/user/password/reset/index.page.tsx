@@ -13,7 +13,7 @@ import {
   ResetPasswordFormContainer,
   ResetPasswordPageContainer,
 } from './styles'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { LockKey } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -22,7 +22,12 @@ import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
 import { UserContext } from '@contexts/user'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 const resetPasswordFormSchema = z.object({
   password: z
@@ -102,16 +107,21 @@ export default function ResetPasswordPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="password"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
               isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="***************"
+                {...register('password')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -122,24 +132,30 @@ export default function ResetPasswordPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="confirmPassword"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
               isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="***************"
+                {...register('confirmPassword')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Redefinir senha"
             align="center"
             disabled={formState.isSubmitting}
-          />
+          >
+            <ButtonLabel>Redefinir senha</ButtonLabel>
+          </ButtonRoot>
           <Links>
             <Link href="/login">
               <Text as="span" size="xs">

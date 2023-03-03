@@ -1,7 +1,8 @@
 import { AvatarWeb } from '@components/usefull/Avatar'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 import { InterfaceContext } from '@contexts/interface'
 import { UserContext } from '@contexts/user'
-import { Button, Text } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import {
   Fingerprint,
@@ -43,55 +44,56 @@ export function UserOptionsPopup() {
         </div>
       </UserInfos>
       <Options>
-        <Button
+        <ButtonRoot
           type="button"
-          icon={<Gear weight="bold" />}
-          label="Configurações de usuário"
           onClick={() => {
             router.push('/user/settings')
             setUserOptionsIsOpen(false)
           }}
-        />
+        >
+          <ButtonIcon>
+            <Gear weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Configurações de usuário</ButtonLabel>
+        </ButtonRoot>
 
-        <Button
+        <ButtonRoot
           type="button"
-          icon={<UsersThree weight="bold" />}
-          label="Projetos compartilhados"
           onClick={() => {
             router.push('/shared')
             setUserOptionsIsOpen(false)
           }}
-        />
+        >
+          <ButtonIcon>
+            <UsersThree weight="bold" />
+          </ButtonIcon>
 
-        <Button
-          type="button"
-          icon={<UserMinus weight="bold" />}
-          label="Logout"
-          onClick={() =>
-            // user.isSocialLogin
-            //   ? signOut({
-            //       redirect: true,
-            //       callbackUrl: 'http://localhost:3000/login',
-            //     }).then(() => logout())
-            //   :
-            logout()
-          }
-        />
-        <Button
-          type="button"
-          icon={<WarningOctagon weight="bold" />}
-          label="Ajuda"
-          disabled
-          css={{
-            marginTop: '$8',
-          }}
-        />
-        <Button
-          type="button"
-          icon={<Fingerprint weight="bold" />}
-          label="Política de privacidade"
-          disabled
-        />
+          <ButtonLabel>Projetos compartilhados</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot type="button" onClick={logout}>
+          <ButtonIcon>
+            <UserMinus weight="bold" />
+          </ButtonIcon>
+
+          <ButtonLabel>Logout</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot type="button" disabled css={{ marginTop: '$8' }}>
+          <ButtonIcon>
+            <WarningOctagon weight="bold" />
+          </ButtonIcon>
+
+          <ButtonLabel>Ajuda</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot type="button" label="" disabled>
+          <ButtonIcon>
+            <Fingerprint weight="bold" />
+          </ButtonIcon>
+
+          <ButtonLabel>Política de privacidade</ButtonLabel>
+        </ButtonRoot>
       </Options>
     </UserOptionsPopupContainer>
   )

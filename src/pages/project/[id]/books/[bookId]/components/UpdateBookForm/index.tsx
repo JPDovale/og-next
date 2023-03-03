@@ -1,12 +1,12 @@
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
-import { TextInput } from '@components/usefull/TextInput'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { Trash, X } from 'phosphor-react'
 import { useContext, useState } from 'react'
@@ -86,31 +86,39 @@ export function UpdateBookForm({ book, usersInProject }: IUpdateBookFormProps) {
       <UpdateBookFormContainer onSubmit={handleSubmit(handleUpdateBook)}>
         <ContainerGrid columns={2}>
           <InfoDefault title="Titulo" as="label">
-            <TextInput label="title" register={register} />
+            <TextInputRoot>
+              <TextInputInput {...register('title')} />
+            </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Subtitulo" as="label">
-            <TextInput label="subtitle" register={register} />
+            <TextInputRoot>
+              <TextInputInput {...register('subtitle')} />
+            </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="ISBN" as="label">
-            <TextInput label="isbn" register={register} />
+            <TextInputRoot>
+              <TextInputInput {...register('isbn')} />
+            </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Gênero literário" as="label">
-            <TextInput label="literaryGenere" register={register} />
+            <TextInputRoot>
+              <TextInputInput {...register('literaryGenere')} />
+            </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Estimativa de palavras" as="label">
-            <TextInput label="words" register={register} />
+            <TextInputRoot>
+              <TextInputInput {...register('words')} />
+            </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Save">
-            <Button
-              label="Salvar"
-              type="submit"
-              disabled={isSubmitting || !isDirty}
-            />
+            <ButtonRoot type="submit" disabled={isSubmitting || !isDirty}>
+              <ButtonLabel>Salvar</ButtonLabel>
+            </ButtonRoot>
           </InfoDefault>
         </ContainerGrid>
       </UpdateBookFormContainer>
@@ -131,30 +139,43 @@ export function UpdateBookForm({ book, usersInProject }: IUpdateBookFormProps) {
         {deleteSelected ? (
           <>
             <ContainerGrid columns={2} padding={0}>
-              <Button
+              <ButtonRoot
                 type="button"
-                label="Apagar"
-                icon={<Trash />}
                 css={{ background: '$fullError' }}
                 onClick={handleDeleteBook}
-              />
-              <Button
+              >
+                <ButtonIcon>
+                  <Trash />
+                </ButtonIcon>
+
+                <ButtonLabel>Apagar</ButtonLabel>
+              </ButtonRoot>
+
+              <ButtonRoot
                 type="button"
-                label="Cancelar"
-                icon={<X />}
                 onClick={() => setDeleteSelected(false)}
-              />
+              >
+                <ButtonIcon>
+                  <X />
+                </ButtonIcon>
+
+                <ButtonLabel>Cancelar</ButtonLabel>
+              </ButtonRoot>
             </ContainerGrid>
             <InfoDefault title="Tem certeza que quer excluir esse livro? Não será possível desafazer isso depois e todo o progresso será perdido." />
           </>
         ) : (
-          <Button
+          <ButtonRoot
             type="button"
-            label="Apagar"
-            icon={<Trash />}
             css={{ background: '$fullError' }}
             onClick={() => setDeleteSelected(true)}
-          />
+          >
+            <ButtonIcon>
+              <Trash />
+            </ButtonIcon>
+
+            <ButtonLabel>Apagar</ButtonLabel>
+          </ButtonRoot>
         )}
       </ContainerGrid>
     </ContainerGrid>

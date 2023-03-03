@@ -1,15 +1,17 @@
 import { BookGenere } from '@components/BooksComponents/BookGenere'
 import { CapituleCard } from '@components/BooksComponents/CapituleCard'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { DefaultError } from '@components/usefull/DefaultError'
 import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '@components/usefull/HeadingPart'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { ListEmpty } from '@components/usefull/ListEmpty'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Bookmarks, Brain, Gear } from 'phosphor-react'
@@ -130,16 +132,17 @@ export default function BookPage() {
             {addingGenre && (
               <AddGenreForm>
                 <Text>Adicionar gênero</Text>
-                <TextInput
+                <TextInputRoot
                   variant={errorIn === 'genre' ? 'denied' : 'default'}
-                  onChange={(e) => setGenre(e.target.value)}
-                  value={genre}
-                />
-                <Button
-                  label="Adicionar"
-                  align="center"
-                  onClick={handleAddGenre}
-                />
+                >
+                  <TextInputInput
+                    onChange={(e) => setGenre(e.target.value)}
+                    value={genre}
+                  />
+                </TextInputRoot>
+                <ButtonRoot align="center" onClick={handleAddGenre}>
+                  <ButtonLabel>Adicionar</ButtonLabel>{' '}
+                </ButtonRoot>
               </AddGenreForm>
             )}
 

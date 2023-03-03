@@ -1,7 +1,8 @@
-import { Text, styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { X } from 'phosphor-react'
 import { IError } from 'src/@types/errors/IError'
 import { ISuccess } from 'src/@types/success/ISuccess'
+import { Text } from '../Text'
 
 interface IResponseInfoApiProps {
   error?: IError

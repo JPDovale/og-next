@@ -1,5 +1,5 @@
 import { useState, useContext, FormEvent } from 'react'
-import { Button, Heading, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { PaperPlaneTilt } from 'phosphor-react'
 import {
   CommentContainer,
@@ -13,6 +13,9 @@ import { ProjectsContext } from '@contexts/projects'
 import { UserContext } from '@contexts/user'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Heading } from '@components/usefull/Heading'
+import { Text } from '@components/usefull/Text'
 
 interface ICommentProps {
   comment: IComment
@@ -155,12 +158,13 @@ export function Comment({
                   value={newResponse}
                   onChange={(e) => setNewResponse(e.target.value)}
                 />
-                <Button
-                  type="submit"
-                  label="Responder"
-                  icon={<PaperPlaneTilt weight="bold" />}
-                  align="center"
-                />
+                <ButtonRoot type="submit" align="center">
+                  <ButtonIcon>
+                    <PaperPlaneTilt weight="bold" />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Responder</ButtonLabel>
+                </ButtonRoot>
               </NewResponseForm>
             )}
           </ResponsesComment>

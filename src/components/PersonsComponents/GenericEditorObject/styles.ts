@@ -1,4 +1,5 @@
-import { Text, styled } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const GenericEditorObjectContainer = styled('div', {
   position: 'relative',

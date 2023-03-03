@@ -1,11 +1,14 @@
 import { IUpdateSceneRequest } from '@api/booksRequests/types/IUpdateSceneRequest'
 import { ICapitule, IScene } from '@api/responsesTypes/IBooksResponse'
+import { Textarea } from '@components/usefull/Textarea'
 import { Avatares } from '@components/usefull/Avatares'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { Heading } from '@components/usefull/Heading'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
-import { Button, Checkbox, Heading, Text, Textarea } from '@og-ui/react'
 import {
   FileArrowDown,
   UserCircleMinus,
@@ -17,6 +20,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { InputContainer } from '../../styles'
 import { EditSceneContainer, AvataresContainer, CloseButton } from './styles'
+import { Checkbox } from '@components/usefull/Checkbox'
 
 interface IEditSceneProps {
   capitule: ICapitule
@@ -283,14 +287,19 @@ export function EditScene({
         />
       </AvataresContainer>
 
-      <Button
+      <ButtonRoot
         type="submit"
-        label="Atualizar cena"
         align="center"
+        size="sm"
+        variant="noShadow"
         disabled={isSubmitting || (!isDirty && !formUpdated)}
-        css={{ padding: '$3', boxShadow: 'none' }}
-        icon={<FileArrowDown />}
-      />
+      >
+        <ButtonIcon>
+          <FileArrowDown />
+        </ButtonIcon>
+
+        <ButtonLabel>Atualizar cena</ButtonLabel>
+      </ButtonRoot>
     </EditSceneContainer>
   )
 }

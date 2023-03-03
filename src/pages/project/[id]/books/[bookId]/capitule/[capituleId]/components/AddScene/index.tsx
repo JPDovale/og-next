@@ -1,18 +1,26 @@
 import { ICreateSceneRequest } from '@api/booksRequests/types/ICreateSceneRequest'
 import { ICapitule } from '@api/responsesTypes/IBooksResponse'
 import { Avatares } from '@components/usefull/Avatares'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { Heading } from '@components/usefull/Heading'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
-import { Button, Heading, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { FilePlus, UserCircleMinus, UserCirclePlus, X } from 'phosphor-react'
 import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { InputContainer } from '../../styles'
-import { AddSceneContainer, AvataresContainer, CloseButton } from './styles'
+import {
+  AddSceneContainer,
+  AvataresContainer,
+  AvataresContainerHeader,
+  CloseButton,
+} from './styles'
 
 interface IAddSceneProps {
   capitule: ICapitule
@@ -170,9 +178,9 @@ export function AddScene({
       </ContainerGrid>
 
       <AvataresContainer>
-        <Text family="body" size="sm" css={{ marginBottom: '-$8' }}>
+        <AvataresContainerHeader family="body" size="sm">
           Selecione os personagens presentes na cena:
-        </Text>
+        </AvataresContainerHeader>
 
         <Avatares
           size="xsm"
@@ -189,12 +197,12 @@ export function AddScene({
       </AvataresContainer>
 
       <AvataresContainer>
-        <Text family="body" size="sm" css={{ marginBottom: '-$8' }}>
+        <AvataresContainerHeader family="body" size="sm">
           Personagens presentes na cena:
           <Text as="span" family="body" size="sm">
             {errors.persons?.message}
           </Text>
-        </Text>
+        </AvataresContainerHeader>
 
         <Avatares
           listEmptyMessage="Você ainda não selecionou nenhum personagem"
@@ -205,14 +213,19 @@ export function AddScene({
         />
       </AvataresContainer>
 
-      <Button
+      <ButtonRoot
         type="submit"
-        label="Criar cena"
         align="center"
         disabled={isSubmitting || !isDirty}
-        css={{ padding: '$3', boxShadow: 'none' }}
-        icon={<FilePlus />}
-      />
+        size="sm"
+        variant="noShadow"
+      >
+        <ButtonIcon>
+          <FilePlus />
+        </ButtonIcon>
+
+        <ButtonLabel>Criar cena</ButtonLabel>
+      </ButtonRoot>
     </AddSceneContainer>
   )
 }

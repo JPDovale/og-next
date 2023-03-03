@@ -1,4 +1,6 @@
-import { Button, Text, Textarea } from '@og-ui/react'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { Textarea } from '@components/usefull/Textarea'
 import { useRouter } from 'next/router'
 import {
   CaretCircleDoubleLeft,
@@ -45,13 +47,17 @@ export function Editor({
         <Text as="span">
           <Textbox size={24} /> Editar {to}.
         </Text>
-        <Button
+
+        <ButtonRoot
           type="button"
           className="goBack"
           wid="hug"
-          icon={<CaretCircleDoubleLeft weight="bold" />}
           onClick={() => router.push(`/project/${projectId}/${goBackPath}`)}
-        />
+        >
+          <ButtonIcon>
+            <CaretCircleDoubleLeft weight="bold" />
+          </ButtonIcon>
+        </ButtonRoot>
       </EditorHeader>
       <Text
         size="md"
@@ -128,22 +134,29 @@ export function Editor({
 
       {permission === 'edit' && (
         <div className="buttons">
-          <Button
+          <ButtonRoot
             type="button"
             align="center"
             className="save"
-            label="Salvar"
-            icon={<FileArrowUp weight="bold" />}
             onClick={updateValue}
-          />
-          <Button
+          >
+            <ButtonIcon>
+              <FileArrowUp weight="bold" />
+            </ButtonIcon>
+            <ButtonLabel>Salvar</ButtonLabel>
+          </ButtonRoot>
+
+          <ButtonRoot
             type="button"
             align="center"
             className="cancel"
-            label="Cancelar"
-            icon={<FileX weight="bold" />}
             onClick={() => setValue && setValue(preValue || '')}
-          />
+          >
+            <ButtonIcon>
+              <FileX weight="bold" />
+            </ButtonIcon>
+            <ButtonLabel>Cancelar</ButtonLabel>
+          </ButtonRoot>
         </div>
       )}
       {error && (

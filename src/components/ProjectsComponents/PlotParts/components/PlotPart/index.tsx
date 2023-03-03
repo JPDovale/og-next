@@ -1,6 +1,8 @@
 import { IComment } from '@api/responsesTypes/IProjcetResponse'
 import { Comment } from '@components/ProjectsComponents/Comment'
-import { Button, Heading, Text } from '@og-ui/react'
+import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
+import { Heading } from '@components/usefull/Heading'
+import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import { Pencil } from 'phosphor-react'
 import { Comments, PlotPartContainer } from './styles'
@@ -54,16 +56,19 @@ export function PlotPart({
       <Heading as="header" size="sm">
         {to}
         {!isPreview && permission === 'edit' && (
-          <Button
+          <ButtonRoot
             type="button"
-            icon={<Pencil />}
             wid="hug"
             disabled={!element && isInitialized && disabled}
             onClick={() => {
               if (!element && isInitialized && disabled) return
               router.push(pathToRedirect)
             }}
-          />
+          >
+            <ButtonIcon>
+              <Pencil />
+            </ButtonIcon>
+          </ButtonRoot>
         )}
       </Heading>
       <Text

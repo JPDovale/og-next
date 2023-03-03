@@ -1,4 +1,6 @@
-import { styled, Text, TextInput } from '@og-ui/react'
+import { TextInputRoot } from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const CapituleCardContainer = styled('div', {
   all: 'unset',
@@ -76,7 +78,7 @@ export const AlternativeFormContainer = styled('div', {
   },
 })
 
-export const WrittenWordsInput = styled(TextInput, {})
+export const WrittenWordsInput = styled(TextInputRoot, {})
 
 export const InputContainer = styled('label', {
   width: '100%',

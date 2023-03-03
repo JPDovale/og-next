@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const DashboardPageLayoutContainer = styled('main', {
   float: 'right',
   display: 'flex',

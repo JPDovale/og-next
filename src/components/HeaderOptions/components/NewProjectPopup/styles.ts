@@ -1,4 +1,7 @@
-import { Box, Button, Text, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const NewProjectPopupContainer = styled('div', {
   position: 'fixed',
@@ -82,7 +85,7 @@ export const Input = styled(Text, {
   marginTop: '$8',
 })
 
-export const Submit = styled(Button, {
+export const Submit = styled(ButtonRoot, {
   display: 'flex',
   marginTop: '$16',
 })

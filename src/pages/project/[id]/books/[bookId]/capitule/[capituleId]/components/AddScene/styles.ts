@@ -1,5 +1,5 @@
-import { styled } from '@og-ui/react'
-
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 export const AddSceneContainer = styled('form', {
   display: 'flex',
   position: 'relative',
@@ -14,22 +14,19 @@ export const AddSceneContainer = styled('form', {
 
 export const AvataresContainer = styled('div', {
   width: '100%',
+})
 
-  p: {
-    display: 'flex',
-    justifyContent: 'space-between',
+export const AvataresContainerHeader = styled(Text, {
+  display: 'flex',
+  justifyContent: 'space-between',
 
-    width: '100%',
+  width: '100%',
+  padding: '$3',
 
-    color: '$base800',
+  color: '$base800',
 
-    span: {
-      color: '$errorDefault',
-    },
-  },
-
-  div: {
-    padding: '$3',
+  span: {
+    color: '$errorDefault',
   },
 })
 

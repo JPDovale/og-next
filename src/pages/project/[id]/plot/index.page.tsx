@@ -1,11 +1,17 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { PlotParts } from '@components/ProjectsComponents/PlotParts'
+import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useScroll } from '@hooks/useScroll'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Link, Pencil } from 'phosphor-react'
@@ -74,23 +80,25 @@ export default function PlotPage() {
                 </BoxInputUrlOfTextHeader>
 
                 <BoxInput onSubmit={handleEditUrlOfText}>
-                  <TextInput
-                    type="url"
-                    id="linkOfText"
-                    icon={<Link />}
-                    placeholder={
-                      project?.plot?.urlOfText || 'https://exemplo.com'
-                    }
-                    value={urlOfText}
-                    onChange={(e) => setUrlOfText(e.target.value)}
-                  />
+                  <TextInputRoot type="url" id="linkOfText">
+                    <TextInputIcon>
+                      <Link />
+                    </TextInputIcon>
 
-                  <Button
-                    icon={<Pencil />}
-                    wid="hug"
-                    disabled={!urlOfText}
-                    type="submit"
-                  />
+                    <TextInputInput
+                      placeholder={
+                        project?.plot?.urlOfText || 'https://exemplo.com'
+                      }
+                      value={urlOfText}
+                      onChange={(e) => setUrlOfText(e.target.value)}
+                    />
+                  </TextInputRoot>
+
+                  <ButtonRoot wid="hug" disabled={!urlOfText} type="submit">
+                    <ButtonIcon>
+                      <Pencil />
+                    </ButtonIcon>
+                  </ButtonRoot>
                 </BoxInput>
 
                 {project?.plot?.urlOfText && (

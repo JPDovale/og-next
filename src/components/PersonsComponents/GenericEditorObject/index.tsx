@@ -1,5 +1,4 @@
 import { useEffect, FormEvent, useContext, useState } from 'react'
-import { Box, Button, Text, Textarea, TextInput } from '@og-ui/react'
 import {
   Brandy,
   CaretCircleDoubleLeft,
@@ -37,6 +36,15 @@ import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Refs } from '@components/ProjectsComponents/Refs'
 import { InputRadio } from '@components/usefull/InputRadio'
 import { Avatares } from '@components/usefull/Avatares'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { Box } from '@components/usefull/Box'
+import { Textarea } from '@components/usefull/Textarea'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 interface ISubObject {
   title: string
@@ -262,28 +270,39 @@ export function GenericEditorObject({
                           <Textbox size={24} />
                           Criar {withSubObjects}
                         </Text>
-                        <Button
+
+                        <ButtonRoot
                           type="button"
                           className="goBack"
                           wid="hug"
-                          icon={<CaretCircleDoubleLeft weight="bold" />}
                           onClick={() => setShowSubObjectForm(false)}
-                        />
+                        >
+                          <ButtonIcon>
+                            <CaretCircleDoubleLeft weight="bold" />
+                          </ButtonIcon>
+                        </ButtonRoot>
                       </EditorHeader>
                       <InputContainer as="label" family="body">
                         <p>Titulo da {withSubObjects}</p>
-                        <TextInput
+                        <TextInputRoot
                           variant={
                             errorIn === 'titleSubObject' ? 'denied' : 'default'
                           }
-                          value={titleSubObject}
-                          icon={<Crosshair />}
-                          onChange={(e) =>
-                            permission === 'edit' &&
-                            setTitleSubObject(e.target.value)
-                          }
                           disabled={permission !== 'edit'}
-                        />
+                        >
+                          <TextInputIcon>
+                            <Crosshair />
+                          </TextInputIcon>
+
+                          <TextInputInput
+                            value={titleSubObject}
+                            onChange={(e) =>
+                              permission === 'edit' &&
+                              setTitleSubObject(e.target.value)
+                            }
+                            disabled={permission !== 'edit'}
+                          />
+                        </TextInputRoot>
                       </InputContainer>
 
                       <InputContainer as="label" family="body">
@@ -304,26 +323,35 @@ export function GenericEditorObject({
                       </InputContainer>
 
                       <div className="buttons">
-                        <Button
+                        <ButtonRoot
                           type="button"
                           align="center"
                           className="save"
-                          label="Salvar"
-                          icon={<FileArrowUp weight="bold" />}
                           onClick={handleSaveNewSubObject}
-                        />
-                        <Button
+                        >
+                          <ButtonIcon>
+                            <FileArrowUp weight="bold" />
+                          </ButtonIcon>
+
+                          <ButtonLabel>Salvar</ButtonLabel>
+                        </ButtonRoot>
+
+                        <ButtonRoot
                           type="button"
                           align="center"
                           className="cancel"
-                          label="Cancelar"
-                          icon={<FileX weight="bold" />}
                           onClick={() => {
                             setShowSubObjectForm(false)
                             setTitleSubObject('')
                             setDescriptionSubObject('')
                           }}
-                        />
+                        >
+                          <ButtonIcon>
+                            <FileX weight="bold" />
+                          </ButtonIcon>
+
+                          <ButtonLabel>Cancelar</ButtonLabel>
+                        </ButtonRoot>
                       </div>
                     </SubObjectForm>
                   </SubObjectFormContainer>
@@ -336,15 +364,18 @@ export function GenericEditorObject({
                     <Textbox size={24} />
                     {isNew ? `Criar ${editorTo}` : `Editar ${editorTo}`}
                   </Text>
-                  <Button
+                  <ButtonRoot
                     type="button"
                     className="goBack"
                     wid="hug"
-                    icon={<CaretCircleDoubleLeft weight="bold" />}
                     onClick={() =>
                       router.push(`/project/${projectId}/persons/${personId}`)
                     }
-                  />
+                  >
+                    <ButtonIcon>
+                      <CaretCircleDoubleLeft weight="bold" />
+                    </ButtonIcon>
+                  </ButtonRoot>
                 </EditorHeader>
 
                 {isNew && filteredRefs && filteredRefs[0] && !refSelected && (
@@ -369,17 +400,24 @@ export function GenericEditorObject({
                 <FormContainer onSubmit={handleSubmitForm}>
                   <InputContainer as="label" family="body">
                     <p>Titulo do {editorTo}</p>
-                    <TextInput
+                    <TextInputRoot
                       variant={errorIn === 'title' ? 'denied' : 'default'}
-                      value={title}
-                      icon={<Crosshair />}
-                      placeholder={object?.title}
-                      onChange={(e) => {
-                        if (refSelected) setRefSelected('')
-                        permission === 'edit' && setTitle(e.target.value)
-                      }}
                       disabled={permission !== 'edit'}
-                    />
+                    >
+                      <TextInputIcon>
+                        <Crosshair />
+                      </TextInputIcon>
+
+                      <TextInputInput
+                        value={title}
+                        placeholder={object?.title}
+                        onChange={(e) => {
+                          if (refSelected) setRefSelected('')
+                          permission === 'edit' && setTitle(e.target.value)
+                        }}
+                        disabled={permission !== 'edit'}
+                      />
+                    </TextInputRoot>
                   </InputContainer>
 
                   <InputContainer as="label" family="body">
@@ -436,13 +474,16 @@ export function GenericEditorObject({
                         <p>
                           {withSubObjects}
                           {permission === 'edit' && (
-                            <Button
+                            <ButtonRoot
                               type="button"
                               className="goBack"
                               wid="hug"
-                              icon={<Plus weight="bold" />}
                               onClick={() => setShowSubObjectForm(true)}
-                            />
+                            >
+                              <ButtonIcon>
+                                <Plus weight="bold" />
+                              </ButtonIcon>
+                            </ButtonRoot>
                           )}
                         </p>
                       </InputContainer>
@@ -475,33 +516,36 @@ export function GenericEditorObject({
 
                   {permission === 'edit' && (
                     <div className="buttons">
-                      <Button
-                        type="submit"
-                        align="center"
-                        className="save"
-                        label="Salvar"
-                        icon={<FileArrowUp weight="bold" />}
-                      />
-                      <Button
+                      <ButtonRoot type="submit" align="center" className="save">
+                        <ButtonIcon>
+                          <FileArrowUp weight="bold" />
+                        </ButtonIcon>
+
+                        <ButtonLabel>Salvar</ButtonLabel>
+                      </ButtonRoot>
+
+                      <ButtonRoot
                         type="button"
                         align="center"
                         className="cancel"
-                        label="Cancelar"
-                        icon={<FileX weight="bold" />}
                         onClick={() =>
                           router.push(
                             `/project/${projectId}/persons/${personId}`,
                           )
                         }
-                      />
+                      >
+                        <ButtonIcon>
+                          <FileX weight="bold" />
+                        </ButtonIcon>
+
+                        <ButtonLabel>Cancelar</ButtonLabel>
+                      </ButtonRoot>
                     </div>
                   )}
                 </FormContainer>
                 {permission === 'edit' && !isNew && object && (
-                  <Button
+                  <ButtonRoot
                     type="button"
-                    label="Apagar"
-                    icon={<Trash />}
                     align="center"
                     css={{
                       marginTop: '$20',
@@ -509,7 +553,13 @@ export function GenericEditorObject({
                       padding: '$2',
                     }}
                     onClick={() => setOnOpenDelete(true)}
-                  />
+                  >
+                    <ButtonIcon>
+                      <Trash />
+                    </ButtonIcon>
+
+                    <ButtonLabel>Apagar</ButtonLabel>
+                  </ButtonRoot>
                 )}
 
                 {!isNew && onOpenDelete && object && (
@@ -519,23 +569,31 @@ export function GenericEditorObject({
                         Tem certeza que quer apagar o {editorTo}:{' '}
                         {object?.title}? Será impossível desfazer isso.
                       </Text>
-                      <Button
+                      <ButtonRoot
                         type="button"
                         css={{
                           background: 'DarkRed',
                         }}
                         align="center"
-                        icon={<Trash weight="bold" />}
-                        label="Apagar permanentemente"
                         onClick={() => handleDeleteObject()}
-                      />
-                      <Button
+                      >
+                        <ButtonIcon>
+                          <Trash weight="bold" />
+                        </ButtonIcon>
+
+                        <ButtonLabel>Apagar permanentemente</ButtonLabel>
+                      </ButtonRoot>
+
+                      <ButtonRoot
                         type="button"
                         align="center"
-                        icon={<XSquare weight="bold" />}
-                        label="Cancelar"
                         onClick={() => setOnOpenDelete(false)}
-                      />
+                      >
+                        <ButtonIcon>
+                          <XSquare weight="bold" />
+                        </ButtonIcon>
+                        <ButtonLabel>Cancelar</ButtonLabel>
+                      </ButtonRoot>
                     </Box>
                   </DeletePopUp>
                 )}

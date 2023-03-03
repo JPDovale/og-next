@@ -1,4 +1,4 @@
-import { Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { RadioItem, RadioLabel, RadioRoot, RadioSelected } from './styles'
 
 type IValue = { label: string; value: any }

@@ -2,13 +2,16 @@ import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneTo
 import { IScene } from '@api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { Avatares } from '@components/usefull/Avatares'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Checkbox } from '@components/usefull/Checkbox'
 import { InfoDefault } from '@components/usefull/InfoDefault'
+import { TextInputInput } from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { useProject } from '@hooks/useProject'
-import { Button, Checkbox, Text } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { List, PencilLine, Trash, X } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { ChangeEvent, useContext, useState } from 'react'
 import { z } from 'zod'
 
 import {
@@ -198,17 +201,23 @@ export function SceneCard({
 
               <WrittenWordsInput
                 variant={errorIn === 'writtenWords' ? 'denied' : 'default'}
-                onChange={(e) => setWrittenWords(e.target.value)}
-                value={writtenWords}
-              />
+              >
+                <TextInputInput
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setWrittenWords(e.target.value)
+                  }
+                  value={writtenWords}
+                />
+              </WrittenWordsInput>
             </InputContainer>
 
-            <Button
+            <ButtonRoot
               align="center"
-              label="Marcar como concluído"
               onClick={handleSetCompleteScene}
               disabled={!writtenWords}
-            />
+            >
+              <ButtonLabel>Marcar como concluído</ButtonLabel>
+            </ButtonRoot>
           </div>
         </AlternativeFormContainer>
       )}
@@ -226,12 +235,13 @@ export function SceneCard({
               </Text>
             </InputContainer>
 
-            <Button
+            <ButtonRoot
               align="center"
-              label="Excluir"
               onClick={handleDeleteScene}
               css={{ background: '$fullError' }}
-            />
+            >
+              <ButtonLabel>Excluir</ButtonLabel>
+            </ButtonRoot>
           </div>
         </AlternativeFormContainer>
       )}
@@ -256,18 +266,24 @@ export function SceneCard({
 
               <WrittenWordsInput
                 variant={errorIn === 'reorder' ? 'denied' : 'default'}
-                onChange={(e) => setToSequenceSet(e.target.value)}
-                placeholder={`Máximo: ${capitule?.scenes?.length}`}
-                value={toSequenceSet}
-              />
+              >
+                <TextInputInput
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setToSequenceSet(e.target.value)
+                  }
+                  placeholder={`Máximo: ${capitule?.scenes?.length}`}
+                  value={toSequenceSet}
+                />
+              </WrittenWordsInput>
             </InputContainer>
 
-            <Button
+            <ButtonRoot
               align="center"
-              label="Reordenar cenas"
               onClick={handleReorderScenes}
               disabled={!toSequenceSet}
-            />
+            >
+              <ButtonLabel>Reordenar cenas</ButtonLabel>
+            </ButtonRoot>
           </div>
         </AlternativeFormContainer>
       )}

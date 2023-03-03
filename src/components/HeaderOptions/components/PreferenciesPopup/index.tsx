@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import { Button, Text } from '@og-ui/react'
 import {
   ArrowFatLinesDown,
   ArrowFatLinesUp,
@@ -17,6 +16,8 @@ import {
   PreferenciesPopupContainer,
 } from './styles'
 import { InterfaceContext } from '@contexts/interface'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 
 interface IPreferenciesPopupProps {
   preferenciesIsOpen: boolean
@@ -45,69 +46,100 @@ export function PreferenciesPopup({
         </Text>
       </HeaderPreferencies>
       <Options>
-        <Button
+        <ButtonRoot
           type="button"
-          icon={<GridFour weight="bold" />}
-          label="Grid"
           variant={isList ? 'default' : 'active'}
           onClick={() => {
             setIsList && setIsList(false)
             setPreferenciesIsOpen(false)
           }}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <GridFour weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Grid</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
-          icon={<List weight="bold" />}
-          label="list"
           variant={!isList ? 'default' : 'active'}
           onClick={() => {
             setIsList && setIsList(true)
             setPreferenciesIsOpen(false)
           }}
-        />
+        >
+          <ButtonIcon>
+            <List weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>List</ButtonLabel>
+        </ButtonRoot>
         <Text>Ordenar por:</Text>
-        <Button
+
+        <ButtonRoot
           type="button"
           variant={orderBy === 'a-z' ? 'active' : 'default'}
-          icon={<SortDescending weight="bold" />}
-          label="A para Z"
           onClick={() => setOrderBy('a-z')}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <SortDescending weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>A para Z</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
           variant={orderBy === 'z-a' ? 'active' : 'default'}
-          icon={<SortAscending weight="bold" />}
-          label="Z para A"
           onClick={() => setOrderBy('z-a')}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <SortAscending weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Z para A</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
           variant={orderBy === 'time-asc' ? 'active' : 'default'}
-          icon={<ArrowFatLinesUp weight="bold" />}
-          label="Mais novos primeiro"
           onClick={() => setOrderBy('time-asc')}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <ArrowFatLinesUp weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Mais novos primeiro</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
           variant={orderBy === 'time-desc' ? 'active' : 'default'}
-          icon={<ArrowFatLinesDown weight="bold" />}
-          label="Mais velhos primeiro"
           onClick={() => setOrderBy('time-desc')}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <ArrowFatLinesDown weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Mais velhos primeiro</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
           variant={orderBy === 'update-asc' ? 'active' : 'default'}
-          icon={<ArrowLineUp weight="bold" />}
-          label="Atualização mais recente primeiro"
           onClick={() => setOrderBy('update-asc')}
-        />
-        <Button
+        >
+          <ButtonIcon>
+            <ArrowLineUp weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Atualização mais recente primeiro</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
           type="button"
           variant={orderBy === 'update-desc' ? 'active' : 'default'}
-          icon={<ArrowLineDown weight="bold" />}
-          label="Atualização mais antiga primeiro"
           onClick={() => setOrderBy('update-desc')}
-        />
+        >
+          <ButtonIcon>
+            <ArrowLineDown weight="bold" />
+          </ButtonIcon>
+          <ButtonLabel>Atualização mais antiga primeiro</ButtonLabel>
+        </ButtonRoot>
       </Options>
     </PreferenciesPopupContainer>
   )

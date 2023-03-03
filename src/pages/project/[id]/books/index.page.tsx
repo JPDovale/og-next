@@ -1,11 +1,11 @@
 import { CardBook } from '@components/BooksComponents/CardBook'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { DefaultError } from '@components/usefull/DefaultError'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Button } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Books } from 'phosphor-react'
@@ -43,13 +43,18 @@ export default function BooksPage() {
         )}
 
         <NewBookButtonContainer>
-          <Button
-            label="Criar novo livro"
+          <ButtonRoot
             icon={<Books />}
             align="center"
             css={{ padding: '$3' }}
             onClick={() => router.push(`/project/${id}/books/new`)}
-          />
+          >
+            <ButtonIcon>
+              <Books />
+            </ButtonIcon>
+
+            <ButtonLabel>Criar novo livro</ButtonLabel>
+          </ButtonRoot>
         </NewBookButtonContainer>
 
         <BooksContainer>

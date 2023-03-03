@@ -1,13 +1,15 @@
+import { ButtonLabel } from '@components/usefull/Button'
 import { DefaultError } from '@components/usefull/DefaultError'
+import { Heading } from '@components/usefull/Heading'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { TextInput } from '@components/usefull/TextInput'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Heading, Text, TextInput as Input } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { X } from 'phosphor-react'
@@ -169,7 +171,9 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <TextInput label="title" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('title')} />
+                </TextInputRoot>
               </InputContainer>
 
               <InputContainer>
@@ -180,7 +184,9 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <TextInput label="subtitle" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('subtitle')} />
+                </TextInputRoot>
               </InputContainer>
             </InputGroup>
 
@@ -193,7 +199,9 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <TextInput label="words" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('words')} />
+                </TextInputRoot>
               </InputContainer>
 
               <InputContainer>
@@ -204,7 +212,9 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <TextInput label="writtenWords" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('writtenWords')} />
+                </TextInputRoot>
               </InputContainer>
             </InputGroup>
 
@@ -217,7 +227,9 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <TextInput label="literaryGenere" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('literaryGenere')} />
+                </TextInputRoot>
               </InputContainer>
 
               <InputContainer>
@@ -228,7 +240,9 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <TextInput label="isbn" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('isbn')} />
+                </TextInputRoot>
               </InputContainer>
             </InputGroup>
 
@@ -241,20 +255,23 @@ export default function NewBookPage() {
                   </Text>
                 </Text>
 
-                <Input
-                  name="genere"
-                  value={genere}
-                  onChange={(e) => setGenere(e.target.value)}
-                />
+                <TextInputRoot>
+                  <TextInputInput
+                    name="genere"
+                    value={genere}
+                    onChange={(e) => setGenere(e.target.value)}
+                  />
+                </TextInputRoot>
 
                 <AddButton
                   type="button"
-                  label="Adicionar"
                   wid="hug"
-                  css={{ boxShadow: 'none' }}
+                  variant="noShadow"
                   disabled={!genere}
                   onClick={handleAddGenere}
-                />
+                >
+                  <ButtonLabel>Adicionar</ButtonLabel>
+                </AddButton>
               </InputContainer>
 
               <InputContainer>
@@ -287,13 +304,12 @@ export default function NewBookPage() {
 
             <AddButton
               type="submit"
-              label="Criar livro"
               wid="hug"
-              css={{
-                boxShadow: 'none',
-              }}
+              variant="noShadow"
               disabled={isSubmitting}
-            />
+            >
+              <ButtonLabel>Criar livro</ButtonLabel>
+            </AddButton>
           </NewBookForm>
         </NewBookContainer>
       </ProjectPageLayout>

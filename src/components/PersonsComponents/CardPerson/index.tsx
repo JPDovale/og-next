@@ -1,5 +1,6 @@
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { Text } from '@og-ui/react'
+import { ButtonIcon } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco, Pencil, UserPlus } from 'phosphor-react'
@@ -191,12 +192,15 @@ export function CardPerson({
                 })}
               </PersonHistory>
               <EditPersonButton
-                icon={<Pencil weight="bold" size={32} />}
                 wid="hug"
                 onClick={() =>
                   router.push(`/project/${id}/persons/${personId}`)
                 }
-              />
+              >
+                <ButtonIcon>
+                  <Pencil weight="bold" size={32} />
+                </ButtonIcon>
+              </EditPersonButton>
             </>
           )}
         </>

@@ -1,5 +1,7 @@
+import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
-import { Text, TextInput } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { FilePlus, XCircle } from 'phosphor-react'
 import { FormEvent, useContext, useState } from 'react'
@@ -90,12 +92,13 @@ export function NewProjectPopup({
         <NewProjectForm onSubmit={handleNewProject}>
           <Input as="label" size="xs">
             Nome do projeto
-            <TextInput
-              variant={errorIn === 'name' ? 'denied' : 'default'}
-              placeholder="Insira o nome do projeto"
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-            />
+            <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
+              <TextInputInput
+                placeholder="Insira o nome do projeto"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+              />
+            </TextInputRoot>
           </Input>
           {/* <Input as="label" size="xs">
             Selecione o tipo do projeto {type}
@@ -124,7 +127,7 @@ export function NewProjectPopup({
           {isPrivate === true && (
             <Input as="label" size="xs">
               Senha do projeto
-              <TextInput
+              <TextInputRoot
                 placeholder="Insira uma senha para o projeto"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -132,12 +135,13 @@ export function NewProjectPopup({
               />
             </Input>
           )} */}
-          <Submit
-            label="Criar projeto"
-            align="center"
-            wid="full"
-            icon={<FilePlus />}
-          />
+          <Submit align="center" wid="full">
+            <ButtonIcon>
+              <FilePlus />
+            </ButtonIcon>
+
+            <ButtonLabel>Criar projeto</ButtonLabel>
+          </Submit>
         </NewProjectForm>
       </Popup>
     </NewProjectPopupContainer>

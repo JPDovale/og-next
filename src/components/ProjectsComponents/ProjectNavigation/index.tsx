@@ -7,7 +7,6 @@ import {
 } from './styles'
 
 import logoSvg from '../../../assets/logos/aloneLogo.svg'
-import { Box, Button, Text } from '@og-ui/react'
 import {
   ArrowFatLinesDown,
   ArrowFatLinesUp,
@@ -43,6 +42,9 @@ import Image from 'next/image'
 import { ProjectsContext } from '@contexts/projects'
 import { UserContext } from '@contexts/user'
 import { InterfaceContext } from '@contexts/interface'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { Box } from '@components/usefull/Box'
 
 interface IProjectNavigationProps {
   isFullDisabled?: boolean
@@ -117,98 +119,116 @@ export function ProjectNavigation({
             <Options isOpen={navigatorProjectIsOpen}>
               <Label size="xxs">
                 A para Z
-                <Button
+                <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<SortDescending />}
                   variant={orderBy === 'a-z' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
                     setOrderBy(`a-z`)
                     setNavigatorProjectIsOpen(false)
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <SortDescending />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
 
               <Label size="xxs">
                 Z para A
-                <Button
+                <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<SortAscending />}
                   variant={orderBy === 'z-a' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
                     setOrderBy(`z-a`)
                     setNavigatorProjectIsOpen(false)
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <SortAscending />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
 
               <Label size="xxs">
                 Mais novos primeiro
-                <Button
+                <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowFatLinesUp />}
                   variant={orderBy === 'time-asc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
                     setOrderBy(`time-asc`)
                     setNavigatorProjectIsOpen(false)
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <ArrowFatLinesUp />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
 
               <Label size="xxs">
                 Mais velhos primeiro
-                <Button
+                <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowFatLinesDown />}
                   variant={orderBy === 'time-desc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
                     setOrderBy(`time-desc`)
                     setNavigatorProjectIsOpen(false)
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <ArrowFatLinesDown />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
 
               <Label size="xxs">
                 Atualização mais recente primeiro
-                <Button
+                <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowLineUp />}
                   variant={orderBy === 'update-asc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
                     setOrderBy(`update-asc`)
                     setNavigatorProjectIsOpen(false)
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <ArrowLineUp />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
 
               <Label size="xxs">
                 Atualização mais antiga primeiro
-                <Button
+                <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<ArrowLineDown />}
                   variant={orderBy === 'update-desc' ? 'active' : 'default'}
                   disabled={isFullDisabled || !!loading}
                   onClick={() => {
                     setOrderBy(`update-desc`)
                     setNavigatorProjectIsOpen(false)
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <ArrowLineDown />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
             </Options>
           </>
@@ -220,22 +240,25 @@ export function ProjectNavigation({
         <Options isOpen={navigatorProjectIsOpen}>
           <Label size="xxs">
             Projeto
-            <Button
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<House />}
               onClick={() => {
                 router.push(`/project/${id}`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <House />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
 
           <Label size="xxs">
             Livros
-            <Button
+            <ButtonRoot
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
@@ -245,225 +268,271 @@ export function ProjectNavigation({
                 router.push(`/project/${id}/books`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Books />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
 
           <Label size="xxs">
             Plot
-            <Button
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<BookOpen />}
               variant={onWindow === 'plot' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/plot`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <BookOpen />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
 
           <Label size="xxs">
             Planetas
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Planet />}
               variant={onWindow === 'planets' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/planets`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Planet />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Nações
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<MapTrifold />}
               variant={onWindow === 'nations' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/nations`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <MapTrifold />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Personagens
-            <Button
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<UserFocus />}
               variant={onWindow === 'persons' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/persons`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <UserFocus />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Cidades
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Buildings />}
               variant={onWindow === 'cities' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/cities`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Buildings />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Raças
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Alien />}
               variant={onWindow === 'races' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/races`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Alien />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Religiões
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Atom />}
               variant={onWindow === 'religions' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/religions`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Atom />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Poderes
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Lightning />}
               variant={onWindow === 'powers' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/powers`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Lightning />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Famílias
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<UsersFour />}
               variant={onWindow === 'familys' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/familys`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <UsersFour />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Linguagens
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Translate />}
               variant={onWindow === 'languages' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/languages`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Translate />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Instituições
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Bank />}
               variant={onWindow === 'institutions' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/institutions`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Bank />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           <Label size="xxs">
             Time lines
-            <Button
+            <ButtonRoot
               type="button"
               disabled
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Clock />}
               variant={onWindow === 'timelines' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/timelines`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <Clock />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
 
           <Label size="xxs">
             Mind map
-            <Button
+            <ButtonRoot
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<TreeStructure />}
               variant={onWindow === 'mindMap' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/mindMap`)
                 setNavigatorProjectIsOpen(false)
               }}
-            />
+            >
+              <ButtonIcon>
+                <TreeStructure />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
 
           <Label size="xxs">
             Configurações
-            <Button
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Gear />}
               onClick={() => {
                 router.push(`/project/${id}/settings`)
                 setNavigatorProjectIsOpen(false)
               }}
               variant={onWindow === 'settings' ? 'active' : 'default'}
-            />
+            >
+              <ButtonIcon>
+                <Gear />
+              </ButtonIcon>
+            </ButtonRoot>
           </Label>
           {project?.createdPerUser !== user?.id && (
             <Label size="xxs">
               Sair
-              <Button
+              <ButtonRoot
                 disabled={isFullDisabled || !!loading}
                 type="button"
                 css={{
@@ -471,9 +540,12 @@ export function ProjectNavigation({
                 }}
                 wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                 align="center"
-                icon={<UserMinus />}
                 onClick={() => setOnOpenQuit(true)}
-              />
+              >
+                <ButtonIcon>
+                  <UserMinus />
+                </ButtonIcon>
+              </ButtonRoot>
             </Label>
           )}
           {project?.createdPerUser === user?.id && (
@@ -486,7 +558,7 @@ export function ProjectNavigation({
                 }}
               >
                 Apagar
-                <Button
+                <ButtonRoot
                   disabled={isFullDisabled || !!loading}
                   type="button"
                   css={{
@@ -494,9 +566,12 @@ export function ProjectNavigation({
                   }}
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  icon={<Trash />}
                   onClick={() => setOnOpenDelete(true)}
-                />
+                >
+                  <ButtonIcon>
+                    <Trash />
+                  </ButtonIcon>
+                </ButtonRoot>
               </Label>
             </>
           )}
@@ -509,25 +584,34 @@ export function ProjectNavigation({
               Tem certeza que quer apagar o projeto? Será impossível desfazer
               isso.
             </Text>
-            <Button
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               css={{
                 background: 'DarkRed',
               }}
               align="center"
-              icon={<Trash />}
-              label="Apagar permanentemente"
               onClick={() => handleDeleteProject()}
-            />
-            <Button
+            >
+              <ButtonIcon>
+                <Trash />
+              </ButtonIcon>
+
+              <ButtonLabel>Apagar permanentemente</ButtonLabel>
+            </ButtonRoot>
+
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               align="center"
-              icon={<XSquare />}
-              label="Cancelar"
               onClick={() => setOnOpenDelete(false)}
-            />
+            >
+              <ButtonIcon>
+                <XSquare />
+              </ButtonIcon>
+
+              <ButtonLabel>Cancelar</ButtonLabel>
+            </ButtonRoot>
           </Box>
         </DeletePopUp>
       )}
@@ -539,25 +623,34 @@ export function ProjectNavigation({
               Tem certeza que quer sair do projeto? Será impossível desfazer
               isso. Você não poderá mais ver o projeto na sua aba de projetos.
             </Text>
-            <Button
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               css={{
                 background: 'DarkRed',
               }}
               align="center"
-              icon={<UserMinus />}
-              label="Sair do projeto."
               onClick={handleQuitProject}
-            />
-            <Button
+            >
+              <ButtonIcon>
+                <UserMinus />
+              </ButtonIcon>
+
+              <ButtonLabel>Sair do projeto</ButtonLabel>
+            </ButtonRoot>
+
+            <ButtonRoot
               disabled={isFullDisabled || !!loading}
               type="button"
               align="center"
-              icon={<XSquare />}
-              label="Cancelar"
               onClick={() => setOnOpenDelete(false)}
-            />
+            >
+              <ButtonIcon>
+                <XSquare />
+              </ButtonIcon>
+
+              <ButtonLabel>Cancelar</ButtonLabel>
+            </ButtonRoot>
           </Box>
         </DeletePopUp>
       )}

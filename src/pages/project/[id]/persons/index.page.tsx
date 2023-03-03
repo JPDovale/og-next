@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { Button, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { useRouter } from 'next/router'
 import {
   Calendar,
@@ -35,10 +35,16 @@ import { useWindowSize } from '@hooks/useWindow'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { DefaultError } from '@components/usefull/DefaultError'
-import { TextInput } from '@components/usefull/TextInput'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { CardPerson } from '@components/PersonsComponents/CardPerson'
 import { Avatares } from '@components/usefull/Avatares'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 const newPersonFormSchema = z.object({
   name: z
@@ -125,23 +131,30 @@ export default function PersonsPage() {
         <NewPersonFormContainer>
           <ShowFormButton
             formIsVisible={formIsVisible}
-            icon={
-              formIsVisible ? <X weight="bold" /> : <UserPlus weight="bold" />
-            }
-            label={
-              !formIsVisible ? (smallWindow ? '' : 'Criar personagem') : ''
-            }
             wid="hug"
             onClick={() => setFormIsVisible(!formIsVisible)}
-          />
+          >
+            <ButtonIcon>
+              {formIsVisible ? <X weight="bold" /> : <UserPlus weight="bold" />}
+            </ButtonIcon>
+
+            <ButtonLabel>
+              {!formIsVisible ? (smallWindow ? '' : 'Criar personagem') : ''}
+            </ButtonLabel>
+          </ShowFormButton>
 
           <QueryInputContainer formIsVisible={formIsVisible}>
-            <QueryInput
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              icon={<MagnifyingGlass size={24} />}
-              placeholder="Encontre um personagem"
-            />
+            <QueryInput>
+              <TextInputIcon>
+                <MagnifyingGlass size={24} />
+              </TextInputIcon>
+
+              <TextInputInput
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Encontre um personagem"
+              />
+            </QueryInput>
           </QueryInputContainer>
 
           <Text
@@ -169,15 +182,20 @@ export default function PersonsPage() {
                     </Text>
                   </InputHeader>
 
-                  <TextInput
-                    label="name"
-                    register={register}
+                  <TextInputRoot
                     variant={
                       formState.errors.name?.message ? 'denied' : 'default'
                     }
-                    icon={<IdentificationCard weight="bold" />}
-                    placeholder="Nome do personagem"
-                  />
+                  >
+                    <TextInputIcon>
+                      <IdentificationCard weight="bold" />
+                    </TextInputIcon>
+
+                    <TextInputInput
+                      placeholder="Nome do personagem"
+                      {...register('name')}
+                    />
+                  </TextInputRoot>
                 </InputForm>
 
                 <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
@@ -188,15 +206,20 @@ export default function PersonsPage() {
                     </Text>
                   </InputHeader>
 
-                  <TextInput
-                    label="lastName"
-                    register={register}
+                  <TextInputRoot
                     variant={
                       formState.errors.lastName?.message ? 'denied' : 'default'
                     }
-                    icon={<IdentificationCard weight="bold" />}
-                    placeholder="Sobrenome do personagem"
-                  />
+                  >
+                    <TextInputIcon>
+                      <IdentificationCard weight="bold" />
+                    </TextInputIcon>
+
+                    <TextInputInput
+                      placeholder="Sobrenome do personagem"
+                      {...register('lastName')}
+                    />
+                  </TextInputRoot>
                 </InputForm>
 
                 <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
@@ -207,15 +230,20 @@ export default function PersonsPage() {
                     </Text>
                   </InputHeader>
 
-                  <TextInput
-                    label="age"
-                    register={register}
+                  <TextInputRoot
                     variant={
                       formState.errors.age?.message ? 'denied' : 'default'
                     }
-                    icon={<Calendar weight="bold" />}
-                    placeholder="Idade do personagem"
-                  />
+                  >
+                    <TextInputIcon>
+                      <Calendar weight="bold" />
+                    </TextInputIcon>
+
+                    <TextInputInput
+                      placeholder="Idade do personagem"
+                      {...register('age')}
+                    />
+                  </TextInputRoot>
                 </InputForm>
               </InfosBasics>
 
@@ -236,13 +264,17 @@ export default function PersonsPage() {
               </InputForm>
             </NewInfosPerson>
 
-            <Button
-              label="Criar"
+            <ButtonRoot
               type="submit"
-              icon={<PlusCircle weight="bold" />}
               align="center"
               disabled={formState.isSubmitting}
-            />
+            >
+              <ButtonIcon>
+                <PlusCircle weight="bold" />
+              </ButtonIcon>
+
+              <ButtonLabel>Criar</ButtonLabel>
+            </ButtonRoot>
           </NewPersonForm>
         </NewPersonFormContainer>
 

@@ -1,7 +1,9 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
-import { Button, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { CaretDoubleRight, Chats, PaperPlaneTilt } from 'phosphor-react'
 import { FormEvent, useState, useContext } from 'react'
 import { Comment } from '../Comment'
@@ -89,13 +91,13 @@ export function CommentsOnPage({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
-          <Button
-            disabled={isNew}
-            type="submit"
-            label="Comentar"
-            icon={<PaperPlaneTilt weight="bold" />}
-            align="center"
-          />
+          <ButtonRoot disabled={isNew} type="submit" align="center">
+            <ButtonIcon>
+              <PaperPlaneTilt weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Comentar</ButtonLabel>
+          </ButtonRoot>
         </NewCommentForm>
       )}
 

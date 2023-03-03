@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { Button, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { EditContainer, Info } from './styles'
@@ -27,7 +27,9 @@ import { useWindowSize } from '@hooks/useWindow'
 import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 
 const personFormSchema = z.object({
   name: z.string(),
@@ -92,29 +94,32 @@ export default function EditPersonPage() {
           <Info isCard columns={smallWindow ? 1 : 3}>
             <Text family="body" as="label">
               Nome
-              <TextInput
-                placeholder={personName}
-                label="name"
-                register={register}
-              />
+              <TextInputRoot>
+                <TextInputInput
+                  placeholder={personName}
+                  {...register('name')}
+                />
+              </TextInputRoot>
             </Text>
 
             <Text family="body" as="label">
               Sobrenome
-              <TextInput
-                placeholder={person?.lastName || 'Carregando...'}
-                label="lastName"
-                register={register}
-              />
+              <TextInputRoot>
+                <TextInputInput
+                  placeholder={person?.lastName || 'Carregando...'}
+                  {...register('lastName')}
+                />
+              </TextInputRoot>
             </Text>
 
             <Text family="body" as="label">
               Idade
-              <TextInput
-                placeholder={person?.age || 'Carregando...'}
-                label="age"
-                register={register}
-              />
+              <TextInputRoot>
+                <TextInputInput
+                  placeholder={person?.age || 'Carregando...'}
+                  {...register('age')}
+                />
+              </TextInputRoot>
             </Text>
           </Info>
 
@@ -129,10 +134,8 @@ export default function EditPersonPage() {
             </Text>
           </Info>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Salvar alterações"
-            icon={<PencilLine />}
             wid={smallWindow ? 'full' : 'middle'}
             align="center"
             disabled={
@@ -145,7 +148,13 @@ export default function EditPersonPage() {
               marginTop: '$4',
               marginBottom: '$8',
             }}
-          />
+          >
+            <ButtonIcon>
+              <PencilLine />
+            </ButtonIcon>
+
+            <ButtonLabel>Salvar alterações</ButtonLabel>
+          </ButtonRoot>
 
           <Info isCard columns={2}>
             <Text family="body" as="label">
