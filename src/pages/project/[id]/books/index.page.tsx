@@ -1,7 +1,8 @@
+import * as Dialog from '@radix-ui/react-dialog'
 import { CardBook } from '@components/BooksComponents/CardBook'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
-import { DefaultError } from '@components/usefull/DefaultError'
 import { ListEmpty } from '@components/usefull/ListEmpty'
+import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,11 +10,15 @@ import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Books } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 import { BooksContainer, NewBookButtonContainer } from './styles'
+import { NewBookModal } from './components/NewBookModal'
+import { Toast } from '@components/usefull/Toast'
 
 export default function BooksPage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
+
   const { loading, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
@@ -34,28 +39,33 @@ export default function BooksPage() {
         inError={!loading && !project}
         isScrolling
       >
-        {error && (
-          <DefaultError
-            close={() => setError(undefined)}
-            title={error.title}
-            message={error.message}
-          />
-        )}
+        <ToastError error={error} setError={setError} />
+        <Toast
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          title="Livro criado"
+          message="Parabéns! Você acabou de criar um novo livro... Veja ele na aba de livos"
+        />
 
-        <NewBookButtonContainer>
-          <ButtonRoot
-            icon={<Books />}
-            align="center"
-            css={{ padding: '$3' }}
-            onClick={() => router.push(`/project/${id}/books/new`)}
-          >
-            <ButtonIcon>
-              <Books />
-            </ButtonIcon>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <NewBookButtonContainer>
+              <ButtonRoot
+                align="center"
+                size="sm"
+                // onClick={() => router.push(`/project/${id}/books/new`)}
+              >
+                <ButtonIcon>
+                  <Books />
+                </ButtonIcon>
 
-            <ButtonLabel>Criar novo livro</ButtonLabel>
-          </ButtonRoot>
-        </NewBookButtonContainer>
+                <ButtonLabel>Criar novo livro</ButtonLabel>
+              </ButtonRoot>
+            </NewBookButtonContainer>
+          </Dialog.Trigger>
+
+          <NewBookModal openToast={() => setSuccessToastOpen(true)} />
+        </Dialog.Root>
 
         <BooksContainer>
           {booksThisProject[0] ? (

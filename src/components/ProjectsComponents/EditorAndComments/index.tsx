@@ -5,6 +5,7 @@ import { EditorContainer } from './styles'
 
 interface IEditorAndCommentsProps {
   to: string
+  superFix?: string
   updateValue: () => void
   setValue: (value: any) => void
   preValue: any
@@ -13,10 +14,12 @@ interface IEditorAndCommentsProps {
   personId?: string
   projectCreatedPerUser: string
   comments?: IComment[]
+  withoutComments?: boolean
 }
 
 export function EditorAndComments({
   to,
+  superFix,
   updateValue,
   setValue,
   preValue,
@@ -25,10 +28,12 @@ export function EditorAndComments({
   personId = '',
   projectCreatedPerUser,
   comments = [],
+  withoutComments = false,
 }: IEditorAndCommentsProps) {
   return (
     <EditorContainer>
       <Editor
+        superFix={superFix}
         projectId={projectId}
         to={to}
         permission={permission}
@@ -36,14 +41,16 @@ export function EditorAndComments({
         preValue={preValue}
         setValue={setValue}
       />
-      <CommentsOnPage
-        personId={personId}
-        to={to}
-        projectId={projectId}
-        projectCreatedPerUser={projectCreatedPerUser}
-        comments={comments}
-        permission={permission}
-      />
+      {!withoutComments && (
+        <CommentsOnPage
+          personId={personId}
+          to={to}
+          projectId={projectId}
+          projectCreatedPerUser={projectCreatedPerUser}
+          comments={comments}
+          permission={permission}
+        />
+      )}
     </EditorContainer>
   )
 }

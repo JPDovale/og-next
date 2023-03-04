@@ -8,7 +8,7 @@ export const PlotPartsContainer = styled('div', {
   borderRadius: '$sm',
 
   '@media screen and (max-width: 768px)': {
-    gridTemplateColumns: '1fr ',
+    gridTemplateColumns: '1fr',
   },
 
   variants: {
@@ -17,10 +17,10 @@ export const PlotPartsContainer = styled('div', {
         display: 'grid',
         gap: '$8',
         padding: '$6',
-        gridTemplateColumns: '1fr ',
+        gridTemplateColumns: '1fr',
 
         borderRadius: '0',
-        background: '$gray400',
+        background: '$gray800',
         boxShadow: 'none',
 
         '@media screen and (max-width: 768px)': {
@@ -31,6 +31,9 @@ export const PlotPartsContainer = styled('div', {
     },
     columns: {
       undefined: {},
+      1: {
+        gridTemplateColumns: '1fr',
+      },
       2: {
         gridTemplateColumns: '1fr 1fr',
 

@@ -19,12 +19,14 @@ import Link from 'next/link'
 import {
   At,
   Envelope,
+  Eye,
+  EyeClosed,
   // GoogleLogo,
   LockKey,
   UserCircle,
 } from 'phosphor-react'
 import { z } from 'zod'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 // import { signIn, useSession } from 'next-auth/react'
 // import { unstable_getServerSession } from 'next-auth'
@@ -74,6 +76,8 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function RegisterPage() {
+  const [isShowPassword, setIsShowPassword] = useState(false)
+
   const { createUser, userLogged, error, loading } = useContext(UserContext)
 
   const { handleSubmit, register, formState, setError } =
@@ -218,16 +222,20 @@ export default function RegisterPage() {
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              isShown
             >
               <TextInputIcon>
                 <LockKey />
               </TextInputIcon>
 
               <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
                 placeholder="***************"
                 {...register('password')}
               />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
             </TextInputRoot>
           </InputContainer>
 
@@ -243,16 +251,20 @@ export default function RegisterPage() {
               variant={
                 formState.errors.confirmPassword?.message ? 'denied' : 'default'
               }
-              isShown
             >
               <TextInputIcon>
                 <LockKey />
               </TextInputIcon>
 
               <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
                 placeholder="***************"
                 {...register('confirmPassword')}
               />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
             </TextInputRoot>
           </InputContainer>
 

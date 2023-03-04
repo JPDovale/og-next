@@ -6,6 +6,7 @@ export const CardUserWithAccessContainer = styled('div', {
   flexDirection: 'column',
   alignItems: 'center',
   position: 'relative',
+  padding: '$4',
 
   width: '100%',
 

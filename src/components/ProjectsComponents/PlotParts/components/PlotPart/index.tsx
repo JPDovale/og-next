@@ -1,23 +1,17 @@
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
-import { Comment } from '@components/ProjectsComponents/Comment'
 import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import { Pencil } from 'phosphor-react'
-import { Comments, ElementContent, PlotPartContainer } from './styles'
+import { Content, ElementContent, PlotPartContainer } from './styles'
 
 interface IPlotPartProps {
-  term: 'o' | 'a' | 'os' | 'as'
   idObject: string
   to: string
-  last?: string
-  lastTerm?: 'o' | 'a' | 'os' | 'as'
   element: string | undefined
   disabled?: boolean
   permission: 'view' | 'edit' | 'comment' | undefined
   isPreview: boolean
-  comments?: IComment[]
   keyValue: string
   isToProject: boolean
 }
@@ -25,21 +19,15 @@ interface IPlotPartProps {
 export function PlotPart({
   to,
   idObject,
-  last,
-  lastTerm,
   element,
-  term,
   permission,
   disabled = false,
   isPreview,
-  comments,
   keyValue,
   isToProject,
 }: IPlotPartProps) {
   const router = useRouter()
   const { id } = router.query
-
-  const comment = comments?.filter((comment) => comment.to === keyValue)[0]
 
   const pathToRedirect = isToProject
     ? `/project/${id}/plot/${keyValue}`
@@ -72,7 +60,7 @@ export function PlotPart({
           </ButtonRoot>
         )}
       </Heading>
-      <Text
+      <Content
         as="div"
         family="body"
         size="lg"
@@ -91,7 +79,7 @@ export function PlotPart({
             size="xs"
             css={{
               alignSelf: 'center',
-              color: isPreview ? '$black' : '$white',
+              color: '$black',
             }}
           >
             {finalMessage}
@@ -102,23 +90,14 @@ export function PlotPart({
             size="xs"
             css={{
               alignSelf: 'center',
-              color: isPreview ? '$white' : '$white',
+              color: '$black',
               paddingBottom: 16,
             }}
           >
             {finalMessage}
           </Text>
         )}
-      </Text>
-      {!isPreview && !isToProject && comment && (
-        <Comments>
-          <Heading as="header" size="sm">
-            Comentários
-          </Heading>
-
-          <Comment projectId={idObject} comment={comment} isPreview />
-        </Comments>
-      )}
+      </Content>
     </PlotPartContainer>
   )
 }

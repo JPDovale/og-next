@@ -4,7 +4,7 @@ import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { Textarea } from '@components/usefull/Textarea'
-import { CaretDoubleRight, Chats, PaperPlaneTilt } from 'phosphor-react'
+import { Chats, PaperPlaneTilt } from 'phosphor-react'
 
 import { FormEvent, useState, useContext } from 'react'
 import { Comment } from '../Comment'
