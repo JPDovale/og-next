@@ -3,15 +3,12 @@ import { styled } from '@styles/index'
 export const PlotPartsContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr 1fr',
-  // padding: '$6',
-  // background: '$gray900',
   gap: '$4',
-  // overflowX: 'scroll',
-  // boxShadow: '$onActive',
+
   borderRadius: '$sm',
 
   '@media screen and (max-width: 768px)': {
-    gridTemplateColumns: '1fr ',
+    gridTemplateColumns: '1fr',
   },
 
   variants: {
@@ -20,10 +17,10 @@ export const PlotPartsContainer = styled('div', {
         display: 'grid',
         gap: '$8',
         padding: '$6',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: '1fr',
 
         borderRadius: '0',
-        background: '$gray400',
+        background: '$gray800',
         boxShadow: 'none',
 
         '@media screen and (max-width: 768px)': {
@@ -34,6 +31,9 @@ export const PlotPartsContainer = styled('div', {
     },
     columns: {
       undefined: {},
+      1: {
+        gridTemplateColumns: '1fr',
+      },
       2: {
         gridTemplateColumns: '1fr 1fr',
 

@@ -1,144 +1,56 @@
+import { TextEditor } from '@components/TextEditor'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Text } from '@components/usefull/Text'
-import { Textarea } from '@components/usefull/Textarea'
-import { useRouter } from 'next/router'
-import {
-  CaretCircleDoubleLeft,
-  FileArrowUp,
-  FileX,
-  Textbox,
-} from 'phosphor-react'
-import { useState } from 'react'
-import { EditorContainer, EditorHeader } from './styles'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { reverbKeys } from '@services/reverbKeys'
+import { FileArrowUp, FileX, Textbox } from 'phosphor-react'
+import { EditorHeader } from './styles'
 
 interface IEditorProps {
-  value: any
-  preValue?: string
-  setValue?: (newState: any) => void
-  permission?: 'edit' | 'view' | 'comment' | undefined
-  updateValue: () => void
+  superFix?: string
+  projectId: string
   to: string
-  message?: string
-  toMany?: any[]
-  preValueToMany?: string[]
+  preValue: string
+  setValue: (newState: string) => void
+  permission: 'edit' | 'comment' | 'view' | undefined
+  handleUpdate: () => void
 }
 
 export function Editor({
-  setValue,
-  value,
-  preValue,
-  permission,
-  updateValue,
+  projectId,
   to,
-  toMany,
-  preValueToMany,
-  message,
+  preValue,
+  setValue,
+  permission,
+  handleUpdate,
+  superFix,
 }: IEditorProps) {
-  const [valueChanged, setValueChanged] = useState(false)
-  const [error, setError] = useState('')
-
-  const router = useRouter()
-  const { id: projectId } = router.query
-  const goBackPath = router.pathname.split('/')[3]
+  const { GoBackButton } = usePreventBack(`/project/${projectId}/plot`)
 
   return (
-    <EditorContainer toMany={!!toMany}>
+    <ContainerGrid isRelativePosition>
+      <GoBackButton topDistance={4} />
+
       <EditorHeader>
-        <Text as="span">
-          <Textbox size={24} /> Editar {to}.
+        <Text as="span" size="xl">
+          <Textbox size={24} /> Editar {reverbKeys[to]} {superFix}.
         </Text>
-
-        <ButtonRoot
-          type="button"
-          className="goBack"
-          wid="hug"
-          onClick={() => router.push(`/project/${projectId}/${goBackPath}`)}
-        >
-          <ButtonIcon>
-            <CaretCircleDoubleLeft weight="bold" />
-          </ButtonIcon>
-        </ButtonRoot>
       </EditorHeader>
-      <Text
-        size="md"
-        css={{
-          color: '$successDefault',
-        }}
-        weight="bold"
-        family="body"
-      >
-        {message}
-      </Text>
-      {toMany ? (
-        <>
-          {toMany.map((i, index) => {
-            const valueThisIndex = value.find((item: any) => item.key === i.key)
-            const valueThisIndexChanged = valueThisIndex.changed
 
-            return (
-              <Textarea
-                key={i.key}
-                placeholder={`Digite aqui o(a) ${i.label}`}
-                value={
-                  valueThisIndex.value ||
-                  (!valueThisIndexChanged
-                    ? preValueToMany && preValueToMany[index]
-                    : valueThisIndex.value)
-                }
-                onClick={() =>
-                  permission !== 'edit' &&
-                  setError(
-                    'Você não tem permissão para editar o projeto. Aguarde os editores.',
-                  )
-                }
-                onChange={(e) => {
-                  const thisIndexUpdated = valueThisIndex
-
-                  if (!valueThisIndexChanged) {
-                    thisIndexUpdated.changed = true
-                  }
-
-                  const filteredKeys = value.filter(
-                    (item: any) => item.key !== i.key,
-                  )
-
-                  thisIndexUpdated.value = e.target.value
-
-                  const newState = [...filteredKeys, thisIndexUpdated]
-                  setValue && setValue(newState)
-                }}
-                readOnly={permission !== 'edit'}
-              />
-            )
-          })}
-        </>
-      ) : (
-        <Textarea
-          placeholder={`Digite aqui o(a) ${to}`}
-          value={value || (!valueChanged ? preValue : value)}
-          onClick={() =>
-            permission !== 'edit' &&
-            setError(
-              'Você não tem permissão para editar o projeto. Aguarde os editores.',
-            )
-          }
-          onChange={(e) => {
-            if (!valueChanged) {
-              setValueChanged(true)
-            }
-            setValue && setValue(e.target.value)
-          }}
-          readOnly={permission !== 'edit'}
-        />
-      )}
+      <TextEditor
+        setValue={setValue}
+        initialValue={preValue}
+        permission={permission}
+      />
 
       {permission === 'edit' && (
-        <div className="buttons">
+        <ContainerGrid columns={2}>
           <ButtonRoot
             type="button"
             align="center"
-            className="save"
-            onClick={updateValue}
+            css={{ background: 'DarkGreen' }}
+            onClick={handleUpdate}
           >
             <ButtonIcon>
               <FileArrowUp weight="bold" />
@@ -149,7 +61,7 @@ export function Editor({
           <ButtonRoot
             type="button"
             align="center"
-            className="cancel"
+            css={{ background: 'DarkRed' }}
             onClick={() => setValue && setValue(preValue || '')}
           >
             <ButtonIcon>
@@ -157,20 +69,8 @@ export function Editor({
             </ButtonIcon>
             <ButtonLabel>Cancelar</ButtonLabel>
           </ButtonRoot>
-        </div>
+        </ContainerGrid>
       )}
-      {error && (
-        <Text
-          size="md"
-          css={{
-            color: '$errorDefault',
-          }}
-          weight="bold"
-          family="body"
-        >
-          {error}
-        </Text>
-      )}
-    </EditorContainer>
+    </ContainerGrid>
   )
 }

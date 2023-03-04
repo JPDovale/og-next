@@ -1,12 +1,12 @@
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
-import { DefaultError } from '@components/usefull/DefaultError'
 import {
   TextInputIcon,
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
+import { Toast } from '@components/usefull/Toast'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -29,7 +29,7 @@ import {
   UserFocus,
   Warning,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { ChangeEvent, useContext, useState } from 'react'
 
 import { CardUserWithAccess } from './components/CardUserWithAccess'
 import { Creator, Info, SettingsProject } from './styles'
@@ -86,13 +86,12 @@ export default function SettingsPage() {
         isScrolling
       >
         <SettingsProject>
-          {error && (
-            <DefaultError
-              title={error.title}
-              message={error.message}
-              close={() => setError(undefined)}
-            />
-          )}
+          <Toast
+            title={error?.title!}
+            message={error?.message!}
+            open={!!error}
+            setOpen={() => setError(undefined)}
+          />
 
           <Info isCard>
             <Text family="body" as="label">
@@ -104,7 +103,9 @@ export default function SettingsPage() {
 
                 <TextInputInput
                   placeholder={project?.name || 'Carregando...'}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setName(e.target.value)
+                  }
                   value={name}
                 />
               </TextInputRoot>

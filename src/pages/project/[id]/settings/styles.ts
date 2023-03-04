@@ -56,10 +56,6 @@ export const Info = styled('div', {
           alignItems: 'center',
           gap: '$1',
         },
-
-        div: {
-          padding: '$3',
-        },
       },
       false: {},
     },
@@ -84,6 +80,7 @@ export const Creator = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 4fr',
   alignItems: 'center',
+  gap: '$4',
 
   padding: '0',
 

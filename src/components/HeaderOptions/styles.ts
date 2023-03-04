@@ -1,4 +1,3 @@
-import { ButtonRoot } from '@components/usefull/Button'
 import { keyframes, styled } from '@styles/index'
 
 const loadingAnimation = keyframes({
@@ -38,6 +37,8 @@ export const HeaderOptionsContainer = styled('header', {
 
   boxShadow: '0 4px 8px #000000aa',
   borderTopLeftRadius: '48px',
+  transition: 'all 500ms',
+  background: '$gray800',
 
   variants: {
     NavIsOpen: {
@@ -51,30 +52,15 @@ export const HeaderOptionsContainer = styled('header', {
         width: '100%',
       },
     },
-    onPopUp: {
-      true: {
-        alignItems: 'flex-start',
-        paddingTop: '$8',
-        height: '100vh',
-        opacity: 0.7,
-        cursor: 'pointer',
-        background: 'black',
-      },
-      false: {
-        opacity: 1,
-        background: '$gray800',
-        transition: 'all 500ms',
-      },
-    },
   },
 
   defaultVariants: {
     NavIsOpen: true,
-    onPopUp: false,
   },
 
   '@media screen and (max-width: 768px)': {
     borderRadius: '0',
+    padding: '$4',
   },
 })
 
@@ -109,8 +95,8 @@ export const Title = styled('div', {
   },
 
   '@media screen and (max-width: 768px)': {
-    span: { fontSize: '$sm' },
     svg: { width: 20 },
+    gap: '$2',
   },
 })
 
@@ -145,17 +131,8 @@ export const Options = styled('div', {
   },
 
   '@media screen and (max-width: 768px)': {
-    svg: { width: 20 },
-    display: 'none',
-  },
-})
-
-export const AddNewProjectButton = styled(ButtonRoot, {
-  borderRadius: '$full',
-  padding: '$3',
-
-  '@media screen and (max-width: 768px)': {
-    padding: '$2',
+    gap: '$2',
+    svg: { width: 18 },
   },
 })
 
@@ -229,18 +206,5 @@ export const NewNotificationAlert = styled('div', {
 
   p: {
     lineHeight: 0,
-  },
-
-  variants: {
-    inRight: {
-      true: {
-        left: -14,
-        top: -8,
-        right: 'unset',
-
-        width: 18,
-        height: 18,
-      },
-    },
   },
 })

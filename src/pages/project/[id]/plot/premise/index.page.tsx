@@ -1,5 +1,8 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+
+import { Toast } from '@components/usefull/Toast'
+import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,10 +12,11 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function PremisePage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [premise, setPremise] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -32,6 +36,7 @@ export default function PremisePage() {
 
     await updatePlot(updatedPlotPremise, project.id as string)
     setMessage('Premissa Alterada com sucesso')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -44,12 +49,20 @@ export default function PremisePage() {
         paths={['plot', 'Premissa']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
+        <Toast
+          title="Premissa atualizada"
           message={message}
-          label="Premissa"
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <ToastError error={error} setError={setError} />
+
+        <EditorAndComments
           updateValue={handleUpdatePremise}
-          value={premise}
           preValue={project?.plot?.premise}
           permission={permission}
           comments={commentsPremise}

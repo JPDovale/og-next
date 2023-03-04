@@ -1,24 +1,12 @@
 import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
-import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { useRouter } from 'next/router'
-import { FilePlus, XCircle } from 'phosphor-react'
-import { FormEvent, useContext, useState } from 'react'
+import { FilePlus } from 'phosphor-react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 // import { InputRadio } from '../../../InputRadio'
-import {
-  HeaderNewProject,
-  Input,
-  NewProjectForm,
-  NewProjectPopupContainer,
-  Popup,
-  Submit,
-} from './styles'
-
-interface INewProjectPopupProps {
-  newProjectIsOpen: boolean
-  setNewProjectIsOpen: (newState: boolean) => void
-}
+import { Input, NewProjectForm, Submit } from './styles'
+import { ModalContent } from '@components/usefull/ModalContent'
 
 // const typesOfProjects = [
 //   { label: 'Book', value: 'book' },
@@ -27,10 +15,7 @@ interface INewProjectPopupProps {
 //   { label: 'RoadMap', value: 'roadMap' },
 // ]
 
-export function NewProjectPopup({
-  newProjectIsOpen,
-  setNewProjectIsOpen,
-}: INewProjectPopupProps) {
+export function NewProjectModal() {
   const { createProject } = useContext(ProjectsContext)
 
   const [
@@ -69,38 +54,26 @@ export function NewProjectPopup({
     }
 
     const idNewProject = await createProject(newProject)
-    setNewProjectIsOpen(false)
 
     router.push(`/project/${idNewProject}`)
   }
 
   return (
-    <NewProjectPopupContainer>
-      <Popup>
-        <HeaderNewProject>
-          <button
-            className="close"
-            type="button"
-            onClick={() => setNewProjectIsOpen(false)}
-          >
-            <XCircle size={32} />
-          </button>
-          <Text as={'h3'} size={'lg'} weight={'bold'} spacing={'maximum'}>
-            Novo projeto
-          </Text>
-        </HeaderNewProject>
-        <NewProjectForm onSubmit={handleNewProject}>
-          <Input as="label" size="xs">
-            Nome do projeto
-            <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
-              <TextInputInput
-                placeholder="Insira o nome do projeto"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-              />
-            </TextInputRoot>
-          </Input>
-          {/* <Input as="label" size="xs">
+    <ModalContent title="Novo projeto">
+      <NewProjectForm onSubmit={handleNewProject}>
+        <Input as="label" size="xs">
+          Nome do projeto
+          <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
+            <TextInputInput
+              placeholder="Insira o nome do projeto"
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setName(e.target.value)
+              }
+              value={name}
+            />
+          </TextInputRoot>
+        </Input>
+        {/* <Input as="label" size="xs">
             Selecione o tipo do projeto {type}
             <Text
               as="span"
@@ -114,7 +87,7 @@ export function NewProjectPopup({
             </Text>
             <InputRadio values={typesOfProjects} setState={setType} />
           </Input> */}
-          {/* <Input as="label" size="xs">
+        {/* <Input as="label" size="xs">
             O projeto é privado {isPrivate}
             <InputRadio
               values={[
@@ -135,15 +108,14 @@ export function NewProjectPopup({
               />
             </Input>
           )} */}
-          <Submit align="center" wid="full">
-            <ButtonIcon>
-              <FilePlus />
-            </ButtonIcon>
+        <Submit align="center" wid="full" variant="noShadow" size="sm">
+          <ButtonIcon>
+            <FilePlus />
+          </ButtonIcon>
 
-            <ButtonLabel>Criar projeto</ButtonLabel>
-          </Submit>
-        </NewProjectForm>
-      </Popup>
-    </NewProjectPopupContainer>
+          <ButtonLabel>Criar projeto</ButtonLabel>
+        </Submit>
+      </NewProjectForm>
+    </ModalContent>
   )
 }
