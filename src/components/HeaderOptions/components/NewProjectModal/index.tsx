@@ -1,24 +1,21 @@
+import * as Dialog from '@radix-ui/react-dialog'
 import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { useRouter } from 'next/router'
-import { FilePlus, XCircle } from 'phosphor-react'
-import { FormEvent, useContext, useState } from 'react'
+import { FilePlus, X } from 'phosphor-react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 // import { InputRadio } from '../../../InputRadio'
 import {
-  HeaderNewProject,
   Input,
   NewProjectForm,
-  NewProjectPopupContainer,
-  Popup,
   Submit,
+  ModalOverlay,
+  ModalContent,
+  ModalTitle,
+  ModalClose,
 } from './styles'
-
-interface INewProjectPopupProps {
-  newProjectIsOpen: boolean
-  setNewProjectIsOpen: (newState: boolean) => void
-}
 
 // const typesOfProjects = [
 //   { label: 'Book', value: 'book' },
@@ -27,10 +24,7 @@ interface INewProjectPopupProps {
 //   { label: 'RoadMap', value: 'roadMap' },
 // ]
 
-export function NewProjectPopup({
-  newProjectIsOpen,
-  setNewProjectIsOpen,
-}: INewProjectPopupProps) {
+export function NewProjectModal() {
   const { createProject } = useContext(ProjectsContext)
 
   const [
@@ -69,33 +63,32 @@ export function NewProjectPopup({
     }
 
     const idNewProject = await createProject(newProject)
-    setNewProjectIsOpen(false)
 
     router.push(`/project/${idNewProject}`)
   }
 
   return (
-    <NewProjectPopupContainer>
-      <Popup>
-        <HeaderNewProject>
-          <button
-            className="close"
-            type="button"
-            onClick={() => setNewProjectIsOpen(false)}
-          >
-            <XCircle size={32} />
-          </button>
-          <Text as={'h3'} size={'lg'} weight={'bold'} spacing={'maximum'}>
-            Novo projeto
-          </Text>
-        </HeaderNewProject>
+    <Dialog.Portal>
+      <ModalOverlay />
+
+      <ModalContent>
+        <ModalClose>
+          <X size={20} />
+        </ModalClose>
+
+        <ModalTitle asChild>
+          <Text as={'h3'}>Novo projeto</Text>
+        </ModalTitle>
+
         <NewProjectForm onSubmit={handleNewProject}>
           <Input as="label" size="xs">
             Nome do projeto
             <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
               <TextInputInput
                 placeholder="Insira o nome do projeto"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
                 value={name}
               />
             </TextInputRoot>
@@ -135,7 +128,7 @@ export function NewProjectPopup({
               />
             </Input>
           )} */}
-          <Submit align="center" wid="full">
+          <Submit align="center" wid="full" variant="noShadow" size="sm">
             <ButtonIcon>
               <FilePlus />
             </ButtonIcon>
@@ -143,7 +136,7 @@ export function NewProjectPopup({
             <ButtonLabel>Criar projeto</ButtonLabel>
           </Submit>
         </NewProjectForm>
-      </Popup>
-    </NewProjectPopupContainer>
+      </ModalContent>
+    </Dialog.Portal>
   )
 }

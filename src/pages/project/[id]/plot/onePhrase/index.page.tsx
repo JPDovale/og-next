@@ -1,7 +1,6 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
-import { DefaultError } from '@components/usefull/DefaultError'
-import { Success } from '@components/usefull/Success'
+import { Toast } from '@components/usefull/Toast'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -11,6 +10,8 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function OnePhrasePage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
+
   const [onePhrase, setOnePhrase] = useState('')
   const [message, setMessage] = useState('')
 
@@ -34,6 +35,7 @@ export default function OnePhrasePage() {
 
     await updatePlot(updatedPlotOnePhrase, project.id as string)
     setMessage('Ideia central atualizada com sucesso.')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -48,20 +50,20 @@ export default function OnePhrasePage() {
         inError={!loading && !project}
         isScrolling
       >
-        {message && (
-          <Success
-            title="Sucesso"
-            message={message}
-            close={() => setMessage('')}
-          />
-        )}
-        {error && (
-          <DefaultError
-            title={error.title}
-            message={error.message}
-            close={() => setError(undefined)}
-          />
-        )}
+        <Toast
+          title="Ideia central atualizada"
+          message={message}
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <Toast
+          title={error?.title!}
+          message={error?.message!}
+          open={!!error}
+          setOpen={() => setError(undefined)}
+        />
 
         <EditorAndComments
           updateValue={handleUpdateOnePhrase}

@@ -1,4 +1,6 @@
-import { Button, Text, Textarea } from '@og-ui/react'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { Textarea } from '@components/usefull/Textarea'
 import { useRouter } from 'next/router'
 import {
   CaretCircleDoubleLeft,
@@ -6,7 +8,7 @@ import {
   FileX,
   Textbox,
 } from 'phosphor-react'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { EditorContainer, EditorHeader } from './styles'
 
 interface IEditorProps {
@@ -45,13 +47,16 @@ export function EditorPased({
         <Text as="span">
           <Textbox size={24} /> Editar {to}.
         </Text>
-        <Button
+        <ButtonRoot
           type="button"
           className="goBack"
           wid="hug"
-          icon={<CaretCircleDoubleLeft weight="bold" />}
           onClick={() => router.push(`/project/${projectId}/${goBackPath}`)}
-        />
+        >
+          <ButtonIcon>
+            <CaretCircleDoubleLeft weight="bold" />
+          </ButtonIcon>
+        </ButtonRoot>
       </EditorHeader>
       <Text
         size="md"
@@ -85,7 +90,7 @@ export function EditorPased({
                     'Você não tem permissão para editar o projeto. Aguarde os editores.',
                   )
                 }
-                onChange={(e) => {
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                   const thisIndexUpdated = valueThisIndex
 
                   if (!valueThisIndexChanged) {
@@ -108,7 +113,7 @@ export function EditorPased({
         </>
       ) : (
         <Textarea
-          placeholder={`Digite aqui o(a) ${to}`}
+          placehoder={`Digite aqui o(a) ${to}`}
           value={value || (!valueChanged ? preValue : value)}
           onClick={() =>
             permission !== 'edit' &&
@@ -116,7 +121,7 @@ export function EditorPased({
               'Você não tem permissão para editar o projeto. Aguarde os editores.',
             )
           }
-          onChange={(e) => {
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
             if (!valueChanged) {
               setValueChanged(true)
             }
@@ -128,22 +133,31 @@ export function EditorPased({
 
       {permission === 'edit' && (
         <div className="buttons">
-          <Button
+          <ButtonRoot
             type="button"
             align="center"
             className="save"
-            label="Salvar"
-            icon={<FileArrowUp weight="bold" />}
             onClick={updateValue}
-          />
-          <Button
+          >
+            <ButtonIcon>
+              <FileArrowUp weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Salvar</ButtonLabel>
+          </ButtonRoot>
+
+          <ButtonRoot
             type="button"
             align="center"
             className="cancel"
-            label="Cancelar"
-            icon={<FileX weight="bold" />}
             onClick={() => setValue && setValue(preValue || '')}
-          />
+          >
+            <ButtonIcon>
+              <FileX weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Cancelar</ButtonLabel>
+          </ButtonRoot>
         </div>
       )}
       {error && (

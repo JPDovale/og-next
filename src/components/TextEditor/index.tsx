@@ -1,6 +1,5 @@
-import { styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { Editor } from '@tinymce/tinymce-react'
-
 interface ITextEditorProps {
   initialValue?: string
   setValue: (newValue: string) => void
@@ -37,7 +36,7 @@ export function TextEditor({
           color_default_background: '#fff',
         }}
         disabled={permission !== 'edit'}
-        onEditorChange={(e) => setValue(e)}
+        onEditorChange={(e: string) => setValue(e)}
       />
     </TextEditorContainer>
   )
@@ -46,6 +45,10 @@ export function TextEditor({
 const TextEditorContainer = styled('div', {
   '.tox .tox-edit-area__iframe': {
     background: '$base700',
+  },
+
+  '.tox-promotion': {
+    visibility: 'hidden',
   },
 
   padding: '$2',

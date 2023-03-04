@@ -487,9 +487,8 @@ export default function UserSettingsPage() {
                   <ButtonIcon>
                     <X />
                   </ButtonIcon>
+                  <ButtonLabel>Remover avatar</ButtonLabel>
                 </ButtonRoot>
-
-                <ButtonLabel>Remover avatar</ButtonLabel>
               </div>
             </Info>
           </UserInfos>

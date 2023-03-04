@@ -60,7 +60,7 @@ export interface ITextAreaProps
   variant?: 'default' | 'accepted' | 'denied' | 'attention'
 }
 
-export const Textarea = forwardRef((props, ref) => {
+export const Textarea = forwardRef((props: ITextAreaProps, ref) => {
   return <TextareaContainer {...props} ref={ref} />
 })
 

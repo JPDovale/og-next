@@ -1,4 +1,5 @@
 import { styled } from '@styles/index'
+
 export const UserSettingsPageContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '8fr 4fr',
@@ -88,10 +89,6 @@ export const Info = styled('div', {
           flexDirection: 'row',
           alignItems: 'center',
           gap: '$1',
-        },
-
-        div: {
-          padding: '$3',
         },
       },
       false: {},

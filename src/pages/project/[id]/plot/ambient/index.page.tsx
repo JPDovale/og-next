@@ -1,5 +1,6 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Toast } from '@components/usefull/Toast'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,10 +10,11 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function AmbientPage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [ambient, setAmbient] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -32,6 +34,7 @@ export default function AmbientPage() {
 
     await updatePlot(updatedPlotAmbient, project.id as string)
     setMessage('Ambientação atualizada com sucesso.')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -43,12 +46,25 @@ export default function AmbientPage() {
         paths={['Plot', 'Ambientação']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
+        <Toast
+          title="Ambiente atualizado"
           message={message}
-          label="Ambientação"
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <Toast
+          title={error?.title!}
+          message={error?.message!}
+          open={!!error}
+          setOpen={() => setError(undefined)}
+        />
+
+        <EditorAndComments
           updateValue={handleUpdateAmbient}
-          value={ambient}
           preValue={project?.plot?.ambient}
           permission={permission}
           comments={commentsAmbient}

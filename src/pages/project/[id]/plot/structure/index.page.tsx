@@ -1,5 +1,6 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Toast } from '@components/usefull/Toast'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -8,21 +9,14 @@ import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
-interface IStructure {
-  key: 'act1' | 'act2' | 'act3'
-  value: string
-  changed: boolean
-}
-
 export default function StructurePage() {
-  const [structure, setStructure] = useState<IStructure[]>([
-    { key: 'act1', value: '', changed: false },
-    { key: 'act2', value: '', changed: false },
-    { key: 'act3', value: '', changed: false },
-  ])
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
+  const [act1, setAct1] = useState('')
+  const [act2, setAct2] = useState('')
+  const [act3, setAct3] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -33,23 +27,58 @@ export default function StructurePage() {
     (comment) => comment.to === 'structure',
   )
 
-  const act1 = structure.find((i) => i.key === 'act1') as IStructure
-  const act2 = structure.find((i) => i.key === 'act2') as IStructure
-  const act3 = structure.find((i) => i.key === 'act3') as IStructure
-
-  async function handleUpdateStructure() {
+  async function handleUpdateAct1() {
+    setSuccessToastOpen(false)
     setMessage('')
-    if (structure === project.plot.structure) return
+    if (act1 === project.plot.structure?.act1) return
+
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1: act1.changed ? act1?.value : project.plot.structure?.act1,
-        act2: act2.changed ? act2?.value : project.plot.structure?.act2,
-        act3: act3.changed ? act3?.value : project.plot.structure?.act3,
+        act1,
+        act2: project.plot.structure?.act2,
+        act3: project.plot.structure?.act3,
       },
     }
 
     await updatePlot(updatedPlotStructure, project.id as string)
-    setMessage('Estrutura atualizada com sucesso.')
+    setMessage('Estrutura -> Ato 1 atualizada com sucesso.')
+    setSuccessToastOpen(true)
+  }
+
+  async function handleUpdateAct2() {
+    setSuccessToastOpen(false)
+    setMessage('')
+    if (act2 === project.plot.structure?.act2) return
+
+    const updatedPlotStructure: IUpdatePlotDTO = {
+      structure: {
+        act1: project.plot.structure?.act1,
+        act2,
+        act3: project.plot.structure?.act3,
+      },
+    }
+
+    await updatePlot(updatedPlotStructure, project.id as string)
+    setMessage('Estrutura -> Ato 2 atualizada com sucesso.')
+    setSuccessToastOpen(true)
+  }
+
+  async function handleUpdateAct3() {
+    setSuccessToastOpen(false)
+    setMessage('')
+    if (act3 === project.plot.structure?.act3) return
+
+    const updatedPlotStructure: IUpdatePlotDTO = {
+      structure: {
+        act1: project.plot.structure?.act1,
+        act2: project.plot.structure?.act2,
+        act3,
+      },
+    }
+
+    await updatePlot(updatedPlotStructure, project.id as string)
+    setMessage('Estrutura -> Ato 3 atualizada com sucesso.')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -62,29 +91,59 @@ export default function StructurePage() {
         paths={['Plot', 'Estrutura']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
-          toMany={[
-            { key: 'act1', label: 'Ato 1' },
-            { key: 'act2', label: 'Ato 2' },
-            { key: 'act3', label: 'Ato 3' },
-          ]}
-          preValueToMany={[
-            act1?.value || (project?.plot.structure?.act1 as string),
-            act2?.value || (project?.plot.structure?.act2 as string),
-            act3?.value || (project?.plot.structure?.act3 as string),
-          ]}
+        <Toast
+          title="Estrutura de três atos atualizada"
           message={message}
-          label="Estrutura"
-          updateValue={handleUpdateStructure}
-          value={structure}
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <Toast
+          title={error?.title!}
+          message={error?.message!}
+          open={!!error}
+          setOpen={() => setError(undefined)}
+        />
+
+        <EditorAndComments
+          updateValue={handleUpdateAct1}
           preValue={project?.plot.structure?.act1}
           permission={permission}
           comments={commentsStructure}
           projectCreatedPerUser={project?.createdPerUser}
           projectId={project?.id as string}
-          setValue={setStructure}
+          setValue={setAct1}
           to="structure"
+          superFix="Ato 1"
+          withoutComments
+        />
+
+        <EditorAndComments
+          updateValue={handleUpdateAct2}
+          preValue={project?.plot.structure?.act2}
+          permission={permission}
+          comments={commentsStructure}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setAct2}
+          to="structure"
+          superFix="Ato 2"
+          withoutComments
+        />
+
+        <EditorAndComments
+          updateValue={handleUpdateAct3}
+          preValue={project?.plot.structure?.act3}
+          permission={permission}
+          comments={commentsStructure}
+          projectCreatedPerUser={project?.createdPerUser}
+          projectId={project?.id as string}
+          setValue={setAct3}
+          to="structure"
+          superFix="Ato 3"
         />
       </ProjectPageLayout>
     </>

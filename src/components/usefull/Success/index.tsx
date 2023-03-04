@@ -1,5 +1,8 @@
-import { Box, Button, Text, styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { X } from 'phosphor-react'
+import { Box } from '../Box'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '../Button'
+import { Text } from '../Text'
 
 interface ISuccessProps {
   title: string
@@ -17,10 +20,8 @@ export function Success({ title, message, close }: ISuccessProps) {
         <Text as="p" size="lg" family="body">
           {message}
         </Text>
-        <Button
+        <ButtonRoot
           type="button"
-          icon={<X />}
-          label="Fechar"
           align="center"
           wid="hug"
           css={{
@@ -28,7 +29,13 @@ export function Success({ title, message, close }: ISuccessProps) {
             marginTop: '$2',
           }}
           onClick={close}
-        />
+        >
+          <ButtonIcon>
+            <X />
+          </ButtonIcon>
+
+          <ButtonLabel>Fechar</ButtonLabel>
+        </ButtonRoot>
       </SuccessBox>
     </SuccessContainer>
   )

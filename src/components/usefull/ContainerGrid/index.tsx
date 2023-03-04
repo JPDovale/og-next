@@ -7,6 +7,7 @@ interface IContainerGrid {
   children?: ReactNode
   darkBackground?: boolean
   alignCenter?: boolean
+  isRelativePosition?: boolean
 }
 
 export function ContainerGrid({
@@ -15,6 +16,7 @@ export function ContainerGrid({
   children,
   darkBackground = false,
   alignCenter = false,
+  isRelativePosition = false,
 }: IContainerGrid) {
   return (
     <ContainerGridContainer
@@ -22,6 +24,7 @@ export function ContainerGrid({
       darkBackground={darkBackground}
       padding={padding}
       alignCenter={alignCenter}
+      isRelativePosition={isRelativePosition}
     >
       {children}
     </ContainerGridContainer>
@@ -108,6 +111,13 @@ const ContainerGridContainer = styled('div', {
       10: {
         padding: '$10',
       },
+    },
+
+    isRelativePosition: {
+      true: {
+        position: 'relative',
+      },
+      false: {},
     },
   },
 })
