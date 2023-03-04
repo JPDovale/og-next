@@ -3,6 +3,8 @@ import {
   At,
   Crosshair,
   Envelope,
+  Eye,
+  EyeClosed,
   HeartBreak,
   Key,
   Lightning,
@@ -59,6 +61,8 @@ interface IObjects {
 }
 
 export default function UserSettingsPage() {
+  const [isShowPassword, setIsShowPassword] = useState(false)
+
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -294,11 +298,17 @@ export default function UserSettingsPage() {
                       </TextInputIcon>
 
                       <TextInputInput
-                        type="password"
+                        type={isShowPassword ? 'text' : 'password'}
                         placeholder="**********"
                         value={oldPassword}
                         onChange={(e) => setOldPassword(e.target.value)}
                       />
+
+                      <TextInputIcon
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                      >
+                        {isShowPassword ? <Eye /> : <EyeClosed />}
+                      </TextInputIcon>
                     </TextInputRoot>
                   </Text>
 
@@ -310,11 +320,17 @@ export default function UserSettingsPage() {
                       </TextInputIcon>
 
                       <TextInputInput
-                        type="password"
+                        type={isShowPassword ? 'text' : 'password'}
                         placeholder="**********"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
+
+                      <TextInputIcon
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                      >
+                        {isShowPassword ? <Eye /> : <EyeClosed />}
+                      </TextInputIcon>
                     </TextInputRoot>
                   </Text>
                 </Info>

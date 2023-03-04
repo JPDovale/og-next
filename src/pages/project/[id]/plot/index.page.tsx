@@ -1,11 +1,7 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { PlotParts } from '@components/ProjectsComponents/PlotParts'
 import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
-import {
-  TextInputIcon,
-  TextInputInput,
-  TextInputRoot,
-} from '@components/usefull/InputText'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
@@ -14,7 +10,7 @@ import { useScroll } from '@hooks/useScroll'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { Link, Pencil } from 'phosphor-react'
+import { Pencil } from 'phosphor-react'
 import { ChangeEvent, FocusEvent, useContext, useState } from 'react'
 
 import {
@@ -63,14 +59,9 @@ export default function PlotPage() {
         <Container ref={scrollRef} onScroll={handleScroll}>
           {permission === 'edit' && !loading && (
             <BoxInputUrlOfTextContainer>
-              <BoxInputUrlOfText>
+              <BoxInputUrlOfText as="label">
                 <BoxInputUrlOfTextHeader>
-                  <Text
-                    as="label"
-                    htmlFor="linkOfText"
-                    weight="bold"
-                    css={{ color: '$black' }}
-                  >
+                  <Text weight="bold" css={{ color: '$black' }}>
                     Insira a url do seu arquivo de escrita.
                   </Text>
 
@@ -86,10 +77,6 @@ export default function PlotPage() {
 
                 <BoxInput onSubmit={handleEditUrlOfText}>
                   <TextInputRoot id="linkOfText">
-                    <TextInputIcon>
-                      <Link />
-                    </TextInputIcon>
-
                     <TextInputInput
                       type="url"
                       placeholder={
@@ -111,12 +98,9 @@ export default function PlotPage() {
 
                 {project?.plot?.urlOfText && (
                   <LinkOfText
-                    as="a"
                     target="_blank"
                     rel="noopener noreferrer"
                     href={project.plot.urlOfText}
-                    family="body"
-                    height="shorter"
                   >
                     <Text css={{ color: '$black' }} weight="bold" size="sm">
                       Link do texto:

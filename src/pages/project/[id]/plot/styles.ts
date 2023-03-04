@@ -1,4 +1,3 @@
-import { Text } from '@components/usefull/Text'
 import { styled } from '@styles/index'
 
 export const PlotPageContainer = styled('main', {
@@ -50,7 +49,7 @@ export const BoxInput = styled('form', {
   },
 })
 
-export const LinkOfText = styled(Text, {
+export const LinkOfText = styled('a', {
   textDecoration: 'none',
   color: '$purple600',
   whiteSpace: 'pre-wrap',

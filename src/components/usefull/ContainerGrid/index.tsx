@@ -2,7 +2,7 @@ import { styled } from '@styles/index'
 import { ReactNode } from 'react'
 
 interface IContainerGrid {
-  columns?: 1 | 2 | 3 | 4
+  columns?: 1 | 2 | 3 | 4 | 5 | 6
   padding?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   children?: ReactNode
   darkBackground?: boolean
@@ -62,6 +62,20 @@ const ContainerGridContainer = styled('div', {
       },
       4: {
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr',
+        },
+      },
+      5: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr',
+        },
+      },
+      6: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
 
         '@media screen and (max-width: 768px)': {
           gridTemplateColumns: '1fr 1fr',

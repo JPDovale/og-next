@@ -16,11 +16,11 @@ export function Toast({
   setOpen,
   title,
   message,
-  type = 'error',
+  type = 'success',
 }: IToastProps) {
   return (
     <ToastRoot open={open} onOpenChange={setOpen}>
-      <ToastTitle toastType={type}>
+      <ToastTitle>
         <Text
           weight="bold"
           css={{

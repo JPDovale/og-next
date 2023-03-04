@@ -1,6 +1,7 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
 import { Toast } from '@components/usefull/Toast'
+import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -56,12 +57,7 @@ export default function AmbientPage() {
           type="success"
         />
 
-        <Toast
-          title={error?.title!}
-          message={error?.message!}
-          open={!!error}
-          setOpen={() => setError(undefined)}
-        />
+        <ToastError error={error} setError={setError} />
 
         <EditorAndComments
           updateValue={handleUpdateAmbient}

@@ -243,7 +243,6 @@ export default function CapitulePage() {
                 </ContainerGrid>
                 <ButtonRoot
                   type="submit"
-                  label="Salvar"
                   disabled={isSubmitting || !isDirty}
                   size="sm"
                   variant="noShadow"
@@ -300,12 +299,10 @@ export default function CapitulePage() {
 
                   <ButtonRoot
                     type="button"
-                    label="Excluir"
                     align="center"
                     size="sm"
                     variant="noShadow"
                     css={{ background: '$fullError' }}
-                    icon={<Trash />}
                     onClick={handleDeleteCapitule}
                   >
                     <ButtonIcon>

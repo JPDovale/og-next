@@ -1,7 +1,5 @@
-import * as Dialog from '@radix-ui/react-dialog'
-import { ModalOverlay } from '@components/HeaderOptions/components/NewProjectModal/styles'
-import { ModalClose, ModalContent, ModalTitle, ShareForm } from './styles'
-import { Envelope, Share, X } from 'phosphor-react'
+import { ShareForm } from './styles'
+import { Envelope, Share } from 'phosphor-react'
 import { useProject } from '@hooks/useProject'
 import { Text } from '@components/usefull/Text'
 import { FormEvent, useContext, useState } from 'react'
@@ -14,6 +12,7 @@ import {
 } from '@components/usefull/InputText'
 import { InputRadio } from '@components/usefull/InputRadio'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { ModalContent } from '@components/usefull/ModalContent'
 
 interface IShareProjectModalProps {
   projectId: string
@@ -59,94 +58,82 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
   }
 
   return (
-    <Dialog.Portal>
-      <ModalOverlay />
+    <ModalContent title={`Pronto para compartilhar ${projectName}?`}>
+      <Toast
+        open={successToastOpen}
+        setOpen={setSuccessToastOpen}
+        title="Projeto compartilhado"
+        message="Seu projeto foi compartilhado com sucesso"
+        type="success"
+      />
 
-      <ModalContent>
-        <ModalClose>
-          <X size={20} />
-        </ModalClose>
+      <Toast
+        open={errorIn === 'email'}
+        setOpen={() => setErrorIn('')}
+        title="Erro ao compartilhar"
+        message="Parece que você já adicionou esse usuário ao projeto..."
+      />
 
-        <ModalTitle asChild>
-          <Text as={'h3'}>Pronto para compartilhar {projectName}?</Text>
-        </ModalTitle>
+      <Toast
+        open={!!error}
+        setOpen={() => setError(undefined)}
+        title={error?.title!}
+        message={error?.message!}
+      />
 
-        <Toast
-          open={successToastOpen}
-          setOpen={setSuccessToastOpen}
-          title="Projeto compartilhado"
-          message="Seu projeto foi compartilhado com sucesso"
-          type="success"
-        />
+      <ShareForm onSubmit={handleShareProject}>
+        <Text size="xs">
+          Informe o email do usuário que quer compartilhar o projeto
+        </Text>
 
-        <Toast
-          open={errorIn === 'email'}
-          setOpen={() => setErrorIn('')}
-          title="Erro ao compartilhar"
-          message="Parece que você já adicionou esse usuário ao projeto..."
-        />
+        <TextInputRoot variant={errorIn === 'email' ? 'denied' : 'default'}>
+          <TextInputIcon>
+            <Envelope />
+          </TextInputIcon>
 
-        <Toast
-          open={!!error}
-          setOpen={() => setError(undefined)}
-          title={error?.title!}
-          message={error?.message!}
-        />
-
-        <ShareForm onSubmit={handleShareProject}>
-          <Text size="xs">
-            Informe o email do usuário que quer compartilhar o projeto
-          </Text>
-
-          <TextInputRoot variant={errorIn === 'email' ? 'denied' : 'default'}>
-            <TextInputIcon>
-              <Envelope />
-            </TextInputIcon>
-
-            <TextInputInput
-              placeholder="jonas@ognare.com"
-              type="email"
-              onChange={(e) => setShareEmail(e.target.value)}
-              value={shareEmail}
-            />
-          </TextInputRoot>
-
-          <Text size="xs">
-            Esse usuário poderá{' '}
-            {sharePermission === 'edit'
-              ? 'editar '
-              : sharePermission === 'comment'
-              ? 'comentar n'
-              : 'visualizar '}
-            o projeto
-          </Text>
-
-          <InputRadio
-            values={[
-              { label: 'Editor', value: 'edit' },
-              { label: 'Comentarista', value: 'comment' },
-              { label: 'Visualização', value: 'view' },
-            ]}
-            setState={setSharePermission}
-            state={sharePermission}
-            withColorInBackground
+          <TextInputInput
+            placeholder="jonas@ognare.com"
+            type="email"
+            onChange={(e) => setShareEmail(e.target.value)}
+            value={shareEmail}
           />
+        </TextInputRoot>
 
-          <ButtonRoot
-            type="submit"
-            wid="middle"
-            align="center"
-            size="xs"
-            variant="noShadow"
-          >
-            <ButtonIcon>
-              <Share />
-            </ButtonIcon>
+        <Text size="xs">
+          Esse usuário poderá{' '}
+          {sharePermission === 'edit'
+            ? 'editar '
+            : sharePermission === 'comment'
+            ? 'comentar n'
+            : 'visualizar '}
+          o projeto
+        </Text>
 
-            <ButtonLabel>Compartilhar</ButtonLabel>
-          </ButtonRoot>
-        </ShareForm>
-      </ModalContent>
-    </Dialog.Portal>
+        <InputRadio
+          values={[
+            { label: 'Editor', value: 'edit' },
+            { label: 'Comentarista', value: 'comment' },
+            { label: 'Visualização', value: 'view' },
+          ]}
+          setState={setSharePermission}
+          state={sharePermission}
+          withColorInBackground
+        />
+
+        <ButtonRoot
+          type="submit"
+          wid="middle"
+          align="center"
+          size="xs"
+          variant="noShadow"
+        >
+          <ButtonIcon>
+            <Share />
+          </ButtonIcon>
+
+          <ButtonLabel>Compartilhar</ButtonLabel>
+        </ButtonRoot>
+      </ShareForm>
+    </ModalContent>
   )
 }

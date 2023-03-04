@@ -1,21 +1,12 @@
-import * as Dialog from '@radix-ui/react-dialog'
 import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
-import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { useRouter } from 'next/router'
-import { FilePlus, X } from 'phosphor-react'
+import { FilePlus } from 'phosphor-react'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 // import { InputRadio } from '../../../InputRadio'
-import {
-  Input,
-  NewProjectForm,
-  Submit,
-  ModalOverlay,
-  ModalContent,
-  ModalTitle,
-  ModalClose,
-} from './styles'
+import { Input, NewProjectForm, Submit } from './styles'
+import { ModalContent } from '@components/usefull/ModalContent'
 
 // const typesOfProjects = [
 //   { label: 'Book', value: 'book' },
@@ -68,32 +59,21 @@ export function NewProjectModal() {
   }
 
   return (
-    <Dialog.Portal>
-      <ModalOverlay />
-
-      <ModalContent>
-        <ModalClose>
-          <X size={20} />
-        </ModalClose>
-
-        <ModalTitle asChild>
-          <Text as={'h3'}>Novo projeto</Text>
-        </ModalTitle>
-
-        <NewProjectForm onSubmit={handleNewProject}>
-          <Input as="label" size="xs">
-            Nome do projeto
-            <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
-              <TextInputInput
-                placeholder="Insira o nome do projeto"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
-                }
-                value={name}
-              />
-            </TextInputRoot>
-          </Input>
-          {/* <Input as="label" size="xs">
+    <ModalContent title="Novo projeto">
+      <NewProjectForm onSubmit={handleNewProject}>
+        <Input as="label" size="xs">
+          Nome do projeto
+          <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
+            <TextInputInput
+              placeholder="Insira o nome do projeto"
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setName(e.target.value)
+              }
+              value={name}
+            />
+          </TextInputRoot>
+        </Input>
+        {/* <Input as="label" size="xs">
             Selecione o tipo do projeto {type}
             <Text
               as="span"
@@ -107,7 +87,7 @@ export function NewProjectModal() {
             </Text>
             <InputRadio values={typesOfProjects} setState={setType} />
           </Input> */}
-          {/* <Input as="label" size="xs">
+        {/* <Input as="label" size="xs">
             O projeto é privado {isPrivate}
             <InputRadio
               values={[
@@ -128,15 +108,14 @@ export function NewProjectModal() {
               />
             </Input>
           )} */}
-          <Submit align="center" wid="full" variant="noShadow" size="sm">
-            <ButtonIcon>
-              <FilePlus />
-            </ButtonIcon>
+        <Submit align="center" wid="full" variant="noShadow" size="sm">
+          <ButtonIcon>
+            <FilePlus />
+          </ButtonIcon>
 
-            <ButtonLabel>Criar projeto</ButtonLabel>
-          </Submit>
-        </NewProjectForm>
-      </ModalContent>
-    </Dialog.Portal>
+          <ButtonLabel>Criar projeto</ButtonLabel>
+        </Submit>
+      </NewProjectForm>
+    </ModalContent>
   )
 }

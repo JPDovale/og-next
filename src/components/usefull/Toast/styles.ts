@@ -61,22 +61,7 @@ export const ToastRoot = styled(Toast.Root, {
   },
 })
 
-export const ToastTitle = styled(Toast.Title, {
-  variants: {
-    toastType: {
-      error: {
-        p: {
-          color: '$errorDefault',
-        },
-      },
-      success: {
-        p: {
-          color: '$successDefault',
-        },
-      },
-    },
-  },
-})
+export const ToastTitle = styled(Toast.Title, {})
 
 export const ToastDescription = styled(Toast.Description, {})
 
