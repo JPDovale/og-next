@@ -67,7 +67,7 @@ export default function EditPersonPage() {
   const smallWindow = windowSize.width! < 786
 
   const { GoBackButton } = usePreventBack(
-    `/project/${project.id}/persons/${person?.id}`,
+    `/project/${project?.id}/persons/${person?.id}`,
   )
 
   async function handleUpdatePerson() {
