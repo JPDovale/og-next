@@ -1,4 +1,5 @@
-import { Heading, styled } from '@og-ui/react'
+import { styled } from '@styles/index'
+import { Heading } from '../Heading'
 
 export const HeadingPartContainer = styled(Heading, {
   display: 'flex',

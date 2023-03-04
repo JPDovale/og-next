@@ -1,117 +1,88 @@
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
-import { Comment } from '@components/ProjectsComponents/Comment'
-import { Button, Heading, Text } from '@og-ui/react'
+import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
+import { Heading } from '@components/usefull/Heading'
+import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import { Pencil } from 'phosphor-react'
-import { Comments, PlotPartContainer } from './styles'
+import { Content, ElementContent, PlotPartContainer } from './styles'
 
 interface IPlotPartProps {
-  term: 'o' | 'a' | 'os' | 'as'
   idObject: string
   to: string
-  last?: string
-  lastTerm?: 'o' | 'a' | 'os' | 'as'
   element: string | undefined
   disabled?: boolean
   permission: 'view' | 'edit' | 'comment' | undefined
   isPreview: boolean
-  comments?: IComment[]
   keyValue: string
-  isInitialized: boolean
   isToProject: boolean
 }
 
 export function PlotPart({
   to,
   idObject,
-  last,
-  lastTerm,
   element,
-  term,
   permission,
   disabled = false,
   isPreview,
-  comments,
   keyValue,
-  isInitialized,
   isToProject,
 }: IPlotPartProps) {
   const router = useRouter()
   const { id } = router.query
 
-  const comment = comments?.filter((comment) => comment.to === keyValue)[0]
-
-  const elementLineBraked = element?.split('\n')
   const pathToRedirect = isToProject
     ? `/project/${id}/plot/${keyValue}`
     : `/project/${id}/books/${idObject}/${keyValue}`
 
+  const finalMessage =
+    permission !== 'edit'
+      ? 'Aguarde os editores definirem esse tópico'
+      : permission === 'edit'
+      ? 'Clique para editar'
+      : 'Clique para visualizar'
+
   return (
-    <PlotPartContainer
-      disabled={!element && isInitialized && disabled}
-      isPreview={isPreview}
-    >
+    <PlotPartContainer disabled={!element && disabled} isPreview={isPreview}>
       <Heading as="header" size="sm">
         {to}
         {!isPreview && permission === 'edit' && (
-          <Button
+          <ButtonRoot
             type="button"
-            icon={<Pencil />}
             wid="hug"
-            disabled={!element && isInitialized && disabled}
+            disabled={!element && disabled}
             onClick={() => {
-              if (!element && isInitialized && disabled) return
+              if (!element && disabled) return
               router.push(pathToRedirect)
             }}
-          />
+          >
+            <ButtonIcon>
+              <Pencil />
+            </ButtonIcon>
+          </ButtonRoot>
         )}
       </Heading>
-      <Text
+      <Content
         as="div"
         family="body"
         size="lg"
         onClick={() => {
-          if (!element && isInitialized && disabled) return
+          if (!element && disabled) return
           router.push(pathToRedirect)
         }}
       >
-        {!element ? (
-          permission === 'edit' ? (
-            <Text family="body">
-              Você ainda não definiu {term} {to} do seu projeto{' '}
-            </Text>
-          ) : (
-            <Text family="body">
-              {to} ainda não foi definido pelos editores do projeto
-            </Text>
-          )
-        ) : (
-          elementLineBraked?.map((line) => {
-            if (line) {
-              return (
-                <Text key={line} family="body">
-                  {line}
-                  <br />
-                  <br />
-                </Text>
-              )
-            }
-
-            return null
-          })
+        {element && (
+          <ElementContent dangerouslySetInnerHTML={{ __html: element! }} />
         )}
 
-        {!element && isInitialized ? (
-          <Text as="span" size="sm">
-            {disabled && permission === 'edit'
-              ? `Você precisa definir ${lastTerm || term} ${last} antes`
-              : disabled
-              ? 'As  outras definições precisa acontecer antes'
-              : permission === 'edit'
-              ? 'Clique para definir'
-              : element
-              ? 'Clique para visualizar'
-              : 'Aguardando os editores'}
+        {!element && !isPreview ? (
+          <Text
+            as="span"
+            size="xs"
+            css={{
+              alignSelf: 'center',
+              color: '$black',
+            }}
+          >
+            {finalMessage}
           </Text>
         ) : (
           <Text
@@ -119,23 +90,14 @@ export function PlotPart({
             size="xs"
             css={{
               alignSelf: 'center',
-              color: isPreview ? '$black' : '$white',
+              color: '$black',
               paddingBottom: 16,
             }}
           >
-            Clique para definir
+            {finalMessage}
           </Text>
         )}
-      </Text>
-      {!isPreview && !isToProject && comment && (
-        <Comments>
-          <Heading as="header" size="sm">
-            Comentários
-          </Heading>
-
-          <Comment projectId={idObject} comment={comment} isPreview />
-        </Comments>
-      )}
+      </Content>
     </PlotPartContainer>
   )
 }

@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { Button, Text, Textarea } from '@og-ui/react'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { EditContainer, Info } from './styles'
@@ -26,8 +25,12 @@ import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { TextEditor } from '@components/TextEditor'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { ToastError } from '@components/usefull/ToastError'
 
 const personFormSchema = z.object({
   name: z.string(),
@@ -39,13 +42,13 @@ const personFormSchema = z.object({
 type PersonFormData = z.infer<typeof personFormSchema>
 
 export default function EditPersonPage() {
-  const { loading, error, updatePerson } = useContext(ProjectsContext)
+  const { loading, error, updatePerson, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId } = router.query
   usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const { register, handleSubmit, formState, watch, reset } =
+  const { register, handleSubmit, formState, watch, reset, setValue } =
     useForm<PersonFormData>({
       resolver: zodResolver(personFormSchema),
     })
@@ -55,11 +58,17 @@ export default function EditPersonPage() {
   const age = watch('age')
   const history = watch('history')
 
-  const { project, projectName, usePerson } = useProject(id as string)
+  const { project, projectName, usePerson, permission } = useProject(
+    id as string,
+  )
   const { person, personName } = usePerson(personId as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
+
+  const { GoBackButton } = usePreventBack(
+    `/project/${project?.id}/persons/${person?.id}`,
+  )
 
   async function handleUpdatePerson() {
     const updatedPerson: ICreatePersonDTO = {
@@ -87,52 +96,60 @@ export default function EditPersonPage() {
         isScrolling
       >
         <EditContainer onSubmit={handleSubmit(handleUpdatePerson)}>
-          {error && <ResponseInfoApi error={error} />}
+          <GoBackButton topDistance={4} />
+
+          <ToastError error={error} setError={setError} />
 
           <Info isCard columns={smallWindow ? 1 : 3}>
             <Text family="body" as="label">
               Nome
-              <TextInput
-                placeholder={personName}
-                label="name"
-                register={register}
-              />
+              <TextInputRoot>
+                <TextInputInput
+                  placeholder={personName}
+                  {...register('name')}
+                />
+              </TextInputRoot>
             </Text>
 
             <Text family="body" as="label">
               Sobrenome
-              <TextInput
-                placeholder={person?.lastName || 'Carregando...'}
-                label="lastName"
-                register={register}
-              />
+              <TextInputRoot>
+                <TextInputInput
+                  placeholder={person?.lastName || 'Carregando...'}
+                  {...register('lastName')}
+                />
+              </TextInputRoot>
             </Text>
 
             <Text family="body" as="label">
               Idade
-              <TextInput
-                placeholder={person?.age || 'Carregando...'}
-                label="age"
-                register={register}
-              />
+              <TextInputRoot>
+                <TextInputInput
+                  placeholder={person?.age || 'Carregando...'}
+                  {...register('age')}
+                />
+              </TextInputRoot>
             </Text>
           </Info>
 
-          <Info isCard>
-            <Text family="body" as="label">
+          <ContainerGrid darkBackground>
+            <Text family="body" as="label" css={{ color: '$base900' }}>
               História
-              <Textarea
+              {/* <Textarea
                 placeholder={person?.history || 'Carregando...'}
                 {...register('history')}
                 css={{ fontSize: '$lg', minHeight: '430px' }}
-              />
+              /> */}
             </Text>
-          </Info>
+            <TextEditor
+              initialValue={person?.history}
+              setValue={(e) => setValue('history', e)}
+              permission={permission}
+            />
+          </ContainerGrid>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Salvar alterações"
-            icon={<PencilLine />}
             wid={smallWindow ? 'full' : 'middle'}
             align="center"
             disabled={
@@ -145,7 +162,13 @@ export default function EditPersonPage() {
               marginTop: '$4',
               marginBottom: '$8',
             }}
-          />
+          >
+            <ButtonIcon>
+              <PencilLine />
+            </ButtonIcon>
+
+            <ButtonLabel>Salvar alterações</ButtonLabel>
+          </ButtonRoot>
 
           <Info isCard columns={2}>
             <Text family="body" as="label">

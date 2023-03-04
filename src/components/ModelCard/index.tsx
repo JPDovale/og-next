@@ -1,4 +1,4 @@
-import { IBoxProps } from '@og-ui/react'
+import { IBoxProps } from '@components/usefull/Box'
 import { ModelCardContainer } from './styles'
 
 type IModelCardProps = IBoxProps & {}

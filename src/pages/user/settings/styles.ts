@@ -1,4 +1,4 @@
-import { styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 
 export const UserSettingsPageContainer = styled('div', {
   display: 'grid',
@@ -89,10 +89,6 @@ export const Info = styled('div', {
           flexDirection: 'row',
           alignItems: 'center',
           gap: '$1',
-        },
-
-        div: {
-          padding: '$3',
         },
       },
       false: {},

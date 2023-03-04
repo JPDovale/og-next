@@ -1,8 +1,11 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
-import { Button, Text, Textarea } from '@og-ui/react'
-import { CaretDoubleRight, Chats, PaperPlaneTilt } from 'phosphor-react'
+import { Textarea } from '@components/usefull/Textarea'
+import { Chats, PaperPlaneTilt } from 'phosphor-react'
+
 import { FormEvent, useState, useContext } from 'react'
 import { Comment } from '../Comment'
 import {
@@ -10,7 +13,6 @@ import {
   CommentsHeader,
   CommentsOnPageContainer,
   NewCommentForm,
-  ShowComment,
 } from './styles'
 
 interface ICommentsOnPageProps {
@@ -40,7 +42,6 @@ export function CommentsOnPage({
   const { commentInPlot } = useContext(ProjectsContext)
 
   const [newComment, setNewComment] = useState('')
-  const [showComments, setShowComments] = useState(true)
 
   async function handleNewComment(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -62,19 +63,12 @@ export function CommentsOnPage({
   }
 
   return (
-    <CommentsOnPageContainer onWindow={showComments}>
+    <CommentsOnPageContainer>
       <CommentsHeader>
         <Text as="p">
           <Chats size={24} />
           Comentários
         </Text>
-        <ShowComment
-          type="button"
-          onClick={() => setShowComments(!showComments)}
-          show={showComments}
-        >
-          <CaretDoubleRight size={24} />
-        </ShowComment>
       </CommentsHeader>
       {permission !== 'view' && (
         <NewCommentForm onSubmit={handleNewComment}>
@@ -89,13 +83,13 @@ export function CommentsOnPage({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
-          <Button
-            disabled={isNew}
-            type="submit"
-            label="Comentar"
-            icon={<PaperPlaneTilt weight="bold" />}
-            align="center"
-          />
+          <ButtonRoot disabled={isNew} type="submit" align="center">
+            <ButtonIcon>
+              <PaperPlaneTilt weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Comentar</ButtonLabel>
+          </ButtonRoot>
         </NewCommentForm>
       )}
 

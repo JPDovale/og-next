@@ -1,4 +1,4 @@
-import { globalCss } from '@og-ui/react'
+import { globalCss } from '.'
 
 export const globalStyles = globalCss({
   '*': {

@@ -1,4 +1,5 @@
-import { styled, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 import Image from 'next/image'
 
 export const LoginPageContainer = styled('main', {

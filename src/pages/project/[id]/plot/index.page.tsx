@@ -1,15 +1,17 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { PlotParts } from '@components/ProjectsComponents/PlotParts'
+import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useScroll } from '@hooks/useScroll'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Button, Text, TextInput } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { Link, Pencil } from 'phosphor-react'
-import { FocusEvent, useContext, useState } from 'react'
+import { Pencil } from 'phosphor-react'
+import { ChangeEvent, FocusEvent, useContext, useState } from 'react'
 
 import {
   BoxInput,
@@ -57,13 +59,13 @@ export default function PlotPage() {
         <Container ref={scrollRef} onScroll={handleScroll}>
           {permission === 'edit' && !loading && (
             <BoxInputUrlOfTextContainer>
-              <BoxInputUrlOfText>
+              <BoxInputUrlOfText as="label">
                 <BoxInputUrlOfTextHeader>
-                  <Text as="label" htmlFor="linkOfText" size="sm">
+                  <Text weight="bold" css={{ color: '$black' }}>
                     Insira a url do seu arquivo de escrita.
                   </Text>
 
-                  <Text family="body" height="shorter">
+                  <Text family="body" size="lg" height="shorter">
                     Para que os usuários que tem acesso ao seu projeto poderem
                     acessar o texto, você precisa selecionar a opção de
                     compartilhamento &ldquo;Qualquer pessoas com o link.&ldquo;
@@ -74,35 +76,35 @@ export default function PlotPage() {
                 </BoxInputUrlOfTextHeader>
 
                 <BoxInput onSubmit={handleEditUrlOfText}>
-                  <TextInput
-                    type="url"
-                    id="linkOfText"
-                    icon={<Link />}
-                    placeholder={
-                      project?.plot?.urlOfText || 'https://exemplo.com'
-                    }
-                    value={urlOfText}
-                    onChange={(e) => setUrlOfText(e.target.value)}
-                  />
+                  <TextInputRoot id="linkOfText">
+                    <TextInputInput
+                      type="url"
+                      placeholder={
+                        project?.plot?.urlOfText || 'https://exemplo.com'
+                      }
+                      value={urlOfText}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setUrlOfText(e.target.value)
+                      }
+                    />
+                  </TextInputRoot>
 
-                  <Button
-                    icon={<Pencil />}
-                    wid="hug"
-                    disabled={!urlOfText}
-                    type="submit"
-                  />
+                  <ButtonRoot wid="hug" disabled={!urlOfText} type="submit">
+                    <ButtonIcon>
+                      <Pencil />
+                    </ButtonIcon>
+                  </ButtonRoot>
                 </BoxInput>
 
                 {project?.plot?.urlOfText && (
                   <LinkOfText
-                    as="a"
                     target="_blank"
                     rel="noopener noreferrer"
                     href={project.plot.urlOfText}
-                    family="body"
-                    height="shorter"
                   >
-                    <Text size="sm">Link do texto:</Text>
+                    <Text css={{ color: '$black' }} weight="bold" size="sm">
+                      Link do texto:
+                    </Text>
                     {project.plot.urlOfText}
                   </LinkOfText>
                 )}
@@ -110,7 +112,7 @@ export default function PlotPage() {
             </BoxInputUrlOfTextContainer>
           )}
 
-          {!loading && <PlotParts project={project} columns={2} />}
+          {!loading && <PlotParts project={project} columns={1} />}
         </Container>
       </ProjectPageLayout>
     </>

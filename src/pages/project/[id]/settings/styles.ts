@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const SettingsProject = styled('div', {
   display: 'flex',
   flexDirection: 'column',
@@ -57,10 +56,6 @@ export const Info = styled('div', {
           alignItems: 'center',
           gap: '$1',
         },
-
-        div: {
-          padding: '$3',
-        },
       },
       false: {},
     },
@@ -85,6 +80,7 @@ export const Creator = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 4fr',
   alignItems: 'center',
+  gap: '$4',
 
   padding: '0',
 

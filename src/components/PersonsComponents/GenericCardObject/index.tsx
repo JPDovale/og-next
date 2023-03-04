@@ -1,5 +1,5 @@
 import { ReactNode, useContext } from 'react'
-import { Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { Eye, Pencil } from 'phosphor-react'
 import {
   EditButton,

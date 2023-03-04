@@ -13,15 +13,20 @@ import {
   ForgotPasswordPageContainer,
   Links,
 } from './styles'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { LockKey } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
 import { UserContext } from '@contexts/user'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 const resetPasswordFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -74,22 +79,27 @@ export default function ForgotPasswordPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="email"
-              register={register}
+            <TextInputRoot
               variant={formState.errors.email?.message ? 'denied' : 'default'}
-              icon={<LockKey />}
-              placeholder="exemplo@exemplo.com"
-              type="email"
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                placeholder="exemplo@exemplo.com"
+                {...register('email')}
+              />
+            </TextInputRoot>
           </InputContainer>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Enviar email de recuperação"
             align="center"
             disabled={formState.isSubmitting}
-          />
+          >
+            <ButtonLabel>Enviar email de recuperação</ButtonLabel>
+          </ButtonRoot>
           <Text
             family="body"
             spacing="minimus"

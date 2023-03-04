@@ -4,7 +4,7 @@ import {
 } from '@api/responsesTypes/IPersonsResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import { Eye, Pencil, Skull, UsersThree } from 'phosphor-react'
 

@@ -1,11 +1,13 @@
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { Text } from '@og-ui/react'
+import { ButtonIcon } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco, Pencil, UserPlus } from 'phosphor-react'
 import {
   CardPersonContainer,
   EditPersonButton,
+  HistoryContent,
   ItemInfo,
   ItemsContainer,
   ObjectsOfPerson,
@@ -28,8 +30,6 @@ export function CardPerson({
   const { id } = router.query
 
   const personId = person.id
-
-  const historyBreakLines = person.history?.split('\n')
 
   return (
     <CardPersonContainer
@@ -175,28 +175,25 @@ export function CardPerson({
           {isNotPreview && (
             <>
               <PersonHistory>
-                <Text as="label" weight="bold" size="xl">
+                <Text as="label" size="xl">
                   História:
                 </Text>
-                {historyBreakLines.map((line) => {
-                  if (line) {
-                    return (
-                      <Text key={line} as="p" family="body">
-                        {line}
-                      </Text>
-                    )
-                  }
-
-                  return null
-                })}
+                <HistoryContent
+                  dangerouslySetInnerHTML={{ __html: person.history! }}
+                />
               </PersonHistory>
               <EditPersonButton
-                icon={<Pencil weight="bold" size={32} />}
+                size="xs"
+                variant="noShadow"
                 wid="hug"
                 onClick={() =>
                   router.push(`/project/${id}/persons/${personId}`)
                 }
-              />
+              >
+                <ButtonIcon>
+                  <Pencil weight="bold" size={32} />
+                </ButtonIcon>
+              </EditPersonButton>
             </>
           )}
         </>

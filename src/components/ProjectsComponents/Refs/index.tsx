@@ -2,7 +2,7 @@ import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { IRef } from '@api/responsesTypes/IProjcetResponse'
 import { Avatares } from '@components/usefull/Avatares'
 import { ProjectsContext } from '@contexts/projects'
-import { Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { CaretDown } from 'phosphor-react'
 import { useContext, useState } from 'react'
 

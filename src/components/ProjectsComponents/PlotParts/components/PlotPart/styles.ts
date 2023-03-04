@@ -1,11 +1,13 @@
-import { Box, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { Text } from '@components/usefull/Text'
+import { styled } from '@styles/index'
 
 export const PlotPartContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
-  background: '$base600',
+  background: '$base500',
   gap: '$4',
-  padding: '$4',
+  padding: '0',
 
   width: '100%',
   maxHeight: 400,
@@ -16,39 +18,15 @@ export const PlotPartContainer = styled(Box, {
   cursor: 'pointer',
   overflow: 'hidden',
   transition: 'ease-in 250ms',
-  boxShadow: '$onActive',
+  boxShadow: 'none',
 
   header: {
+    padding: '$2 $4',
     borderBottom: '1px solid $base900',
     width: '100%',
     textAlign: 'start',
     color: '$black',
     fontWeight: 'bold',
-  },
-
-  div: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: '100%',
-  },
-
-  p: {
-    textAlign: 'justify',
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column',
-    color: '$black',
-
-    span: {
-      textAlign: 'center',
-      fontSize: '12px',
-      color: '$black',
-      marginTop: '8px',
-    },
   },
 
   '@media screen and (max-width: 768px)': {
@@ -58,13 +36,6 @@ export const PlotPartContainer = styled(Box, {
 
     header: {
       fontSize: '18px',
-    },
-
-    p: {
-      fontSize: '16px',
-      span: {
-        fontSize: '10px',
-      },
     },
   },
 
@@ -81,7 +52,7 @@ export const PlotPartContainer = styled(Box, {
       },
       false: {
         '&:hover': {
-          boxShadow: '$inFocus',
+          boxShadow: '$none',
         },
 
         '&:focus  ': {
@@ -94,12 +65,12 @@ export const PlotPartContainer = styled(Box, {
       false: {
         width: '100%',
         maxHeight: 'none',
-        minHeight: 580,
+        minHeight: 280,
         padding: 0,
 
-        background: '$gray900',
+        background: '$base500',
         borderRadius: '$sm',
-        boxShadow: '$default',
+        boxShadow: 'none',
 
         '&:hover': {
           boxShadow: '$default',
@@ -114,7 +85,6 @@ export const PlotPartContainer = styled(Box, {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '$3 $4',
-          color: '$white',
           fontWeight: '$regular',
 
           button: {
@@ -122,32 +92,29 @@ export const PlotPartContainer = styled(Box, {
           },
         },
 
-        p: {
-          padding: '$2 $4',
-          marginTop: '-1rem',
-          color: '$white',
-        },
-
         '@media screen and (max-width: 768px)': {
           width: '100%',
           minWidth: '0',
         },
       },
-
-      true: {
-        div: { alignItems: 'center' },
-      },
     },
   },
 })
 
-export const Comments = styled('div', {
+export const Content = styled(Text, {
   display: 'flex',
   flexDirection: 'column',
-
+  justifyContent: 'space-between',
   width: '100%',
+  height: '100%',
+})
 
-  header: {
-    borderTop: '1px solid $base900',
+export const ElementContent = styled('div', {
+  color: '$black',
+  display: 'inline',
+  padding: '0 $4',
+
+  p: {
+    display: 'block',
   },
 })

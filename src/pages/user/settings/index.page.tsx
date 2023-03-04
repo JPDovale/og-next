@@ -1,9 +1,10 @@
 import { useMemo, useContext, useState } from 'react'
-import { Button, Text, TextInput } from '@og-ui/react'
 import {
   At,
   Crosshair,
   Envelope,
+  Eye,
+  EyeClosed,
   HeartBreak,
   Key,
   Lightning,
@@ -39,6 +40,13 @@ import {
 } from './styles'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
 import { AvatarWeb } from '@components/usefull/Avatar'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 interface IObjects {
   objectives: IRef[]
@@ -53,6 +61,8 @@ interface IObjects {
 }
 
 export default function UserSettingsPage() {
+  const [isShowPassword, setIsShowPassword] = useState(false)
+
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -204,47 +214,60 @@ export default function UserSettingsPage() {
             <Info isCard>
               <Text family="body" as="label">
                 Nome
-                <TextInput
-                  icon={<UserCircle />}
-                  placeholder={user?.name}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+                <TextInputRoot>
+                  <TextInputIcon>
+                    <UserCircle />
+                  </TextInputIcon>
+
+                  <TextInputInput
+                    placeholder={user?.name}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </TextInputRoot>
               </Text>
             </Info>
 
             <Info isCard>
               <Text family="body" as="label">
                 Nome de usuário
-                <TextInput
-                  icon={<At />}
-                  placeholder={user?.username}
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
+                <TextInputRoot>
+                  <TextInputIcon>
+                    <At />
+                  </TextInputIcon>
+
+                  <TextInputInput
+                    placeholder={user?.username}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </TextInputRoot>
               </Text>
             </Info>
 
             <Info isCard>
               <Text family="body" as="label">
                 Email
-                <TextInput
-                  type="email"
-                  icon={<Envelope />}
-                  placeholder={user?.email}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled
-                />
+                <TextInputRoot disabled>
+                  <TextInputIcon>
+                    <Envelope />
+                  </TextInputIcon>
+
+                  <TextInputInput
+                    type="email"
+                    placeholder={user?.email}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled
+                  />
+                </TextInputRoot>
                 Caso você não forneça um email valido, não poderemos recuperar a
                 sua conta...
               </Text>
             </Info>
 
-            <Button
+            <ButtonRoot
               type="button"
-              label="Salvar alterações"
-              icon={<PencilLine />}
               wid={smallWindow ? 'full' : 'middle'}
               align="center"
               disabled={!!(!name && !email && !username)}
@@ -255,7 +278,13 @@ export default function UserSettingsPage() {
                 marginTop: '$4',
                 marginBottom: '$8',
               }}
-            />
+            >
+              <ButtonIcon>
+                <PencilLine />
+              </ButtonIcon>
+
+              <ButtonLabel>Salvar alterações</ButtonLabel>
+            </ButtonRoot>
 
             <Info isCard>
               <Text family="body" as="label">
@@ -263,30 +292,50 @@ export default function UserSettingsPage() {
                 <Info isCard columns={smallWindow ? 1 : 2}>
                   <Text family="body" as="label">
                     <header>Senha antiga</header>
-                    <TextInput
-                      type="password"
-                      icon={<Key />}
-                      placeholder="**********"
-                      value={oldPassword}
-                      onChange={(e) => setOldPassword(e.target.value)}
-                    />
+                    <TextInputRoot>
+                      <TextInputIcon>
+                        <Key />
+                      </TextInputIcon>
+
+                      <TextInputInput
+                        type={isShowPassword ? 'text' : 'password'}
+                        placeholder="**********"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                      />
+
+                      <TextInputIcon
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                      >
+                        {isShowPassword ? <Eye /> : <EyeClosed />}
+                      </TextInputIcon>
+                    </TextInputRoot>
                   </Text>
 
                   <Text family="body" as="label">
                     <header>Nova senha</header>
-                    <TextInput
-                      type="password"
-                      icon={<LockKey />}
-                      placeholder="**********"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <TextInputRoot>
+                      <TextInputIcon>
+                        <LockKey />
+                      </TextInputIcon>
+
+                      <TextInputInput
+                        type={isShowPassword ? 'text' : 'password'}
+                        placeholder="**********"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+
+                      <TextInputIcon
+                        onClick={() => setIsShowPassword(!isShowPassword)}
+                      >
+                        {isShowPassword ? <Eye /> : <EyeClosed />}
+                      </TextInputIcon>
+                    </TextInputRoot>
                   </Text>
                 </Info>
-                <Button
+                <ButtonRoot
                   type="button"
-                  label="Alterar"
-                  icon={<LockLaminated />}
                   wid="hug"
                   disabled={!oldPassword || !password}
                   onClick={() => handleUpdatePassword()}
@@ -295,7 +344,13 @@ export default function UserSettingsPage() {
                     alignSelf: 'center',
                     marginTop: '$4',
                   }}
-                />
+                >
+                  <ButtonIcon>
+                    <LockLaminated />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Alterar</ButtonLabel>
+                </ButtonRoot>
               </Text>
             </Info>
 
@@ -438,15 +493,18 @@ export default function UserSettingsPage() {
                   />
                 </Input>
 
-                <Button
+                <ButtonRoot
                   disabled={!user?.avatar?.url || loading}
                   onClick={deleteAvatar}
                   type="button"
-                  label="Remover avatar"
-                  icon={<X />}
                   wid="full"
                   align="center"
-                />
+                >
+                  <ButtonIcon>
+                    <X />
+                  </ButtonIcon>
+                  <ButtonLabel>Remover avatar</ButtonLabel>
+                </ButtonRoot>
               </div>
             </Info>
           </UserInfos>

@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const NotifyContainer = styled('main', {
   width: '100%',
   height: '100vh',

@@ -17,7 +17,6 @@ import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Text } from '@og-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import {
@@ -51,9 +50,7 @@ export default function PersonPage() {
   usePreventBack(`/project/${id}/persons`)
 
   const { project, permission, usePerson } = useProject(id as string)
-  const { person, historyPersons, objectives, personInfos } = usePerson(
-    personId as string,
-  )
+  const { person, objectives, personInfos } = usePerson(personId as string)
 
   async function handleUpdateImage(files: FileList | null): Promise<void> {
     if (!files) return
@@ -100,19 +97,10 @@ export default function PersonPage() {
             }
             isToEdit
           />
-          <HistoryContent>
-            {historyPersons?.map((line) => {
-              if (line) {
-                return (
-                  <Text family="body" key={line}>
-                    {line}
-                  </Text>
-                )
-              }
 
-              return null
-            }) || <Text family="body">Carregando...</Text>}
-          </HistoryContent>
+          <HistoryContent
+            dangerouslySetInnerHTML={{ __html: person?.history! }}
+          />
         </History>
 
         <ObjectContainer>

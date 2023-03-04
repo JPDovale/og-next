@@ -1,4 +1,6 @@
-import { Box, Button, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { ButtonRoot } from '@components/usefull/Button'
+import { styled } from '@styles/index'
 
 export const CardPersonContainer = styled(Box, {
   display: 'flex',
@@ -170,7 +172,9 @@ export const ObjectsOfPerson = styled('div', {
 })
 
 export const PersonHistory = styled('div', {
-  padding: '$5',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '$3',
   height: '100%',
   width: '100%',
   maxHeight: '400px',
@@ -181,15 +185,23 @@ export const PersonHistory = styled('div', {
   label: {
     color: '$base700',
   },
+})
+
+export const HistoryContent = styled('div', {
+  display: 'inline',
+  padding: '$2',
+
+  background: '$base300',
+  boxShadow: '$onActive',
+  borderRadius: '$xs',
+  color: '$black',
 
   p: {
-    marginTop: '$4',
-    width: '100%',
-    textAlign: 'justify',
+    display: 'block',
   },
 })
 
-export const EditPersonButton = styled(Button, {
+export const EditPersonButton = styled(ButtonRoot, {
   position: 'absolute',
 
   padding: '$3',
