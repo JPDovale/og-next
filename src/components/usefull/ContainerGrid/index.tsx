@@ -2,11 +2,12 @@ import { styled } from '@styles/index'
 import { ReactNode } from 'react'
 
 interface IContainerGrid {
-  columns?: 1 | 2 | 3 | 4
+  columns?: 1 | 2 | 3 | 4 | 5 | 6
   padding?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   children?: ReactNode
   darkBackground?: boolean
   alignCenter?: boolean
+  isRelativePosition?: boolean
 }
 
 export function ContainerGrid({
@@ -15,6 +16,7 @@ export function ContainerGrid({
   children,
   darkBackground = false,
   alignCenter = false,
+  isRelativePosition = false,
 }: IContainerGrid) {
   return (
     <ContainerGridContainer
@@ -22,6 +24,7 @@ export function ContainerGrid({
       darkBackground={darkBackground}
       padding={padding}
       alignCenter={alignCenter}
+      isRelativePosition={isRelativePosition}
     >
       {children}
     </ContainerGridContainer>
@@ -59,6 +62,20 @@ const ContainerGridContainer = styled('div', {
       },
       4: {
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr',
+        },
+      },
+      5: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr',
+        },
+      },
+      6: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
 
         '@media screen and (max-width: 768px)': {
           gridTemplateColumns: '1fr 1fr',
@@ -108,6 +125,13 @@ const ContainerGridContainer = styled('div', {
       10: {
         padding: '$10',
       },
+    },
+
+    isRelativePosition: {
+      true: {
+        position: 'relative',
+      },
+      false: {},
     },
   },
 })

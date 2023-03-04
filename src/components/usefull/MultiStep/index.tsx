@@ -5,15 +5,16 @@ import { MultiStepContainer, Label, Steps, Step } from './style'
 export interface IMultiStepProps {
   size: number
   currentStep?: number
+  title?: string
 }
 
 export function MultiStep(props: IMultiStepProps) {
-  const { size, currentStep = 1 } = props
+  const { size, currentStep = 1, title } = props
 
   return (
     <MultiStepContainer>
-      <Label>
-        Passo {currentStep} de {size}
+      <Label size="xs">
+        Passo {currentStep} de {size} {title && ` | ${title}`}
       </Label>
       <Steps css={{ '--steps-size': size }}>
         {Array.from({ length: size }, (_, i) => i + 1).map((step) => {

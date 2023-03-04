@@ -1,5 +1,7 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Toast } from '@components/usefull/Toast'
+import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,10 +11,11 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function StorytellerPage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [storyteller, setStoryteller] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -32,6 +35,7 @@ export default function StorytellerPage() {
 
     await updatePlot(updatedPlotStoryteller, project.id as string)
     setMessage('Narrador Alterado com sucesso')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -44,12 +48,20 @@ export default function StorytellerPage() {
         paths={['plot', 'Narrador']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
+        <Toast
+          title="Narrador atualizado"
           message={message}
-          label="Narrador"
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <ToastError error={error} setError={setError} />
+
+        <EditorAndComments
           updateValue={handleUpdateStoryteller}
-          value={storyteller}
           preValue={project?.plot?.storyteller}
           permission={permission}
           comments={commentsStoryteller}

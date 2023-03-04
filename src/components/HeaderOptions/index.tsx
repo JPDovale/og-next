@@ -1,6 +1,6 @@
+import * as Popover from '@radix-ui/react-popover'
+import * as Dialog from '@radix-ui/react-dialog'
 import { AvatarWeb } from '@components/usefull/Avatar'
-import { ButtonIcon } from '@components/usefull/Button'
-import { Heading } from '@components/usefull/Heading'
 import {
   TextInputIcon,
   TextInputInput,
@@ -18,13 +18,8 @@ import {
   MagnifyingGlass,
   XCircle,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
-import { NewProjectPopup } from './components/NewProjectPopup'
-import { NotificationsPopup } from './components/NotificationsPopup'
-import { PreferenciesPopup } from './components/PreferenciesPopup'
-import { UserOptionsPopup } from './components/UserOptionsPopup'
+import { ChangeEvent, useContext, useState } from 'react'
 import {
-  AddNewProjectButton,
   HeaderOptionsContainer,
   Loading,
   NewNotificationAlert,
@@ -32,6 +27,10 @@ import {
   QueryContainer,
   Title,
 } from './styles'
+import { NewProjectModal } from './components/NewProjectModal'
+import { PreferenciesPopover } from './components/PreferenciesPopover'
+import { NotificationsPopover } from './components/NotificationsPopover'
+import { UserOptionsPopover } from './components/UserOptionsPopover'
 
 interface IHeaderOptionsProps {
   windowName: string
@@ -55,25 +54,7 @@ export function HeaderOptions({
   const [queryIsOpen, setQueryIsOpen] = useState(false)
 
   const { user, visualizeNotifications } = useContext(UserContext)
-  const {
-    userOptionsIsOpen,
-    setUserOptionsIsOpen,
-    navIsOpen,
-    setNavIsOpen,
-    notificationsIsOpen,
-    setNotificationsIsOpen,
-    preferenciesIsOpen,
-    setPreferenciesIsOpen,
-    newProjectIsOpen,
-    setNewProjectIsOpen,
-  } = useContext(InterfaceContext)
-
-  const onPopUpOpen = !!(
-    userOptionsIsOpen ||
-    notificationsIsOpen ||
-    preferenciesIsOpen ||
-    newProjectIsOpen
-  )
+  const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -85,139 +66,51 @@ export function HeaderOptions({
     (notification) => notification.isVisualized === false,
   ).length
 
-  function closePopUp() {
-    if (!onPopUpOpen) return
-    setUserOptionsIsOpen(false)
-    setNotificationsIsOpen(false)
-    setPreferenciesIsOpen(false)
-    setNewProjectIsOpen(false)
-  }
-
   return (
-    <>
-      <HeaderOptionsContainer
-        NavIsOpen={navIsOpen}
-        onPopUp={onPopUpOpen}
-        onClick={closePopUp}
-      >
-        {isLoading && <Loading />}
-        <Title NavIsOpen={navIsOpen}>
-          <ArrowFatLinesRight
-            size="24"
-            onClick={() => !onPopUpOpen && setNavIsOpen(!navIsOpen)}
-          />
-          <Heading
-            as="span"
-            css={{
-              fontSize: '1.1rem',
-            }}
-          >
-            {windowName.toUpperCase()}
-          </Heading>
-          {smallWindow && newNotifications && (
-            <NewNotificationAlert inRight>
-              <Text size="sm" family="body">
-                {newNotificationsNumber}
-              </Text>
-            </NewNotificationAlert>
-          )}
-        </Title>
-        <Options>
-          <AddNewProjectButton
-            wid="hug"
-            onClick={() => {
-              setNavIsOpen(false)
-              setNewProjectIsOpen(true)
-            }}
-          >
-            <ButtonIcon>
-              <FilePlus />
-            </ButtonIcon>
-          </AddNewProjectButton>
+    <HeaderOptionsContainer NavIsOpen={navIsOpen}>
+      {isLoading && <Loading />}
 
-          <button
-            type="button"
-            className="icon-button"
-            onClick={() => {
-              setNavIsOpen(false)
-              setPreferenciesIsOpen(true)
-            }}
-          >
-            <DotsNine size={'24'} />
-          </button>
+      <Title NavIsOpen={navIsOpen}>
+        <ArrowFatLinesRight
+          size={smallWindow ? 20 : 24}
+          onClick={() => setNavIsOpen(!navIsOpen)}
+        />
+        <Text family="headingText" as="span" size={smallWindow ? 'xs' : 'md'}>
+          {windowName.toUpperCase()}
+        </Text>
+      </Title>
 
-          {!smallWindow && queryless && (
-            <QueryContainer onQuery={queryIsOpen}>
-              {queryIsOpen && (
-                <TextInputRoot>
-                  <TextInputIcon>
-                    <MagnifyingGlass size={24} />
-                  </TextInputIcon>
+      <Options>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button type="button" className="icon-button">
+              <FilePlus size={24} />
+            </button>
+          </Dialog.Trigger>
 
-                  <TextInputInput
-                    placeholder={'Procure por um projeto'}
-                    value={query}
-                    onChange={(e) => {
-                      setQuery && setQuery(e.target.value)
-                    }}
-                  />
-                </TextInputRoot>
-              )}
-              <button
-                type="button"
-                className="icon-button"
-                onClick={() => {
-                  setNavIsOpen(false)
-                  setQueryIsOpen(!queryIsOpen)
-                  setQuery && setQuery('')
-                }}
-              >
-                {queryIsOpen ? (
-                  <XCircle size={24} />
-                ) : (
-                  <MagnifyingGlass size={'24'} />
-                )}
-              </button>
-            </QueryContainer>
-          )}
+          <NewProjectModal />
+        </Dialog.Root>
 
-          <button
-            type="button"
-            className="icon-button"
-            onClick={() => {
-              setNavIsOpen(false)
-              setNotificationsIsOpen(true)
+        <Popover.Root>
+          <Popover.Trigger asChild>
+            <button type="button" className="icon-button">
+              <DotsNine size={'24'} />
+            </button>
+          </Popover.Trigger>
 
-              setTimeout(() => {
-                newNotifications && visualizeNotifications()
-              }, 10000)
-            }}
-          >
-            <BellSimple size={'24'} />
-            {newNotifications && (
-              <NewNotificationAlert>
-                <Text size="sm" family="body">
-                  {newNotificationsNumber}
-                </Text>
-              </NewNotificationAlert>
-            )}
-          </button>
+          <PreferenciesPopover />
+        </Popover.Root>
 
-          <button
-            type="button"
-            className="icon-button avatar"
-            onClick={() => {
-              setNavIsOpen(false)
-              setUserOptionsIsOpen(true)
-            }}
-          >
-            <AvatarWeb size="sm" src={user?.avatar?.url as string} />
-          </button>
-        </Options>
-        {smallWindow && queryless && (
+        {!smallWindow && queryless && (
           <QueryContainer onQuery={queryIsOpen}>
             {queryIsOpen && (
-              <TextInputRoot>
+              <TextInputRoot
+                css={{
+                  padding: '$2',
+                  boxShadow: 'none',
+                  background: '$gray500',
+                }}
+              >
                 <TextInputIcon>
                   <MagnifyingGlass size={24} />
                 </TextInputIcon>
@@ -225,7 +118,7 @@ export function HeaderOptions({
                 <TextInputInput
                   placeholder={'Procure por um projeto'}
                   value={query}
-                  onChange={(e) => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setQuery && setQuery(e.target.value)
                   }}
                 />
@@ -241,33 +134,52 @@ export function HeaderOptions({
               }}
             >
               {queryIsOpen ? (
-                <XCircle size={18} />
+                <XCircle size={24} />
               ) : (
-                <MagnifyingGlass size={18} />
+                <MagnifyingGlass size={'24'} />
               )}
             </button>
           </QueryContainer>
         )}
-      </HeaderOptionsContainer>
-      {!isLoading && (
-        <>
-          <UserOptionsPopup />
-          <NotificationsPopup
-            notificationsIsOpen={notificationsIsOpen}
-            setNotificationsIsOpen={setNotificationsIsOpen}
-          />
-          <PreferenciesPopup
-            preferenciesIsOpen={preferenciesIsOpen}
-            setPreferenciesIsOpen={setPreferenciesIsOpen}
-          />
-          {newProjectIsOpen && (
-            <NewProjectPopup
-              newProjectIsOpen={newProjectIsOpen}
-              setNewProjectIsOpen={setNewProjectIsOpen}
-            />
-          )}
-        </>
-      )}
-    </>
+
+        <Popover.Root>
+          <Popover.Trigger asChild>
+            <button
+              type="button"
+              className="icon-button"
+              onClick={() => {
+                setTimeout(() => {
+                  newNotifications && visualizeNotifications()
+                }, 10000)
+              }}
+            >
+              <BellSimple size={'24'} />
+              {newNotifications && (
+                <NewNotificationAlert>
+                  <Text size="sm" family="body">
+                    {newNotificationsNumber}
+                  </Text>
+                </NewNotificationAlert>
+              )}
+            </button>
+          </Popover.Trigger>
+
+          <NotificationsPopover />
+        </Popover.Root>
+
+        <Popover.Root>
+          <Popover.Trigger asChild>
+            <button type="button" className="icon-button avatar">
+              <AvatarWeb
+                size={smallWindow ? '2xs' : 'xsm'}
+                src={user?.avatar?.url as string}
+              />
+            </button>
+          </Popover.Trigger>
+
+          <UserOptionsPopover />
+        </Popover.Root>
+      </Options>
+    </HeaderOptionsContainer>
   )
 }

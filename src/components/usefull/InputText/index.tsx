@@ -4,6 +4,7 @@ import React, {
   InputHTMLAttributes,
   forwardRef,
 } from 'react'
+import { TypeElement } from 'typescript'
 import {
   Input,
   TextInputContainer,
@@ -21,7 +22,8 @@ export interface ITextInputRootProps
   extends ComponentProps<typeof TextInputContainer> {
   disabled?: boolean
   children?: ReactNode
-  variant?: 'default' | 'accepted' | 'denied' | 'attention'
+  variant?: 'default' | 'accepted' | 'denied' | 'attention' | 'noShadow'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
 }
 
 export function TextInputRoot(props: ITextInputRootProps) {
@@ -44,6 +46,7 @@ TextInputPrefix.displayName = 'TextInput.Prefix'
 export interface ITextInputIconProps
   extends ComponentProps<typeof TextInputIconContainer> {
   children?: ReactNode
+  as?: TypeElement
 }
 
 export function TextInputIcon(props: ITextInputIconProps) {
@@ -56,7 +59,10 @@ export interface ITextInputInputProps
   extends InputHTMLAttributes<HTMLInputElement>,
     ComponentProps<typeof Input> {}
 
-export const TextInputInput = forwardRef((props: ITextInputInputProps, ref) => {
+export const TextInputInput = forwardRef<
+  HTMLInputElement,
+  ITextInputInputProps
+>((props, ref) => {
   return <Input {...props} ref={ref} />
 })
 

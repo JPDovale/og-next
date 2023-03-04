@@ -1,5 +1,7 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Toast } from '@components/usefull/Toast'
+import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,10 +11,11 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function CountTimePage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [countTime, setCountTime] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -33,6 +36,7 @@ export default function CountTimePage() {
     await updatePlot(updatedPlotCountTime, project.id as string)
 
     setMessage('Tempo em que se passa atualizado com sucesso.')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -47,12 +51,20 @@ export default function CountTimePage() {
         paths={['Plot', 'Tempo em que se passa']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
+        <Toast
+          title="Tempo em que se passa atualizado"
           message={message}
-          label="Tempo em que se passa"
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <ToastError error={error} setError={setError} />
+
+        <EditorAndComments
           updateValue={handleUpdateCountTime}
-          value={countTime}
           preValue={project?.plot.countTime}
           permission={permission}
           comments={commentsCountTime}

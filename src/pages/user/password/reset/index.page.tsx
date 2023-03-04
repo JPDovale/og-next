@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import Image from 'next/image'
 
 import Back from '../../../../assets/back.svg'
@@ -14,7 +14,7 @@ import {
   ResetPasswordPageContainer,
 } from './styles'
 import { Text } from '@components/usefull/Text'
-import { LockKey } from 'phosphor-react'
+import { Eye, EyeClosed, LockKey } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -41,6 +41,8 @@ const resetPasswordFormSchema = z.object({
 type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 
 export default function ResetPasswordPage() {
+  const [isShowPassword, setIsShowPassword] = useState(false)
+
   const { error, setError, recoveryPassword, success, setSuccess } =
     useContext(UserContext)
 
@@ -111,16 +113,20 @@ export default function ResetPasswordPage() {
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              isShown
             >
               <TextInputIcon>
                 <LockKey />
               </TextInputIcon>
 
               <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
                 placeholder="***************"
                 {...register('password')}
               />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
             </TextInputRoot>
           </InputContainer>
 
@@ -136,16 +142,20 @@ export default function ResetPasswordPage() {
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              isShown
             >
               <TextInputIcon>
                 <LockKey />
               </TextInputIcon>
 
               <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
                 placeholder="***************"
                 {...register('confirmPassword')}
               />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
             </TextInputRoot>
           </InputContainer>
 

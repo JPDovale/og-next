@@ -1,4 +1,3 @@
-import { Text } from '@components/usefull/Text'
 import { styled } from '@styles/index'
 
 export const PlotPageContainer = styled('main', {
@@ -7,7 +6,6 @@ export const PlotPageContainer = styled('main', {
   width: '92%',
   height: '100vh',
 
-  backgroundColor: '$gray800',
   overflowY: 'scroll',
 
   '@media screen and (max-width: 768px)': {
@@ -17,7 +15,7 @@ export const PlotPageContainer = styled('main', {
 
 export const BoxInputUrlOfTextContainer = styled('div', {
   padding: '$5',
-  background: '$gray400',
+  background: '$gray800',
 })
 
 export const BoxInputUrlOfText = styled('div', {
@@ -27,7 +25,7 @@ export const BoxInputUrlOfText = styled('div', {
 
   padding: '$5',
 
-  background: '$gray900',
+  background: '$base500',
   borderRadius: '$sm',
   boxShadow: '$default',
 })
@@ -38,7 +36,7 @@ export const BoxInputUrlOfTextHeader = styled('header', {
   gap: '$2',
 
   p: {
-    color: '$base800',
+    color: '$black',
   },
 })
 
@@ -51,9 +49,9 @@ export const BoxInput = styled('form', {
   },
 })
 
-export const LinkOfText = styled(Text, {
+export const LinkOfText = styled('a', {
   textDecoration: 'none',
-  color: '$purple100',
+  color: '$purple600',
   whiteSpace: 'pre-wrap',
   wordBreak: 'break-all',
   marginTop: '$6',

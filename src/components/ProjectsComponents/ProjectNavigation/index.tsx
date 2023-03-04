@@ -262,7 +262,6 @@ export function ProjectNavigation({
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
-              icon={<Books />}
               variant={onWindow === 'books' ? 'active' : 'default'}
               onClick={() => {
                 router.push(`/project/${id}/books`)

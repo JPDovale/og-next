@@ -4,11 +4,9 @@ import { CommentsOnPage } from '../CommentsOnPage'
 import { EditorContainer } from './styles'
 
 interface IEditorAndCommentsProps {
-  message: string
   to: string
-  label: string
+  superFix?: string
   updateValue: () => void
-  value: any
   setValue: (value: any) => void
   preValue: any
   permission: 'edit' | 'view' | 'comment' | undefined
@@ -16,16 +14,13 @@ interface IEditorAndCommentsProps {
   personId?: string
   projectCreatedPerUser: string
   comments?: IComment[]
-  toMany?: any[]
-  preValueToMany?: any[]
+  withoutComments?: boolean
 }
 
 export function EditorAndComments({
-  message,
   to,
-  label,
+  superFix,
   updateValue,
-  value,
   setValue,
   preValue,
   permission,
@@ -33,30 +28,29 @@ export function EditorAndComments({
   personId = '',
   projectCreatedPerUser,
   comments = [],
-  toMany,
-  preValueToMany,
+  withoutComments = false,
 }: IEditorAndCommentsProps) {
   return (
     <EditorContainer>
       <Editor
-        toMany={toMany}
-        preValueToMany={preValueToMany}
-        message={message}
-        to={label}
-        updateValue={updateValue}
-        setValue={setValue}
-        value={value}
-        preValue={preValue}
-        permission={permission}
-      />
-      <CommentsOnPage
-        personId={personId}
-        to={to}
+        superFix={superFix}
         projectId={projectId}
-        projectCreatedPerUser={projectCreatedPerUser}
-        comments={comments}
+        to={to}
         permission={permission}
+        handleUpdate={updateValue}
+        preValue={preValue}
+        setValue={setValue}
       />
+      {!withoutComments && (
+        <CommentsOnPage
+          personId={personId}
+          to={to}
+          projectId={projectId}
+          projectCreatedPerUser={projectCreatedPerUser}
+          comments={comments}
+          permission={permission}
+        />
+      )}
     </EditorContainer>
   )
 }
