@@ -8,6 +8,7 @@ export const NotificationPopoverContainer = styled(Popover.Content, {
   display: 'flex',
   flexDirection: 'column',
 
+  width: '420px',
   maxWidth: '100vw',
   maxHeight: '450px',
 
