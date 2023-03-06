@@ -1,7 +1,7 @@
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ProgressBar } from '@components/usefull/ProgressBar'
-import { Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'

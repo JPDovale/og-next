@@ -1,4 +1,5 @@
-import { Heading, styled } from '@og-ui/react'
+import { Heading } from '@components/usefull/Heading'
+import { styled } from '@styles/index'
 
 interface IOnBuildingProps {
   text?: string

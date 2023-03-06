@@ -1,4 +1,4 @@
-import { styled } from '@og-ui/react'
+import { styled } from '@styles/index'
 
 export const CommentsOnPageContainer = styled('div', {
   display: 'flex',
@@ -6,27 +6,14 @@ export const CommentsOnPageContainer = styled('div', {
   gap: '$6',
 
   width: '100%',
-  height: '100vh',
-  padding: '$8',
-  paddingBottom: '$40',
+  padding: '$4',
+  paddingBottom: '$20',
 
-  background: '$gray900',
-  boxShadow: '$onActive',
-  overflowY: 'scroll',
-  overflowX: 'hidden',
   transition: 'ease-in-out 250ms',
 
   '@media screen and (max-width: 768px)': {
     padding: '$4',
     overflow: 'unset',
-  },
-
-  variants: {
-    onWindow: {
-      false: {
-        marginRight: '-100%',
-      },
-    },
   },
 })
 
@@ -49,6 +36,7 @@ export const NewCommentForm = styled('form', {
     resize: 'none',
     height: 110,
     padding: '$2',
+    background: '$gray900',
 
     '&:focus': {
       boxShadow: 'none',
@@ -62,49 +50,3 @@ export const NewCommentForm = styled('form', {
 })
 
 export const Comments = styled('div', {})
-
-export const ShowComment = styled('button', {
-  position: 'absolute',
-  padding: '$2',
-  paddingRight: '$12',
-  right: '-$3',
-  top: '$40',
-
-  lineHeight: 0,
-
-  color: '$base900',
-  border: 'none',
-  outline: 'none',
-  background: 'none',
-  cursor: 'pointer',
-  transition: 'ease-in-out 250ms',
-
-  '@media screen and (max-width: 768px)': {
-    display: 'none',
-  },
-
-  variants: {
-    show: {
-      true: {},
-      false: {
-        rotate: '180deg',
-        right: '-$3',
-
-        paddingRight: '$2',
-        paddingLeft: '$4',
-
-        background: '$gray900',
-        borderRadius: '$sm',
-        opacity: 0.4,
-
-        '&:hover': {
-          opacity: 1,
-        },
-      },
-    },
-  },
-
-  defaultVariants: {
-    show: false,
-  },
-})

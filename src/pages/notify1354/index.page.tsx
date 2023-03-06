@@ -1,9 +1,10 @@
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Error } from '@components/usefull/Error'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { notifyUsersFunction } from '@contexts/user/functions/notifyUsersFunction'
 import { verifyFunction } from '@contexts/user/functions/verifyFunction'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { Share } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -77,7 +78,13 @@ export default function NotifyAllUsers() {
           />
         </InfoDefault>
 
-        <Button type="submit" label="Send" icon={<Share />} align="center" />
+        <ButtonRoot type="submit" align="center">
+          <ButtonIcon>
+            <Share />
+          </ButtonIcon>
+
+          <ButtonLabel>Enviar</ButtonLabel>
+        </ButtonRoot>
       </NotifyForm>
     </NotifyContainer>
   )

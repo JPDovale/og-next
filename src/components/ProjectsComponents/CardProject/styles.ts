@@ -1,4 +1,5 @@
-import { Box, Button, Text, styled } from '@og-ui/react'
+import { Box } from '@components/usefull/Box'
+import { styled } from '@styles/index'
 
 export const CardProjectContainer = styled(Box, {
   display: 'flex',
@@ -106,6 +107,8 @@ export const ProjectInfos = styled('div', {
 
   textAlign: 'start',
 
+  background: '$gray600',
+
   span: {
     color: '$base800',
   },
@@ -163,117 +166,6 @@ export const ProjectInfos = styled('div', {
   },
 })
 
-export const ShareButton = styled(Button, {
-  position: 'absolute',
-  padding: '$2 ',
-  alignSelf: 'center',
-  right: 12,
-  top: 12,
-
-  variants: {
-    isList: {
-      true: {
-        padding: '$3',
-        margin: 0,
-        position: 'absolute',
-
-        top: '50%',
-        transform: 'translateY(-50%)',
-
-        '@media screen and (max-width: 768px)': {
-          padding: '$2',
-        },
-      },
-      false: {},
-    },
-  },
-
-  defaultVariants: {
-    isList: false,
-  },
-})
-
-export const SharePopUpContainer = styled('div', {
-  zIndex: 4,
-  position: 'fixed',
-
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-
-  background: '#000000be',
-})
-
-export const SharePopUp = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'absolute',
-  background: '$gray800',
-  gap: '$5',
-
-  top: '50%',
-  left: '50%',
-  width: '75%',
-  height: '75%',
-
-  transform: 'translate(-50%, -50%)',
-  borderRadius: '$md',
-  boxShadow: '$default',
-
-  '@media screen and (max-width: 768px)': {
-    width: '90%',
-    height: '90%',
-  },
-
-  '.close': {
-    position: 'absolute',
-
-    right: '$8',
-    top: '$4',
-
-    lineHeight: 0,
-
-    border: 0,
-    outline: 0,
-    borderRadius: '$full',
-    background: 'transparent',
-    cursor: 'pointer',
-    color: '$base100',
-
-    scale: '80%',
-
-    '&:focus': {
-      boxShadow: '$inFocus',
-    },
-    '&:active': {
-      scale: '75%',
-    },
-  },
-})
-
-export const HeaderShareForm = styled(Text, {
-  display: 'flex',
-  gap: '$5',
-  padding: '$6',
-  paddingBottom: '$1',
-})
-
-export const ShareForm = styled('form', {
-  display: 'flex',
-  flexDirection: 'column',
-  padding: '$8',
-  gap: '$5',
-
-  background: '$gray900',
-  overflowY: 'scroll',
-  height: '100%',
-
-  button: {
-    alignSelf: 'center',
-  },
-})
-
 export const InfosContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: '3fr 2fr',
@@ -315,17 +207,4 @@ export const UserImage = styled('div', {
       false: {},
     },
   },
-})
-
-export const SuccessContainer = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: '$8',
-  gap: '$5',
-
-  background: '$gray900',
-  overflowY: 'scroll',
-  height: '100%',
 })

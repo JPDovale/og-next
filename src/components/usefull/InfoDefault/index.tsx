@@ -1,5 +1,6 @@
-import { styled, Text } from '@og-ui/react'
+import { styled } from '@styles/index'
 import { ReactNode } from 'react'
+import { Text } from '../Text'
 
 interface IInfoDefaultProps {
   children?: ReactNode

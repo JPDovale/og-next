@@ -1,12 +1,14 @@
+import { ButtonLabel } from '@components/usefull/Button'
 import { DefaultError } from '@components/usefull/DefaultError'
-import { TextInput } from '@components/usefull/TextInput'
+import { Heading } from '@components/usefull/Heading'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Heading, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useContext } from 'react'
@@ -19,6 +21,7 @@ import {
   InputContainer,
   AddButton,
 } from './styles'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 
 const newCapituleSchema = z.object({
   name: z
@@ -133,7 +136,9 @@ export default function NewCapitule() {
                   </Text>
                 </Text>
 
-                <TextInput label="name" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('name')} />
+                </TextInputRoot>
               </InputContainer>
 
               <InputContainer>
@@ -144,7 +149,9 @@ export default function NewCapitule() {
                   </Text>
                 </Text>
 
-                <TextInput label="objective" register={register} />
+                <TextInputRoot>
+                  <TextInputInput {...register('objective')} />
+                </TextInputRoot>
               </InputContainer>
             </InputGroup>
 
@@ -189,13 +196,12 @@ export default function NewCapitule() {
 
             <AddButton
               type="submit"
-              label="Criar capitulo"
               wid="hug"
-              css={{
-                boxShadow: 'none',
-              }}
+              variant="noShadow"
               disabled={isSubmitting}
-            />
+            >
+              <ButtonLabel>Criar capitulo</ButtonLabel>
+            </AddButton>
           </NewCapituleForm>
         </NewCapituleContainer>
       </ProjectPageLayout>

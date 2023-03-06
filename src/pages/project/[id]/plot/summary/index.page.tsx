@@ -1,5 +1,6 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Toast } from '@components/usefull/Toast'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,10 +10,11 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function SummaryPage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [summary, setSummary] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -32,6 +34,7 @@ export default function SummaryPage() {
 
     await updatePlot(updatedPlotSummary, project.id as string)
     setMessage('Resumo atualizado com sucesso.')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -44,12 +47,25 @@ export default function SummaryPage() {
         paths={['Plot', 'Resumo']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
+        <Toast
+          title="Resumo atualizado"
           message={message}
-          label="Resumo"
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <Toast
+          title={error?.title!}
+          message={error?.message!}
+          open={!!error}
+          setOpen={() => setError(undefined)}
+        />
+
+        <EditorAndComments
           updateValue={handleUpdateSummary}
-          value={summary}
           preValue={project?.plot.summary}
           permission={permission}
           comments={commentsSummary}

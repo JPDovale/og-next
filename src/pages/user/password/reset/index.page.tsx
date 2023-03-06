@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import Image from 'next/image'
 
 import Back from '../../../../assets/back.svg'
@@ -13,8 +13,8 @@ import {
   ResetPasswordFormContainer,
   ResetPasswordPageContainer,
 } from './styles'
-import { Button, Text } from '@og-ui/react'
-import { LockKey } from 'phosphor-react'
+import { Text } from '@components/usefull/Text'
+import { Eye, EyeClosed, LockKey } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,7 +22,12 @@ import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
 import { UserContext } from '@contexts/user'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { TextInput } from '@components/usefull/TextInput'
+import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 
 const resetPasswordFormSchema = z.object({
   password: z
@@ -36,6 +41,8 @@ const resetPasswordFormSchema = z.object({
 type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 
 export default function ResetPasswordPage() {
+  const [isShowPassword, setIsShowPassword] = useState(false)
+
   const { error, setError, recoveryPassword, success, setSuccess } =
     useContext(UserContext)
 
@@ -102,16 +109,25 @@ export default function ResetPasswordPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="password"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
-              isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
+                placeholder="***************"
+                {...register('password')}
+              />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
+            </TextInputRoot>
           </InputContainer>
 
           <InputContainer>
@@ -122,24 +138,34 @@ export default function ResetPasswordPage() {
               </Text>
             </InputHeader>
 
-            <TextInput
-              label="confirmPassword"
-              register={register}
+            <TextInputRoot
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              icon={<LockKey />}
-              placeholder="***************"
-              isShown
-            />
+            >
+              <TextInputIcon>
+                <LockKey />
+              </TextInputIcon>
+
+              <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
+                placeholder="***************"
+                {...register('confirmPassword')}
+              />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
+            </TextInputRoot>
           </InputContainer>
 
-          <Button
+          <ButtonRoot
             type="submit"
-            label="Redefinir senha"
             align="center"
             disabled={formState.isSubmitting}
-          />
+          >
+            <ButtonLabel>Redefinir senha</ButtonLabel>
+          </ButtonRoot>
           <Links>
             <Link href="/login">
               <Text as="span" size="xs">

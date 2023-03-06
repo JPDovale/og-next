@@ -1,5 +1,4 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const HeaderPersonInfos = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
@@ -38,6 +37,8 @@ export const HeaderPersonInfos = styled('div', {
 })
 
 export const History = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
   padding: '$4',
 
   '@media screen and (max-width: 768px)': {
@@ -46,23 +47,16 @@ export const History = styled('div', {
 })
 
 export const HistoryContent = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '$4',
+  display: 'inline',
   padding: '$4',
 
   background: '$base300',
   boxShadow: '$onActive',
   borderRadius: '$xs',
+  color: '$black',
 
   p: {
-    textAlign: 'justify',
-    fontFamily: '$bodyText',
-    fontWeight: 'bold',
-    lineHeight: '$base',
-    fontSize: '1.1rem',
-
-    color: '$gray900',
+    display: 'block',
   },
 })
 

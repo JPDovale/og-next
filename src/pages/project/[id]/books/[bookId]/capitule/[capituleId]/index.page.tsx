@@ -1,19 +1,20 @@
 import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
 import { SceneCard } from '@components/BooksComponents/SceneCard'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { DefaultError } from '@components/usefull/DefaultError'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ProgressBar } from '@components/usefull/ProgressBar'
-import { TextInput } from '@components/usefull/TextInput'
+import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { Button, Text, Textarea } from '@og-ui/react'
+import { Textarea } from '@components/usefull/Textarea'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import {
@@ -35,6 +36,7 @@ import {
   DeleteContainer,
   InputContainer,
 } from './styles'
+import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -172,11 +174,12 @@ export default function CapitulePage() {
                     </Text>
                   </Text>
 
-                  <TextInput
-                    register={register}
-                    label="name"
-                    placeholder={capitule?.name || 'Carregando...'}
-                  />
+                  <TextInputRoot>
+                    <TextInputInput
+                      placeholder={capitule?.name || 'Carregando...'}
+                      {...register('name')}
+                    />
+                  </TextInputRoot>
                 </InputContainer>
                 <InputContainer>
                   <Text family="body" size="sm">
@@ -238,27 +241,36 @@ export default function CapitulePage() {
                     />
                   </InputContainer>
                 </ContainerGrid>
-                <Button
+                <ButtonRoot
                   type="submit"
-                  label="Salvar"
-                  align="center"
                   disabled={isSubmitting || !isDirty}
-                  css={{ padding: '$3', boxShadow: 'none' }}
-                  icon={<ArchiveBox />}
-                />
-                <Button
+                  size="sm"
+                  variant="noShadow"
+                >
+                  <ButtonIcon>
+                    <ArchiveBox />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Salvar</ButtonLabel>
+                </ButtonRoot>
+
+                <ButtonRoot
                   type="button"
-                  label="Excluir"
+                  variant="noShadow"
+                  size="xs"
                   align="center"
                   css={{
-                    padding: '$2',
-                    boxShadow: 'none',
                     marginTop: '$4',
                     background: '$fullError',
                   }}
-                  icon={<Trash />}
                   onClick={() => setIsSelectedDelete(true)}
-                />
+                >
+                  <ButtonIcon>
+                    <Trash />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Excluir</ButtonLabel>
+                </ButtonRoot>
               </>
             )}
 
@@ -271,26 +283,34 @@ export default function CapitulePage() {
                 </Text>
 
                 <div className="buttons">
-                  <Button
+                  <ButtonRoot
                     type="button"
-                    label="Canelar"
                     align="center"
-                    css={{ padding: '$3', boxShadow: 'none' }}
-                    icon={<X />}
+                    variant="noShadow"
+                    size="sm"
                     onClick={() => setIsSelectedDelete(false)}
-                  />
-                  <Button
+                  >
+                    <ButtonIcon>
+                      <X />
+                    </ButtonIcon>
+
+                    <ButtonLabel>Cancelar</ButtonLabel>
+                  </ButtonRoot>
+
+                  <ButtonRoot
                     type="button"
-                    label="Excluir"
                     align="center"
-                    css={{
-                      padding: '$3',
-                      boxShadow: 'none',
-                      background: '$fullError',
-                    }}
-                    icon={<Trash />}
+                    size="sm"
+                    variant="noShadow"
+                    css={{ background: '$fullError' }}
                     onClick={handleDeleteCapitule}
-                  />
+                  >
+                    <ButtonIcon>
+                      <Trash />
+                    </ButtonIcon>
+
+                    <ButtonLabel>Excluir</ButtonLabel>
+                  </ButtonRoot>
                 </div>
               </DeleteContainer>
             )}

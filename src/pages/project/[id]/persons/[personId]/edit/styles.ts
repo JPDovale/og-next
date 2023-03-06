@@ -1,6 +1,6 @@
-import { styled } from '@og-ui/react'
-
+import { styled } from '@styles/index'
 export const EditContainer = styled('form', {
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   gap: '$4',

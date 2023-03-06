@@ -1,5 +1,7 @@
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Toast } from '@components/usefull/Toast'
+import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -9,10 +11,11 @@ import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
 
 export default function HistoricalFactPage() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [historicalFact, setHistoricalFact] = useState('')
   const [message, setMessage] = useState('')
 
-  const { loading, updatePlot } = useContext(ProjectsContext)
+  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -32,6 +35,7 @@ export default function HistoricalFactPage() {
 
     await updatePlot(updatedPlotHistoricalFact, project.id as string)
     setMessage('Fato histórico atualizado com sucesso.')
+    setSuccessToastOpen(true)
   }
 
   return (
@@ -44,12 +48,20 @@ export default function HistoricalFactPage() {
         paths={['Plot', 'Fato histórico']}
         loading={loading}
         inError={!loading && !project}
+        isScrolling
       >
-        <EditorAndComments
+        <Toast
+          title="Fato histórico atualizado"
           message={message}
-          label="Fato histórico"
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          type="success"
+        />
+
+        <ToastError error={error} setError={setError} />
+
+        <EditorAndComments
           updateValue={handleUpdateHistoricalFact}
-          value={historicalFact}
           preValue={project?.plot.historicalFact}
           permission={permission}
           comments={commentsHistoricalFact}

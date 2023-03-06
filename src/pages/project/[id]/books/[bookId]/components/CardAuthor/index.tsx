@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { UserCircleMinus, X } from 'phosphor-react'
 
 import { CardAuthorContainer, UnshareButton, UnshareConfirm } from './styles'
@@ -11,6 +11,7 @@ import { InfoDefault } from '@components/usefull/InfoDefault'
 import { useWindowSize } from '@hooks/useWindow'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 
 interface ICardAuthorProps {
   userAuthor: IUserResponse | undefined
@@ -37,14 +38,16 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
         {userAuthor?.id !== user?.id && (
           <UnshareButton
             className="unshare"
-            icon={unshare ? <X /> : <UserCircleMinus />}
             wid="hug"
-            label={unshare ? 'Cancelar' : 'Remover'}
             onClick={() => {
               if (unshare) return setUnshare(false)
               setUnshare(true)
             }}
-          />
+          >
+            <ButtonIcon>{unshare ? <X /> : <UserCircleMinus />}</ButtonIcon>
+
+            <ButtonLabel>{unshare ? 'Cancelar' : 'Remover'}</ButtonLabel>
+          </UnshareButton>
         )}
       </ContainerGrid>
       <ContainerGrid padding={4}>
@@ -79,14 +82,18 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
               direitos autorais.
             </Text>
 
-            <Button
+            <ButtonRoot
               type="button"
               className="unshare"
-              icon={<UserCircleMinus />}
               wid="full"
-              label="Confirmar"
               onClick={handleUnshare}
-            />
+            >
+              <ButtonIcon>
+                <UserCircleMinus />
+              </ButtonIcon>
+
+              <ButtonLabel>Confirmar</ButtonLabel>
+            </ButtonRoot>
           </InfoDefault>
         </UnshareConfirm>
       )}

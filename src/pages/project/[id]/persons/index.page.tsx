@@ -1,31 +1,13 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { Button, Text, Textarea } from '@og-ui/react'
+import * as Dialog from '@radix-ui/react-dialog'
 import { useRouter } from 'next/router'
-import {
-  Calendar,
-  IdentificationCard,
-  MagnifyingGlass,
-  PlusCircle,
-  UserFocus,
-  UserPlus,
-  X,
-} from 'phosphor-react'
+import { MagnifyingGlass, UserFocus, UserPlus } from 'phosphor-react'
 import { useContext, useState } from 'react'
 
 import {
   FastAccessPersons,
-  InfosBasics,
-  InputForm,
-  InputHeader,
-  NewInfosPerson,
-  NewPersonForm,
   NewPersonFormContainer,
   PersonsContainer,
-  QueryInput,
   QueryInputContainer,
-  ShowFormButton,
 } from './styles'
 
 import { NextSeo } from 'next-seo'
@@ -34,43 +16,25 @@ import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
-import { DefaultError } from '@components/usefull/DefaultError'
-import { TextInput } from '@components/usefull/TextInput'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { CardPerson } from '@components/PersonsComponents/CardPerson'
 import { Avatares } from '@components/usefull/Avatares'
-
-const newPersonFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'O nome precisa ter pelo menos dois caracteres' })
-    .max(100, { message: 'O nome não pode ter mais de 100 caracteres' }),
-  lastName: z
-    .string()
-    .min(2, { message: 'O sobrenome precisa ter pelo menos dois caracteres' })
-    .max(100, { message: 'O sobrenome não pode ter mais de 100 caracteres' }),
-  age: z.string().regex(/^([0-9]+)$/, {
-    message: 'Coloque apenas números na idade do personagem.',
-  }),
-  history: z
-    .string()
-    .min(1, { message: 'Coloque a história do personagem para prosseguir.' }),
-})
-
-type NewPersonFormData = z.infer<typeof newPersonFormSchema>
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Text } from '@components/usefull/Text'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
+import { ToastError } from '@components/usefull/ToastError'
+import { NewPersonModal } from './components/NewPersonModal'
+import { Toast } from '@components/usefull/Toast'
 
 export default function PersonsPage() {
-  const [formIsVisible, setFormIsVisible] = useState(false)
-  const [success, setSuccess] = useState('')
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [query, setQuery] = useState('')
 
-  const { loading, createNewPerson, error, setError } =
-    useContext(ProjectsContext)
-
-  const { register, handleSubmit, formState, reset } =
-    useForm<NewPersonFormData>({
-      resolver: zodResolver(newPersonFormSchema),
-    })
+  const { loading, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -81,26 +45,6 @@ export default function PersonsPage() {
 
   const { project, projectName, queryPerson } = useProject(id as string)
   const finalPersonsToShow = queryPerson(query)
-
-  async function handleNewPerson(data: NewPersonFormData) {
-    const newPerson = {
-      name: data.name,
-      lastName: data.lastName,
-      age: data.age,
-      history: data.history,
-      projectId: project.id,
-    }
-
-    const success = await createNewPerson(newPerson)
-
-    if (!success) return
-
-    reset()
-
-    setFormIsVisible(false)
-    setSuccess('Personagem criado com sucesso!')
-    setTimeout(() => setSuccess(''), 5000)
-  }
 
   return (
     <>
@@ -114,136 +58,50 @@ export default function PersonsPage() {
         inError={!loading && !project}
         isScrolling
       >
-        {error && (
-          <DefaultError
-            close={() => setError(undefined)}
-            title={error.title}
-            message={error.message}
-          />
-        )}
+        <ToastError error={error} setError={setError} />
+        <Toast
+          open={successToastOpen}
+          setOpen={setSuccessToastOpen}
+          title="Personagem criada"
+          message="Parabéns! Você acabou de criar uma nova personagem! Acesse a aba de personagens para ver."
+        />
 
         <NewPersonFormContainer>
-          <ShowFormButton
-            formIsVisible={formIsVisible}
-            icon={
-              formIsVisible ? <X weight="bold" /> : <UserPlus weight="bold" />
-            }
-            label={
-              !formIsVisible ? (smallWindow ? '' : 'Criar personagem') : ''
-            }
-            wid="hug"
-            onClick={() => setFormIsVisible(!formIsVisible)}
-          />
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <ButtonRoot
+                size="xs"
+                variant="noShadow"
+                wid="hug"
+                css={{ float: 'right' }}
+              >
+                <ButtonIcon>
+                  <UserPlus weight="bold" />
+                </ButtonIcon>
 
-          <QueryInputContainer formIsVisible={formIsVisible}>
-            <QueryInput
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              icon={<MagnifyingGlass size={24} />}
-              placeholder="Encontre um personagem"
+                {!smallWindow && <ButtonLabel>Criar personagem</ButtonLabel>}
+              </ButtonRoot>
+            </Dialog.Trigger>
+
+            <NewPersonModal
+              onSuccess={() => setSuccessToastOpen(true)}
+              projectId={project?.id!}
             />
+          </Dialog.Root>
+
+          <QueryInputContainer>
+            <TextInputRoot size="xs" variant="noShadow">
+              <TextInputIcon>
+                <MagnifyingGlass size={24} />
+              </TextInputIcon>
+
+              <TextInputInput
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Encontre um personagem"
+              />
+            </TextInputRoot>
           </QueryInputContainer>
-
-          <Text
-            size="md"
-            css={{
-              color: '$successDefault',
-            }}
-            weight="bold"
-            family="body"
-          >
-            {success}
-          </Text>
-
-          <NewPersonForm
-            onSubmit={handleSubmit(handleNewPerson)}
-            formIsVisible={formIsVisible}
-          >
-            <NewInfosPerson>
-              <InfosBasics>
-                <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                  <InputHeader size={'xs'}>
-                    NOME
-                    <Text size="sm" as="span" family="body">
-                      {formState.errors?.name?.message}
-                    </Text>
-                  </InputHeader>
-
-                  <TextInput
-                    label="name"
-                    register={register}
-                    variant={
-                      formState.errors.name?.message ? 'denied' : 'default'
-                    }
-                    icon={<IdentificationCard weight="bold" />}
-                    placeholder="Nome do personagem"
-                  />
-                </InputForm>
-
-                <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                  <InputHeader size={'xs'}>
-                    SOBRENOME
-                    <Text size="sm" as="span" family="body">
-                      {formState.errors?.lastName?.message}
-                    </Text>
-                  </InputHeader>
-
-                  <TextInput
-                    label="lastName"
-                    register={register}
-                    variant={
-                      formState.errors.lastName?.message ? 'denied' : 'default'
-                    }
-                    icon={<IdentificationCard weight="bold" />}
-                    placeholder="Sobrenome do personagem"
-                  />
-                </InputForm>
-
-                <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                  <InputHeader size={'xs'}>
-                    IDADE
-                    <Text size="sm" as="span" family="body">
-                      {formState.errors?.age?.message}
-                    </Text>
-                  </InputHeader>
-
-                  <TextInput
-                    label="age"
-                    register={register}
-                    variant={
-                      formState.errors.age?.message ? 'denied' : 'default'
-                    }
-                    icon={<Calendar weight="bold" />}
-                    placeholder="Idade do personagem"
-                  />
-                </InputForm>
-              </InfosBasics>
-
-              <InputForm as="label" size="xs" formIsVisible={formIsVisible}>
-                <InputHeader size={'xs'}>
-                  HISTÓRIA
-                  <Text size="sm" as="span" family="body">
-                    {formState.errors?.history?.message}
-                  </Text>
-                </InputHeader>
-                <Textarea
-                  variant={
-                    formState.errors.history?.message ? 'denied' : 'default'
-                  }
-                  placeholder="História do personagem"
-                  {...register('history')}
-                />
-              </InputForm>
-            </NewInfosPerson>
-
-            <Button
-              label="Criar"
-              type="submit"
-              icon={<PlusCircle weight="bold" />}
-              align="center"
-              disabled={formState.isSubmitting}
-            />
-          </NewPersonForm>
         </NewPersonFormContainer>
 
         <FastAccessPersons>

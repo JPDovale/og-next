@@ -1,8 +1,9 @@
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { Button, Text } from '@og-ui/react'
+import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/dist/client/router'
 import { ReactNode } from 'react'
 import { AvatarWeb } from '../Avatar'
+import { ButtonIcon, ButtonRoot } from '../Button'
 import {
   AvataresContainer,
   Buttons,
@@ -93,35 +94,43 @@ export function Avatares({
           >
             <Buttons>
               {firstButtonIcon && personSelected !== person.id && (
-                <Button
+                <ButtonRoot
+                  size="xxs"
+                  variant="noShadow"
                   type="button"
-                  icon={firstButtonIcon}
                   wid="full"
                   align="center"
                   onClick={() => handleFirstButton(person.id)}
-                />
+                >
+                  <ButtonIcon>{firstButtonIcon}</ButtonIcon>
+                </ButtonRoot>
               )}
               {secondaryButtonIcon && personSelected !== person.id && (
-                <Button
+                <ButtonRoot
+                  size="xxs"
+                  variant="noShadow"
                   type="button"
-                  icon={secondaryButtonIcon}
                   wid="full"
                   align="center"
                   onClick={() => handleSecondaryButton(person.id)}
-                />
+                >
+                  <ButtonIcon>{secondaryButtonIcon}</ButtonIcon>
+                </ButtonRoot>
               )}
               {internalButtonIcon && personSelected !== person.id && (
-                <Button
+                <ButtonRoot
+                  size="xxs"
+                  variant="noShadow"
                   type="button"
-                  icon={internalButtonIcon}
                   wid="full"
                   align="center"
                   onClick={() => findPersonAndReturn(person.id)}
-                />
+                >
+                  <ButtonIcon>{internalButtonIcon}</ButtonIcon>
+                </ButtonRoot>
               )}
             </Buttons>
             <Header
-              as="label"
               size="sm"
               family="body"
               css={{
@@ -136,7 +145,9 @@ export function Avatares({
                 isClickable={isClickable}
               />
 
-              <p>{person?.name}</p>
+              <Text size="sm" family="body">
+                {person?.name}
+              </Text>
             </Header>
           </PersonAvatar>
         )
