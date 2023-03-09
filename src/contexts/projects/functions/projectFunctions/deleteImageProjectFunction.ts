@@ -4,6 +4,7 @@ import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -16,15 +17,7 @@ export async function deleteImageProjectFunction({
   projectId,
   dispatch,
 }: IDeleteImageProjectFunctionProps): Promise<any> {
-  if (!projectId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await deleteImageProjectRequest({ projectId })
 
@@ -33,18 +26,25 @@ export async function deleteImageProjectFunction({
 
     if (isRefreshed) {
       return deleteImageProjectFunction({ projectId, dispatch })
+    } else {
+      dispatch(setLoadingAction(false))
+      return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const projectUpdated = response as IProjectResponse
+  dispatch(setLoadingAction(false))
   dispatch(updateProjectAction(projectUpdated))
 }

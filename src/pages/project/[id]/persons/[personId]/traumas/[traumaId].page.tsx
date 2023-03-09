@@ -30,13 +30,15 @@ export default function TraumaPage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, tags, personName, findTrauma } = usePerson(personId as string)
+  const { person, personBoxes, personName, findTrauma } = usePerson(
+    personId as string,
+  )
   const { commentsInThisTrauma, keysTrauma, trauma } = findTrauma(
     traumaId as string,
   )
 
-  const tag = tags.traumas
-  const refs = tag && tag.refs
+  const boxTraumas = personBoxes.traumas
+  const files = boxTraumas && boxTraumas.archives
 
   const inError =
     !loading && ((traumaId !== 'new' && !trauma) || !project || !person)
@@ -70,7 +72,7 @@ export default function TraumaPage() {
         <EditorAndCommentsToGenerics
           persons={persons}
           projectId={project?.id}
-          refs={refs}
+          referenceArchives={files}
           isNew={traumaId === 'new'}
           editorTo={keysTrauma.label}
           personId={person?.id!}

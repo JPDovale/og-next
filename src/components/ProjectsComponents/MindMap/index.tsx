@@ -30,7 +30,9 @@ export function MindMap() {
   const router = useRouter()
   const { id } = router.query
 
-  const { project, personsThisProject, tags } = useProject(id as string)
+  const { project, personsThisProject, boxesThisProject } = useProject(
+    id as string,
+  )
 
   return (
     <MindMapContainer>
@@ -85,8 +87,10 @@ export function MindMap() {
               <TagsOfProject>
                 <header>
                   <Text>
-                    Tags:{' '}
-                    {personsThisProject[0] ? tags.length - 1 : tags.length}
+                    Tags:
+                    {personsThisProject[0]
+                      ? boxesThisProject.length - 1
+                      : boxesThisProject.length}
                   </Text>
 
                   <ButtonColapse
@@ -100,59 +104,64 @@ export function MindMap() {
 
                 {!tagsIsColapse && (
                   <>
-                    {tags.length === 0 ||
-                      (tags.length === 1 && personsThisProject[0] && (
-                        <Text family="body" css={{ alignSelf: 'center' }}>
-                          Nenhuma tag foi criada ainda. Não se preocupe... as
-                          tags são criada automaticamente, visando a criação de
-                          conexões automáticas entro os vários elementos do seu
-                          projeto.
-                        </Text>
-                      ))}
+                    {boxesThisProject.length === 0 ||
+                      (boxesThisProject.length === 1 &&
+                        personsThisProject[0] && (
+                          <Text family="body" css={{ alignSelf: 'center' }}>
+                            Nenhuma tag foi criada ainda. Não se preocupe... as
+                            tags são criada automaticamente, visando a criação
+                            de conexões automáticas entro os vários elementos do
+                            seu projeto.
+                          </Text>
+                        ))}
 
-                    {tags.map((tag) => {
-                      if (tag.type === 'persons') return ''
-                      if (tag.type === 'books') return ''
+                    {boxesThisProject.map((box) => {
+                      if (box.name === 'persons') return ''
+                      if (box.name === 'books') return ''
 
                       return (
-                        <Tag key={tag.id}>
+                        <Tag key={box.id}>
                           <div>
                             <Text size="xl">
-                              {tag.type}: {tag.refs.length}
+                              {box.name}: {box.archives.length}
                               <Text as="span" family="body">
-                                {tag.origPath}
+                                {box.createdAt}
                               </Text>
                             </Text>
                           </div>
                           <References>
-                            {tag.refs.map((ref) => {
-                              const personsInThisRef = ref.references.map(
-                                (r) => {
+                            {box.archives.map((file) => {
+                              const personsInThisRef = file?.links?.map(
+                                (link) => {
                                   const personFind = personsThisProject.find(
-                                    (person) => person?.id === r,
+                                    (person) => person?.id === link.id,
                                   )
                                   return personFind
                                 },
                               ) as IPersonsResponse[]
 
+                              const finalPersons = personsInThisRef.filter(
+                                (person) => person !== undefined,
+                              )
+
                               return (
-                                <Reference key={ref.object?.id}>
+                                <Reference key={file.archive?.id}>
                                   <div>
-                                    <Text>{ref.object?.title}</Text>
+                                    <Text>{file.archive?.title}</Text>
 
                                     <Text
                                       as="span"
                                       family="body"
                                       height="short"
                                     >
-                                      {ref.object?.description}
+                                      {file.archive?.description}
                                     </Text>
                                   </div>
 
                                   <Persons inRef>
                                     <Avatares
                                       columns={5}
-                                      persons={personsInThisRef}
+                                      persons={finalPersons}
                                       listEmptyMessage="-"
                                       isClickable
                                     />

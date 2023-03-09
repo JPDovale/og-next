@@ -4,6 +4,7 @@ import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateBookAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -18,15 +19,7 @@ export async function updateFrontCoverFunction({
   dispatch,
   file,
 }: IUpdateFrontCoverFunction): Promise<void> {
-  if (!file || !bookId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Imagem não alterada',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await updateFrontCoverRequest({ bookId, file })
 
@@ -35,20 +28,26 @@ export async function updateFrontCoverFunction({
 
     if (isRefreshed) {
       return updateFrontCoverFunction({ file, bookId, dispatch })
-    }
+    } else {
+      dispatch(setLoadingAction(false))
 
-    return
+      return
+    }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const book = response as IBooksResponse
   dispatch(updateBookAction(book))
+  dispatch(setLoadingAction(false))
 }

@@ -1,5 +1,4 @@
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IRef } from '@api/responsesTypes/IProjcetResponse'
 import { Avatares } from '@components/usefull/Avatares'
 import { ProjectsContext } from '@contexts/projects'
 import { Text } from '@components/usefull/Text'
@@ -7,14 +6,15 @@ import { CaretDown } from 'phosphor-react'
 import { useContext, useState } from 'react'
 
 import { Header, RefCard, RefsContainer } from './styles'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 
 interface IRefsProps {
   title: string
-  refs: IRef[]
-  onSelectRef: (ref: IRef) => void
+  referenceArchives: IArchive[]
+  onSelectRef: (ref: IArchive) => void
 }
 
-export function Refs({ title, refs, onSelectRef }: IRefsProps) {
+export function Refs({ title, referenceArchives, onSelectRef }: IRefsProps) {
   const [showRefs, setShowRefs] = useState(false)
 
   const { persons } = useContext(ProjectsContext)
@@ -31,29 +31,29 @@ export function Refs({ title, refs, onSelectRef }: IRefsProps) {
       </Header>
 
       {showRefs &&
-        refs.map((ref) => {
+        referenceArchives.map((file) => {
           const filteredPersons = persons?.filter((person) => {
-            const personInRef = !!ref.references.find(
-              (reference) => reference === person.id,
+            const personInRef = !!file?.links?.find(
+              (link) => link.id === person.id,
             )
 
             return personInRef
           })
 
           return (
-            <RefCard key={ref.object.id} onClick={() => onSelectRef(ref)}>
+            <RefCard key={file.archive.id} onClick={() => onSelectRef(file)}>
               <Header as="label" size="sm" family="body">
                 <p>Titulo</p>
               </Header>
               <Text as="span" size="xs">
-                {ref.object.title}
+                {file.archive.title}
               </Text>
 
               <Header as="label" size="sm" family="body">
                 <p>Descrição</p>
               </Header>
               <Text as="span" size="xs">
-                {ref.object.description}
+                {file.archive.description}
               </Text>
 
               <Header as="label" size="sm" family="body">

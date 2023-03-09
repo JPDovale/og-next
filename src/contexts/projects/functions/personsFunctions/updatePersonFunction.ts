@@ -5,6 +5,7 @@ import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -13,15 +14,7 @@ export async function updatedPersonFunction(
   personId: string,
   dispatch: Dispatch<any>,
 ): Promise<void> {
-  if (!person) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await updatePersonRequest(person, personId)
 
@@ -30,18 +23,25 @@ export async function updatedPersonFunction(
 
     if (isRefreshed) {
       return updatedPersonFunction(person, personId, dispatch)
+    } else {
+      dispatch(setLoadingAction(false))
+      return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const personUpdated = response as IPersonsResponse
   dispatch(updatePersonAction(personUpdated))
+  dispatch(setLoadingAction(false))
 }
