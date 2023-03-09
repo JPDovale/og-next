@@ -18,13 +18,15 @@ export default function CouplePage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, personName, tags, findCouple } = usePerson(personId as string)
+  const { person, personName, personBoxes, findCouple } = usePerson(
+    personId as string,
+  )
   const { commentsInThisCouple, couple, keysCouple } = findCouple(
     coupleId as string,
   )
 
-  const tag = tags.couples
-  const refs = tag && tag.refs
+  const boxCouples = personBoxes.couples
+  const files = boxCouples && boxCouples.archives
 
   const inError =
     !loading && ((coupleId !== 'new' && !couple) || !project || !person)
@@ -58,7 +60,7 @@ export default function CouplePage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={coupleId === 'new'}
           editorTo={keysCouple.label}
           projectId={project?.id}

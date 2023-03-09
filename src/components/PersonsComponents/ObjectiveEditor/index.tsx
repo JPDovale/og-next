@@ -25,7 +25,6 @@ import {
   IObjective,
   IPersonsResponse,
 } from '@api/responsesTypes/IPersonsResponse'
-import { IRef } from '@api/responsesTypes/IProjcetResponse'
 import { ProjectsContext } from '@contexts/projects'
 import { useRouter } from 'next/router'
 import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
@@ -41,6 +40,7 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 
 interface IObjetiveEditorProps {
   isNew?: boolean
@@ -48,7 +48,7 @@ interface IObjetiveEditorProps {
   projectId: string
   personId: string
   persons: IPersonsResponse[]
-  refs: IRef[] | undefined
+  referenceArchives: IArchive[] | undefined
   permission: 'view' | 'edit' | 'comment' | undefined
 }
 
@@ -58,7 +58,7 @@ export function ObjectiveEditor({
   projectId,
   personId,
   persons,
-  refs,
+  referenceArchives,
   permission,
 }: IObjetiveEditorProps) {
   const [isInitialChangeSupporting, setIsInitialChangeSupporting] =
@@ -134,9 +134,9 @@ export function ObjectiveEditor({
 
   const filteredPersons = restPersons.filter((person) => person.id !== personId)
 
-  const filteredRefs = refs?.filter((ref) => {
+  const filteredArchives = referenceArchives?.filter((file) => {
     const idAddedRef = !person?.objectives?.find(
-      (objective) => objective.id === ref.object.id,
+      (objective) => objective.id === file.archive.id,
     )
 
     return idAddedRef
@@ -264,14 +264,16 @@ export function ObjectiveEditor({
     }
   }
 
-  function handleSelectRef(ref: IRef) {
-    setRefSelected(ref.object.id as string)
-    setTitle(ref.object.title as string)
-    setDescription(ref.object.description as string)
+  function handleSelectRef(file: IArchive) {
+    setRefSelected(file.archive.id as string)
+    setTitle(file.archive.title as string)
+    setDescription(file.archive.description as string)
   }
 
   async function saveRef() {
-    const ref = refs?.find((ref) => ref.object.id === refSelected) as IRef
+    const ref = referenceArchives?.find(
+      (file) => file.archive.id === refSelected,
+    ) as IArchive
 
     const avoidersToObjective = avoiders?.map(
       (avoiders) => avoiders.id,
@@ -288,7 +290,7 @@ export function ObjectiveEditor({
       objective,
       personId,
       projectId,
-      ref.object.id as string,
+      ref.archive.id as string,
     )
 
     if (isSaved) {
@@ -343,13 +345,16 @@ export function ObjectiveEditor({
                 </ButtonIcon>
               </ButtonRoot>
             </EditorHeader>
-            {isNew && filteredRefs && filteredRefs[0] && !refSelected && (
-              <Refs
-                onSelectRef={handleSelectRef}
-                refs={filteredRefs}
-                title="Reaproveite objetivos já criados"
-              />
-            )}
+            {isNew &&
+              filteredArchives &&
+              filteredArchives[0] &&
+              !refSelected && (
+                <Refs
+                  onSelectRef={handleSelectRef}
+                  referenceArchives={filteredArchives}
+                  title="Reaproveite objetivos já criados"
+                />
+              )}
             <Text
               size="md"
               css={{

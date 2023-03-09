@@ -4,6 +4,7 @@ import { refreshSessionFunction } from '../../../user/functions/refreshSessionFu
 import {
   removeProjectAction,
   setErrorAction,
+  setLoadingAction,
 } from '../../reducer/actionsProjectsReducer'
 
 interface IQuitProjectFunction {
@@ -15,6 +16,8 @@ export async function quitProjectFunction({
   projectId,
   dispatch,
 }: IQuitProjectFunction): Promise<void> {
+  dispatch(setLoadingAction(true))
+
   const response = await quitProjectRequest({ projectId })
 
   if (response.errorMessage === 'Invalid token') {
@@ -23,18 +26,24 @@ export async function quitProjectFunction({
     if (isRefreshed) {
       return quitProjectFunction({ projectId, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   dispatch(removeProjectAction(projectId))
+  dispatch(setLoadingAction(false))
 }

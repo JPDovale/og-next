@@ -5,6 +5,7 @@ import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -12,16 +13,7 @@ export async function shareProjectFunction(
   share: IShareProjectDTO,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!share) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const shareBodyRequest = {
     user: {
@@ -39,6 +31,7 @@ export async function shareProjectFunction(
     if (isRefreshed) {
       return shareProjectFunction(share, dispatch)
     } else {
+      dispatch(setLoadingAction(false))
       return false
     }
   }
@@ -50,11 +43,13 @@ export async function shareProjectFunction(
         message: response.errorMessage,
       }),
     )
+    dispatch(setLoadingAction(false))
     return false
   }
 
   const project = response as IProjectResponse
   dispatch(updateProjectAction(project))
+  dispatch(setLoadingAction(false))
 
   return true
 }
