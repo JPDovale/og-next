@@ -1,9 +1,10 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 import {
   IObjective,
   IPersonsResponse,
 } from '@api/responsesTypes/IPersonsResponse'
-import { IComment, IRef } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjcetResponse'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 import { EditorContainer } from '@components/ProjectsComponents/EditorAndComments/styles'
 import { ObjectiveEditor } from '../ObjectiveEditor'
@@ -14,7 +15,7 @@ interface IEditorAndCommentsToObjective {
   projectId: string
   personId: string
   persons: IPersonsResponse[]
-  refs: IRef[] | undefined
+  referenceArchives: IArchive[] | undefined
   permission: 'edit' | 'view' | 'comment' | undefined
   projectCreatedPerUser: string
   comments?: IComment[]
@@ -30,7 +31,7 @@ export function EditorAndCommentsToObjective({
   persons,
   projectCreatedPerUser,
   projectId,
-  refs,
+  referenceArchives,
   comments,
 }: IEditorAndCommentsToObjective) {
   return (
@@ -41,7 +42,7 @@ export function EditorAndCommentsToObjective({
         projectId={projectId}
         personId={personId}
         persons={persons}
-        refs={refs}
+        referenceArchives={referenceArchives}
         permission={permission}
       />
       {!isNew && permission !== 'view' && (

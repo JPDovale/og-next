@@ -1,6 +1,7 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IComment, IRef } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjcetResponse'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 import { EditorContainer } from '@components/ProjectsComponents/EditorAndComments/styles'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
@@ -24,7 +25,7 @@ interface IEditorAndCommentsToGenerics {
   projectId: string
   personId: string
   persons: IPersonsResponse[]
-  refs: IRef[] | undefined
+  referenceArchives: IArchive[] | undefined
   permission: 'edit' | 'view' | 'comment' | undefined
   projectCreatedPerUser: string
   comments?: IComment[]
@@ -44,7 +45,7 @@ export function EditorAndCommentsToGenerics({
   persons,
   projectCreatedPerUser,
   projectId,
-  refs,
+  referenceArchives,
   comments,
   withSubObjects,
   editorTo,
@@ -55,7 +56,7 @@ export function EditorAndCommentsToGenerics({
     <EditorContainer>
       <GenericEditorObject
         persons={persons}
-        refs={refs}
+        referenceArchives={referenceArchives}
         isNew={isNew}
         editorTo={editorTo}
         projectId={projectId}

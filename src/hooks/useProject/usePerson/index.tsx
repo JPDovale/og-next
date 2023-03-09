@@ -1,5 +1,5 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { ITag } from '@api/responsesTypes/IProjcetResponse'
 import { constructInfos } from './utils/constructInfos'
 import { constructObjectives } from './utils/constructObjectives'
 import { findAppearanceUtil } from './utils/findAppearence'
@@ -16,25 +16,23 @@ import { findWisheUtil } from './utils/findWishe'
 export function usePerson(
   persons: IPersonsResponse[],
   id: string,
-  tagsOfProject?: ITag[],
+  boxes?: IBoxResponse[],
 ) {
   const person = persons.find((person) => person?.id === id)
   const historyPersons = person?.history.split('\n')
   const personName = `${person?.name || 'Carregando...'}`
 
-  const tags = {
-    objectives: tagsOfProject?.find((tag) => tag.type === 'persons/objectives'),
-    personality: tagsOfProject?.find(
-      (tag) => tag.type === 'persons/personality',
-    ),
-    values: tagsOfProject?.find((tag) => tag.type === 'persons/values'),
-    traumas: tagsOfProject?.find((tag) => tag.type === 'persons/traumas'),
-    appearance: tagsOfProject?.find((tag) => tag.type === 'persons/appearance'),
-    dreams: tagsOfProject?.find((tag) => tag.type === 'persons/dreams'),
-    fears: tagsOfProject?.find((tag) => tag.type === 'persons/fears'),
-    wishes: tagsOfProject?.find((tag) => tag.type === 'persons/wishes'),
-    couples: tagsOfProject?.find((tag) => tag.type === 'persons/couples'),
-    powers: tagsOfProject?.find((tag) => tag.type === 'persons/powers'),
+  const personBoxes = {
+    objectives: boxes?.find((box) => box.name === 'persons/objectives'),
+    personality: boxes?.find((box) => box.name === 'persons/personality'),
+    values: boxes?.find((box) => box.name === 'persons/values'),
+    traumas: boxes?.find((box) => box.name === 'persons/traumas'),
+    appearance: boxes?.find((box) => box.name === 'persons/appearance'),
+    dreams: boxes?.find((box) => box.name === 'persons/dreams'),
+    fears: boxes?.find((box) => box.name === 'persons/fears'),
+    wishes: boxes?.find((box) => box.name === 'persons/wishes'),
+    couples: boxes?.find((box) => box.name === 'persons/couples'),
+    powers: boxes?.find((box) => box.name === 'persons/powers'),
   }
 
   const personInfos = constructInfos(person)
@@ -86,7 +84,7 @@ export function usePerson(
     personName,
     personInfos,
     objectives,
-    tags,
+    personBoxes,
 
     findObjective,
     findPersonality,

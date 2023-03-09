@@ -1,3 +1,4 @@
+import { CSS } from '@stitches/react'
 import { styled } from '@styles/index'
 import { ReactNode } from 'react'
 
@@ -8,6 +9,7 @@ interface IContainerGrid {
   darkBackground?: boolean
   alignCenter?: boolean
   isRelativePosition?: boolean
+  css?: CSS
 }
 
 export function ContainerGrid({
@@ -17,9 +19,11 @@ export function ContainerGrid({
   darkBackground = false,
   alignCenter = false,
   isRelativePosition = false,
+  css,
 }: IContainerGrid) {
   return (
     <ContainerGridContainer
+      css={css}
       columns={columns}
       darkBackground={darkBackground}
       padding={padding}

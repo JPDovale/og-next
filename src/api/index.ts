@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'https://ogapi.onrender.com',
+  baseURL: 'http://localhost:3030',
 })
 
 export async function GetInfoUser() {

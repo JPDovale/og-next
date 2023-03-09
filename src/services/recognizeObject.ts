@@ -22,6 +22,7 @@ export function recognizeObject(
   refId?: string,
   genericId?: string,
   subObjects?: ISubObject[],
+  coupleId?: string,
 ) {
   switch (to) {
     case 'sonho': {
@@ -358,7 +359,7 @@ export function recognizeObject(
       const toDelete = {
         request: {
           personId,
-          coupleId: genericId,
+          coupleId,
         },
         key: 'couples',
       }

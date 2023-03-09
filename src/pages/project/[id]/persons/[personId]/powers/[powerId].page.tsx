@@ -18,11 +18,13 @@ export default function PowerPage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, tags, personName, findPower } = usePerson(personId as string)
+  const { person, personBoxes, personName, findPower } = usePerson(
+    personId as string,
+  )
   const { commentsInThisPower, keysPower, power } = findPower(powerId as string)
 
-  const tag = tags.powers
-  const refs = tag && tag.refs
+  const boxPowers = personBoxes.powers
+  const files = boxPowers && boxPowers.archives
 
   const inError =
     !loading && ((powerId !== 'new' && !power) || !project || !person)
@@ -56,7 +58,7 @@ export default function PowerPage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={powerId === 'new'}
           editorTo={keysPower.label}
           projectId={project?.id}

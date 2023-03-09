@@ -6,22 +6,14 @@ import { refreshSessionFunction } from '../../../user/functions/refreshSessionFu
 import {
   addProjectAction,
   setErrorAction,
+  setLoadingAction,
 } from '../../reducer/actionsProjectsReducer'
 
 export async function createProjectFunction(
   newProject: ICreateProjectDTO,
   dispatch: Dispatch<any>,
 ): Promise<void | string> {
-  if (!newProject) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
-
+  dispatch(setLoadingAction(true))
   const response = await createProjectRequest(newProject)
 
   if (response.errorMessage === 'Invalid token') {
@@ -30,21 +22,27 @@ export async function createProjectFunction(
     if (isRefreshed) {
       return createProjectFunction(newProject, dispatch)
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+    dispatch(
       setErrorAction({
         title: response.errorTitle as string,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const project = response as IProjectResponse
 
   dispatch(addProjectAction(project))
+  dispatch(setLoadingAction(false))
+
   return project.id
 }
