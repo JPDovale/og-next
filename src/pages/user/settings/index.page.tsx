@@ -23,7 +23,6 @@ import {
   Warning,
   X,
 } from 'phosphor-react'
-import { IRef } from '@api/responsesTypes/IProjcetResponse'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectsContext } from '@contexts/projects'
@@ -47,17 +46,18 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 
 interface IObjects {
-  objectives: IRef[]
-  dreams: IRef[]
-  fears: IRef[]
-  appearance: IRef[]
-  personality: IRef[]
-  powers: IRef[]
-  traumas: IRef[]
-  values: IRef[]
-  wishes: IRef[]
+  objectives: IArchive[]
+  dreams: IArchive[]
+  fears: IArchive[]
+  appearance: IArchive[]
+  personality: IArchive[]
+  powers: IArchive[]
+  traumas: IArchive[]
+  values: IArchive[]
+  wishes: IArchive[]
 }
 
 export default function UserSettingsPage() {
@@ -79,7 +79,7 @@ export default function UserSettingsPage() {
     updatePassword,
     deleteAvatar,
   } = useContext(UserContext)
-  const { users, projects, persons } = useContext(ProjectsContext)
+  const { users, projects, persons, boxes } = useContext(ProjectsContext)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -99,66 +99,80 @@ export default function UserSettingsPage() {
       wishes: [],
     }
 
-    projects.map((project) => {
-      project.tags
-        .find((tag) => tag.type === 'persons/objectives')
-        ?.refs.map((ref) => {
-          return findeObjectives.objectives.push(ref)
-        })
+    boxes.map((box) => {
+      switch (box.name) {
+        case 'persons/objectives': {
+          box.archives.map((file) => {
+            return findeObjectives.objectives.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/dreams')
-        ?.refs.map((ref) => {
-          return findeObjectives.dreams.push(ref)
-        })
+        case 'persons/dreams': {
+          box.archives.map((file) => {
+            return findeObjectives.dreams.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/fears')
-        ?.refs.map((ref) => {
-          return findeObjectives.fears.push(ref)
-        })
+        case 'persons/fears': {
+          box.archives.map((file) => {
+            return findeObjectives.fears.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/appearance')
-        ?.refs.map((ref) => {
-          return findeObjectives.appearance.push(ref)
-        })
+        case 'persons/appearance': {
+          box.archives.map((file) => {
+            return findeObjectives.appearance.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/personality')
-        ?.refs.map((ref) => {
-          return findeObjectives.personality.push(ref)
-        })
+        case 'persons/personality': {
+          box.archives.map((file) => {
+            return findeObjectives.personality.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/powers')
-        ?.refs.map((ref) => {
-          return findeObjectives.powers.push(ref)
-        })
+        case 'persons/powers': {
+          box.archives.map((file) => {
+            return findeObjectives.powers.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/traumas')
-        ?.refs.map((ref) => {
-          return findeObjectives.traumas.push(ref)
-        })
+        case 'persons/traumas': {
+          box.archives.map((file) => {
+            return findeObjectives.traumas.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/values')
-        ?.refs.map((ref) => {
-          return findeObjectives.values.push(ref)
-        })
+        case 'persons/values': {
+          box.archives.map((file) => {
+            return findeObjectives.values.push(file)
+          })
+          break
+        }
 
-      project.tags
-        .find((tag) => tag.type === 'persons/wishes')
-        ?.refs.map((ref) => {
-          return findeObjectives.wishes.push(ref)
-        })
+        case 'persons/wishes': {
+          box.archives.map((file) => {
+            return findeObjectives.wishes.push(file)
+          })
+          break
+        }
+
+        default:
+          break
+      }
 
       return ''
     })
 
     return findeObjectives
-  }, [projects])
+  }, [boxes])
 
   function handleSaveUser() {
     setError(undefined)
