@@ -52,31 +52,10 @@ export interface IPlotProject {
   comments?: IComment[]
 }
 
-interface IObject {
-  id?: string
-  title?: string
-  description?: string
-}
-
-export interface IRef {
-  object: IObject
-  references: string[]
-}
-
-export interface ITag {
-  id: string
-  type: string
-  refs: IRef[]
-  origPath: string
-  createAt: string
-  updateAt: string
-}
-
 export interface IProjectResponse {
   id: string
   name: string
   createdPerUser: string
-  tags: ITag[]
   users: ISharedWhitUsers[]
   private: boolean
   password?: string

@@ -4,6 +4,7 @@ import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -18,15 +19,7 @@ export async function updateNameProjectFunction({
   name,
   projectId,
 }: IUpdateNameProjectFunction): Promise<void> {
-  if (!name || !projectId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await updateNameProjectRequest(name, projectId)
 
@@ -36,19 +29,25 @@ export async function updateNameProjectFunction({
     if (isRefreshed) {
       return updateNameProjectFunction({ name, projectId, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle as string,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const project = response as IProjectResponse
   dispatch(updateProjectAction(project))
+  dispatch(setLoadingAction(false))
 }

@@ -18,14 +18,14 @@ export default function AppearancePage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, tags, personName, findAppearance } = usePerson(
+  const { person, personBoxes, personName, findAppearance } = usePerson(
     personId as string,
   )
   const { appearance, commentsInThisAppearance, keysAppearance } =
     findAppearance(appearanceId as string)
 
-  const tag = tags.appearance
-  const refs = tag && tag.refs
+  const boxAppearance = personBoxes.appearance
+  const files = boxAppearance && boxAppearance.archives
 
   const inError =
     !loading && ((appearanceId !== 'new' && !appearance) || !project || !person)
@@ -59,7 +59,7 @@ export default function AppearancePage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={appearanceId === 'new'}
           editorTo={keysAppearance.label}
           projectId={project?.id}

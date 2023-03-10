@@ -3,6 +3,7 @@ import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapitule
 import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
 import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
@@ -40,6 +41,7 @@ export interface IProjectsContext {
   users: IUserResponse[]
   persons: IPersonsResponse[]
   books: IBooksResponse[]
+  boxes: IBoxResponse[]
 
   error: IError | undefined
   setError: (newState: IError | undefined) => void

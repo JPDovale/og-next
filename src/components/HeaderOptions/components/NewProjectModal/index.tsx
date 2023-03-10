@@ -16,7 +16,7 @@ import { ModalContent } from '@components/usefull/ModalContent'
 // ]
 
 export function NewProjectModal() {
-  const { createProject } = useContext(ProjectsContext)
+  const { createProject, loading } = useContext(ProjectsContext)
 
   const [
     isPrivate,
@@ -108,7 +108,13 @@ export function NewProjectModal() {
               />
             </Input>
           )} */}
-        <Submit align="center" wid="full" variant="noShadow" size="sm">
+        <Submit
+          disabled={loading}
+          align="center"
+          wid="full"
+          variant="noShadow"
+          size="sm"
+        >
           <ButtonIcon>
             <FilePlus />
           </ButtonIcon>

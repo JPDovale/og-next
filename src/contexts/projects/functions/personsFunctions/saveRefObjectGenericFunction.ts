@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { IEditorTo } from '../../../../@types/editores/IEditorTo'
 import { saveRefObjectGenericRequest } from '../../../../api/personsRequests'
@@ -6,6 +7,7 @@ import { recognizeObject } from '../../../../services/recognizeObject'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -20,16 +22,7 @@ export async function saveRefObjectGenericFunction(
     description: string
   }>,
 ): Promise<boolean> {
-  if (!personId || !projectId || !refId || !to) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const objectToSend = recognizeObject(
     to,
@@ -48,6 +41,7 @@ export async function saveRefObjectGenericFunction(
           'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
       }),
     )
+    dispatch(setLoadingAction(false))
     return false
   }
 
@@ -65,11 +59,15 @@ export async function saveRefObjectGenericFunction(
         dispatch,
       )
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle,
@@ -79,8 +77,11 @@ export async function saveRefObjectGenericFunction(
     return false
   }
 
-  const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
+  const person = response.person as IPersonsResponse
+  const box = response.box as IBoxResponse
+
+  dispatch(updatePersonAction(person, box))
+  dispatch(setLoadingAction(false))
 
   return true
 }

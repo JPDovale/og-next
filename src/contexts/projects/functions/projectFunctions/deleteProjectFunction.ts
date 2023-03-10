@@ -4,21 +4,15 @@ import { refreshSessionFunction } from '../../../user/functions/refreshSessionFu
 import {
   deleteProjectAction,
   setErrorAction,
+  setLoadingAction,
 } from '../../reducer/actionsProjectsReducer'
 
 export async function deleteProjectFunction(
   projectId: string,
   dispatch: Dispatch<any>,
 ): Promise<void> {
-  if (!projectId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
+
   const response = await deleteProjectRequest(projectId)
 
   if (response.errorMessage === 'Invalid token') {
@@ -27,18 +21,24 @@ export async function deleteProjectFunction(
     if (isRefreshed) {
       return deleteProjectFunction(projectId, dispatch)
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
+  dispatch(setLoadingAction(false))
   dispatch(deleteProjectAction(projectId))
 }

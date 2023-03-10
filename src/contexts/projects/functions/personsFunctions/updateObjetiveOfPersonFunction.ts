@@ -8,6 +8,7 @@ import {
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -17,16 +18,7 @@ export async function updateObjetiveOfPersonFunction(
   objectiveId: string,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!objective || !personId || !objective) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const updatedObjective: IUpdateObjetiveDTO = {
     objective,
@@ -47,11 +39,15 @@ export async function updateObjetiveOfPersonFunction(
         dispatch,
       )
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle,
@@ -63,6 +59,7 @@ export async function updateObjetiveOfPersonFunction(
 
   const person = response as IPersonsResponse
   dispatch(updatePersonAction(person))
+  dispatch(setLoadingAction(false))
 
   return true
 }

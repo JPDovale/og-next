@@ -2,7 +2,10 @@ import { Dispatch } from 'react'
 import { deleteBookRequest } from '../../../../api/booksRequests'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import { setErrorAction } from '../../../user/reducer/actionsUserReducer'
-import { deleteBookAction } from '../../reducer/actionsProjectsReducer'
+import {
+  deleteBookAction,
+  setLoadingAction,
+} from '../../reducer/actionsProjectsReducer'
 
 interface IDeleteBookFunction {
   bookId: string
@@ -13,16 +16,7 @@ export async function deleteBookFunction({
   bookId,
   dispatch,
 }: IDeleteBookFunction): Promise<boolean> {
-  if (!bookId) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await deleteBookRequest(bookId)
 
@@ -32,11 +26,15 @@ export async function deleteBookFunction({
     if (isRefreshed) {
       return deleteBookFunction({ bookId, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle as string,
@@ -48,6 +46,7 @@ export async function deleteBookFunction({
   }
 
   dispatch(deleteBookAction(bookId))
+  dispatch(setLoadingAction(false))
 
   return true
 }

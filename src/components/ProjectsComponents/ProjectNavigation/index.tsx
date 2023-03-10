@@ -34,6 +34,7 @@ import {
   House,
   TreeStructure,
   UserMinus,
+  ArchiveBox,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 
@@ -45,6 +46,7 @@ import { InterfaceContext } from '@contexts/interface'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 import { Box } from '@components/usefull/Box'
+import { useScroll } from '@hooks/useScroll'
 
 interface IProjectNavigationProps {
   isFullDisabled?: boolean
@@ -70,6 +72,8 @@ export function ProjectNavigation({
 
   const pathname = router.pathname
   const { id } = router.query
+
+  const { handleScroll, scrollRef } = useScroll<HTMLDivElement>()
 
   const project = projects?.find((project) => project.id === id)
   const onWindow = pathname.split('/')[3]
@@ -237,7 +241,11 @@ export function ProjectNavigation({
         {navigatorProjectIsOpen && (
           <Text css={{ color: '$base700' }}>Opções do projeto</Text>
         )}
-        <Options isOpen={navigatorProjectIsOpen}>
+        <Options
+          ref={scrollRef}
+          onScroll={handleScroll}
+          isOpen={navigatorProjectIsOpen}
+        >
           <Label size="xxs">
             Projeto
             <ButtonRoot
@@ -488,6 +496,24 @@ export function ProjectNavigation({
             >
               <ButtonIcon>
                 <Clock />
+              </ButtonIcon>
+            </ButtonRoot>
+          </Label>
+
+          <Label size="xxs">
+            Boxes
+            <ButtonRoot
+              type="button"
+              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+              align="center"
+              variant={onWindow === 'boxes' ? 'active' : 'default'}
+              onClick={() => {
+                router.push(`/project/${id}/boxes`)
+                setNavigatorProjectIsOpen(false)
+              }}
+            >
+              <ButtonIcon>
+                <ArchiveBox />
               </ButtonIcon>
             </ButtonRoot>
           </Label>

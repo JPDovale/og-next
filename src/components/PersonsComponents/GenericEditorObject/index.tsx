@@ -27,7 +27,6 @@ import {
 } from './styles'
 import { useRouter } from 'next/router'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
-import { IRef } from '@api/responsesTypes/IProjcetResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { ProjectsContext } from '@contexts/projects'
 import { findRefs } from '@services/findRefs'
@@ -45,6 +44,7 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 
 interface ISubObject {
   title: string
@@ -64,7 +64,7 @@ interface IGenericEditorProps {
   editorTo: IEditorTo
   projectId: string
   personId: string
-  refs: IRef[] | undefined
+  referenceArchives: IArchive[] | undefined
   persons: IPersonsResponse[]
   object?: IGenericObject
   withSubObjects?: 'consequências' | 'exceções' | undefined
@@ -77,7 +77,7 @@ export function GenericEditorObject({
   editorTo,
   projectId,
   personId,
-  refs,
+  referenceArchives,
   persons,
   object,
   withSubObjects,
@@ -117,24 +117,26 @@ export function GenericEditorObject({
     (person) => person.defaultProject === projectId,
   )
 
-  const filteredRefs = findRefs(editorTo, refs!, person)
+  const filteredArchives = findRefs(editorTo, referenceArchives!, person)
 
-  function handleSelectRef(ref: IRef) {
-    setRefSelected(ref.object.id as string)
-    setTitle(ref.object.title as string)
-    setDescription(ref.object.description as string)
+  function handleSelectRef(file: IArchive) {
+    setRefSelected(file.archive.id as string)
+    setTitle(file.archive.title as string)
+    setDescription(file.archive.description as string)
   }
 
   async function handleSubmitForm(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     if (refSelected) {
-      const ref = refs?.find((ref) => ref.object.id === refSelected) as IRef
+      const ref = referenceArchives?.find(
+        (file) => file.archive.id === refSelected,
+      ) as IArchive
 
       const savedRef = await saveRefObjectGeneric(
         personId,
         projectId,
-        ref.object.id as string,
+        ref.archive.id as string,
         editorTo,
         subObjects,
       )
@@ -378,13 +380,16 @@ export function GenericEditorObject({
                   </ButtonRoot>
                 </EditorHeader>
 
-                {isNew && filteredRefs && filteredRefs[0] && !refSelected && (
-                  <Refs
-                    onSelectRef={handleSelectRef}
-                    refs={filteredRefs}
-                    title={`Reaproveite ${editorTo}s já criados`}
-                  />
-                )}
+                {isNew &&
+                  filteredArchives &&
+                  filteredArchives[0] &&
+                  !refSelected && (
+                    <Refs
+                      onSelectRef={handleSelectRef}
+                      referenceArchives={filteredArchives}
+                      title={`Reaproveite ${editorTo}s já criados`}
+                    />
+                  )}
 
                 {/* <Text
                 size="md"

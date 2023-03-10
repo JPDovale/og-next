@@ -18,15 +18,15 @@ export default function ObjectivePage() {
   const { project, permission, usePerson, projectName } = useProject(
     id as string,
   )
-  const { person, tags, findObjective, personName } = usePerson(
+  const { person, personBoxes, findObjective, personName } = usePerson(
     personId as string,
   )
   const { objective, commentsInThisObjective } = findObjective(
     objectiveId as string,
   )
 
-  const tag = tags.objectives
-  const refs = tag?.refs
+  const boxObjectives = personBoxes.objectives
+  const files = boxObjectives?.archives
 
   const inError =
     !loading && ((objectiveId !== 'new' && !objective) || !project || !person)
@@ -67,7 +67,7 @@ export default function ObjectivePage() {
           persons={persons}
           projectCreatedPerUser={project?.createdPerUser}
           projectId={project?.id as string}
-          refs={refs}
+          referenceArchives={files}
           comments={commentsInThisObjective}
         />
       </ProjectPageLayout>

@@ -18,11 +18,13 @@ export default function DreamPage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, tags, personName, findDream } = usePerson(personId as string)
+  const { person, personBoxes, personName, findDream } = usePerson(
+    personId as string,
+  )
   const { commentsInThisDream, dream, keysDream } = findDream(dreamId as string)
 
-  const tag = tags.dreams
-  const refs = tag && tag.refs
+  const boxDreams = personBoxes.dreams
+  const files = boxDreams && boxDreams.archives
 
   const inError =
     !loading && ((dreamId !== 'new' && !dream) || !project || !person)
@@ -56,7 +58,7 @@ export default function DreamPage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={dreamId === 'new'}
           editorTo={keysDream.label}
           projectId={project?.id}
