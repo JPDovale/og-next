@@ -131,7 +131,9 @@ export function useProject(id: string) {
     (person) => person.defaultProject === project?.id,
   )
 
-  const boxesThisProject = boxes?.filter((box) => box.projectId === project?.id)
+  const boxesThisProject = boxes?.filter(
+    (box) => box?.projectId === project?.id,
+  )
 
   const userCreatorFinde = users?.find(
     (user) => user.id === project?.createdPerUser,
