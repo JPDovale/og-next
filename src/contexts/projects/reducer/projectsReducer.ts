@@ -194,6 +194,12 @@ export function projectsReducer(state: IProjectState, action: any) {
       })
     }
 
+    case ProjectsActionsType.AddBox: {
+      return produce(state, (draft) => {
+        draft.boxes.push(action.payload.box)
+      })
+    }
+
     default:
       return state
   }

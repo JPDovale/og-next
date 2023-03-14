@@ -1,17 +1,22 @@
-import { Box } from '@components/usefull/Box'
 import { styled } from '@styles/index'
 
-export const ModelCardContainer = styled(Box, {
-  background: '$purple300',
-  padding: '$8',
-  width: '100%',
-  justifyContent: 'center',
+export const ModelCardContainer = styled('button', {
+  all: 'unset',
 
-  border: 0,
-  outline: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  background: '$purple700',
+  padding: '$4',
+  gap: '$2',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  // border: '1px solid $purple400',
   color: '$base100',
   cursor: 'pointer',
   transition: 'ease-in-out 250ms',
+  borderRadius: '$sm',
+  boxShadow: '$default',
 
   '&:hover': {
     scale: '105%',
@@ -24,5 +29,12 @@ export const ModelCardContainer = styled(Box, {
   '&:active': {
     scale: '95%',
     boxShadow: '$onActive',
+  },
+
+  '.icon': {
+    svg: {
+      width: '$8',
+      height: '$8',
+    },
   },
 })

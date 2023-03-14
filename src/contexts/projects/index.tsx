@@ -77,6 +77,8 @@ import { removeGenreFunction } from './functions/booksFunctions/removeGenreFunct
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
 import { updateBookFunction } from './functions/booksFunctions/updateBookFunction'
 import { deleteBookFunction } from './functions/booksFunctions/deleteBookFunction'
+import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
+import { createBoxFunction } from './functions/boxesFunctions/createBoxFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   {} as IProjectsContext,
@@ -441,6 +443,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return deleteBookFunction({ bookId, dispatch })
   }
 
+  async function createBox(box: ICreateBoxRequest) {
+    return createBoxFunction({ newBox: box, dispatch })
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -501,6 +507,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         removeGenre,
         updateBook,
         deleteBook,
+        createBox,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

@@ -1,45 +1,41 @@
 import { CardModelNewBox } from '@components/BoxesComponents/CardModelNewBox'
 import { CardModelNewPerson } from '@components/PersonsComponents/CardModelNewPerson'
 import { CardModelNewProject } from '@components/ProjectsComponents/CardModelNewProject'
-import { Projects } from '@components/ProjectsComponents/Projects'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
+import { useBox } from '@hooks/useBox'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
+import { CardBoxNotInternal } from '../../components/BoxesComponents/CardBoxNotInternal'
 import { Container } from './styles'
 
-export default function ProjectsPage() {
+export default function BoxesPage() {
   const [query, setQuery] = useState('')
 
-  const { projects, loading, error, setError } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { loading, error, setError } = useContext(ProjectsContext)
+
+  const { boxes } = useBox()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
-  usePreventBack()
 
-  const projectsThisUser = projects?.filter(
-    (project) => project.createdPerUser === user?.id,
-  )
+  usePreventBack()
 
   return (
     <>
-      <NextSeo title="Meus projetos | Ognare" noindex />
+      <NextSeo title="Boxes | Ognare" noindex />
 
       <DashboardPageLayout
-        window={`Meus projetos: ${
-          projectsThisUser ? projectsThisUser.length : 0
-        }`}
+        window={`Boxes: ${boxes ? boxes.length : 0}`}
         query={query}
         setQuery={setQuery}
         loading={loading}
-        queryless={projectsThisUser && !!projectsThisUser[0]}
+        queryless={boxes && !!boxes[0]}
       >
         <Container>
           {!smallWindow && (
@@ -50,16 +46,15 @@ export default function ProjectsPage() {
                 <CardModelNewPerson />
                 <CardModelNewBox />
               </ContainerGrid>
-              <Heading size="sm">Projetos:</Heading>
+              <Heading size="sm">Boxes:</Heading>
             </>
           )}
 
-          <Projects
-            listEmptyMessage="Você ainda não criou nenhum projeto"
-            projects={projectsThisUser}
-            query={query}
-            isLoading={loading}
-          />
+          <ContainerGrid padding={0} columns={2} css={{ gap: '$8' }}>
+            {boxes.map((box) => (
+              <CardBoxNotInternal key={box.id} box={box} />
+            ))}
+          </ContainerGrid>
         </Container>
 
         <ToastError error={error} setError={setError} />

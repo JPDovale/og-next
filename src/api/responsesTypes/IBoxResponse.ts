@@ -23,6 +23,7 @@ export interface IArchive {
 export interface IBoxResponse {
   id: string
   name: string
+  description: string
   projectId: string
   internal: boolean
   type: string

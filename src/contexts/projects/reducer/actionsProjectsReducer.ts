@@ -25,6 +25,7 @@ export enum ProjectsActionsType {
   SetError = 'setError',
   SetLoading = 'setLoading',
   UpdateBox = 'updateBox',
+  AddBox = 'addBox',
 }
 
 export function addProjectAction(project: IProjectResponse) {
@@ -39,6 +40,15 @@ export function addProjectAction(project: IProjectResponse) {
 export function updateBoxAction(box: IBoxResponse) {
   return {
     type: ProjectsActionsType.UpdateBox,
+    payload: {
+      box,
+    },
+  }
+}
+
+export function addBoxAction(box: IBoxResponse) {
+  return {
+    type: ProjectsActionsType.AddBox,
     payload: {
       box,
     },
@@ -160,7 +170,7 @@ export function removeProjectAction(projectId: string) {
   }
 }
 
-export function addBookAction(book: IBooksResponse, box: IBooksResponse) {
+export function addBookAction(book: IBooksResponse, box: IBoxResponse) {
   return {
     type: ProjectsActionsType.AddBook,
     payload: {

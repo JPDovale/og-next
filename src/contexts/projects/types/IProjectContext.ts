@@ -3,6 +3,7 @@ import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapitule
 import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
 import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
+import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
@@ -165,6 +166,7 @@ export interface IProjectsContext {
   removeGenre: (genreRequest: IRemoveGenreRequest) => Promise<void>
   updateBook: (bookInfosUpdated: IUpdateBookRequest) => Promise<void>
   deleteBook: (bookId: string) => Promise<boolean>
+  createBox: (box: ICreateBoxRequest) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {
