@@ -173,20 +173,12 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
           <Textarea
             css={{ width: '100%', height: 160, resize: 'none' }}
-            variant={formState.errors.name?.message ? 'denied' : 'default'}
+            variant={
+              formState.errors.description?.message ? 'denied' : 'default'
+            }
             placeholder="Descrição da box"
             {...register('description')}
           />
-
-          {/* <TextInputRoot
-            variant={formState.errors.name?.message ? 'denied' : 'default'}
-          >
-            <TextInputIcon>
-              <Package weight="bold" />
-            </TextInputIcon>
-
-            <TextInputInput placeholder="Nome da box" {...register('name')} />
-          </TextInputRoot> */}
         </Text>
 
         <Text as="label">

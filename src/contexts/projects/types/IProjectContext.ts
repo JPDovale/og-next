@@ -1,3 +1,4 @@
+import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
 import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
 import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
 import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
@@ -167,6 +168,7 @@ export interface IProjectsContext {
   updateBook: (bookInfosUpdated: IUpdateBookRequest) => Promise<void>
   deleteBook: (bookId: string) => Promise<boolean>
   createBox: (box: ICreateBoxRequest) => Promise<boolean>
+  createArchiveInBox: (archive: ICreateArchiveInBoxRequest) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

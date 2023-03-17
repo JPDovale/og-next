@@ -8,8 +8,9 @@ export function useBox() {
 
   function findBox(id: string) {
     const box = boxes?.find((box) => box.id === id)
+    const boxName = box ? box.name : 'Carregando...'
 
-    return box
+    return { box, boxName }
   }
 
   return {
