@@ -50,7 +50,11 @@ export default function BoxesPage() {
             </>
           )}
 
-          <ContainerGrid padding={0} columns={2} css={{ gap: '$8' }}>
+          <ContainerGrid
+            padding={0}
+            columns={smallWindow ? 1 : 2}
+            css={{ gap: '$8' }}
+          >
             {boxes.map((box) => (
               <CardBoxNotInternal key={box.id} box={box} />
             ))}

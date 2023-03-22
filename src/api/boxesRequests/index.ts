@@ -1,6 +1,7 @@
 import { ICreateArchiveInBoxRequest } from './types/ICreateArchiveInBoxRequest'
 import { api } from '..'
 import { ICreateBoxRequest } from './types/ICreateBoxRequest'
+import { ISaveImagesRequest } from './types/ISaveImagesRequest'
 
 export async function createBoxRequest(box: ICreateBoxRequest) {
   try {
@@ -17,6 +18,28 @@ export async function createArchiveInBoxRequest(
 ) {
   try {
     const response = await api.post('/boxes/archives', archiveRequest)
+
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function saveImagesRequest({
+  archiveId,
+  boxId,
+  file,
+}: ISaveImagesRequest) {
+  try {
+    const response = await api.patch(
+      `/boxes/${boxId}/archives/${archiveId}`,
+      { file },
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    )
 
     return response.data
   } catch (err: any) {

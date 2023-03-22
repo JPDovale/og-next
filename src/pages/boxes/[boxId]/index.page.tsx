@@ -11,6 +11,9 @@ import { useContext, useState } from 'react'
 import { NewArchiveInBoxModal } from '@components/BoxesComponents/NewArchiveInBoxModal'
 import { Toast } from '@components/usefull/Toast'
 import { NewArchive } from './components/NewArchive'
+import { CardArchive } from './components/CardArchive'
+import { useWindowSize } from '@hooks/useWindow'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
 
 export default function BoxPage() {
   const [successToastOpen, setSuccessToastOpen] = useState(false)
@@ -23,6 +26,11 @@ export default function BoxPage() {
   const { findBox } = useBox()
   const { box, boxName } = findBox(boxId as string)
 
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
+
+  const { GoBackButton } = usePreventBack('/boxes')
+
   return (
     <DashboardPageLayout loading={loading} window={`Box: ${boxName}`}>
       <ToastError error={error} setError={setError} />
@@ -33,8 +41,15 @@ export default function BoxPage() {
         setOpen={setSuccessToastOpen}
       />
 
-      <ContainerGrid padding={4} css={{ marginTop: '80px' }}>
-        <ContainerGrid padding={4} columns={2} darkBackground>
+      <ContainerGrid padding={4} css={{ marginTop: '80px' }} isRelativePosition>
+        <GoBackButton topDistance={2} />
+
+        <ContainerGrid
+          padding={4}
+          css={{ marginTop: '40px' }}
+          columns={smallWindow ? 1 : 2}
+          darkBackground
+        >
           <InfoDefault title="Nome da box:">{boxName}</InfoDefault>
           <InfoDefault title="Descrição da box:">
             {box?.description ?? 'Carregando...'}
@@ -42,11 +57,19 @@ export default function BoxPage() {
         </ContainerGrid>
 
         <ContainerGrid padding={2}>
-          <Text size="2xl" family="headingText">
+          <Text
+            size="2xl"
+            family="headingText"
+            css={
+              smallWindow
+                ? {}
+                : {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }
+            }
+          >
             Galeria:
-          </Text>
-
-          <ContainerGrid columns={3} padding={0}>
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <NewArchive />
@@ -57,9 +80,15 @@ export default function BoxPage() {
                 onSuccess={() => setSuccessToastOpen(true)}
               />
             </Dialog.Root>
+          </Text>
 
+          <ContainerGrid padding={0}>
             {box?.archives.map((archive) => (
-              <Text key={archive.archive.id}>{archive.archive.title}</Text>
+              <CardArchive
+                key={archive.archive.id}
+                archive={archive}
+                boxId={box.id}
+              />
             ))}
           </ContainerGrid>
         </ContainerGrid>

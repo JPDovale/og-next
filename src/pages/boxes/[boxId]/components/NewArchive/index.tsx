@@ -11,7 +11,7 @@ export const NewArchive = forwardRef<HTMLButtonElement, INewArchiveProps>(
   (props, ref) => {
     return (
       <NewArchiveContainer {...props} title="Novo arquivo" ref={ref}>
-        <FileImage size={40} />
+        <FileImage size={18} />
 
         <Text>Criar novo arquivo</Text>
       </NewArchiveContainer>

@@ -3,15 +3,10 @@ import { styled } from '@styles/index'
 export const NewArchiveContainer = styled('button', {
   all: 'unset',
   display: 'flex',
-  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
   gap: '$2',
-
-  width: '100%',
-  height: '100%',
-  maxHeight: '340px',
-  minHeight: '340px',
+  padding: '$2',
 
   background: '$gray900',
   borderRadius: '$sm',

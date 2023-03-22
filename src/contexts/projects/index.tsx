@@ -81,6 +81,8 @@ import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
 import { createBoxFunction } from './functions/boxesFunctions/createBoxFunction'
 import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
 import { createArchiveInBoxFunction } from './functions/boxesFunctions/createArchiveInBoxFunction'
+import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
+import { saveArchiveImagesFunction } from './functions/boxesFunctions/saveArchiveImagesFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   {} as IProjectsContext,
@@ -453,6 +455,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return createArchiveInBoxFunction({ newArchive: archive, dispatch })
   }
 
+  async function saveArchiveImages(images: ISaveImagesRequest) {
+    return saveArchiveImagesFunction({ imagesToSave: images, dispatch })
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -515,6 +521,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteBook,
         createBox,
         createArchiveInBox,
+        saveArchiveImages,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

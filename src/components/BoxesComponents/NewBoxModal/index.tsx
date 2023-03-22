@@ -54,7 +54,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   const tagsAlreadyExistesInBoxes: Array<{ name: string }> = []
 
   boxesNotInternal?.filter((box) => {
-    box.tags.map((tag) => {
+    box.tags?.map((tag) => {
       return tagsAlreadyExistesInBoxes.push(tag)
     })
 

@@ -2,6 +2,7 @@ import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
+import { useWindowSize } from '@hooks/useWindow'
 import { useRouter } from 'next/router'
 import { CardBoxNotInternalContainer, CardTagBox } from './styles'
 
@@ -11,6 +12,9 @@ interface ICardBoxNotInternalProps {
 
 export function CardBoxNotInternal({ box }: ICardBoxNotInternalProps) {
   const router = useRouter()
+
+  const windowSize = useWindowSize()
+  const smallWindow = windowSize.width! < 786
 
   return (
     <CardBoxNotInternalContainer
@@ -26,7 +30,7 @@ export function CardBoxNotInternal({ box }: ICardBoxNotInternalProps) {
         </ContainerGrid>
       </InfoDefault>
 
-      <ContainerGrid padding={0} columns={2}>
+      <ContainerGrid padding={0} columns={smallWindow ? 1 : 2}>
         <InfoDefault title="Nome:">
           <Text family="headingText">{box.name}</Text>
         </InfoDefault>
