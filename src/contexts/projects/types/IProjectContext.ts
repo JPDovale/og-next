@@ -37,6 +37,7 @@ import { IQuitProject } from './interfaceFunctions/IQuitProject'
 import { IUpdateFrontCover } from './interfaceFunctions/IUpdateFrontCover'
 import { IUpdateNameProject } from './interfaceFunctions/IUpdateNameProject'
 import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
+import { IDeleteArchiveBox } from './interfaceFunctions/IDeleteArchiveBox'
 
 export interface IProjectsContext {
   loading: boolean
@@ -171,6 +172,10 @@ export interface IProjectsContext {
   createBox: (box: ICreateBoxRequest) => Promise<boolean>
   createArchiveInBox: (archive: ICreateArchiveInBoxRequest) => Promise<boolean>
   saveArchiveImages: (images: ISaveImagesRequest) => Promise<boolean>
+  deleteArchiveBox: ({
+    archiveId,
+    boxId,
+  }: IDeleteArchiveBox) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

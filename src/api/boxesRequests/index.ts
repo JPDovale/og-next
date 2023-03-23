@@ -1,3 +1,4 @@
+import { IDeleteArchiveBoxRequest } from './types/IDeleteArchiveBoxRequest'
 import { ICreateArchiveInBoxRequest } from './types/ICreateArchiveInBoxRequest'
 import { api } from '..'
 import { ICreateBoxRequest } from './types/ICreateBoxRequest'
@@ -40,6 +41,19 @@ export async function saveImagesRequest({
         },
       },
     )
+
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function deleteArchiveBoxRequest({
+  boxId,
+  archiveId,
+}: IDeleteArchiveBoxRequest) {
+  try {
+    const response = await api.delete(`/boxes/${boxId}/archives/${archiveId}`)
 
     return response.data
   } catch (err: any) {

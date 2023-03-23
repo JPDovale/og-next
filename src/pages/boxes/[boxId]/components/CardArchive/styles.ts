@@ -31,3 +31,27 @@ export const ImageContainer = styled('div', {
     objectFit: 'cover',
   },
 })
+
+export const DeleteButton = styled('button', {
+  all: 'unset',
+
+  position: 'absolute',
+
+  padding: '$1',
+  right: 0,
+
+  lineHeight: 0,
+
+  background: '$fullError',
+  borderRadius: '$xs',
+  cursor: 'pointer',
+
+  '&:hover': {
+    scale: 1.05,
+  },
+
+  svg: {
+    width: '$4',
+    height: '$4',
+  },
+})
