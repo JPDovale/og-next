@@ -1,6 +1,6 @@
 import { styled } from '@styles/index'
 
-export const NewPersonForm = styled('form', {
+export const NewArchiveForm = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   gap: '$8',

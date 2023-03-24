@@ -27,8 +27,8 @@ import {
   TextInputRoot,
 } from '@components/usefull/InputText'
 import { ToastError } from '@components/usefull/ToastError'
-import { NewPersonModal } from './components/NewPersonModal'
 import { Toast } from '@components/usefull/Toast'
+import { NewPersonModal } from '@components/PersonsComponents/NewPersonModal'
 
 export default function PersonsPage() {
   const [successToastOpen, setSuccessToastOpen] = useState(false)
