@@ -85,6 +85,13 @@ import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
 import { saveArchiveImagesFunction } from './functions/boxesFunctions/saveArchiveImagesFunction'
 import { IDeleteArchiveBox } from './types/interfaceFunctions/IDeleteArchiveBox'
 import { deleteArchiveBoxFunction } from './functions/boxesFunctions/deleteArchiveBoxFunction'
+import { IDeleteImageInArchiveRequest } from '@api/boxesRequests/types/IDeleteImageInArchiveRequest'
+import { deleteImageInArchiveFunction } from './functions/boxesFunctions/deleteImageInArchiveFunction'
+import { IUpdateArchiveRequest } from '@api/boxesRequests/types/IUpdateArchiveRequest'
+import { updateArchiveFunction } from './functions/boxesFunctions/updateArchiveFunction'
+import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
+import { updateBoxFunction } from './functions/boxesFunctions/updateBoxFunction'
+import { deleteBoxFunction } from './functions/boxesFunctions/deleteBoxFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   {} as IProjectsContext,
@@ -465,6 +472,42 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return deleteArchiveBoxFunction({ archiveId, boxId, dispatch })
   }
 
+  async function deleteImageInArchive({
+    archiveId,
+    boxId,
+    imageId,
+  }: IDeleteImageInArchiveRequest) {
+    return deleteImageInArchiveFunction({ archiveId, boxId, imageId, dispatch })
+  }
+
+  async function updateArchive({
+    archiveId,
+    boxId,
+    description,
+    title,
+  }: IUpdateArchiveRequest) {
+    return updateArchiveFunction({
+      archiveId,
+      boxId,
+      description,
+      title,
+      dispatch,
+    })
+  }
+
+  async function updateBox({
+    boxId,
+    name,
+    description,
+    tags,
+  }: IUpdateBoxRequest) {
+    return updateBoxFunction({ boxId, name, description, tags, dispatch })
+  }
+
+  async function deleteBox(boxId: string) {
+    return deleteBoxFunction({ boxId, dispatch })
+  }
+
   useEffect(() => {
     if (!userLogged) return
     getProjects()
@@ -529,6 +572,10 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         createArchiveInBox,
         saveArchiveImages,
         deleteArchiveBox,
+        deleteImageInArchive,
+        updateArchive,
+        updateBox,
+        deleteBox,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

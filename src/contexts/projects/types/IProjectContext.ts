@@ -38,6 +38,9 @@ import { IUpdateFrontCover } from './interfaceFunctions/IUpdateFrontCover'
 import { IUpdateNameProject } from './interfaceFunctions/IUpdateNameProject'
 import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
 import { IDeleteArchiveBox } from './interfaceFunctions/IDeleteArchiveBox'
+import { IDeleteImageInArchiveRequest } from '@api/boxesRequests/types/IDeleteImageInArchiveRequest'
+import { IUpdateArchiveRequest } from '@api/boxesRequests/types/IUpdateArchiveRequest'
+import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
 
 export interface IProjectsContext {
   loading: boolean
@@ -176,6 +179,24 @@ export interface IProjectsContext {
     archiveId,
     boxId,
   }: IDeleteArchiveBox) => Promise<boolean>
+  deleteImageInArchive: ({
+    archiveId,
+    boxId,
+    imageId,
+  }: IDeleteImageInArchiveRequest) => Promise<boolean>
+  updateArchive: ({
+    archiveId,
+    boxId,
+    description,
+    title,
+  }: IUpdateArchiveRequest) => Promise<boolean>
+  updateBox: ({
+    boxId,
+    name,
+    description,
+    tags,
+  }: IUpdateBoxRequest) => Promise<boolean>
+  deleteBox: (boxId: string) => Promise<void>
 }
 
 export interface IProjectsContextProps {

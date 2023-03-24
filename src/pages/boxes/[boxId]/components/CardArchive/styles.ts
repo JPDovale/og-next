@@ -19,6 +19,8 @@ export const ContentCardArchive = styled('div', {
 })
 
 export const ImageContainer = styled('div', {
+  position: 'relative',
+
   minHeight: '320px',
   maxHeight: '380px',
   overflow: 'hidden',

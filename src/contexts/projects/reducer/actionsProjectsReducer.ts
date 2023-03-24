@@ -26,6 +26,7 @@ export enum ProjectsActionsType {
   SetLoading = 'setLoading',
   UpdateBox = 'updateBox',
   AddBox = 'addBox',
+  DeleteBox = 'deleteBox',
 }
 
 export function addProjectAction(project: IProjectResponse) {
@@ -185,6 +186,15 @@ export function updateBookAction(book: IBooksResponse) {
     type: ProjectsActionsType.UpdateBook,
     payload: {
       book,
+    },
+  }
+}
+
+export function deleteBoxAction(boxId: string) {
+  return {
+    type: ProjectsActionsType.DeleteBox,
+    payload: {
+      boxId,
     },
   }
 }
