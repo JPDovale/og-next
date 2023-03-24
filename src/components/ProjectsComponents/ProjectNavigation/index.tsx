@@ -34,7 +34,7 @@ import {
   House,
   TreeStructure,
   UserMinus,
-  ArchiveBox,
+  Package,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 
@@ -513,7 +513,7 @@ export function ProjectNavigation({
               }}
             >
               <ButtonIcon>
-                <ArchiveBox />
+                <Package />
               </ButtonIcon>
             </ButtonRoot>
           </Label>

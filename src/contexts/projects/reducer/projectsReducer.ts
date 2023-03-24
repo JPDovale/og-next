@@ -194,6 +194,20 @@ export function projectsReducer(state: IProjectState, action: any) {
       })
     }
 
+    case ProjectsActionsType.AddBox: {
+      return produce(state, (draft) => {
+        draft.boxes.push(action.payload.box)
+      })
+    }
+
+    case ProjectsActionsType.DeleteBox: {
+      return produce(state, (draft) => {
+        draft.boxes = state.boxes.filter(
+          (box) => box.id !== action.payload.boxId,
+        )
+      })
+    }
+
     default:
       return state
   }

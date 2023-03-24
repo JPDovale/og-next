@@ -7,7 +7,7 @@ import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { ArchiveBox } from 'phosphor-react'
+import { Package } from 'phosphor-react'
 import { useContext } from 'react'
 
 export default function BoxesProjectPage() {
@@ -44,7 +44,7 @@ export default function BoxesProjectPage() {
             ))
           ) : (
             <ListEmpty
-              icon={<ArchiveBox size={40} />}
+              icon={<Package size={40} />}
               message="Não se preocupe... As boxes dos projetos são criadas automaticamente para organizar os arquivos..."
             />
           )}
