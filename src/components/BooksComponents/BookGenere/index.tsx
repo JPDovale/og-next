@@ -18,7 +18,11 @@ export function BookGenere({
     <BookGenereContainer>
       <Genere>{genere}</Genere>
       {!isNotRemovable && (
-        <button type="button" onClick={() => onRemove(genere)}>
+        <button
+          type="button"
+          title="Remover gênero do livro"
+          onClick={() => onRemove(genere)}
+        >
           <X />
         </button>
       )}
