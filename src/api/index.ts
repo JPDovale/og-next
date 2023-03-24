@@ -2,10 +2,10 @@ import axios from 'axios'
 
 export const api = axios.create({
   // devEnvironment
-  baseURL: 'https://ogapi-teste.onrender.com',
+  // baseURL: 'https://ogapi-teste.onrender.com',
 
   // deployEnvironment
-  // baseURL: 'https://ogapi.onrender.com',
+  baseURL: 'https://ogapi.onrender.com',
 
   // fullDevEnvironment
   // baseURL: 'http://localhost:3030/',
