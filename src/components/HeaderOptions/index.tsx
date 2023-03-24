@@ -16,6 +16,7 @@ import {
   DotsNine,
   FilePlus,
   MagnifyingGlass,
+  Package,
   XCircle,
 } from 'phosphor-react'
 import { ChangeEvent, useContext, useState } from 'react'
@@ -27,10 +28,11 @@ import {
   QueryContainer,
   Title,
 } from './styles'
-import { NewProjectModal } from './components/NewProjectModal'
 import { PreferenciesPopover } from './components/PreferenciesPopover'
 import { NotificationsPopover } from './components/NotificationsPopover'
 import { UserOptionsPopover } from './components/UserOptionsPopover'
+import { NewProjectModal } from '@components/ProjectsComponents/NewProjectModal'
+import { NewBoxModal } from '@components/BoxesComponents/NewBoxModal'
 
 interface IHeaderOptionsProps {
   windowName: string
@@ -81,6 +83,16 @@ export function HeaderOptions({
       </Title>
 
       <Options>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button type="button" className="icon-button">
+              <Package size={24} />
+            </button>
+          </Dialog.Trigger>
+
+          <NewBoxModal />
+        </Dialog.Root>
+
         <Dialog.Root>
           <Dialog.Trigger asChild>
             <button type="button" className="icon-button">

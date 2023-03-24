@@ -1,8 +1,10 @@
+import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
 import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
 import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
 import { IRemoveGenreRequest } from '@api/booksRequests/types/IRemoveGenreRequest'
 import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
+import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
@@ -34,6 +36,11 @@ import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
 import { IQuitProject } from './interfaceFunctions/IQuitProject'
 import { IUpdateFrontCover } from './interfaceFunctions/IUpdateFrontCover'
 import { IUpdateNameProject } from './interfaceFunctions/IUpdateNameProject'
+import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
+import { IDeleteArchiveBox } from './interfaceFunctions/IDeleteArchiveBox'
+import { IDeleteImageInArchiveRequest } from '@api/boxesRequests/types/IDeleteImageInArchiveRequest'
+import { IUpdateArchiveRequest } from '@api/boxesRequests/types/IUpdateArchiveRequest'
+import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
 
 export interface IProjectsContext {
   loading: boolean
@@ -165,6 +172,31 @@ export interface IProjectsContext {
   removeGenre: (genreRequest: IRemoveGenreRequest) => Promise<void>
   updateBook: (bookInfosUpdated: IUpdateBookRequest) => Promise<void>
   deleteBook: (bookId: string) => Promise<boolean>
+  createBox: (box: ICreateBoxRequest) => Promise<boolean>
+  createArchiveInBox: (archive: ICreateArchiveInBoxRequest) => Promise<boolean>
+  saveArchiveImages: (images: ISaveImagesRequest) => Promise<boolean>
+  deleteArchiveBox: ({
+    archiveId,
+    boxId,
+  }: IDeleteArchiveBox) => Promise<boolean>
+  deleteImageInArchive: ({
+    archiveId,
+    boxId,
+    imageId,
+  }: IDeleteImageInArchiveRequest) => Promise<boolean>
+  updateArchive: ({
+    archiveId,
+    boxId,
+    description,
+    title,
+  }: IUpdateArchiveRequest) => Promise<boolean>
+  updateBox: ({
+    boxId,
+    name,
+    description,
+    tags,
+  }: IUpdateBoxRequest) => Promise<boolean>
+  deleteBox: (boxId: string) => Promise<void>
 }
 
 export interface IProjectsContextProps {

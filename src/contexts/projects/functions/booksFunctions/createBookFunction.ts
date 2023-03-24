@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { createBookRequest } from '../../../../api/booksRequests'
 import { ICreateBookDTO } from '../../../../api/dtos/booksDTOS/ICreateBookDTO'
@@ -108,7 +109,7 @@ export async function createBookFunction({
   }
 
   const bookReceipted = response.book as IBooksResponse
-  const boxReceipted = response.box as IBooksResponse
+  const boxReceipted = response.box as IBoxResponse
 
   dispatch(addBookAction(bookReceipted, boxReceipted))
   dispatch(setLoadingAction(false))

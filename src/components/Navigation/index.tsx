@@ -4,6 +4,7 @@ import LogoToLeft from '../../assets/logos/logo.svg'
 import {
   Bookmark,
   ListChecks,
+  Package,
   ProjectorScreenChart,
   UserCircle,
   UsersThree,
@@ -46,26 +47,15 @@ export function NavigationBar() {
       </button>
       <ButtonsContainer>
         {smallWindow && (
-          <>
-            <Text
-              size="xs"
-              css={{
-                marginBottom: '-$4',
-              }}
-            >
-              Ferramentas
-            </Text>
-
-            <Text
-              size="xs"
-              css={{
-                marginTop: '$4',
-                marginBottom: '-$4',
-              }}
-            >
-              Projetos
-            </Text>
-          </>
+          <Text
+            size="xs"
+            css={{
+              marginTop: '$4',
+              marginBottom: '-$4',
+            }}
+          >
+            Projetos
+          </Text>
         )}
 
         <ButtonRoot
@@ -122,6 +112,21 @@ export function NavigationBar() {
           </ButtonIcon>
 
           <ButtonLabel>Compartilhados comigo</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
+          type="button"
+          variant={location === 'boxes' ? 'active' : 'default'}
+          onClick={() => {
+            router.push('/boxes')
+            smallWindow && setNavIsOpen(false)
+          }}
+        >
+          <ButtonIcon>
+            <Package />
+          </ButtonIcon>
+
+          <ButtonLabel>Boxes</ButtonLabel>
         </ButtonRoot>
 
         <ButtonRoot

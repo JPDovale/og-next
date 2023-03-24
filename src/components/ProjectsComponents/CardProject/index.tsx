@@ -20,6 +20,7 @@ import {
   UsersWhitAccess,
 } from './styles'
 import { ShareProjectModal } from './components/ShareProjectModal'
+import { useProject } from '@hooks/useProject'
 
 interface ICardProjectProps {
   project: IProjectResponse
@@ -52,8 +53,10 @@ export function CardProject({
     (u) => u.id !== user?.id,
   )
 
-  const persons = project?.tags?.find((tag) => tag.type === 'persons')
-  const books = project?.tags?.find((tag) => tag.type === 'books')
+  const { boxesThisProject } = useProject(project.id)
+
+  const persons = boxesThisProject?.find((box) => box.name === 'persons')
+  const books = boxesThisProject?.find((box) => box.name === 'books')
 
   return (
     <CardProjectContainer isList={isList}>
@@ -138,14 +141,14 @@ export function CardProject({
                 <Text as="span" family="body" size="sm" height="shorter">
                   Livros
                 </Text>
-                {books?.refs[0].references.length || 0}
+                {books?.archives[0]?.links?.length || 0}
               </Text>
 
               <Text as="p" height={'shorter'} size={'sm'}>
                 <Text as="span" family="body" size="sm" height="shorter">
                   Personagens
                 </Text>
-                {persons?.refs[0].references.length || 0}
+                {persons?.archives[0]?.links?.length || 0}
               </Text>
             </InfosContainer>
           )}

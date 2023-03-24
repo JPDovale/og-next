@@ -1,12 +1,13 @@
-interface IAvatar {
+export interface IImageArchive {
   fileName: string
   url: string
-  createdAt?: string
-  updatedAt?: string
+  createdAt: string
+  updatedAt: string
+  id: string
 }
 
 export interface IArchive {
-  images?: IAvatar[]
+  images?: IImageArchive[]
   archive: {
     id: string
     title: string
@@ -23,6 +24,7 @@ export interface IArchive {
 export interface IBoxResponse {
   id: string
   name: string
+  description: string
   projectId: string
   internal: boolean
   type: string

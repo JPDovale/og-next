@@ -3,12 +3,19 @@ export const ProjectsContainer = styled('div', {
   display: 'grid',
 
   gap: '$8',
-  padding: '0 $8 $10 $8',
+  padding: '0 0 $10 0',
   marginTop: '120px',
 
   transition: 'all 500ms',
 
   variants: {
+    isFirst: {
+      true: {},
+      false: {
+        marginTop: '0',
+      },
+    },
+
     navIsOpen: {
       true: {
         gridTemplateColumns: '1fr 1fr ',
@@ -21,14 +28,7 @@ export const ProjectsContainer = styled('div', {
     isEmpty: {
       true: {
         display: 'flex',
-        position: 'absolute',
-        padding: '$2',
-        marginTop: '90px',
-
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        minHeight: '80%',
 
         '@media screen and (max-width: 768px)': {
           minHeight: '80%',
