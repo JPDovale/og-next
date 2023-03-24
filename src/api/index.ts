@@ -1,8 +1,14 @@
 import axios from 'axios'
 
 export const api = axios.create({
+  // devEnvironment
+  baseURL: 'https://ogapi-teste.onrender.com',
+
+  // deployEnvironment
   // baseURL: 'https://ogapi.onrender.com',
-  baseURL: 'http://localhost:3030/',
+
+  // fullDevEnvironment
+  // baseURL: 'http://localhost:3030/',
 })
 
 export async function GetInfoUser() {
