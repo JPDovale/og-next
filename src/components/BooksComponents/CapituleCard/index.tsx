@@ -112,7 +112,7 @@ export function CapituleCard({
         >
           <ContainerGrid columns={4}>
             <InfoDefault title="Completo">
-              <CapituleComplete size="sm" complete={capitule.complete}>
+              <CapituleComplete as="div" size="sm" complete={capitule.complete}>
                 {capitule.complete ? (
                   <Text size="sm" data-testid="complete" family="body">
                     Completo

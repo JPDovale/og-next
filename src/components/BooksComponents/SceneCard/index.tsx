@@ -128,22 +128,23 @@ export function SceneCard({
   }
 
   return (
-    <SceneCardContainer>
+    <SceneCardContainer data-testid="scene-card">
       <SceneHeading as="header">
         Cena: {scene.sequence}
         <div className="buttons">
           {!checked && (
-            <HeaderButton title="Editar cena">
-              <PencilLine
-                size={16}
-                weight="duotone"
-                onClick={() => setOnEditScene(scene.id)}
-              />
+            <HeaderButton
+              title="Editar cena"
+              onClick={() => setOnEditScene(scene.id)}
+              data-testid="edit-scene-button"
+            >
+              <PencilLine size={16} weight="duotone" />
             </HeaderButton>
           )}
 
           {!scene.complete && (
             <Checkbox
+              data-testid="check-complete"
               onCheckedChange={() => {
                 setChecked(!checked)
                 setDeleteSelected(false)
@@ -156,6 +157,7 @@ export function SceneCard({
           {!checked && (
             <>
               <HeaderButton
+                data-testid="reorder-scenes-button"
                 title="Reordenar cenas"
                 onClick={() => {
                   setReOrderSelected(!reOrderSelected)
@@ -170,6 +172,7 @@ export function SceneCard({
               </HeaderButton>
 
               <HeaderButton
+                data-testid="delete-scene-button"
                 toDelete={!deleteSelected}
                 title={deleteSelected ? 'Cancelar' : 'Remover cena'}
                 onClick={() => {
@@ -189,7 +192,7 @@ export function SceneCard({
       </SceneHeading>
 
       {checked && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="alternative-form">
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">
@@ -223,7 +226,7 @@ export function SceneCard({
       )}
 
       {deleteSelected && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="alternative-delete-form">
           <div className="form">
             <InputContainer>
               <Text family="body" size="sm">
@@ -247,7 +250,7 @@ export function SceneCard({
       )}
 
       {reOrderSelected && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="alternative-reorder-form">
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">
