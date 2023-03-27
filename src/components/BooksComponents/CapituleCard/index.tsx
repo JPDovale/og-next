@@ -81,10 +81,10 @@ export function CapituleCard({
   }
 
   return (
-    <CapituleCardContainer>
+    <CapituleCardContainer data-testid="capitule">
       <CapituleName as="div">
         <div>
-          {capitule.name}
+          <Text as="span">{capitule.name}</Text>
           <Text size="sm" family="body" css={{ color: '$base800' }}>
             Clique para abrir a grade de cenas
           </Text>
@@ -97,22 +97,31 @@ export function CapituleCard({
           }}
         >
           {reOrderSelected ? (
-            <X size={16} weight="duotone" />
+            <X size={16} weight="duotone" data-testid="cancel-reorder" />
           ) : (
-            <List size={16} weight="duotone" />
+            <List size={16} weight="duotone" data-testid="select-reorder" />
           )}
         </HeaderButton>
       </CapituleName>
 
       {!reOrderSelected && (
         <CapituleInfos
+          data-testid="capitule-infos"
           type="button"
           onClick={redirectFunction && redirectFunction}
         >
           <ContainerGrid columns={4}>
             <InfoDefault title="Completo">
               <CapituleComplete size="sm" complete={capitule.complete}>
-                {capitule.complete ? 'Completo' : 'Incompleto'}
+                {capitule.complete ? (
+                  <Text size="sm" data-testid="complete" family="body">
+                    Completo
+                  </Text>
+                ) : (
+                  <Text size="sm" data-testid="incomplete" family="body">
+                    Incompleto
+                  </Text>
+                )}
               </CapituleComplete>
             </InfoDefault>
 
@@ -156,7 +165,7 @@ export function CapituleCard({
       )}
 
       {reOrderSelected && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="reorder-form">
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">

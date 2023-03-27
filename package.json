@@ -58,6 +58,7 @@
     "@types/lodash": "^4.14.191",
     "@types/supertest": "^2.0.12",
     "@types/tinymce": "^4.6.5",
+    "@vitest/coverage-c8": "^0.29.7",
     "@vitest/ui": "^0.29.7",
     "jsdom": "^21.1.1",
     "supertest": "^6.3.3",
