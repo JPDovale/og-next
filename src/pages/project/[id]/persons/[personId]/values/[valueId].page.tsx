@@ -29,11 +29,13 @@ export default function ValuePage() {
   const { project, permission, projectName, usePerson } = useProject(
     id as string,
   )
-  const { person, personName, findValue, tags } = usePerson(personId as string)
+  const { person, personName, findValue, personBoxes } = usePerson(
+    personId as string,
+  )
   const { value, keysValue, commentsInThisValue } = findValue(valueId as string)
 
-  const tag = tags.values
-  const refs = tag && tag.refs
+  const boxValues = personBoxes.values
+  const files = boxValues && boxValues.archives
 
   const inError =
     !loading && ((valueId !== 'new' && !value) || !project || !person)
@@ -66,7 +68,7 @@ export default function ValuePage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={valueId === 'new'}
           editorTo={keysValue.label}
           projectId={project?.id}

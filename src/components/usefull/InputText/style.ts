@@ -35,6 +35,15 @@ export const TextInputContainer = styled('div', {
       attention: {
         boxShadow: '$attention',
       },
+      noShadow: {
+        boxShadow: 'unset',
+      },
+    },
+    size: {
+      xs: { padding: '$2' },
+      sm: { padding: '$3' },
+      md: {},
+      lg: { padding: '$5' },
     },
   },
 
@@ -55,7 +64,7 @@ export const TextInputPrefixContainer = styled('span', {
 })
 
 export const Input = styled('input', {
-  minWidth: '100%',
+  width: '100%',
   height: '100%',
 
   background: '$transparent',

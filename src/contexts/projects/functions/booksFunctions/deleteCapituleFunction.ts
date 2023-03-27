@@ -3,7 +3,10 @@ import { deleteCapituleRequest } from '../../../../api/booksRequests'
 import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import { setErrorAction } from '../../../user/reducer/actionsUserReducer'
-import { updateBookAction } from '../../reducer/actionsProjectsReducer'
+import {
+  setLoadingAction,
+  updateBookAction,
+} from '../../reducer/actionsProjectsReducer'
 
 interface IDeleteCapituleFunction {
   bookId: string
@@ -16,16 +19,7 @@ export async function deleteCapituleFunction({
   capituleId,
   dispatch,
 }: IDeleteCapituleFunction): Promise<boolean> {
-  if (!bookId || !capituleId) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await deleteCapituleRequest({ bookId, capituleId })
 
@@ -35,11 +29,15 @@ export async function deleteCapituleFunction({
     if (isRefreshed) {
       return deleteCapituleFunction({ bookId, capituleId, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle as string,
@@ -52,6 +50,7 @@ export async function deleteCapituleFunction({
 
   const book = response as IBooksResponse
   dispatch(updateBookAction(book))
+  dispatch(setLoadingAction(false))
 
   return true
 }

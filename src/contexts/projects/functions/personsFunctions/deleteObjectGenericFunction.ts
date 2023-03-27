@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { IEditorTo } from '../../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../../@types/editores/IGenericObject'
@@ -7,6 +8,7 @@ import { recognizeObject } from '../../../../services/recognizeObject'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -17,26 +19,31 @@ export async function deleteObjectGenericFunction(
   to: IEditorTo,
   dispatch: Dispatch<any>,
 ): Promise<void> {
-  if (!generic || !personId || !genericId || !to) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
-  const objectToSend = recognizeObject(to, personId, '', generic, '', genericId)
+  const objectToSend = recognizeObject(
+    to,
+    personId,
+    '',
+    generic,
+    '',
+    genericId,
+    undefined,
+    generic.coupleId,
+  )
 
   if (!objectToSend) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: 'Error ao processar as informações',
         message:
           'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
       }),
     )
+
+    return
   }
 
   const response = await deleteObjectGenericRequest(objectToSend)
@@ -53,19 +60,28 @@ export async function deleteObjectGenericFunction(
         dispatch,
       )
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+
+    return
   }
 
-  const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
+  const person = response.person as IPersonsResponse
+  const box = response.box as IBoxResponse
+
+  dispatch(updatePersonAction(person, box))
+  dispatch(setLoadingAction(false))
 }

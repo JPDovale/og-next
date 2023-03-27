@@ -1,23 +1,14 @@
-import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
-import { Text } from '@components/usefull/Text'
-import { Textarea } from '@components/usefull/Textarea'
-import { useRouter } from 'next/router'
-import {
-  CaretCircleDoubleLeft,
-  FileArrowUp,
-  FileX,
-  Textbox,
-} from 'phosphor-react'
-import { useState } from 'react'
-import { EditorContainer, EditorHeader } from './styles'
 import { TextEditor } from '@components/TextEditor'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { Text } from '@components/usefull/Text'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { reverbKeys } from '@services/reverbKeys'
 import { FileArrowUp, FileX, Textbox } from 'phosphor-react'
 import { EditorHeader } from './styles'
 
 interface IEditorProps {
+  superFix?: string
   projectId: string
   to: string
   preValue: string
@@ -33,16 +24,18 @@ export function Editor({
   setValue,
   permission,
   handleUpdate,
+  superFix,
 }: IEditorProps) {
   const { GoBackButton } = usePreventBack(`/project/${projectId}/plot`)
 
   return (
-    <ContainerGrid>
+    <ContainerGrid isRelativePosition>
+      <GoBackButton topDistance={4} />
+
       <EditorHeader>
         <Text as="span" size="xl">
-          <Textbox size={24} /> Editar {reverbKeys[to]}.
+          <Textbox size={24} /> Editar {reverbKeys[to]} {superFix}.
         </Text>
-        <GoBackButton />
       </EditorHeader>
 
       <TextEditor
@@ -52,12 +45,12 @@ export function Editor({
       />
 
       {permission === 'edit' && (
-        <div className="buttons">
+        <ContainerGrid columns={2}>
           <ButtonRoot
             type="button"
             align="center"
-            className="save"
-            onClick={updateValue}
+            css={{ background: 'DarkGreen' }}
+            onClick={handleUpdate}
           >
             <ButtonIcon>
               <FileArrowUp weight="bold" />
@@ -68,7 +61,7 @@ export function Editor({
           <ButtonRoot
             type="button"
             align="center"
-            className="cancel"
+            css={{ background: 'DarkRed' }}
             onClick={() => setValue && setValue(preValue || '')}
           >
             <ButtonIcon>
@@ -76,20 +69,7 @@ export function Editor({
             </ButtonIcon>
             <ButtonLabel>Cancelar</ButtonLabel>
           </ButtonRoot>
-        </div>
-      )}
-      {error && (
-        <Text
-          size="md"
-          css={{
-            color: '$errorDefault',
-          }}
-          weight="bold"
-          family="body"
-        >
-          {error}
-        </Text>
-
+        </ContainerGrid>
       )}
     </ContainerGrid>
   )

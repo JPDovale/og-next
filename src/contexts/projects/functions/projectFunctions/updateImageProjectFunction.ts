@@ -4,6 +4,7 @@ import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -12,16 +13,7 @@ export async function updateImageProjectFunction(
   file: File,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!projectId || !file) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await updateImageProjectRequest(projectId, file)
 
@@ -31,6 +23,8 @@ export async function updateImageProjectFunction(
     if (isRefreshed) {
       return updateImageProjectFunction(projectId, file, dispatch)
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
@@ -42,10 +36,14 @@ export async function updateImageProjectFunction(
         message: response.errorMessage,
       }),
     )
+    dispatch(setLoadingAction(false))
+
     return false
   }
   const projectUpdated = response as IProjectResponse
 
   dispatch(updateProjectAction(projectUpdated))
+  dispatch(setLoadingAction(false))
+
   return true
 }

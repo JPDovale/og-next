@@ -4,6 +4,7 @@ import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateBookAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -16,15 +17,7 @@ export async function removeFrontCoverFunction({
   bookId,
   dispatch,
 }: IRemoveFrontCoverFunction): Promise<void> {
-  if (!bookId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await removeFrontCoverRequest(bookId)
 
@@ -33,18 +26,26 @@ export async function removeFrontCoverFunction({
 
     if (isRefreshed) {
       return removeFrontCoverFunction({ bookId, dispatch })
+    } else {
+      dispatch(setLoadingAction(false))
+
+      return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const bookUpdated = response as IBooksResponse
+  dispatch(setLoadingAction(false))
   dispatch(updateBookAction(bookUpdated))
 }

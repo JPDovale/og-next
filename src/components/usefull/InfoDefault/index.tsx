@@ -1,8 +1,18 @@
 import { styled } from '@styles/index'
-import { ReactNode } from 'react'
+import { ComponentProps, ReactNode } from 'react'
 import { Text } from '../Text'
 
-interface IInfoDefaultProps {
+const InfoContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+
+  span: {
+    color: '$base800',
+  },
+})
+
+interface IInfoDefaultProps extends ComponentProps<typeof InfoContainer> {
   children?: ReactNode
   title: string
   size?: 'md' | 'lg' | 'sm'
@@ -14,9 +24,10 @@ export function InfoDefault({
   title,
   size = 'md',
   as = 'div',
+  ...props
 }: IInfoDefaultProps) {
   return (
-    <InfoContainer>
+    <InfoContainer {...props}>
       <Text as="span" size={size} family="body" height="shorter">
         {title}
       </Text>
@@ -27,13 +38,3 @@ export function InfoDefault({
     </InfoContainer>
   )
 }
-
-const InfoContainer = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-
-  span: {
-    color: '$base800',
-  },
-})

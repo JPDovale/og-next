@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from 'react'
+import { createContext, useContext, useEffect, useReducer } from 'react'
 import { IEditorTo } from '../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../@types/editores/IGenericObject'
 import { IError } from '../../@types/errors/IError'
@@ -83,20 +77,35 @@ import { removeGenreFunction } from './functions/booksFunctions/removeGenreFunct
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
 import { updateBookFunction } from './functions/booksFunctions/updateBookFunction'
 import { deleteBookFunction } from './functions/booksFunctions/deleteBookFunction'
+import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
+import { createBoxFunction } from './functions/boxesFunctions/createBoxFunction'
+import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
+import { createArchiveInBoxFunction } from './functions/boxesFunctions/createArchiveInBoxFunction'
+import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
+import { saveArchiveImagesFunction } from './functions/boxesFunctions/saveArchiveImagesFunction'
+import { IDeleteArchiveBox } from './types/interfaceFunctions/IDeleteArchiveBox'
+import { deleteArchiveBoxFunction } from './functions/boxesFunctions/deleteArchiveBoxFunction'
+import { IDeleteImageInArchiveRequest } from '@api/boxesRequests/types/IDeleteImageInArchiveRequest'
+import { deleteImageInArchiveFunction } from './functions/boxesFunctions/deleteImageInArchiveFunction'
+import { IUpdateArchiveRequest } from '@api/boxesRequests/types/IUpdateArchiveRequest'
+import { updateArchiveFunction } from './functions/boxesFunctions/updateArchiveFunction'
+import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
+import { updateBoxFunction } from './functions/boxesFunctions/updateBoxFunction'
+import { deleteBoxFunction } from './functions/boxesFunctions/deleteBoxFunction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   {} as IProjectsContext,
 )
 
 export function ProjectsProvider({ children }: IProjectsContextProps) {
-  const [loading, setLoading] = useState(true)
-
   const [projectState, dispatch] = useReducer(projectsReducer, {
     projects: [],
     users: [],
     error: undefined,
     persons: [],
     books: [],
+    boxes: [],
+    loading: true,
   })
 
   const {
@@ -106,62 +115,48 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     error: errorUser,
   } = useContext(UserContext)
 
-  const { projects, error, users, persons, books } = projectState
+  const { projects, error, users, persons, books, boxes, loading } =
+    projectState
 
   function setError(error: IError | undefined) {
     dispatch(setErrorAction(error))
   }
 
   async function getProjects() {
-    setLoading(true)
-    await getProjectsFunction(dispatch)
-    setLoading(false)
+    return getProjectsFunction(dispatch)
   }
 
   async function createProject(newProjectInfos: ICreateProjectDTO) {
-    setLoading(true)
     const newProjectId = await createProjectFunction(newProjectInfos, dispatch)
 
-    const welcomeProjectId = projects.find(
+    const welcomeProject = projects.find(
       (p) => p.id === '1242545b-56c9-41c0-9f98-addc9b5c5c65',
-    )?.id
-    if (welcomeProjectId) {
-      await quitProject({ projectId: welcomeProjectId })
+    )
+
+    if (welcomeProject) {
+      await quitProject({ projectId: welcomeProject.id })
     }
 
-    setLoading(false)
     return newProjectId
   }
 
   async function updateImageProject(projectId: string, file: File) {
-    setLoading(true)
-    const isModified = await updateImageProjectFunction(
-      projectId,
-      file,
-      dispatch,
-    )
-    setLoading(false)
-    return isModified
+    return updateImageProjectFunction(projectId, file, dispatch)
   }
 
   async function shareProject(newShare: IShareProjectDTO) {
-    const response = await shareProjectFunction(newShare, dispatch)
-    return response
+    return shareProjectFunction(newShare, dispatch)
   }
 
   async function updatePlot(newPlot: IUpdatePlotDTO, projectId: string) {
-    setLoading(true)
-    await updatePlotFunction(newPlot, projectId, dispatch)
-    setLoading(false)
+    return updatePlotFunction(newPlot, projectId, dispatch)
   }
 
   async function commentInPlot(
     newComment: ICreateCommentDTO,
     projectId: string,
   ) {
-    setLoading(true)
-    await commentInPlotFunction(newComment, projectId, dispatch)
-    setLoading(false)
+    return commentInPlotFunction(newComment, projectId, dispatch)
   }
 
   async function responseCommentInPlot(
@@ -169,39 +164,24 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     projectId: string,
     commentId: string,
   ) {
-    setLoading(true)
-
-    await responseCommentInPlotFunction(
+    return responseCommentInPlotFunction(
       newResponse,
       projectId,
       commentId,
       dispatch,
     )
-    setLoading(false)
   }
 
   async function deleteProject(projectId: string) {
-    setLoading(true)
-    await deleteProjectFunction(projectId, dispatch)
-    setLoading(false)
+    return deleteProjectFunction(projectId, dispatch)
   }
 
   async function createNewPerson(person: ICreatePersonDTO) {
-    setLoading(true)
-    const isCreated = await createNewPersonFunction(person, dispatch)
-    setLoading(false)
-    return isCreated
+    return createNewPersonFunction(person, dispatch)
   }
 
   async function updateImageFromPerson(personId: string, file: File) {
-    setLoading(true)
-    const isUpdated = await updateImageFromPersonFunction(
-      file,
-      personId,
-      dispatch,
-    )
-    setLoading(false)
-    return isUpdated
+    return updateImageFromPersonFunction(file, personId, dispatch)
   }
 
   async function updateObjective(
@@ -209,15 +189,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     objectiveId: string,
   ) {
-    setLoading(true)
-    const isUpdated = await updateObjetiveOfPersonFunction(
+    return updateObjetiveOfPersonFunction(
       objective,
       personId,
       objectiveId,
       dispatch,
     )
-    setLoading(false)
-    return isUpdated
   }
 
   async function createObjective(
@@ -225,15 +202,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     projectId: string,
   ) {
-    setLoading(true)
-    const isCreated = await createObjetiveOfPersonFunction(
+    return createObjetiveOfPersonFunction(
       objective,
       personId,
       projectId,
       dispatch,
     )
-    setLoading(false)
-    return isCreated
   }
 
   async function saveRefObjective(
@@ -242,25 +216,20 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     projectId: string,
     refId: string,
   ) {
-    setLoading(true)
-    const isRefCreated = await saveRefObjectiveFunction(
+    return saveRefObjectiveFunction(
       objective,
       personId,
       projectId,
       refId,
       dispatch,
     )
-    setLoading(false)
-    return isRefCreated
   }
 
   async function commentInPerson(
     newComment: ICreateCommentDTO,
     personId: string,
   ) {
-    setLoading(true)
-    await commentInPersonFunction(newComment, personId, dispatch)
-    setLoading(false)
+    return commentInPersonFunction(newComment, personId, dispatch)
   }
 
   async function responseCommentToPerson(
@@ -268,14 +237,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     commentId: string,
   ) {
-    setLoading(true)
-    await responseCommentInPersonFunction(
+    return responseCommentInPersonFunction(
       newResponse,
       personId,
       commentId,
       dispatch,
     )
-    setLoading(false)
   }
 
   async function createObjectGeneric(
@@ -284,16 +251,13 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     projectId: string,
   ) {
-    setLoading(true)
-    const isCreated = await createObjectGenericFunction(
+    return createObjectGenericFunction(
       generic,
       to,
       personId,
       projectId,
       dispatch,
     )
-    setLoading(false)
-    return isCreated
   }
 
   async function saveRefObjectGeneric(
@@ -306,8 +270,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       description: string
     }>,
   ) {
-    setLoading(true)
-    const isRefCreated = await saveRefObjectGenericFunction(
+    return saveRefObjectGenericFunction(
       personId,
       projectId,
       refId,
@@ -315,8 +278,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       dispatch,
       subObjects,
     )
-    setLoading(false)
-    return isRefCreated
   }
 
   async function updateObjectGeneric(
@@ -325,16 +286,13 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     genericId: string,
     to: IEditorTo,
   ) {
-    setLoading(true)
-    const isUpdated = await updateObjectGenericFunction(
+    return updateObjectGenericFunction(
       generic,
       personId,
       genericId,
       to,
       dispatch,
     )
-    setLoading(false)
-    return isUpdated
   }
 
   async function deleteObjectGeneric(
@@ -343,60 +301,47 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     genericId: string,
     to: IEditorTo,
   ) {
-    setLoading(true)
-    await deleteObjectGenericFunction(
+    return deleteObjectGenericFunction(
       generic,
       personId,
       genericId,
       to,
       dispatch,
     )
-    setLoading(false)
   }
 
   async function unshareProject(userEmail: string, projectId: string) {
-    setLoading(true)
-    await unshareProjectFunction(userEmail, projectId, dispatch)
-    setLoading(false)
+    return unshareProjectFunction(userEmail, projectId, dispatch)
   }
 
   async function updatePerson(person: ICreatePersonDTO, personId: string) {
-    setLoading(true)
-    await updatedPersonFunction(person, personId, dispatch)
-    setLoading(false)
+    return updatedPersonFunction(person, personId, dispatch)
   }
 
   async function deleteImageProject({ projectId }: IDeleteImageProject) {
-    setLoading(true)
-    await deleteImageProjectFunction({ projectId, dispatch })
-    setLoading(false)
+    return deleteImageProjectFunction({ projectId, dispatch })
   }
 
   async function deleteImagePerson({ personId }: IDeleteImagePerson) {
-    setLoading(true)
-    await deleteImagePersonFunction({ personId, dispatch })
-    setLoading(false)
+    return deleteImagePersonFunction({ personId, dispatch })
   }
 
   async function quitProject({ projectId }: IQuitProject) {
-    await quitProjectFunction({ projectId, dispatch })
+    return quitProjectFunction({ projectId, dispatch })
   }
 
   async function deleteObjective({ objectiveId, personId }: IDeleteObjective) {
-    await deleteObjectiveFunction({ objectiveId, personId, dispatch })
+    return deleteObjectiveFunction({ objectiveId, personId, dispatch })
   }
 
   async function createBook({ newBook, project }: ICreateBook) {
-    setLoading(true)
-    const response = await createBookFunction({
+    return createBookFunction({
       dispatch,
       newBook,
       project,
       users,
       user: user!,
     })
-    setLoading(false)
-    return response
   }
 
   async function updateFrontCover({ bookId, file }: IUpdateFrontCover) {
@@ -404,56 +349,41 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   }
 
   async function removeFrontCover(bookId: string) {
-    setLoading(true)
-    await removeFrontCoverFunction({ bookId, dispatch })
-    setLoading(false)
+    return removeFrontCoverFunction({ bookId, dispatch })
   }
 
   async function createCapitule(capitule: ICreateCapituleRequest) {
-    setLoading(true)
-    const response = await createCapituleFunction({
+    return createCapituleFunction({
       newCapitule: capitule,
       dispatch,
     })
-    setLoading(false)
-    return response
   }
 
   async function updateNameProject({ name, projectId }: IUpdateNameProject) {
-    setLoading(true)
-    await updateNameProjectFunction({ dispatch, name, projectId })
-    setLoading(false)
+    return updateNameProjectFunction({ dispatch, name, projectId })
   }
 
   async function updateCapitule(capitule: IUpdateCapituleRequest) {
-    setLoading(true)
-    await updateCapituleFunction({
+    updateCapituleFunction({
       updatedCapitule: capitule,
       dispatch,
     })
-    setLoading(false)
   }
 
   async function createScene(scene: ICreateSceneRequest) {
-    setLoading(true)
-    const response = await createSceneFunction({
+    return createSceneFunction({
       newScene: scene,
       dispatch,
     })
-    setLoading(false)
-    return response
   }
 
   async function setSceneToComplete(
     sceneToComplete: ISetSceneToCompleteRequest,
   ) {
-    setLoading(true)
-    const response = await setSceneToCompleteFunction({
+    return setSceneToCompleteFunction({
       sceneToComplete,
       dispatch,
     })
-    setLoading(false)
-    return response
   }
 
   async function deleteScene({
@@ -461,9 +391,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     capituleId,
     sceneId,
   }: IDeleteSceneRequest) {
-    setLoading(true)
-    await deleteSceneFunction({ bookId, capituleId, sceneId, dispatch })
-    setLoading(false)
+    return deleteSceneFunction({ bookId, capituleId, sceneId, dispatch })
   }
 
   async function reorderScenes({
@@ -472,15 +400,13 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     sequenceFrom,
     sequenceTo,
   }: IReorderScenesRequest) {
-    setLoading(true)
-    await reorderScenesFunction({
+    return reorderScenesFunction({
       bookId,
       capituleId,
       sequenceFrom,
       sequenceTo,
       dispatch,
     })
-    setLoading(false)
   }
 
   async function reorderCapitules({
@@ -488,64 +414,98 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     sequenceFrom,
     sequenceTo,
   }: IReorderCapitulesRequest) {
-    setLoading(true)
-    await reorderCapitulesFunction({
+    return reorderCapitulesFunction({
       bookId,
       sequenceFrom,
       sequenceTo,
       dispatch,
     })
-    setLoading(false)
   }
 
   async function updateScene(sceneUpdate: IUpdateSceneRequest) {
-    setLoading(true)
-    const response = await updateSceneFunction({
+    return updateSceneFunction({
       sceneUpdate,
       dispatch,
     })
-    setLoading(false)
-    return response
   }
 
   async function deleteCapitule({
     bookId,
     capituleId,
   }: IDeleteCapituleRequest) {
-    setLoading(true)
-    const response = await deleteCapituleFunction({
+    return deleteCapituleFunction({
       bookId,
       capituleId,
       dispatch,
     })
-    setLoading(false)
-    return response
   }
 
   async function addGenre(genreRequest: IAddGenreRequest) {
-    setLoading(true)
-    await addGenreFunction({ genreRequest, dispatch })
-    setLoading(false)
+    return addGenreFunction({ genreRequest, dispatch })
   }
 
   async function removeGenre(genreRequest: IRemoveGenreRequest) {
-    setLoading(true)
-    await removeGenreFunction({ genreRequest, dispatch })
-    setLoading(false)
+    return removeGenreFunction({ genreRequest, dispatch })
   }
 
   async function updateBook(bookInfosUpdated: IUpdateBookRequest) {
-    setLoading(true)
-    await updateBookFunction({ bookInfosUpdated, dispatch })
-    setLoading(false)
+    return updateBookFunction({ bookInfosUpdated, dispatch })
   }
 
   async function deleteBook(bookId: string) {
-    setLoading(true)
-    const isDeleted = await deleteBookFunction({ bookId, dispatch })
-    setLoading(false)
+    return deleteBookFunction({ bookId, dispatch })
+  }
 
-    return isDeleted
+  async function createBox(box: ICreateBoxRequest) {
+    return createBoxFunction({ newBox: box, dispatch })
+  }
+
+  async function createArchiveInBox(archive: ICreateArchiveInBoxRequest) {
+    return createArchiveInBoxFunction({ newArchive: archive, dispatch })
+  }
+
+  async function saveArchiveImages(images: ISaveImagesRequest) {
+    return saveArchiveImagesFunction({ imagesToSave: images, dispatch })
+  }
+
+  async function deleteArchiveBox({ archiveId, boxId }: IDeleteArchiveBox) {
+    return deleteArchiveBoxFunction({ archiveId, boxId, dispatch })
+  }
+
+  async function deleteImageInArchive({
+    archiveId,
+    boxId,
+    imageId,
+  }: IDeleteImageInArchiveRequest) {
+    return deleteImageInArchiveFunction({ archiveId, boxId, imageId, dispatch })
+  }
+
+  async function updateArchive({
+    archiveId,
+    boxId,
+    description,
+    title,
+  }: IUpdateArchiveRequest) {
+    return updateArchiveFunction({
+      archiveId,
+      boxId,
+      description,
+      title,
+      dispatch,
+    })
+  }
+
+  async function updateBox({
+    boxId,
+    name,
+    description,
+    tags,
+  }: IUpdateBoxRequest) {
+    return updateBoxFunction({ boxId, name, description, tags, dispatch })
+  }
+
+  async function deleteBox(boxId: string) {
+    return deleteBoxFunction({ boxId, dispatch })
   }
 
   useEffect(() => {
@@ -561,6 +521,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         users,
         persons,
         books,
+        boxes,
 
         error,
         setError,
@@ -607,6 +568,14 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         removeGenre,
         updateBook,
         deleteBook,
+        createBox,
+        createArchiveInBox,
+        saveArchiveImages,
+        deleteArchiveBox,
+        deleteImageInArchive,
+        updateArchive,
+        updateBox,
+        deleteBox,
       }}
     >
       {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (

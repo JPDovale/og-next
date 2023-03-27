@@ -3,6 +3,7 @@ import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import {
   setErrorAction,
+  setLoadingAction,
   updateBookAction,
 } from '@contexts/projects/reducer/actionsProjectsReducer'
 import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
@@ -17,15 +18,7 @@ export async function addGenreFunction({
   dispatch,
   genreRequest,
 }: IAddGenreFunction): Promise<void> {
-  if (!genreRequest) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await addGenreRequest(genreRequest)
 
@@ -35,20 +28,27 @@ export async function addGenreFunction({
     if (isRefreshed) {
       return addGenreFunction({ genreRequest, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle as string,
         message: response.errorMessage,
       }),
     )
+
+    return
   }
 
   const book = response.book as IBooksResponse
 
   dispatch(updateBookAction(book))
+  dispatch(setLoadingAction(false))
 }

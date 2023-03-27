@@ -4,6 +4,7 @@ import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -12,15 +13,7 @@ export async function unshareProjectFunction(
   projectId: string,
   dispatch: Dispatch<any>,
 ): Promise<void> {
-  if (!userEmail || !projectId) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await unshareProjectRequest(userEmail, projectId)
 
@@ -29,18 +22,26 @@ export async function unshareProjectFunction(
 
     if (isRefreshed) {
       return unshareProjectFunction(userEmail, projectId, dispatch)
+    } else {
+      dispatch(setLoadingAction(false))
+
+      return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const project = response as IProjectResponse
   dispatch(updateProjectAction(project))
+  dispatch(setLoadingAction(false))
 }

@@ -5,6 +5,7 @@ import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateBookAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -17,16 +18,7 @@ export async function updateSceneFunction({
   dispatch,
   sceneUpdate,
 }: IUpdateSceneFunction): Promise<boolean> {
-  if (!sceneUpdate) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await updateSceneRequest(sceneUpdate)
 
@@ -36,11 +28,15 @@ export async function updateSceneFunction({
     if (isRefreshed) {
       return updateSceneFunction({ sceneUpdate, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle as string,
@@ -52,6 +48,7 @@ export async function updateSceneFunction({
 
   const book = response as IBooksResponse
   dispatch(updateBookAction(book))
+  dispatch(setLoadingAction(false))
 
   return true
 }

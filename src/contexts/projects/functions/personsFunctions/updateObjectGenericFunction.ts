@@ -7,6 +7,7 @@ import { recognizeObject } from '../../../../services/recognizeObject'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -17,16 +18,7 @@ export async function updateObjectGenericFunction(
   to: IEditorTo,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!generic || !personId || !genericId || !to) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const objectToSend = recognizeObject(to, personId, '', generic, '', genericId)
 
@@ -38,6 +30,8 @@ export async function updateObjectGenericFunction(
           'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
       }),
     )
+    dispatch(setLoadingAction(false))
+
     return false
   }
 
@@ -55,6 +49,8 @@ export async function updateObjectGenericFunction(
         dispatch,
       )
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
@@ -66,11 +62,14 @@ export async function updateObjectGenericFunction(
         message: response.errorMessage,
       }),
     )
+    dispatch(setLoadingAction(false))
+
     return false
   }
 
   const person = response as IPersonsResponse
   dispatch(updatePersonAction(person))
+  dispatch(setLoadingAction(false))
 
   return true
 }

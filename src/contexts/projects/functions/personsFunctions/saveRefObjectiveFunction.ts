@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { saveRefObjectiveOfPersonRequest } from '../../../../api/personsRequests'
 import {
@@ -7,6 +8,7 @@ import {
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -17,16 +19,7 @@ export async function saveRefObjectiveFunction(
   refId: string,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!objective || !personId || !objective || !refId) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const newObjectReference = {
     objective,
@@ -49,11 +42,14 @@ export async function saveRefObjectiveFunction(
         dispatch,
       )
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
     dispatch(
       setErrorAction({
         title: response.errorTitle,
@@ -63,8 +59,11 @@ export async function saveRefObjectiveFunction(
     return false
   }
 
-  const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
+  const person = response.person as IPersonsResponse
+  const box = response.box as IBoxResponse
+
+  dispatch(updatePersonAction(person, box))
+  dispatch(setLoadingAction(false))
 
   return true
 }

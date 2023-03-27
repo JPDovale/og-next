@@ -2,42 +2,24 @@ import { ButtonsContainer, NavigationBarContainer } from './styles'
 
 import LogoToLeft from '../../assets/logos/logo.svg'
 import {
-  BellSimple,
   Bookmark,
-  DotsNine,
-  FilePlus,
-  // Clock,
   ListChecks,
+  Package,
   ProjectorScreenChart,
   UserCircle,
-  // Star,
   UsersThree,
   XCircle,
 } from 'phosphor-react'
 import { useContext } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { UserContext } from '@contexts/user'
 import { InterfaceContext } from '@contexts/interface'
 import { useWindowSize } from '@hooks/useWindow'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 
 export function NavigationBar() {
-  const { user, visualizeNotifications } = useContext(UserContext)
-
-  const {
-    navIsOpen,
-    setNavIsOpen,
-    setUserOptionsIsOpen,
-    setNotificationsIsOpen,
-    setPreferenciesIsOpen,
-    setNewProjectIsOpen,
-  } = useContext(InterfaceContext)
-
-  const newNotifications = user?.notifications?.filter(
-    (notification) => notification.isVisualized === false,
-  )
+  const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
 
   const router = useRouter()
   const location = router.pathname.split('/')[1]
@@ -65,80 +47,15 @@ export function NavigationBar() {
       </button>
       <ButtonsContainer>
         {smallWindow && (
-          <>
-            <Text
-              size="xs"
-              css={{
-                marginBottom: '-$4',
-              }}
-            >
-              Ferramentas
-            </Text>
-
-            <ButtonRoot
-              type="button"
-              onClick={() => {
-                setNewProjectIsOpen(true)
-                setNavIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <FilePlus />
-              </ButtonIcon>
-
-              <ButtonLabel>Novo Projeto</ButtonLabel>
-            </ButtonRoot>
-
-            <ButtonRoot
-              type="button"
-              onClick={() => {
-                setNotificationsIsOpen(true)
-                setNavIsOpen(false)
-
-                setTimeout(() => {
-                  newNotifications &&
-                    newNotifications[0] &&
-                    visualizeNotifications()
-                }, 10000)
-              }}
-            >
-              <ButtonIcon>
-                <BellSimple />
-              </ButtonIcon>
-
-              <ButtonLabel>
-                {`Notificações${
-                  newNotifications && newNotifications[0]
-                    ? ' ( ' + newNotifications.length + ' ) '
-                    : ''
-                }`}
-              </ButtonLabel>
-            </ButtonRoot>
-
-            <ButtonRoot
-              type="button"
-              onClick={() => {
-                setPreferenciesIsOpen(true)
-                setNavIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <DotsNine />
-              </ButtonIcon>
-
-              <ButtonLabel>Preferências</ButtonLabel>
-            </ButtonRoot>
-
-            <Text
-              size="xs"
-              css={{
-                marginTop: '$4',
-                marginBottom: '-$4',
-              }}
-            >
-              Projetos
-            </Text>
-          </>
+          <Text
+            size="xs"
+            css={{
+              marginTop: '$4',
+              marginBottom: '-$4',
+            }}
+          >
+            Projetos
+          </Text>
         )}
 
         <ButtonRoot
@@ -158,7 +75,6 @@ export function NavigationBar() {
 
         <ButtonRoot
           type="button"
-          label=""
           variant={location === 'myProjects' ? 'active' : 'default'}
           onClick={() => {
             router.push('/myProjects')
@@ -200,6 +116,21 @@ export function NavigationBar() {
 
         <ButtonRoot
           type="button"
+          variant={location === 'boxes' ? 'active' : 'default'}
+          onClick={() => {
+            router.push('/boxes')
+            smallWindow && setNavIsOpen(false)
+          }}
+        >
+          <ButtonIcon>
+            <Package />
+          </ButtonIcon>
+
+          <ButtonLabel>Boxes</ButtonLabel>
+        </ButtonRoot>
+
+        <ButtonRoot
+          type="button"
           variant={location === 'todo' ? 'active' : 'default'}
           onClick={() => {
             router.push('/todo')
@@ -234,8 +165,7 @@ export function NavigationBar() {
             <ButtonRoot
               type="button"
               onClick={() => {
-                setUserOptionsIsOpen(true)
-                setNavIsOpen(false)
+                router.push('/user/settings')
               }}
             >
               <ButtonIcon>

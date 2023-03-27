@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
-import { Envelope, LockKey } from 'phosphor-react'
+import { Envelope, Eye, EyeClosed, LockKey } from 'phosphor-react'
 import {
   BackgroundLogin,
   InputContainer,
@@ -19,7 +19,7 @@ import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../contexts/user'
 
 import { NextSeo } from 'next-seo'
@@ -42,6 +42,8 @@ const loginFormSchema = z.object({
 type LoginFormData = z.infer<typeof loginFormSchema>
 
 export default function LoginPage() {
+  const [isShowPassword, setIsShowPassword] = useState(false)
+
   const { createSession, userLogged, loading, error } = useContext(UserContext)
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
@@ -120,16 +122,20 @@ export default function LoginPage() {
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
-              isShown
             >
               <TextInputIcon>
                 <LockKey />
               </TextInputIcon>
 
               <TextInputInput
+                type={isShowPassword ? 'text' : 'password'}
                 placeholder="***************"
                 {...register('password')}
               />
+
+              <TextInputIcon onClick={() => setIsShowPassword(!isShowPassword)}>
+                {isShowPassword ? <Eye /> : <EyeClosed />}
+              </TextInputIcon>
             </TextInputRoot>
           </InputContainer>
 

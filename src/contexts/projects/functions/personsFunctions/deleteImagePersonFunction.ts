@@ -4,6 +4,7 @@ import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsRespons
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -16,15 +17,7 @@ export async function deleteImagePersonFunction({
   personId,
   dispatch,
 }: IDeleteImagePersonFunction): Promise<void> {
-  if (!personId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await deleteImagePersonRequest({ personId })
 
@@ -33,18 +26,26 @@ export async function deleteImagePersonFunction({
 
     if (isRefreshed) {
       return deleteImagePersonFunction({ personId, dispatch })
+    } else {
+      dispatch(setLoadingAction(false))
+
+      return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
   const personUpdate = response as IPersonsResponse
   dispatch(updatePersonAction(personUpdate))
+  dispatch(setLoadingAction(false))
 }
