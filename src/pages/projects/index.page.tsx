@@ -4,14 +4,11 @@ import { Projects } from '@components/ProjectsComponents/Projects'
 import { ProjectsContext } from '../../contexts/projects'
 import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'
-import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { Container } from './styles'
-import { CardModelNewProject } from '@components/ProjectsComponents/CardModelNewProject'
-import { CardModelNewBox } from '@components/BoxesComponents/CardModelNewBox'
 import { useWindowSize } from '@hooks/useWindow'
-import { CardModelNewPerson } from '@components/PersonsComponents/CardModelNewPerson'
 import { ToastError } from '@components/usefull/ToastError'
+import { ModelsHeader } from '@components/ModelsHeader'
 
 export default function ProjectsPage() {
   usePreventBack()
@@ -37,12 +34,7 @@ export default function ProjectsPage() {
         <Container>
           {!smallWindow && (
             <>
-              <Heading size="sm">Modelos:</Heading>
-              <ContainerGrid padding={0} columns={3} css={{ gap: '$8' }}>
-                <CardModelNewProject />
-                <CardModelNewPerson />
-                <CardModelNewBox />
-              </ContainerGrid>
+              <ModelsHeader />
               <Heading size="sm">Projetos:</Heading>
             </>
           )}

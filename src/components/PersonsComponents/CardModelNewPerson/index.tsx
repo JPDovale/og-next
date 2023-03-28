@@ -6,14 +6,22 @@ import { NewPersonModal } from '../NewPersonModal'
 import { Toast } from '@components/usefull/Toast'
 import { useState } from 'react'
 
-export function CardModelNewPerson() {
+interface ICardModelNewPerson {
+  disabled: boolean
+}
+
+export function CardModelNewPerson({ disabled }: ICardModelNewPerson) {
   const [successToastOpen, setSuccessToastOpen] = useState(false)
 
   return (
     <>
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <ModelCard icon={<UserCirclePlus />} title="Novo personagem" />
+          <ModelCard
+            icon={<UserCirclePlus />}
+            title="Novo personagem"
+            disabled={disabled}
+          />
         </Dialog.Trigger>
 
         <NewPersonModal onSuccess={() => setSuccessToastOpen(true)} />

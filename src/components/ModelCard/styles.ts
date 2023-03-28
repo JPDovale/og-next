@@ -18,7 +18,7 @@ export const ModelCardContainer = styled('button', {
   borderRadius: '$sm',
   boxShadow: '$default',
 
-  '&:hover': {
+  '&:not(:disabled):not(:active):hover': {
     scale: '105%',
   },
 
@@ -26,9 +26,14 @@ export const ModelCardContainer = styled('button', {
     boxShadow: '$inFocus',
   },
 
-  '&:active': {
+  '&:not(:disabled):active': {
     scale: '95%',
     boxShadow: '$onActive',
+  },
+
+  '&:disabled': {
+    cursor: 'not-allowed',
+    opacity: 0.5,
   },
 
   '.icon': {

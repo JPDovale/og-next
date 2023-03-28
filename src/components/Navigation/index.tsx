@@ -17,9 +17,21 @@ import { InterfaceContext } from '@contexts/interface'
 import { useWindowSize } from '@hooks/useWindow'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
+import { ProjectsContext } from '@contexts/projects'
+import { UserContext } from '@contexts/user'
 
 export function NavigationBar() {
   const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
+  const { projects } = useContext(ProjectsContext)
+  const { user } = useContext(UserContext)
+
+  const projectsThisUser = projects?.filter(
+    (p) => p.createdPerUser === user?.id,
+  )
+
+  const projectsOfAnotherUsers = projects?.filter(
+    (p) => p.createdPerUser !== user?.id,
+  )
 
   const router = useRouter()
   const location = router.pathname.split('/')[1]
@@ -73,20 +85,22 @@ export function NavigationBar() {
           <ButtonLabel>Projetos</ButtonLabel>
         </ButtonRoot>
 
-        <ButtonRoot
-          type="button"
-          variant={location === 'myProjects' ? 'active' : 'default'}
-          onClick={() => {
-            router.push('/myProjects')
-            smallWindow && setNavIsOpen(false)
-          }}
-        >
-          <ButtonIcon>
-            <Bookmark />
-          </ButtonIcon>
+        {projectsThisUser.length > 0 && projectsOfAnotherUsers.length !== 0 && (
+          <ButtonRoot
+            type="button"
+            variant={location === 'myProjects' ? 'active' : 'default'}
+            onClick={() => {
+              router.push('/myProjects')
+              smallWindow && setNavIsOpen(false)
+            }}
+          >
+            <ButtonIcon>
+              <Bookmark />
+            </ButtonIcon>
 
-          <ButtonLabel>Meus projetos</ButtonLabel>
-        </ButtonRoot>
+            <ButtonLabel>Meus projetos</ButtonLabel>
+          </ButtonRoot>
+        )}
 
         {/* <ButtonRoot
         type='button'
@@ -99,20 +113,22 @@ export function NavigationBar() {
           }}
         /> */}
 
-        <ButtonRoot
-          type="button"
-          variant={location === 'shared' ? 'active' : 'default'}
-          onClick={() => {
-            router.push('/shared')
-            smallWindow && setNavIsOpen(false)
-          }}
-        >
-          <ButtonIcon>
-            <UsersThree />
-          </ButtonIcon>
+        {projectsOfAnotherUsers.length > 0 && (
+          <ButtonRoot
+            type="button"
+            variant={location === 'shared' ? 'active' : 'default'}
+            onClick={() => {
+              router.push('/shared')
+              smallWindow && setNavIsOpen(false)
+            }}
+          >
+            <ButtonIcon>
+              <UsersThree />
+            </ButtonIcon>
 
-          <ButtonLabel>Compartilhados comigo</ButtonLabel>
-        </ButtonRoot>
+            <ButtonLabel>Compartilhados comigo</ButtonLabel>
+          </ButtonRoot>
+        )}
 
         <ButtonRoot
           type="button"
