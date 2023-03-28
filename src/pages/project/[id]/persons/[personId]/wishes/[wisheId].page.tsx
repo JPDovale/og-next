@@ -18,11 +18,13 @@ export default function WishePage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, personName, tags, findWishe } = usePerson(personId as string)
+  const { person, personName, personBoxes, findWishe } = usePerson(
+    personId as string,
+  )
   const { commentsInThisWishe, keysWishe, wishe } = findWishe(wisheId as string)
 
-  const tag = tags.wishes
-  const refs = tag && tag.refs
+  const boxWishes = personBoxes.wishes
+  const files = boxWishes && boxWishes.archives
 
   const inError =
     !loading && ((wisheId !== 'new' && !wishe) || !project || !person)
@@ -56,7 +58,7 @@ export default function WishePage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={wisheId === 'new'}
           editorTo={keysWishe.label}
           projectId={project?.id}

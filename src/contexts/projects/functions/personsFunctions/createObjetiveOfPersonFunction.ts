@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { ICreateObjectiveDTO } from '../../../../api/dtos/ICreateObjectiveDTO'
 import { createObjetiveOfPersonRequest } from '../../../../api/personsRequests'
@@ -5,10 +6,10 @@ import {
   IObjective,
   IPersonsResponse,
 } from '../../../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updatePersonAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -18,16 +19,7 @@ export async function createObjetiveOfPersonFunction(
   projectId: string,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!objective || !personId || !objective) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const newObjetive: ICreateObjectiveDTO = {
     objective,
@@ -48,11 +40,15 @@ export async function createObjetiveOfPersonFunction(
         dispatch,
       )
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle,
@@ -63,8 +59,9 @@ export async function createObjetiveOfPersonFunction(
   }
 
   const person = response.person as IPersonsResponse
-  const project = response.project as IProjectResponse
-  dispatch(updatePersonAction(person, project))
+  const box = response.box as IBoxResponse
+  dispatch(updatePersonAction(person, box))
+  dispatch(setLoadingAction(false))
 
   return true
 }

@@ -4,6 +4,7 @@ import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateBookAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -20,15 +21,7 @@ export async function reorderCapitulesFunction({
   sequenceTo,
   dispatch,
 }: IReorderCapitulesFunction): Promise<void> {
-  if (!bookId || !sequenceFrom || !sequenceTo) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await reorderCapitulesRequest({
     bookId,
@@ -47,19 +40,26 @@ export async function reorderCapitulesFunction({
         dispatch,
       })
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle as string,
         message: response.errorMessage,
       }),
     )
+
+    return
   }
 
   const book = response as IBooksResponse
   dispatch(updateBookAction(book))
+  dispatch(setLoadingAction(false))
 }

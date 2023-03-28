@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { IError } from '../../../@types/errors/IError'
 import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
@@ -22,6 +23,10 @@ export enum ProjectsActionsType {
 
   SetProjects = 'setProjects',
   SetError = 'setError',
+  SetLoading = 'setLoading',
+  UpdateBox = 'updateBox',
+  AddBox = 'addBox',
+  DeleteBox = 'deleteBox',
 }
 
 export function addProjectAction(project: IProjectResponse) {
@@ -29,6 +34,33 @@ export function addProjectAction(project: IProjectResponse) {
     type: ProjectsActionsType.AddProject,
     payload: {
       project,
+    },
+  }
+}
+
+export function updateBoxAction(box: IBoxResponse) {
+  return {
+    type: ProjectsActionsType.UpdateBox,
+    payload: {
+      box,
+    },
+  }
+}
+
+export function addBoxAction(box: IBoxResponse) {
+  return {
+    type: ProjectsActionsType.AddBox,
+    payload: {
+      box,
+    },
+  }
+}
+
+export function setLoadingAction(newState: boolean) {
+  return {
+    type: ProjectsActionsType.SetLoading,
+    payload: {
+      loading: newState,
     },
   }
 }
@@ -75,6 +107,7 @@ export function setProjectsAction(
   users: IUserResponse[],
   persons: IPersonsResponse[],
   books: IBooksResponse[],
+  boxes: IBoxResponse[],
 ) {
   return {
     type: ProjectsActionsType.SetProjects,
@@ -83,6 +116,7 @@ export function setProjectsAction(
       users,
       persons,
       books,
+      boxes,
     },
   }
 }
@@ -108,13 +142,13 @@ export function updatePersonImageAction(personId: string, url: string) {
 
 export function updatePersonAction(
   person: IPersonsResponse,
-  project?: IProjectResponse,
+  box?: IBoxResponse,
 ) {
   return {
     type: ProjectsActionsType.UpdatePerson,
     payload: {
       person,
-      project,
+      box,
     },
   }
 }
@@ -137,12 +171,12 @@ export function removeProjectAction(projectId: string) {
   }
 }
 
-export function addBookAction(book: IBooksResponse, project: IProjectResponse) {
+export function addBookAction(book: IBooksResponse, box: IBoxResponse) {
   return {
     type: ProjectsActionsType.AddBook,
     payload: {
       book,
-      project,
+      box,
     },
   }
 }
@@ -152,6 +186,15 @@ export function updateBookAction(book: IBooksResponse) {
     type: ProjectsActionsType.UpdateBook,
     payload: {
       book,
+    },
+  }
+}
+
+export function deleteBoxAction(boxId: string) {
+  return {
+    type: ProjectsActionsType.DeleteBox,
+    payload: {
+      boxId,
     },
   }
 }

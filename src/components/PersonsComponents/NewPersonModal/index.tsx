@@ -9,12 +9,32 @@ import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
 import { ProjectsContext } from '@contexts/projects'
+import { UserContext } from '@contexts/user'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Calendar, IdentificationCard, PlusCircle } from 'phosphor-react'
-import { useContext } from 'react'
+import {
+  ArrowDown,
+  Calendar,
+  CircleWavyCheck,
+  IdentificationCard,
+  PlusCircle,
+} from 'phosphor-react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { NewPersonForm } from './styles'
+import {
+  NewPersonForm,
+  SelectContent,
+  SelectIcon,
+  SelectItem,
+  SelectItemIndicator,
+  SelectItemText,
+  SelectPortal,
+  SelectRoot,
+  SelectScrollUpButton,
+  SelectTrigger,
+  SelectValue,
+  SelectViewport,
+} from './styles'
 
 const newPersonFormSchema = z.object({
   name: z
@@ -36,39 +56,121 @@ const newPersonFormSchema = z.object({
 type NewPersonFormData = z.infer<typeof newPersonFormSchema>
 
 interface INewPersonModalProps {
-  projectId: string
-  onSuccess: () => void
+  projectId?: string
+  onSuccess?: () => void
 }
 
 export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
-  const { createNewPerson } = useContext(ProjectsContext)
+  const [projectSelected, setProjectSelected] = useState('')
+  const { createNewPerson, projects } = useContext(ProjectsContext)
+  const { user } = useContext(UserContext)
 
-  const { register, handleSubmit, formState, reset } =
+  const { register, handleSubmit, formState, reset, setError } =
     useForm<NewPersonFormData>({
       resolver: zodResolver(newPersonFormSchema),
     })
 
+  const infosProjectSelected = projects.find(
+    (project) => project.id === projectSelected,
+  )
+
+  const projectsEditablePerUser = projects.map((project) => {
+    const userPermission = project.users.find((u) => u.id === user?.id)
+
+    if (userPermission?.permission !== 'edit') {
+      return undefined
+    }
+
+    return project
+  })
+
   async function handleNewPerson(data: NewPersonFormData) {
+    if (!projectId && !projectSelected) {
+      setError('name', { message: 'Selecione um projeto' })
+      setError('lastName', { message: 'Selecione um projeto' })
+      setError('age', { message: 'Selecione um projeto' })
+      setError('history', { message: 'Selecione um projeto' })
+
+      return
+    }
+
     const newPerson = {
       name: data.name,
       lastName: data.lastName,
       age: data.age,
       history: data.history,
-      projectId,
+      projectId: projectId || projectSelected,
     }
 
     const success = await createNewPerson(newPerson)
 
     if (!success) return
 
-    onSuccess()
+    onSuccess && onSuccess()
     reset()
   }
 
   return (
-    <ModalContent sizeWid="lg" title="Novo personagem">
+    <ModalContent
+      sizeWid="lg"
+      title={`Novo personagem ${
+        !projectId &&
+        ` --> ${
+          infosProjectSelected
+            ? infosProjectSelected.name
+            : 'Selecione um projeto'
+        }`
+      }`}
+    >
       <NewPersonForm onSubmit={handleSubmit(handleNewPerson)}>
-        <ContainerGrid padding={0} columns={3}>
+        <ContainerGrid padding={0} columns={projectId ? 3 : 4}>
+          {!projectId && (
+            <Text as="label">
+              <Text
+                family="body"
+                size="sm"
+                css={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                }}
+              >
+                Projeto
+                <SelectRoot onValueChange={(e) => setProjectSelected(e)}>
+                  <SelectTrigger aria-label="Projetos">
+                    <SelectIcon>
+                      <ArrowDown />
+                    </SelectIcon>
+
+                    <SelectValue placeholder="Selecione um projeto" />
+                  </SelectTrigger>
+
+                  <SelectPortal>
+                    <SelectContent>
+                      <SelectScrollUpButton />
+
+                      <SelectViewport>
+                        {projectsEditablePerUser.map((project) => {
+                          if (!project) return ''
+
+                          return (
+                            <SelectItem key={project.id} value={project.id}>
+                              <SelectItemText>{project.name}</SelectItemText>
+
+                              <SelectItemIndicator>
+                                <CircleWavyCheck />
+                              </SelectItemIndicator>
+                            </SelectItem>
+                          )
+                        })}
+                      </SelectViewport>
+                    </SelectContent>
+                  </SelectPortal>
+                </SelectRoot>
+              </Text>
+            </Text>
+          )}
+
           <Text as="label">
             <Text
               family="body"

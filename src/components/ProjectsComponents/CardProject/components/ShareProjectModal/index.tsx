@@ -24,7 +24,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
   const [errorIn, setErrorIn] = useState('')
   const [sharePermission, setSharePermission] = useState('edit')
 
-  const { error, setError, shareProject } = useContext(ProjectsContext)
+  const { error, setError, shareProject, loading } = useContext(ProjectsContext)
 
   const { projectName, project } = useProject(projectId)
 
@@ -126,6 +126,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
           align="center"
           size="xs"
           variant="noShadow"
+          disabled={loading}
         >
           <ButtonIcon>
             <Share />

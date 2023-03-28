@@ -1,6 +1,7 @@
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IProjectResponse, IRef } from '@api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { InterfaceContext } from '@contexts/interface'
 import { ProjectsContext } from '@contexts/projects'
@@ -30,19 +31,19 @@ interface IFindManyPersonsOptions {
 }
 
 interface IObjects {
-  objectives: IRef[]
-  dreams: IRef[]
-  fears: IRef[]
-  appearance: IRef[]
-  personality: IRef[]
-  powers: IRef[]
-  traumas: IRef[]
-  values: IRef[]
-  wishes: IRef[]
+  objectives: IArchive[]
+  dreams: IArchive[]
+  fears: IArchive[]
+  appearance: IArchive[]
+  personality: IArchive[]
+  powers: IArchive[]
+  traumas: IArchive[]
+  values: IArchive[]
+  wishes: IArchive[]
 }
 
 export function useProject(id: string) {
-  const { projects, books, persons, users } = useContext(ProjectsContext)
+  const { projects, books, persons, users, boxes } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
   const { orderBy } = useContext(InterfaceContext)
 
@@ -63,65 +64,64 @@ export function useProject(id: string) {
       wishes: [],
     }
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/objectives')
-      ?.refs.map((ref) => {
-        return findObjects.objectives.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/objectives')
+      ?.archives.map((file) => {
+        return findObjects.objectives.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/dreams')
-      ?.refs.map((ref) => {
-        return findObjects.dreams.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/dreams')
+      ?.archives.map((file) => {
+        return findObjects.dreams.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/fears')
-      ?.refs.map((ref) => {
-        return findObjects.fears.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/fears')
+      ?.archives.map((file) => {
+        return findObjects.fears.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/appearance')
-      ?.refs.map((ref) => {
-        return findObjects.appearance.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/appearance')
+      ?.archives.map((file) => {
+        return findObjects.appearance.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/personality')
-      ?.refs.map((ref) => {
-        return findObjects.personality.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/personality')
+      ?.archives.map((file) => {
+        return findObjects.personality.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/powers')
-      ?.refs.map((ref) => {
-        return findObjects.powers.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/powers')
+      ?.archives.map((file) => {
+        return findObjects.powers.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/traumas')
-      ?.refs.map((ref) => {
-        return findObjects.traumas.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/traumas')
+      ?.archives.map((file) => {
+        return findObjects.traumas.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/values')
-      ?.refs.map((ref) => {
-        return findObjects.values.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/values')
+      ?.archives.map((file) => {
+        return findObjects.values.push(file)
       })
 
-    project?.tags
-      .find((tag) => tag.type === 'persons/wishes')
-      ?.refs.map((ref) => {
-        return findObjects.wishes.push(ref)
+    boxes
+      .find((box) => box.name === 'persons/wishes')
+      ?.archives.map((file) => {
+        return findObjects.wishes.push(file)
       })
 
     return findObjects
-  }, [project?.tags])
+  }, [boxes])
 
   const projectName = project?.name || 'Carregando...'
-  const tags = project?.tags
 
   const booksThisProject = books?.filter(
     (book) => book.defaultProject === project?.id,
@@ -129,6 +129,10 @@ export function useProject(id: string) {
 
   const personsThisProject = persons?.filter(
     (person) => person.defaultProject === project?.id,
+  )
+
+  const boxesThisProject = boxes?.filter(
+    (box) => box?.projectId === project?.id,
   )
 
   const userCreatorFinde = users?.find(
@@ -176,7 +180,7 @@ export function useProject(id: string) {
       historyPersons,
       objectives,
       personInfos,
-      tags,
+      personBoxes,
       findObjective,
       findPersonality,
       findValue,
@@ -188,14 +192,14 @@ export function useProject(id: string) {
       findCouple,
       findPower,
       personName,
-    } = usePeronInternal(persons, id, project?.tags)
+    } = usePeronInternal(persons, id, boxesThisProject)
 
     return {
       person,
       historyPersons,
       objectives,
       personInfos,
-      tags,
+      personBoxes,
       findObjective,
       findPersonality,
       findValue,
@@ -234,19 +238,34 @@ export function useProject(id: string) {
     return personsSelected
   }
 
+  function findBoxOfProject(id: string) {
+    const box = boxesThisProject.find((b) => b.id === id)
+
+    return box
+  }
+
+  function findPersonOfProject(id: string) {
+    const person = personsThisProject.find((p) => p.id === id)
+
+    return person
+  }
+
   return {
     project,
     projectName,
-    tags,
     creator,
     usersWithAccess,
     objectsCreatedInProject,
 
     booksThisProject,
 
+    boxesThisProject,
+    findBoxOfProject,
+
     personsThisProject: personsOrd,
     queryPerson,
     findManyPersons,
+    findPersonOfProject,
 
     permission,
     useBook,

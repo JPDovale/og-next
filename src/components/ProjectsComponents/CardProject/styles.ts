@@ -90,6 +90,7 @@ export const CardProjectContainer = styled(Box, {
 export const Preview = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
+  height: '100%',
   padding: 0,
   boxShadow: 'none',
   border: 'none',
@@ -104,6 +105,7 @@ export const ProjectInfos = styled('div', {
 
   padding: '$4',
   width: '100%',
+  height: '100%',
 
   textAlign: 'start',
 

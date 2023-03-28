@@ -30,14 +30,14 @@ export default function PersonalityPage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, tags, personName, findPersonality } = usePerson(
+  const { person, personBoxes, personName, findPersonality } = usePerson(
     personId as string,
   )
   const { commentsInThisPersonality, personality, keysPersonality } =
     findPersonality(personalityId as string)
 
-  const tag = tags.personality
-  const refs = tag && tag.refs
+  const boxPersonality = personBoxes.personality
+  const files = boxPersonality && boxPersonality.archives
 
   const inError =
     !loading &&
@@ -70,7 +70,7 @@ export default function PersonalityPage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={personalityId === 'new'}
           editorTo={keysPersonality.label}
           projectId={project?.id}

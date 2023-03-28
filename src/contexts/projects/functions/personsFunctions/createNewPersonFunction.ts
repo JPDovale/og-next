@@ -1,29 +1,21 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { ICreatePersonDTO } from '../../../../api/dtos/ICreatePersonDTO'
 import { createPersonRequest } from '../../../../api/personsRequests'
 import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   addPersonAction,
   setErrorAction,
-  updateProjectAction,
+  setLoadingAction,
+  updateBoxAction,
 } from '../../reducer/actionsProjectsReducer'
 
 export async function createNewPersonFunction(
   newPerson: ICreatePersonDTO,
   dispatch: Dispatch<any>,
 ): Promise<boolean> {
-  if (!newPerson) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await createPersonRequest(newPerson)
 
@@ -33,11 +25,15 @@ export async function createNewPersonFunction(
     if (isRefreshed) {
       return createNewPersonFunction(newPerson, dispatch)
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle as string,
@@ -48,10 +44,11 @@ export async function createNewPersonFunction(
   }
 
   const person = response.person as IPersonsResponse
-  const project = response.project as IProjectResponse
+  const box = response.box as IBoxResponse
 
+  dispatch(setLoadingAction(false))
   dispatch(addPersonAction(person))
-  dispatch(updateProjectAction(project))
+  dispatch(updateBoxAction(box))
 
   return true
 }

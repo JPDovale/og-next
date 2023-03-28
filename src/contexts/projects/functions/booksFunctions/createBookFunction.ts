@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
 import { createBookRequest } from '../../../../api/booksRequests'
 import { ICreateBookDTO } from '../../../../api/dtos/booksDTOS/ICreateBookDTO'
@@ -8,6 +9,7 @@ import { refreshSessionFunction } from '../../../user/functions/refreshSessionFu
 import {
   addBookAction,
   setErrorAction,
+  setLoadingAction,
 } from '../../reducer/actionsProjectsReducer'
 
 interface INewBook {
@@ -41,16 +43,7 @@ export async function createBookFunction({
   users,
   user,
 }: ICreateBookFunction): Promise<boolean> {
-  if (!newBook || !project) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return false
-  }
+  dispatch(setLoadingAction(true))
 
   const idAuthors = project.users.map((user) => {
     if (user.permission === 'edit') {
@@ -97,11 +90,15 @@ export async function createBookFunction({
     if (isRefreshed) {
       return createBookFunction({ newBook, project, user, users, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return false
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     dispatch(
       setErrorAction({
         title: response.errorTitle as string,
@@ -112,9 +109,10 @@ export async function createBookFunction({
   }
 
   const bookReceipted = response.book as IBooksResponse
-  const projectReceipted = response.project as IProjectResponse
+  const boxReceipted = response.box as IBoxResponse
 
-  dispatch(addBookAction(bookReceipted, projectReceipted))
+  dispatch(addBookAction(bookReceipted, boxReceipted))
+  dispatch(setLoadingAction(false))
 
   return true
 }

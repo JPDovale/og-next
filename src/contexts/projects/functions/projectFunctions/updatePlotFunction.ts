@@ -4,6 +4,7 @@ import { updatePlotRequest } from '../../../../api/projectsRequests'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
   setErrorAction,
+  setLoadingAction,
   updateProjectAction,
 } from '../../reducer/actionsProjectsReducer'
 
@@ -12,15 +13,8 @@ export async function updatePlotFunction(
   projectId: string,
   dispatch: Dispatch<any>,
 ): Promise<void> {
-  if (!plot || !projectId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
+
   const response = await updatePlotRequest(projectId, plot)
 
   if (response.errorMessage === 'Invalid token') {
@@ -29,18 +23,24 @@ export async function updatePlotFunction(
     if (isRefreshed) {
       return updatePlotFunction(plot, projectId, dispatch)
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
-    return dispatch(
+    dispatch(setLoadingAction(false))
+
+    dispatch(
       setErrorAction({
         title: response.errorTitle as string,
         message: response.errorMessage,
       }),
     )
+    return
   }
 
+  dispatch(setLoadingAction(false))
   dispatch(updateProjectAction(response))
 }

@@ -1,18 +1,18 @@
+import { IArchive } from '@api/responsesTypes/IBoxResponse'
 import { IEditorTo } from '../@types/editores/IEditorTo'
 import { IPersonsResponse } from '../api/responsesTypes/IPersonsResponse'
-import { IRef } from '../api/responsesTypes/IProjcetResponse'
 
 export function findRefs(
   to: IEditorTo,
-  refs: IRef[],
+  referenceArchives: IArchive[],
   person: IPersonsResponse,
-): IRef[] {
+): IArchive[] {
   switch (to) {
     case 'sonho': {
-      if (!refs) return []
-      const refsDreams = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsDreams = referenceArchives.filter((file) => {
         const isAddedRef = !person.dreams?.find(
-          (dream) => dream.id === ref.object.id,
+          (dream) => dream.id === file.archive.id,
         )
 
         return isAddedRef
@@ -22,10 +22,10 @@ export function findRefs(
     }
 
     case 'medo': {
-      if (!refs) return []
-      const refsFears = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsFears = referenceArchives.filter((file) => {
         const isAddedRef = !person.fears?.find(
-          (fear) => ref.object.id === fear.id,
+          (fear) => file.archive.id === fear.id,
         )
 
         return isAddedRef
@@ -35,10 +35,10 @@ export function findRefs(
     }
 
     case 'desejo': {
-      if (!refs) return []
-      const refsWishes = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsWishes = referenceArchives.filter((file) => {
         const isAddedRef = !person.personality?.find(
-          (wishe) => ref.object.id === wishe.id,
+          (wishe) => file.archive.id === wishe.id,
         )
 
         return isAddedRef
@@ -48,10 +48,10 @@ export function findRefs(
     }
 
     case 'personalidade': {
-      if (!refs) return []
-      const refsPersonality = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsPersonality = referenceArchives.filter((file) => {
         const isAddedRef = !person.personality?.find(
-          (personality) => ref.object.id === personality.id,
+          (personality) => file.archive.id === personality.id,
         )
 
         return isAddedRef
@@ -61,10 +61,10 @@ export function findRefs(
     }
 
     case 'valor': {
-      if (!refs) return []
-      const refsValues = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsValues = referenceArchives.filter((file) => {
         const isAddedRef = !person.values?.find(
-          (value) => value.id === ref.object.id,
+          (value) => value.id === file.archive.id,
         )
 
         return isAddedRef
@@ -74,10 +74,10 @@ export function findRefs(
     }
 
     case 'aparência': {
-      if (!refs) return []
-      const refsValues = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsValues = referenceArchives.filter((file) => {
         const isAddedRef = !person.appearance?.find(
-          (appearance) => appearance.id === ref.object.id,
+          (appearance) => appearance.id === file.archive.id,
         )
 
         return isAddedRef
@@ -87,10 +87,10 @@ export function findRefs(
     }
 
     case 'trauma': {
-      if (!refs) return []
-      const refsValues = refs.filter((ref) => {
+      if (!referenceArchives) return []
+      const refsValues = referenceArchives.filter((file) => {
         const isAddedRef = !person.traumas?.find(
-          (trauma) => trauma.id === ref.object.id,
+          (trauma) => trauma.id === file.archive.id,
         )
 
         return isAddedRef

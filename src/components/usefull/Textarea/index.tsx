@@ -46,6 +46,9 @@ export const TextareaContainer = styled('textarea', {
       attention: {
         boxShadow: '$attention',
       },
+      noShadow: {
+        boxShadow: 'unset',
+      },
     },
   },
 
@@ -57,7 +60,7 @@ export const TextareaContainer = styled('textarea', {
 export interface ITextAreaProps
   extends ComponentProps<typeof TextareaContainer>,
     TextareaHTMLAttributes<HTMLTextAreaElement> {
-  variant?: 'default' | 'accepted' | 'denied' | 'attention'
+  variant?: 'default' | 'accepted' | 'denied' | 'attention' | 'noShadow'
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, ITextAreaProps>(

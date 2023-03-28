@@ -13,6 +13,7 @@ interface IProjectProps {
   listEmptyMessage: string
   query?: string
   isLoading: boolean
+  isFirst?: boolean
 }
 
 export function Projects({
@@ -20,6 +21,7 @@ export function Projects({
   listEmptyMessage,
   query = '',
   isLoading,
+  isFirst = false,
 }: IProjectProps) {
   const { isList, navIsOpen, orderBy } = useContext(InterfaceContext)
   const { user } = useContext(UserContext)
@@ -34,6 +36,7 @@ export function Projects({
 
   return (
     <ProjectsContainer
+      isFirst={isFirst}
       isList={isList}
       navIsOpen={navIsOpen}
       isEmpty={projectsOrd && !projectsOrd[0]}
@@ -60,6 +63,7 @@ export function Projects({
           message={
             query ? `Nenhum projeto encontrado para ${query}` : listEmptyMessage
           }
+          isInLine
         />
       )}
     </ProjectsContainer>

@@ -1,3 +1,4 @@
+import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { produce } from 'immer'
 
 import { IError } from '../../../@types/errors/IError'
@@ -12,7 +13,9 @@ export interface IProjectState {
   persons: IPersonsResponse[]
   users: IUserResponse[]
   books: IBooksResponse[]
+  boxes: IBoxResponse[]
   error: IError | undefined
+  loading: boolean
 }
 
 export function projectsReducer(state: IProjectState, action: any) {
@@ -74,6 +77,7 @@ export function projectsReducer(state: IProjectState, action: any) {
         draft.users = action.payload.users
         draft.persons = action.payload.persons
         draft.books = action.payload.books
+        draft.boxes = action.payload.boxes
         draft.error = undefined
       })
     }
@@ -100,16 +104,19 @@ export function projectsReducer(state: IProjectState, action: any) {
       const indexOfPerson = state.persons.findIndex(
         (person) => person.id === action.payload.person.id,
       )
-      const indexOfProject = state.projects.findIndex(
-        (project) => project.id === action.payload?.project?.id,
+      const indexOfBox = state.boxes.findIndex(
+        (box) => box.id === action.payload?.box?.id || '',
       )
 
       if (indexOfPerson === -1) return state
 
       return produce(state, (draft) => {
         draft.persons[indexOfPerson] = action.payload.person
-        if (indexOfProject !== -1) {
-          draft.projects[indexOfProject] = action.payload.project
+
+        if (indexOfBox !== -1) {
+          draft.boxes[indexOfBox] = action.payload.box
+        } else {
+          draft.boxes.push(action.payload.box)
         }
       })
     }
@@ -131,11 +138,16 @@ export function projectsReducer(state: IProjectState, action: any) {
 
     case ProjectsActionsType.AddBook: {
       return produce(state, (draft) => {
-        const indexOfProject = state.projects.findIndex(
-          (project) => project.id === action.payload.project.id,
+        const indexOfBox = state.boxes.findIndex(
+          (box) => box.id === action.payload.box.id,
         )
 
-        draft.projects[indexOfProject] = action.payload.project
+        if (indexOfBox < 0) {
+          draft.boxes.push(action.payload.box)
+        } else {
+          draft.books[indexOfBox] = action.payload.box
+        }
+
         draft.books.push(action.payload.book)
         draft.error = undefined
       })
@@ -159,6 +171,40 @@ export function projectsReducer(state: IProjectState, action: any) {
         )
 
         draft.books = filteredBooks
+      })
+    }
+
+    case ProjectsActionsType.SetLoading: {
+      return produce(state, (draft) => {
+        draft.loading = action.payload.loading
+      })
+    }
+
+    case ProjectsActionsType.UpdateBox: {
+      return produce(state, (draft) => {
+        const indexOfBox = state.boxes.findIndex(
+          (box) => box.id === action.payload.box.id,
+        )
+
+        if (indexOfBox < 0) {
+          draft.boxes.push(action.payload.box)
+        } else {
+          draft.boxes[indexOfBox] = action.payload.box
+        }
+      })
+    }
+
+    case ProjectsActionsType.AddBox: {
+      return produce(state, (draft) => {
+        draft.boxes.push(action.payload.box)
+      })
+    }
+
+    case ProjectsActionsType.DeleteBox: {
+      return produce(state, (draft) => {
+        draft.boxes = state.boxes.filter(
+          (box) => box.id !== action.payload.boxId,
+        )
       })
     }
 

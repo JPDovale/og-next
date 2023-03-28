@@ -14,7 +14,7 @@ export function TextEditor({
   return (
     <TextEditorContainer>
       <Editor
-        apiKey={process.env.API_EDITOR}
+        apiKey="ac8wrme08a5w1b4hv0glq02gzp61kn4gc049y8znk9w1re1k"
         initialValue={initialValue}
         init={{
           height: 500,

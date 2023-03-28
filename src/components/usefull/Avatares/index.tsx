@@ -1,6 +1,6 @@
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { Text } from '@components/usefull/Text'
-import { useRouter } from 'next/dist/client/router'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { AvatarWeb } from '../Avatar'
 import { ButtonIcon, ButtonRoot } from '../Button'

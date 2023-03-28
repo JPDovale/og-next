@@ -3,7 +3,10 @@ import { deleteSceneRequest } from '../../../../api/booksRequests'
 import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import { setErrorAction } from '../../../user/reducer/actionsUserReducer'
-import { updateBookAction } from '../../reducer/actionsProjectsReducer'
+import {
+  setLoadingAction,
+  updateBookAction,
+} from '../../reducer/actionsProjectsReducer'
 
 interface IDeleteSceneFunction {
   bookId: string
@@ -18,15 +21,7 @@ export async function deleteSceneFunction({
   sceneId,
   dispatch,
 }: IDeleteSceneFunction): Promise<void> {
-  if (!bookId || !capituleId || !sceneId) {
-    return dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-  }
+  dispatch(setLoadingAction(true))
 
   const response = await deleteSceneRequest({ bookId, capituleId, sceneId })
 
@@ -36,11 +31,15 @@ export async function deleteSceneFunction({
     if (isRefreshed) {
       return deleteSceneFunction({ bookId, capituleId, sceneId, dispatch })
     } else {
+      dispatch(setLoadingAction(false))
+
       return
     }
   }
 
   if (response.errorMessage) {
+    dispatch(setLoadingAction(false))
+
     return dispatch(
       setErrorAction({
         title: response.errorTitle as string,
@@ -51,4 +50,5 @@ export async function deleteSceneFunction({
 
   const book = response as IBooksResponse
   dispatch(updateBookAction(book))
+  dispatch(setLoadingAction(false))
 }

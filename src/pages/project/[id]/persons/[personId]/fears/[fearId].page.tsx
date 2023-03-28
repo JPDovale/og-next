@@ -18,11 +18,13 @@ export default function FearPage() {
   const { project, projectName, permission, usePerson } = useProject(
     id as string,
   )
-  const { person, personName, tags, findFear } = usePerson(personId as string)
+  const { person, personName, personBoxes, findFear } = usePerson(
+    personId as string,
+  )
   const { commentsInThisFear, fear, keysFear } = findFear(fearId as string)
 
-  const tag = tags.fears
-  const refs = tag && tag.refs
+  const boxFears = personBoxes.fears
+  const files = boxFears && boxFears.archives
 
   const inError =
     !loading && ((fearId !== 'new' && !fear) || !project || !person)
@@ -56,7 +58,7 @@ export default function FearPage() {
       >
         <EditorAndCommentsToGenerics
           persons={persons}
-          refs={refs}
+          referenceArchives={files}
           isNew={fearId === 'new'}
           editorTo={keysFear.label}
           projectId={project?.id}

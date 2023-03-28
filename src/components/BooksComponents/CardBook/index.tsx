@@ -27,6 +27,7 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
   return (
     <CardBookContainer
       as="button"
+      data-testid="card-book"
       onClick={() => router.push(`/project/${id}/books/${book.id}`)}
     >
       <PreviewContainer isPreview={isPreview}>
@@ -37,9 +38,16 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
               alt={book.title}
               width={400}
               height={400}
+              data-testid="image-cover"
             />
           ) : (
-            <ImageIco weight="thin" size={64} alt="" color="#e3e3e3" />
+            <ImageIco
+              weight="thin"
+              size={64}
+              alt=""
+              color="#e3e3e3"
+              data-testid="icon-image"
+            />
           )}
         </ImageContainer>
 
