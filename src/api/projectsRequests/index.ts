@@ -7,6 +7,7 @@ export async function getProjectsRequest() {
   try {
     const response = await api.get('/projects')
 
+    console.log(response.data)
     return response.data
   } catch (err: any) {
     return []

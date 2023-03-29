@@ -105,6 +105,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     persons: [],
     books: [],
     boxes: [],
+    timelines: [],
     loading: true,
   })
 
@@ -115,7 +116,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     error: errorUser,
   } = useContext(UserContext)
 
-  const { projects, error, users, persons, books, boxes, loading } =
+  const { projects, error, users, persons, books, boxes, loading, timelines } =
     projectState
 
   function setError(error: IError | undefined) {
@@ -522,6 +523,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         persons,
         books,
         boxes,
+        timelines,
 
         error,
         setError,

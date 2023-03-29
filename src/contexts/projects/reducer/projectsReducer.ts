@@ -1,4 +1,5 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
 import { produce } from 'immer'
 
 import { IError } from '../../../@types/errors/IError'
@@ -14,6 +15,7 @@ export interface IProjectState {
   users: IUserResponse[]
   books: IBooksResponse[]
   boxes: IBoxResponse[]
+  timelines: ITimelineResponse[]
   error: IError | undefined
   loading: boolean
 }
@@ -78,6 +80,7 @@ export function projectsReducer(state: IProjectState, action: any) {
         draft.persons = action.payload.persons
         draft.books = action.payload.books
         draft.boxes = action.payload.boxes
+        draft.timelines = action.payload.timelines
         draft.error = undefined
       })
     }

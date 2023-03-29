@@ -43,7 +43,8 @@ interface IObjects {
 }
 
 export function useProject(id: string) {
-  const { projects, books, persons, users, boxes } = useContext(ProjectsContext)
+  const { projects, books, persons, users, boxes, timelines } =
+    useContext(ProjectsContext)
   const { user } = useContext(UserContext)
   const { orderBy } = useContext(InterfaceContext)
 
@@ -133,6 +134,13 @@ export function useProject(id: string) {
 
   const boxesThisProject = boxes?.filter(
     (box) => box?.projectId === project?.id,
+  )
+
+  const timelinesThisProject = timelines?.filter(
+    (timeline) => timeline.projectId === project?.id,
+  )
+  const timelineOfProject = timelines?.find(
+    (timeline) => timeline.to === project?.id,
   )
 
   const userCreatorFinde = users?.find(
@@ -258,6 +266,9 @@ export function useProject(id: string) {
     objectsCreatedInProject,
 
     booksThisProject,
+
+    timelinesThisProject,
+    timelineOfProject,
 
     boxesThisProject,
     findBoxOfProject,

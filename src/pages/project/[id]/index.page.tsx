@@ -37,18 +37,26 @@ import {
   PersonsContainer,
   PlotProjectContainer,
 } from './styles'
+import { TimelineView } from '@components/TimelinesComponents/TimelineView'
+import { InterfaceContext } from '@contexts/interface'
 
 export default function ProjectPage() {
   const [onEditImg, setOnEditImg] = useState(false)
 
+  const { timelineIsOpen } = useContext(InterfaceContext)
   const { updateImageProject, loading, deleteImageProject } =
     useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
 
-  const { project, booksThisProject, personsThisProject, permission } =
-    useProject(id as string)
+  const {
+    project,
+    booksThisProject,
+    personsThisProject,
+    permission,
+    timelineOfProject,
+  } = useProject(id as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -77,6 +85,7 @@ export default function ProjectPage() {
         projectId={`${id}`}
         loading={loading}
         inError={!loading && !project?.name}
+        isTimelineInWindow={timelineIsOpen && !smallWindow}
         isScrolling
       >
         <HeaderProjectInfos>
@@ -261,6 +270,10 @@ export default function ProjectPage() {
             })}
           </PersonsContainer>
         </PlotProjectContainer>
+
+        {timelineOfProject && !smallWindow && (
+          <TimelineView timeline={timelineOfProject} />
+        )}
       </ProjectPageLayout>
     </>
   )

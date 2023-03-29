@@ -1,3 +1,4 @@
+import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
 /* eslint-disable no-unused-vars */
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { IError } from '../../../@types/errors/IError'
@@ -108,6 +109,7 @@ export function setProjectsAction(
   persons: IPersonsResponse[],
   books: IBooksResponse[],
   boxes: IBoxResponse[],
+  timelines: ITimelineResponse[],
 ) {
   return {
     type: ProjectsActionsType.SetProjects,
@@ -117,6 +119,7 @@ export function setProjectsAction(
       persons,
       books,
       boxes,
+      timelines,
     },
   }
 }
