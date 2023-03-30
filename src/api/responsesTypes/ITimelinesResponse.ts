@@ -1,5 +1,6 @@
 export interface IDateResponse {
   id: string
+  dateDif: number
   hour: string
   day: string
   month: string

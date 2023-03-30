@@ -1,34 +1,11 @@
 import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
-/* eslint-disable no-unused-vars */
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { IError } from '../../../@types/errors/IError'
 import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
-
-export enum ProjectsActionsType {
-  AddProject = 'addProject',
-  UpdateProjectImage = 'updateProjectImage',
-  UpdateProject = 'updateProject',
-  DeleteProject = 'deleteProject',
-  AddPerson = 'addPerson',
-  UpdatePersonImage = 'updatePersonImage',
-  UpdatePerson = 'updatePerson',
-  RemoveProject = 'removeProject',
-  AddBook = 'addBook',
-  UpdateBook = 'updateBook',
-  DeleteBook = 'deleteBook',
-
-  SetPersons = 'setPersons',
-
-  SetProjects = 'setProjects',
-  SetError = 'setError',
-  SetLoading = 'setLoading',
-  UpdateBox = 'updateBox',
-  AddBox = 'addBox',
-  DeleteBox = 'deleteBox',
-}
+import { ProjectsActionsType } from './actions/ActionsTypes'
 
 export function addProjectAction(project: IProjectResponse) {
   return {

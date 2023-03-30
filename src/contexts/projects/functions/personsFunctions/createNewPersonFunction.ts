@@ -1,14 +1,14 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
+import { createPersonAction } from '@contexts/projects/reducer/actions/persons/createPersonAction'
 import { Dispatch } from 'react'
 import { ICreatePersonDTO } from '../../../../api/dtos/ICreatePersonDTO'
 import { createPersonRequest } from '../../../../api/personsRequests'
 import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
 import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
 import {
-  addPersonAction,
   setErrorAction,
   setLoadingAction,
-  updateBoxAction,
 } from '../../reducer/actionsProjectsReducer'
 
 export async function createNewPersonFunction(
@@ -45,10 +45,9 @@ export async function createNewPersonFunction(
 
   const person = response.person as IPersonsResponse
   const box = response.box as IBoxResponse
+  const timeline = response.timeline as ITimelineResponse
 
-  dispatch(setLoadingAction(false))
-  dispatch(addPersonAction(person))
-  dispatch(updateBoxAction(box))
+  dispatch(createPersonAction({ box, person, timeline }))
 
   return true
 }

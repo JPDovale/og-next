@@ -7,7 +7,7 @@ import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '../../../api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
-import { ProjectsActionsType } from './actionsProjectsReducer'
+import { ProjectsActionsType } from './actions/ActionsTypes'
 
 export interface IProjectState {
   projects: IProjectResponse[]
@@ -208,6 +208,28 @@ export function projectsReducer(state: IProjectState, action: any) {
         draft.boxes = state.boxes.filter(
           (box) => box.id !== action.payload.boxId,
         )
+      })
+    }
+
+    case ProjectsActionsType.CreatePerson: {
+      const indexOfBox = state.boxes.findIndex(
+        (box) => box.id === action.payload.box.id,
+      )
+
+      const indexOfTimeline = state.timelines.findIndex(
+        (timeline) => timeline.id === action.payload.timeline.id,
+      )
+
+      const allIndexesExites = indexOfBox !== -1 && indexOfTimeline !== -1
+
+      if (!allIndexesExites) return state
+
+      return produce(state, (draft) => {
+        draft.boxes[indexOfBox] = action.payload.box
+        draft.timelines[indexOfTimeline] = action.payload.timeline
+        draft.persons.push(action.payload.person)
+        draft.loading = false
+        draft.error = undefined
       })
     }
 
