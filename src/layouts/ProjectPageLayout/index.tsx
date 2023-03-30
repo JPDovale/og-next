@@ -15,6 +15,7 @@ interface IProjectPageLayout {
   isScrolling?: boolean
   isFullScreen?: boolean
   inError: boolean
+  isTimelineInWindow?: boolean
 }
 
 export function ProjectPageLayout({
@@ -25,6 +26,7 @@ export function ProjectPageLayout({
   paths,
   isScrolling = false,
   isFullScreen = false,
+  isTimelineInWindow = true,
   inError,
 }: IProjectPageLayout) {
   return (
@@ -46,6 +48,7 @@ export function ProjectPageLayout({
           <ProjectContainer
             isFullScreen={isFullScreen}
             isScrolling={isScrolling}
+            isTimelineInWindow={isTimelineInWindow}
           >
             {children}
           </ProjectContainer>

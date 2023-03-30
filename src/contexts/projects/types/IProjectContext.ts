@@ -41,6 +41,7 @@ import { IDeleteArchiveBox } from './interfaceFunctions/IDeleteArchiveBox'
 import { IDeleteImageInArchiveRequest } from '@api/boxesRequests/types/IDeleteImageInArchiveRequest'
 import { IUpdateArchiveRequest } from '@api/boxesRequests/types/IUpdateArchiveRequest'
 import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
+import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
 
 export interface IProjectsContext {
   loading: boolean
@@ -49,6 +50,7 @@ export interface IProjectsContext {
   persons: IPersonsResponse[]
   books: IBooksResponse[]
   boxes: IBoxResponse[]
+  timelines: ITimelineResponse[]
 
   error: IError | undefined
   setError: (newState: IError | undefined) => void

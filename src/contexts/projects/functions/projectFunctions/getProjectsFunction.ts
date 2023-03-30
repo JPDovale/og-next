@@ -31,6 +31,7 @@ export async function getProjectsFunction(
       response.persons,
       response.books,
       response.boxes,
+      response.timelines,
     ),
   )
   dispatch(setLoadingAction(false))
