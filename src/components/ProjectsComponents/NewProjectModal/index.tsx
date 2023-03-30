@@ -1,12 +1,12 @@
 import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { ProjectsContext } from '@contexts/projects'
-import { useRouter } from 'next/router'
 import { FilePlus } from 'phosphor-react'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 // import { InputRadio } from '../../../InputRadio'
 import { Input, NewProjectForm, Submit } from './styles'
 import { ModalContent } from '@components/usefull/ModalContent'
+import { Toast } from '@components/usefull/Toast'
 
 // const typesOfProjects = [
 //   { label: 'Book', value: 'book' },
@@ -16,6 +16,8 @@ import { ModalContent } from '@components/usefull/ModalContent'
 // ]
 
 export function NewProjectModal() {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
+
   const { createProject, loading } = useContext(ProjectsContext)
 
   const [
@@ -32,8 +34,6 @@ export function NewProjectModal() {
     // setPassword
   ] = useState('')
   const [errorIn, setErrorIn] = useState('')
-
-  const router = useRouter()
 
   async function handleNewProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -53,13 +53,24 @@ export function NewProjectModal() {
       password,
     }
 
-    const idNewProject = await createProject(newProject)
+    const isCreated = await createProject(newProject)
 
-    router.push(`/project/${idNewProject}`)
+    if (isCreated) {
+      setSuccessToastOpen(true)
+      setName('')
+      setErrorIn('')
+    }
   }
 
   return (
     <ModalContent title="Novo projeto">
+      <Toast
+        setOpen={setSuccessToastOpen}
+        open={successToastOpen}
+        title="Projeto criado"
+        message="Você acabou de criar um novo projeto... Acesse seus projetos para ver"
+      />
+
       <NewProjectForm onSubmit={handleNewProject}>
         <Input as="label" size="xs">
           Nome do projeto
