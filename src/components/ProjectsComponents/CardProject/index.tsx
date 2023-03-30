@@ -1,5 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon } from '@components/usefull/Button'
 

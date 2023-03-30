@@ -1,5 +1,5 @@
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
-import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { UserContext } from '@contexts/user'
 import { useContext } from 'react'
 

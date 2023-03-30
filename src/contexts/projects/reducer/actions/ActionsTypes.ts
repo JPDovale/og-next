@@ -1,24 +1,31 @@
 /* eslint-disable no-unused-vars */
 export enum ProjectsActionsType {
   AddProject = 'addProject',
-  UpdateProjectImage = 'updateProjectImage',
   UpdateProject = 'updateProject',
   DeleteProject = 'deleteProject',
-  AddPerson = 'addPerson',
-  UpdatePersonImage = 'updatePersonImage',
-  UpdatePerson = 'updatePerson',
-  RemoveProject = 'removeProject',
-  AddBook = 'addBook',
-  UpdateBook = 'updateBook',
-  DeleteBook = 'deleteBook',
 
-  SetPersons = 'setPersons',
-
-  SetProjects = 'setProjects',
+  SetAll = 'setAll',
   SetError = 'setError',
   SetLoading = 'setLoading',
+
+  UpdatePerson = 'updatePerson',
+  UpdateCouplesPerson = 'updateCouplesPerson',
+  UpdatePersonAndBox = 'updatePersonAndBox',
+  CreatePerson = 'createPerson',
+
+  UpdateBook = 'updateBook',
+  AddBook = 'addBook',
+  DeleteBook = 'deleteBook',
+
   UpdateBox = 'updateBox',
   AddBox = 'addBox',
   DeleteBox = 'deleteBox',
-  CreatePerson = 'createPerson',
+}
+
+export enum ProjectsBlockActions {
+  Boxes = 'boxes',
+  Persons = 'persons',
+  Projects = 'projects',
+  Timelines = 'timelines',
+  Books = 'books',
 }

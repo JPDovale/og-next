@@ -1,24 +1,31 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
-import { IEditorTo } from '../../../../@types/editores/IEditorTo'
-import { IGenericObject } from '../../../../@types/editores/IGenericObject'
-import { deleteObjectGenericRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { recognizeObject } from '../../../../services/recognizeObject'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { IEditorTo } from '@@types/editores/IEditorTo'
+import { IGenericObject } from '@@types/editores/IGenericObject'
+import { deleteObjectGenericRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { recognizeObject } from '@services/recognizeObject'
 
-export async function deleteObjectGenericFunction(
-  generic: IGenericObject,
-  personId: string,
-  genericId: string,
-  to: IEditorTo,
-  dispatch: Dispatch<any>,
-): Promise<void> {
+import { responseDealings } from '@services/responseDealings'
+import { updatePersonAndBoxAction } from '@contexts/projects/reducer/actions/persons/updatePersonAndBoxAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { setErrorAction } from '@contexts/projects/reducer/actions/projects/setErrorAction'
+
+interface IDeleteObjectGenericFunction {
+  generic: IGenericObject
+  personId: string
+  genericId: string
+  to: IEditorTo
+  dispatch: Dispatch<any>
+}
+
+export async function deleteObjectGenericFunction({
+  dispatch,
+  generic,
+  genericId,
+  personId,
+  to,
+}: IDeleteObjectGenericFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const objectToSend = recognizeObject(
@@ -43,45 +50,31 @@ export async function deleteObjectGenericFunction(
       }),
     )
 
-    return
+    return false
   }
 
   const response = await deleteObjectGenericRequest(objectToSend)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return deleteObjectGenericFunction(
-        generic,
-        personId,
-        genericId,
-        to,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      deleteObjectGenericFunction({
         dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
+        generic,
+        genericId,
+        personId,
+        to,
       }),
-    )
+  })
 
-    return
-  }
+  if (handledAnswer === false) return false
 
   const person = response.person as IPersonsResponse
   const box = response.box as IBoxResponse
 
-  dispatch(updatePersonAction(person, box))
-  dispatch(setLoadingAction(false))
+  dispatch(updatePersonAndBoxAction({ person, box }))
+
+  return true
 }

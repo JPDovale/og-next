@@ -1,7 +1,7 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IArchive } from '@api/responsesTypes/IBoxResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 import { EditorContainer } from '@components/ProjectsComponents/EditorAndComments/styles'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'

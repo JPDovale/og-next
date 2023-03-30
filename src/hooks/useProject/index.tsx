@@ -1,7 +1,7 @@
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { IArchive } from '@api/responsesTypes/IBoxResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { InterfaceContext } from '@contexts/interface'
 import { ProjectsContext } from '@contexts/projects'

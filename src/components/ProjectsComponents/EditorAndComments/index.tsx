@@ -1,4 +1,4 @@
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { Editor } from '@components/Editor'
 import { CommentsOnPage } from '../CommentsOnPage'
 import { EditorContainer } from './styles'

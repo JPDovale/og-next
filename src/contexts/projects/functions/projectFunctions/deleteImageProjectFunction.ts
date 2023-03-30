@@ -1,12 +1,9 @@
 import { Dispatch } from 'react'
-import { deleteImageProjectRequest } from '../../../../api/projectsRequests'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateProjectAction,
-} from '../../reducer/actionsProjectsReducer'
+import { deleteImageProjectRequest } from '@api/projectsRequests'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updateProjectAction } from '@contexts/projects/reducer/actions/projects/updateProjectAction'
 
 interface IDeleteImageProjectFunctionProps {
   projectId: string
@@ -16,35 +13,23 @@ interface IDeleteImageProjectFunctionProps {
 export async function deleteImageProjectFunction({
   projectId,
   dispatch,
-}: IDeleteImageProjectFunctionProps): Promise<any> {
+}: IDeleteImageProjectFunctionProps): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await deleteImageProjectRequest({ projectId })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => deleteImageProjectFunction({ projectId, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return deleteImageProjectFunction({ projectId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-      return
-    }
-  }
+  if (handledAnswer === false) return false
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
+  const project = response as IProjectResponse
 
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
+  dispatch(updateProjectAction({ project }))
 
-  const projectUpdated = response as IProjectResponse
-  dispatch(setLoadingAction(false))
-  dispatch(updateProjectAction(projectUpdated))
+  return true
 }

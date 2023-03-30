@@ -1,5 +1,5 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'

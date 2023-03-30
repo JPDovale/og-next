@@ -1,12 +1,10 @@
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { updateCapituleRequest } from '../../../../api/booksRequests'
-import { IUpdateCapituleRequest } from '../../../../api/booksRequests/types/IUpdateCapituleRequest'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { updateCapituleRequest } from '@api/booksRequests'
+import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
 
 interface IUpdateCapituleFunction {
   updatedCapitule: IUpdateCapituleRequest
@@ -16,40 +14,27 @@ interface IUpdateCapituleFunction {
 export async function updateCapituleFunction({
   dispatch,
   updatedCapitule,
-}: IUpdateCapituleFunction): Promise<void> {
-  if (!updatedCapitule) {
-    dispatch(
-      setErrorAction({
-        title: 'Error ao processar as informações',
-        message:
-          'Verifique as informações fornecidas e tente novamente. Certifique-se de que todos os campos estão preenchidos corretamente.',
-      }),
-    )
-    return
-  }
+}: IUpdateCapituleFunction): Promise<boolean> {
+  dispatch(setLoadingAction(true))
 
   const response = await updateCapituleRequest(updatedCapitule)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updateCapituleFunction({ updatedCapitule, dispatch })
-    } else {
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateCapituleFunction({
+        dispatch,
+        updatedCapitule,
       }),
-    )
-    return
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
+
+  dispatch(updateBookAction({ book }))
+
+  return true
 }

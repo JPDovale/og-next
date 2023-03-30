@@ -1,4 +1,4 @@
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '../../../../api/responsesTypes/IProjectResponse'
 
 interface INewBook {
   title: string

@@ -1,12 +1,9 @@
 import { Dispatch } from 'react'
-import { updateFrontCoverRequest } from '../../../../api/booksRequests'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { updateFrontCoverRequest } from '@api/booksRequests'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
 
 export interface IUpdateFrontCoverFunction {
   file: File
@@ -18,36 +15,28 @@ export async function updateFrontCoverFunction({
   bookId,
   dispatch,
   file,
-}: IUpdateFrontCoverFunction): Promise<void> {
+}: IUpdateFrontCoverFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await updateFrontCoverRequest({ bookId, file })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updateFrontCoverFunction({ file, bookId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateFrontCoverFunction({
+        dispatch,
+        bookId,
+        file,
       }),
-    )
-    return
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
+
+  return true
 }

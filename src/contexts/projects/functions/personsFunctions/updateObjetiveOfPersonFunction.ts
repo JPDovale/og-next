@@ -1,23 +1,27 @@
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { IUpdateObjetiveDTO } from '../../../../api/dtos/IUpdateObjetiveDTO'
-import { updateObjetiveOfPersonRequest } from '../../../../api/personsRequests'
+import { IUpdateObjetiveDTO } from '@api/dtos/IUpdateObjetiveDTO'
+import { updateObjetiveOfPersonRequest } from '@api/personsRequests'
 import {
   IObjective,
   IPersonsResponse,
-} from '../../../../api/responsesTypes/IPersonsResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+} from '@api/responsesTypes/IPersonsResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { updatePersonAction } from '@contexts/projects/reducer/actions/persons/updatePersonAction'
 
-export async function updateObjetiveOfPersonFunction(
-  objective: IObjective,
-  personId: string,
-  objectiveId: string,
-  dispatch: Dispatch<any>,
-): Promise<boolean> {
+interface IUpdateObjetiveOfPersonFunction {
+  objective: IObjective
+  personId: string
+  objectiveId: string
+  dispatch: Dispatch<any>
+}
+
+export async function updateObjetiveOfPersonFunction({
+  objective,
+  personId,
+  objectiveId,
+  dispatch,
+}: IUpdateObjetiveOfPersonFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const updatedObjective: IUpdateObjetiveDTO = {
@@ -28,38 +32,24 @@ export async function updateObjetiveOfPersonFunction(
 
   const response = await updateObjetiveOfPersonRequest(updatedObjective)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updateObjetiveOfPersonFunction(
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateObjetiveOfPersonFunction({
         objective,
         personId,
         objectiveId,
         dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
       }),
-    )
-    return false
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updatePersonAction({ person }))
 
   return true
 }

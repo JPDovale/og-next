@@ -1,12 +1,9 @@
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { reorderCapitulesRequest } from '../../../../api/booksRequests'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { reorderCapitulesRequest } from '@api/booksRequests'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface IReorderCapitulesFunction {
   bookId: string
@@ -20,7 +17,7 @@ export async function reorderCapitulesFunction({
   sequenceFrom,
   sequenceTo,
   dispatch,
-}: IReorderCapitulesFunction): Promise<void> {
+}: IReorderCapitulesFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await reorderCapitulesRequest({
@@ -29,37 +26,19 @@ export async function reorderCapitulesFunction({
     sequenceTo,
   })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      reorderCapitulesFunction({ dispatch, bookId, sequenceFrom, sequenceTo }),
+  })
 
-    if (isRefreshed) {
-      return reorderCapitulesFunction({
-        bookId,
-        sequenceFrom,
-        sequenceTo,
-        dispatch,
-      })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-
-    return
-  }
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
+
+  return true
 }

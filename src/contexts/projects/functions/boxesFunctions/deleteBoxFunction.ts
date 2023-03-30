@@ -1,10 +1,7 @@
 import { deleteBoxRequest } from '@api/boxesRequests'
-import {
-  deleteBoxAction,
-  setErrorAction,
-  setLoadingAction,
-} from '@contexts/projects/reducer/actionsProjectsReducer'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { deleteBoxAction } from '@contexts/projects/reducer/actions/boxes/deleteBoxAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 
 interface IDeleteBoxFunction {
@@ -15,36 +12,21 @@ interface IDeleteBoxFunction {
 export async function deleteBoxFunction({
   boxId,
   dispatch,
-}: IDeleteBoxFunction): Promise<void> {
+}: IDeleteBoxFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await deleteBoxRequest(boxId)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => deleteBoxFunction({ boxId, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return deleteBoxFunction({
-        boxId,
-        dispatch,
-      })
-    } else {
-      return dispatch(setLoadingAction(false))
-    }
-  }
+  if (handledAnswer === false) return false
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
+  dispatch(deleteBoxAction({ boxId }))
 
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
-
-  dispatch(deleteBoxAction(boxId))
-  dispatch(setLoadingAction(false))
+  return true
 }

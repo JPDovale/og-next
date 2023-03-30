@@ -1,13 +1,10 @@
 import { Dispatch } from 'react'
-import { setSceneToCompleteRequest } from '../../../../api/booksRequests'
-import { ISetSceneToCompleteRequest } from '../../../../api/booksRequests/types/ISetSceneToCompleteRequest'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { setSceneToCompleteRequest } from '@api/booksRequests'
+import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
 
 interface ISetSceneToCompleteFunction {
   sceneToComplete: ISetSceneToCompleteRequest
@@ -22,33 +19,22 @@ export async function setSceneToCompleteFunction({
 
   const response = await setSceneToCompleteRequest(sceneToComplete)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return setSceneToCompleteFunction({ sceneToComplete, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      setSceneToCompleteFunction({
+        dispatch,
+        sceneToComplete,
       }),
-    )
-    return false
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
 
   return true
 }

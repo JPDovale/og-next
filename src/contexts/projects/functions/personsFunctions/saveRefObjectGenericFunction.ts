@@ -1,27 +1,35 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
-import { IEditorTo } from '../../../../@types/editores/IEditorTo'
-import { saveRefObjectGenericRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { recognizeObject } from '../../../../services/recognizeObject'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { IEditorTo } from '@@types/editores/IEditorTo'
+import { saveRefObjectGenericRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { recognizeObject } from '@services/recognizeObject'
 
-export async function saveRefObjectGenericFunction(
-  personId: string,
-  projectId: string,
-  refId: string,
-  to: IEditorTo,
-  dispatch: Dispatch<any>,
+import { responseDealings } from '@services/responseDealings'
+import { updatePersonAndBoxAction } from '@contexts/projects/reducer/actions/persons/updatePersonAndBoxAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { setErrorAction } from '@contexts/projects/reducer/actions/projects/setErrorAction'
+
+interface ISaveRefObjectGenericFunction {
+  personId: string
+  projectId: string
+  refId: string
+  to: IEditorTo
+  dispatch: Dispatch<any>
   subObjects?: Array<{
     title: string
     description: string
-  }>,
-): Promise<boolean> {
+  }>
+}
+
+export async function saveRefObjectGenericFunction({
+  personId,
+  projectId,
+  refId,
+  to,
+  dispatch,
+  subObjects,
+}: ISaveRefObjectGenericFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const objectToSend = recognizeObject(
@@ -47,41 +55,27 @@ export async function saveRefObjectGenericFunction(
 
   const response = await saveRefObjectGenericRequest(objectToSend)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return saveRefObjectGenericFunction(
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      saveRefObjectGenericFunction({
         personId,
         projectId,
         refId,
         to,
         dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
+        subObjects,
       }),
-    )
-    return false
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const person = response.person as IPersonsResponse
   const box = response.box as IBoxResponse
 
-  dispatch(updatePersonAction(person, box))
-  dispatch(setLoadingAction(false))
+  dispatch(updatePersonAndBoxAction({ person, box }))
 
   return true
 }

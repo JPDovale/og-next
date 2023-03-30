@@ -1,20 +1,20 @@
 import { createContext, useContext, useEffect, useReducer } from 'react'
-import { IEditorTo } from '../../@types/editores/IEditorTo'
-import { IGenericObject } from '../../@types/editores/IGenericObject'
-import { IError } from '../../@types/errors/IError'
-import { ICreateCapituleRequest } from '../../api/booksRequests/types/ICreateCapituleRequest'
-import { ICreateSceneRequest } from '../../api/booksRequests/types/ICreateSceneRequest'
-import { IDeleteSceneRequest } from '../../api/booksRequests/types/IDeleteSceneRequest'
-import { IReorderScenesRequest } from '../../api/booksRequests/types/IReorderScenesRequest'
-import { ISetSceneToCompleteRequest } from '../../api/booksRequests/types/ISetSceneToCompleteRequest'
-import { IUpdateCapituleRequest } from '../../api/booksRequests/types/IUpdateCapituleRequest'
-import { IUpdateSceneRequest } from '../../api/booksRequests/types/IUpdateSceneRequest'
-import { ICreateCommentDTO } from '../../api/dtos/ICreateNewCommentDTO'
-import { ICreatePersonDTO } from '../../api/dtos/ICreatePersonDTO'
-import { ICreateProjectDTO } from '../../api/dtos/ICreateProjectDTO'
-import { IShareProjectDTO } from '../../api/dtos/IShareProjectDTO'
-import { IUpdatePlotDTO } from '../../api/dtos/IUpdatePlotDTO'
-import { IObjective } from '../../api/responsesTypes/IPersonsResponse'
+import { IEditorTo } from '@@types/editores/IEditorTo'
+import { IGenericObject } from '@@types/editores/IGenericObject'
+import { IError } from '@@types/errors/IError'
+import { ICreateCapituleRequest } from '@api/booksRequests/types/ICreateCapituleRequest'
+import { ICreateSceneRequest } from '@api/booksRequests/types/ICreateSceneRequest'
+import { IDeleteSceneRequest } from '@api/booksRequests/types/IDeleteSceneRequest'
+import { IReorderScenesRequest } from '@api/booksRequests/types/IReorderScenesRequest'
+import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
+import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
+import { IUpdateSceneRequest } from '@api/booksRequests/types/IUpdateSceneRequest'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
+import { ICreateProjectDTO } from '@api/dtos/ICreateProjectDTO'
+import { IShareProjectDTO } from '@api/dtos/IShareProjectDTO'
+import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
+import { IObjective } from '@api/responsesTypes/IPersonsResponse'
 import { Error } from '@components/usefull/Error'
 import { UserContext } from '../user'
 import { createBookFunction } from './functions/booksFunctions/createBookFunction'
@@ -53,7 +53,6 @@ import { unshareProjectFunction } from './functions/projectFunctions/unshareProj
 import { updateImageProjectFunction } from './functions/projectFunctions/updateImageProjectFunction'
 import { updateNameProjectFunction } from './functions/projectFunctions/updateNameProjectFunction'
 import { updatePlotFunction } from './functions/projectFunctions/updatePlotFunction'
-import { setErrorAction } from './reducer/actionsProjectsReducer'
 import { projectsReducer } from './reducer/projectsReducer'
 import { ICreateBook } from './types/interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
@@ -92,6 +91,7 @@ import { updateArchiveFunction } from './functions/boxesFunctions/updateArchiveF
 import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
 import { updateBoxFunction } from './functions/boxesFunctions/updateBoxFunction'
 import { deleteBoxFunction } from './functions/boxesFunctions/deleteBoxFunction'
+import { setErrorAction } from './reducer/actions/projects/setErrorAction'
 
 export const ProjectsContext = createContext<IProjectsContext>(
   {} as IProjectsContext,
@@ -124,11 +124,14 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   }
 
   async function getProjects() {
-    return getProjectsFunction(dispatch)
+    return getProjectsFunction({ dispatch })
   }
 
   async function createProject(newProjectInfos: ICreateProjectDTO) {
-    const newProjectId = await createProjectFunction(newProjectInfos, dispatch)
+    const projectCreated = await createProjectFunction({
+      newProject: newProjectInfos,
+      dispatch,
+    })
 
     const welcomeProject = projects.find(
       (p) => p.id === '1242545b-56c9-41c0-9f98-addc9b5c5c65',
@@ -138,26 +141,26 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       await quitProject({ projectId: welcomeProject.id })
     }
 
-    return newProjectId
+    return projectCreated
   }
 
   async function updateImageProject(projectId: string, file: File) {
-    return updateImageProjectFunction(projectId, file, dispatch)
+    return updateImageProjectFunction({ projectId, file, dispatch })
   }
 
   async function shareProject(newShare: IShareProjectDTO) {
-    return shareProjectFunction(newShare, dispatch)
+    return shareProjectFunction({ share: newShare, dispatch })
   }
 
   async function updatePlot(newPlot: IUpdatePlotDTO, projectId: string) {
-    return updatePlotFunction(newPlot, projectId, dispatch)
+    return updatePlotFunction({ plot: newPlot, projectId, dispatch })
   }
 
   async function commentInPlot(
     newComment: ICreateCommentDTO,
     projectId: string,
   ) {
-    return commentInPlotFunction(newComment, projectId, dispatch)
+    return commentInPlotFunction({ comment: newComment, projectId, dispatch })
   }
 
   async function responseCommentInPlot(
@@ -165,24 +168,24 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     projectId: string,
     commentId: string,
   ) {
-    return responseCommentInPlotFunction(
-      newResponse,
+    return responseCommentInPlotFunction({
+      responseComment: newResponse,
       projectId,
       commentId,
       dispatch,
-    )
+    })
   }
 
   async function deleteProject(projectId: string) {
-    return deleteProjectFunction(projectId, dispatch)
+    return deleteProjectFunction({ projectId, dispatch })
   }
 
   async function createNewPerson(person: ICreatePersonDTO) {
-    return createNewPersonFunction(person, dispatch)
+    return createNewPersonFunction({ newPerson: person, dispatch })
   }
 
   async function updateImageFromPerson(personId: string, file: File) {
-    return updateImageFromPersonFunction(file, personId, dispatch)
+    return updateImageFromPersonFunction({ file, personId, dispatch })
   }
 
   async function updateObjective(
@@ -190,12 +193,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     objectiveId: string,
   ) {
-    return updateObjetiveOfPersonFunction(
+    return updateObjetiveOfPersonFunction({
       objective,
       personId,
       objectiveId,
       dispatch,
-    )
+    })
   }
 
   async function createObjective(
@@ -203,12 +206,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     projectId: string,
   ) {
-    return createObjetiveOfPersonFunction(
+    return createObjetiveOfPersonFunction({
       objective,
       personId,
       projectId,
       dispatch,
-    )
+    })
   }
 
   async function saveRefObjective(
@@ -217,20 +220,20 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     projectId: string,
     refId: string,
   ) {
-    return saveRefObjectiveFunction(
+    return saveRefObjectiveFunction({
       objective,
       personId,
       projectId,
       refId,
       dispatch,
-    )
+    })
   }
 
   async function commentInPerson(
     newComment: ICreateCommentDTO,
     personId: string,
   ) {
-    return commentInPersonFunction(newComment, personId, dispatch)
+    return commentInPersonFunction({ newComment, personId, dispatch })
   }
 
   async function responseCommentToPerson(
@@ -238,12 +241,12 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     commentId: string,
   ) {
-    return responseCommentInPersonFunction(
+    return responseCommentInPersonFunction({
       newResponse,
       personId,
       commentId,
       dispatch,
-    )
+    })
   }
 
   async function createObjectGeneric(
@@ -252,13 +255,13 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     personId: string,
     projectId: string,
   ) {
-    return createObjectGenericFunction(
+    return createObjectGenericFunction({
       generic,
       to,
       personId,
       projectId,
       dispatch,
-    )
+    })
   }
 
   async function saveRefObjectGeneric(
@@ -271,14 +274,14 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       description: string
     }>,
   ) {
-    return saveRefObjectGenericFunction(
+    return saveRefObjectGenericFunction({
       personId,
       projectId,
       refId,
       to,
       dispatch,
       subObjects,
-    )
+    })
   }
 
   async function updateObjectGeneric(
@@ -287,13 +290,13 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     genericId: string,
     to: IEditorTo,
   ) {
-    return updateObjectGenericFunction(
+    return updateObjectGenericFunction({
       generic,
       personId,
       genericId,
       to,
       dispatch,
-    )
+    })
   }
 
   async function deleteObjectGeneric(
@@ -302,21 +305,21 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     genericId: string,
     to: IEditorTo,
   ) {
-    return deleteObjectGenericFunction(
+    return deleteObjectGenericFunction({
       generic,
       personId,
       genericId,
       to,
       dispatch,
-    )
+    })
   }
 
   async function unshareProject(userEmail: string, projectId: string) {
-    return unshareProjectFunction(userEmail, projectId, dispatch)
+    return unshareProjectFunction({ userEmail, projectId, dispatch })
   }
 
   async function updatePerson(person: ICreatePersonDTO, personId: string) {
-    return updatedPersonFunction(person, personId, dispatch)
+    return updatedPersonFunction({ person, personId, dispatch })
   }
 
   async function deleteImageProject({ projectId }: IDeleteImageProject) {
@@ -365,7 +368,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   }
 
   async function updateCapitule(capitule: IUpdateCapituleRequest) {
-    updateCapituleFunction({
+    return updateCapituleFunction({
       updatedCapitule: capitule,
       dispatch,
     })

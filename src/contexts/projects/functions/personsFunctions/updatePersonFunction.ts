@@ -1,47 +1,38 @@
 import { Dispatch } from 'react'
-import { ICreatePersonDTO } from '../../../../api/dtos/ICreatePersonDTO'
-import { updatePersonRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
+import { updatePersonRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updatePersonAction } from '@contexts/projects/reducer/actions/persons/updatePersonAction'
 
-export async function updatedPersonFunction(
-  person: ICreatePersonDTO,
-  personId: string,
-  dispatch: Dispatch<any>,
-): Promise<void> {
+interface IUpdatedPersonFunction {
+  person: ICreatePersonDTO
+  personId: string
+  dispatch: Dispatch<any>
+}
+
+export async function updatedPersonFunction({
+  person,
+  personId,
+  dispatch,
+}: IUpdatedPersonFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await updatePersonRequest(person, personId)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => updatedPersonFunction({ person, personId, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return updatedPersonFunction(person, personId, dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
+  if (handledAnswer === false) return false
 
   const personUpdated = response as IPersonsResponse
-  dispatch(updatePersonAction(personUpdated))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updatePersonAction({ person: personUpdated }))
+
+  return true
 }

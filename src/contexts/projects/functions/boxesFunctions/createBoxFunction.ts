@@ -1,13 +1,10 @@
 import { createBoxRequest } from '@api/boxesRequests'
 import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { addBoxAction } from '@contexts/projects/reducer/actions/boxes/addBoxAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  addBoxAction,
-  setErrorAction,
-  setLoadingAction,
-} from '../../reducer/actionsProjectsReducer'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface ICreateBookFunction {
   newBox: ICreateBoxRequest
@@ -22,34 +19,18 @@ export async function createBoxFunction({
 
   const response = await createBoxRequest(newBox)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => createBoxFunction({ newBox, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return createBoxFunction({ newBox, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
+  if (handledAnswer === false) return false
 
-      return false
-    }
-  }
+  const box = response.box as IBoxResponse
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
-
-  const boxReceipted = response.box as IBoxResponse
-
-  dispatch(addBoxAction(boxReceipted))
-  dispatch(setLoadingAction(false))
+  dispatch(addBoxAction({ box }))
 
   return true
 }

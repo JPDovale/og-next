@@ -1,27 +1,35 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { updateCouplesPersonAction } from '@contexts/projects/reducer/actions/persons/updateCouplesPersonAction'
+import { updatePersonAndBoxAction } from '@contexts/projects/reducer/actions/persons/updatePersonAndBoxAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { IEditorTo } from '../../../../@types/editores/IEditorTo'
-import { IGenericObject } from '../../../../@types/editores/IGenericObject'
-import { createObjectGenericRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { recognizeObject } from '../../../../services/recognizeObject'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { IEditorTo } from '@@types/editores/IEditorTo'
+import { IGenericObject } from '@@types/editores/IGenericObject'
+import { createObjectGenericRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { recognizeObject } from '@services/recognizeObject'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { setErrorAction } from '@contexts/projects/reducer/actions/projects/setErrorAction'
 
-export async function createObjectGenericFunction(
-  generic: IGenericObject,
-  to: IEditorTo,
-  personId: string,
-  projectId: string,
-  dispatch: Dispatch<any>,
-): Promise<boolean> {
+interface ICreateObjectGenericFunction {
+  generic: IGenericObject
+  to: IEditorTo
+  personId: string
+  projectId: string
+  dispatch: Dispatch<any>
+}
+
+export async function createObjectGenericFunction({
+  dispatch,
+  to,
+  personId,
+  projectId,
+  generic,
+}: ICreateObjectGenericFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const objectToSend = recognizeObject(to, personId, projectId, generic)
+
   if (!objectToSend) {
     dispatch(
       setErrorAction({
@@ -35,51 +43,35 @@ export async function createObjectGenericFunction(
 
   const response = await createObjectGenericRequest(objectToSend)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return createObjectGenericFunction(
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      createObjectGenericFunction({
         generic,
+        projectId,
         to,
         personId,
-        projectId,
         dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
       }),
-    )
-    return false
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   if (response.personOfCouple) {
     const person = response.person
     const personOfCouple = response.personOfCouple
 
-    dispatch(updatePersonAction(person))
-    dispatch(updatePersonAction(personOfCouple))
-    dispatch(setLoadingAction(false))
+    dispatch(updateCouplesPersonAction({ person, personOfCouple }))
 
     return true
   }
 
   const person = response.person as IPersonsResponse
   const box = response.box as IBoxResponse
-  dispatch(updatePersonAction(person, box))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updatePersonAndBoxAction({ person, box }))
 
   return true
 }

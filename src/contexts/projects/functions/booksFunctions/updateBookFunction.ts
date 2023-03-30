@@ -1,12 +1,9 @@
 import { updateBookRequest } from '@api/booksRequests'
 import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '@contexts/projects/reducer/actionsProjectsReducer'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 
 interface IUpdateBookFunction {
@@ -17,37 +14,27 @@ interface IUpdateBookFunction {
 export async function updateBookFunction({
   bookInfosUpdated,
   dispatch,
-}: IUpdateBookFunction): Promise<void> {
+}: IUpdateBookFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await updateBookRequest(bookInfosUpdated)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updateBookFunction({ bookInfosUpdated, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateBookFunction({
+        dispatch,
+        bookInfosUpdated,
       }),
-    )
+  })
 
-    return
-  }
+  if (handledAnswer === false) return false
 
   const book = response.book as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
+
+  return true
 }

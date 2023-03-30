@@ -1,19 +1,24 @@
 import { Dispatch } from 'react'
-import { ICreateCommentDTO } from '../../../../api/dtos/ICreateNewCommentDTO'
-import { responseCommentInPlotRequest } from '../../../../api/projectsRequests'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateProjectAction,
-} from '../../reducer/actionsProjectsReducer'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { responseCommentInPlotRequest } from '@api/projectsRequests'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updateProjectAction } from '@contexts/projects/reducer/actions/projects/updateProjectAction'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 
-export async function responseCommentInPlotFunction(
-  responseComment: ICreateCommentDTO,
-  projectId: string,
-  commentId: string,
-  dispatch: Dispatch<any>,
-): Promise<void> {
+interface IResponseCommentInPlotFunction {
+  responseComment: ICreateCommentDTO
+  projectId: string
+  commentId: string
+  dispatch: Dispatch<any>
+}
+
+export async function responseCommentInPlotFunction({
+  responseComment,
+  projectId,
+  commentId,
+  dispatch,
+}: IResponseCommentInPlotFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await responseCommentInPlotRequest(
@@ -22,36 +27,23 @@ export async function responseCommentInPlotFunction(
     commentId,
   )
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return responseCommentInPlotFunction(
-        responseComment,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      responseCommentInPlotFunction({
+        dispatch,
         projectId,
         commentId,
-        dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
+        responseComment,
       }),
-    )
+  })
 
-    return
-  }
+  if (handledAnswer === false) return false
 
-  dispatch(setLoadingAction(false))
-  dispatch(updateProjectAction(response))
+  const project = response as IProjectResponse
+
+  dispatch(updateProjectAction({ project }))
+  return true
 }

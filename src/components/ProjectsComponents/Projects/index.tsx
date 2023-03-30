@@ -1,4 +1,4 @@
-import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { InterfaceContext } from '@contexts/interface'
 import { UserContext } from '@contexts/user'

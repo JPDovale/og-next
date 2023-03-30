@@ -4,7 +4,7 @@ import {
   IObjective,
   IPersonsResponse,
 } from '@api/responsesTypes/IPersonsResponse'
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 import { EditorContainer } from '@components/ProjectsComponents/EditorAndComments/styles'
 import { ObjectiveEditor } from '../ObjectiveEditor'

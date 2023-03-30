@@ -1,48 +1,35 @@
 import { Dispatch } from 'react'
-import { ICreateProjectDTO } from '../../../../api/dtos/ICreateProjectDTO'
-import { createProjectRequest } from '../../../../api/projectsRequests'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  addProjectAction,
-  setErrorAction,
-  setLoadingAction,
-} from '../../reducer/actionsProjectsReducer'
+import { ICreateProjectDTO } from '@api/dtos/ICreateProjectDTO'
+import { createProjectRequest } from '@api/projectsRequests'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { addProjectAction } from '@contexts/projects/reducer/actions/projects/addProjectAction'
 
-export async function createProjectFunction(
-  newProject: ICreateProjectDTO,
-  dispatch: Dispatch<any>,
-): Promise<void | string> {
+interface ICreateProjectFunction {
+  newProject: ICreateProjectDTO
+  dispatch: Dispatch<any>
+}
+
+export async function createProjectFunction({
+  dispatch,
+  newProject,
+}: ICreateProjectFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
   const response = await createProjectRequest(newProject)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => createProjectFunction({ newProject, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return createProjectFunction(newProject, dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
+  if (handledAnswer === false) return false
 
   const project = response as IProjectResponse
 
-  dispatch(addProjectAction(project))
-  dispatch(setLoadingAction(false))
+  dispatch(addProjectAction({ project }))
 
-  return project.id
+  return true
 }

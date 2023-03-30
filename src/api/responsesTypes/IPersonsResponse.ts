@@ -1,5 +1,5 @@
 import { IAvatar } from './ICreateResponse'
-import { IComment } from './IProjcetResponse'
+import { IComment } from './IProjectResponse'
 
 export interface IObjective {
   id?: string

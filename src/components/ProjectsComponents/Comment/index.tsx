@@ -12,7 +12,7 @@ import {
 import { ProjectsContext } from '@contexts/projects'
 import { UserContext } from '@contexts/user'
 import { AvatarWeb } from '@components/usefull/Avatar'
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'

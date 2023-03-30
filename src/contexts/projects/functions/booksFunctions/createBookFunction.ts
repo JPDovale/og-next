@@ -1,16 +1,13 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { addBookAction } from '@contexts/projects/reducer/actions/books/addBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 import { createBookRequest } from '../../../../api/booksRequests'
 import { ICreateBookDTO } from '../../../../api/dtos/booksDTOS/ICreateBookDTO'
 import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '../../../../api/responsesTypes/IProjectResponse'
 import { IUserResponse } from '../../../../api/responsesTypes/IUserResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  addBookAction,
-  setErrorAction,
-  setLoadingAction,
-} from '../../reducer/actionsProjectsReducer'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface INewBook {
   title: string
@@ -84,35 +81,20 @@ export async function createBookFunction({
 
   const response = await createBookRequest({ ...book, projectId: project.id })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      createBookFunction({ dispatch, newBook, project, users, user }),
+  })
 
-    if (isRefreshed) {
-      return createBookFunction({ newBook, project, user, users, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const bookReceipted = response.book as IBooksResponse
   const boxReceipted = response.box as IBoxResponse
 
-  dispatch(addBookAction(bookReceipted, boxReceipted))
-  dispatch(setLoadingAction(false))
+  dispatch(addBookAction({ book: bookReceipted, box: boxReceipted }))
 
   return true
 }

@@ -1,11 +1,8 @@
 import { updateArchiveRequest } from '@api/boxesRequests'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBoxAction,
-} from '@contexts/projects/reducer/actionsProjectsReducer'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { updateBoxAction } from '@contexts/projects/reducer/actions/boxes/updateBoxAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 
 interface IUpdateArchiveFunction {
@@ -32,39 +29,19 @@ export async function updateArchiveFunction({
     description,
   })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateArchiveFunction({ archiveId, boxId, title, description, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return updateArchiveFunction({
-        archiveId,
-        boxId,
-        title,
-        description,
-        dispatch,
-      })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const box = response.box as IBoxResponse
 
-  dispatch(updateBoxAction(box))
-  dispatch(setLoadingAction(false))
+  dispatch(updateBoxAction({ box }))
+
   return true
 }
