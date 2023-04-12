@@ -1,12 +1,9 @@
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { deleteSceneRequest } from '../../../../api/booksRequests'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import { setErrorAction } from '../../../user/reducer/actionsUserReducer'
-import {
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { deleteSceneRequest } from '@api/booksRequests'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface IDeleteSceneFunction {
   bookId: string
@@ -20,35 +17,24 @@ export async function deleteSceneFunction({
   capituleId,
   sceneId,
   dispatch,
-}: IDeleteSceneFunction): Promise<void> {
+}: IDeleteSceneFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await deleteSceneRequest({ bookId, capituleId, sceneId })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      deleteSceneFunction({ dispatch, bookId, capituleId, sceneId }),
+  })
 
-    if (isRefreshed) {
-      return deleteSceneFunction({ bookId, capituleId, sceneId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    return dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-  }
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
+
+  return true
 }

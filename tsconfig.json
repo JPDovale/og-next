@@ -43,7 +43,13 @@
       ],
       "@styles/*": [
         "src/styles/*"
-      ]
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@@types/*": [
+        "src/@types/*"
+      ],
     }
   },
   "include": [

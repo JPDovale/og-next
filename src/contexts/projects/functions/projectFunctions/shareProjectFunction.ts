@@ -1,18 +1,20 @@
+import { updateProjectAction } from '@contexts/projects/reducer/actions/projects/updateProjectAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { IShareProjectDTO } from '../../../../api/dtos/IShareProjectDTO'
-import { shareProjectRequest } from '../../../../api/projectsRequests'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateProjectAction,
-} from '../../reducer/actionsProjectsReducer'
+import { IShareProjectDTO } from '@api/dtos/IShareProjectDTO'
+import { shareProjectRequest } from '@api/projectsRequests'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
-export async function shareProjectFunction(
-  share: IShareProjectDTO,
-  dispatch: Dispatch<any>,
-): Promise<boolean> {
+interface IShareProjectFunction {
+  share: IShareProjectDTO
+  dispatch: Dispatch<any>
+}
+
+export async function shareProjectFunction({
+  share,
+  dispatch,
+}: IShareProjectFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const shareBodyRequest = {
@@ -25,31 +27,22 @@ export async function shareProjectFunction(
 
   const response = await shareProjectRequest(shareBodyRequest)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return shareProjectFunction(share, dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      shareProjectFunction({
+        dispatch,
+        share,
       }),
-    )
-    dispatch(setLoadingAction(false))
-    return false
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const project = response as IProjectResponse
-  dispatch(updateProjectAction(project))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateProjectAction({ project }))
 
   return true
 }

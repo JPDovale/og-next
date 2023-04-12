@@ -27,7 +27,7 @@ import {
   IObjective,
   IPersonsResponse,
 } from '../../../api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '../../../api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '../../../api/responsesTypes/IProjectResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
 import { ICreateBook } from './interfaceFunctions/ICreateBook'
 import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
@@ -41,6 +41,7 @@ import { IDeleteArchiveBox } from './interfaceFunctions/IDeleteArchiveBox'
 import { IDeleteImageInArchiveRequest } from '@api/boxesRequests/types/IDeleteImageInArchiveRequest'
 import { IUpdateArchiveRequest } from '@api/boxesRequests/types/IUpdateArchiveRequest'
 import { IUpdateBoxRequest } from '@api/boxesRequests/types/IUpdateBoxRequest'
+import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
 
 export interface IProjectsContext {
   loading: boolean
@@ -49,24 +50,25 @@ export interface IProjectsContext {
   persons: IPersonsResponse[]
   books: IBooksResponse[]
   boxes: IBoxResponse[]
+  timelines: ITimelineResponse[]
 
   error: IError | undefined
   setError: (newState: IError | undefined) => void
 
-  createProject: (project: ICreateProjectDTO) => Promise<string | void>
+  createProject: (project: ICreateProjectDTO) => Promise<boolean>
   updateImageProject: (projectId: string, file: File) => Promise<boolean>
   shareProject: (newShare: IShareProjectDTO) => Promise<boolean>
-  updatePlot: (newPlot: IUpdatePlotDTO, projectId: string) => Promise<void>
+  updatePlot: (newPlot: IUpdatePlotDTO, projectId: string) => Promise<boolean>
   commentInPlot: (
     newComment: ICreateCommentDTO,
     projectId: string,
-  ) => Promise<void>
+  ) => Promise<boolean>
   responseCommentInPlot: (
     newResponse: ICreateCommentDTO,
     projectId: string,
     commentId: string,
-  ) => Promise<void>
-  deleteProject: (projectId: string) => Promise<void>
+  ) => Promise<boolean>
+  deleteProject: (projectId: string) => Promise<boolean>
 
   createNewPerson: (person: ICreatePersonDTO) => Promise<boolean>
   updateImageFromPerson: (personId: string, file: File) => Promise<boolean>
@@ -89,12 +91,12 @@ export interface IProjectsContext {
   commentInPerson: (
     newComment: ICreateCommentDTO,
     personId: string,
-  ) => Promise<void>
+  ) => Promise<boolean>
   responseCommentToPerson: (
     newResponse: ICreateCommentDTO,
     personId: string,
     commentId: string,
-  ) => Promise<void>
+  ) => Promise<boolean>
   createObjectGeneric: (
     generic: IGenericObject,
     to: IEditorTo,
@@ -125,22 +127,25 @@ export interface IProjectsContext {
     personId: string,
     genericId: string,
     to: IEditorTo,
-  ) => Promise<void>
-  unshareProject: (userEmail: string, projectId: string) => Promise<void>
-  updatePerson: (person: ICreatePersonDTO, personId: string) => Promise<void>
-  deleteImageProject: ({ projectId }: IDeleteImageProject) => Promise<void>
-  deleteImagePerson: ({ personId }: IDeleteImagePerson) => Promise<void>
-  quitProject: ({ projectId }: IQuitProject) => Promise<void>
+  ) => Promise<boolean>
+  unshareProject: (userEmail: string, projectId: string) => Promise<boolean>
+  updatePerson: (person: ICreatePersonDTO, personId: string) => Promise<boolean>
+  deleteImageProject: ({ projectId }: IDeleteImageProject) => Promise<boolean>
+  deleteImagePerson: ({ personId }: IDeleteImagePerson) => Promise<boolean>
+  quitProject: ({ projectId }: IQuitProject) => Promise<boolean>
   deleteObjective: ({
     objectiveId,
     personId,
-  }: IDeleteObjective) => Promise<void>
+  }: IDeleteObjective) => Promise<boolean>
   createBook: ({ newBook, project }: ICreateBook) => Promise<boolean>
-  updateFrontCover: ({ bookId, file }: IUpdateFrontCover) => Promise<void>
-  removeFrontCover: (bookId: string) => Promise<void>
+  updateFrontCover: ({ bookId, file }: IUpdateFrontCover) => Promise<boolean>
+  removeFrontCover: (bookId: string) => Promise<boolean>
   createCapitule: (capitule: ICreateCapituleRequest) => Promise<boolean>
-  updateNameProject: ({ name, projectId }: IUpdateNameProject) => Promise<void>
-  updateCapitule: (capitule: IUpdateCapituleRequest) => Promise<void>
+  updateNameProject: ({
+    name,
+    projectId,
+  }: IUpdateNameProject) => Promise<boolean>
+  updateCapitule: (capitule: IUpdateCapituleRequest) => Promise<boolean>
   createScene: (scene: ICreateSceneRequest) => Promise<boolean>
   setSceneToComplete: (
     sceneToComplete: ISetSceneToCompleteRequest,
@@ -149,13 +154,13 @@ export interface IProjectsContext {
     bookId,
     capituleId,
     sceneId,
-  }: IDeleteSceneRequest) => Promise<void>
+  }: IDeleteSceneRequest) => Promise<boolean>
   reorderScenes: ({
     bookId,
     capituleId,
     sequenceFrom,
     sequenceTo,
-  }: IReorderScenesRequest) => Promise<void>
+  }: IReorderScenesRequest) => Promise<boolean>
   updateScene: (sceneUpdate: IUpdateSceneRequest) => Promise<boolean>
   deleteCapitule: ({
     bookId,
@@ -165,12 +170,12 @@ export interface IProjectsContext {
     bookId,
     sequenceFrom,
     sequenceTo,
-  }: IReorderCapitulesRequest) => Promise<void>
+  }: IReorderCapitulesRequest) => Promise<boolean>
 
-  addGenre: (genreRequest: IAddGenreRequest) => Promise<void>
+  addGenre: (genreRequest: IAddGenreRequest) => Promise<boolean>
 
-  removeGenre: (genreRequest: IRemoveGenreRequest) => Promise<void>
-  updateBook: (bookInfosUpdated: IUpdateBookRequest) => Promise<void>
+  removeGenre: (genreRequest: IRemoveGenreRequest) => Promise<boolean>
+  updateBook: (bookInfosUpdated: IUpdateBookRequest) => Promise<boolean>
   deleteBook: (bookId: string) => Promise<boolean>
   createBox: (box: ICreateBoxRequest) => Promise<boolean>
   createArchiveInBox: (archive: ICreateArchiveInBoxRequest) => Promise<boolean>
@@ -196,7 +201,7 @@ export interface IProjectsContext {
     description,
     tags,
   }: IUpdateBoxRequest) => Promise<boolean>
-  deleteBox: (boxId: string) => Promise<void>
+  deleteBox: (boxId: string) => Promise<boolean>
 }
 
 export interface IProjectsContextProps {

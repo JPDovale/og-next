@@ -1,13 +1,10 @@
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 import { createSceneRequest } from '../../../../api/booksRequests'
 import { ICreateSceneRequest } from '../../../../api/booksRequests/types/ICreateSceneRequest'
 import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface ICreateSceneFunction {
   newScene: ICreateSceneRequest
@@ -22,33 +19,18 @@ export async function createSceneFunction({
 
   const response = await createSceneRequest(newScene)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => createSceneFunction({ dispatch, newScene }),
+  })
 
-    if (isRefreshed) {
-      return createSceneFunction({ newScene, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
 
   return true
 }

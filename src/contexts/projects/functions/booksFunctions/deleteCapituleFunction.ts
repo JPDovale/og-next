@@ -1,12 +1,9 @@
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 import { deleteCapituleRequest } from '../../../../api/booksRequests'
 import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import { setErrorAction } from '../../../user/reducer/actionsUserReducer'
-import {
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface IDeleteCapituleFunction {
   bookId: string
@@ -23,34 +20,18 @@ export async function deleteCapituleFunction({
 
   const response = await deleteCapituleRequest({ bookId, capituleId })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => deleteCapituleFunction({ dispatch, bookId, capituleId }),
+  })
 
-    if (isRefreshed) {
-      return deleteCapituleFunction({ bookId, capituleId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
 
   return true
 }

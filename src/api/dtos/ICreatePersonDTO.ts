@@ -4,4 +4,5 @@ export interface ICreatePersonDTO {
   age: string
   history: string
   projectId: string
+  birthHour: string
 }

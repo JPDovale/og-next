@@ -1,37 +1,39 @@
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { getProjectsRequest } from '../../../../api/projectsRequests'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setLoadingAction,
-  setProjectsAction,
-} from '../../reducer/actionsProjectsReducer'
+import { getProjectsRequest } from '@api/projectsRequests'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { setAllAction } from '@contexts/projects/reducer/actions/projects/setAllAction'
 
-export async function getProjectsFunction(
-  dispatch: Dispatch<any>,
-): Promise<void> {
+interface IGetProjectsFunction {
+  dispatch: Dispatch<any>
+}
+
+export async function getProjectsFunction({
+  dispatch,
+}: IGetProjectsFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
+
   const response = await getProjectsRequest()
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => getProjectsFunction({ dispatch }),
+  })
 
-    if (isRefreshed) {
-      return getProjectsFunction(dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
+  if (handledAnswer === false) return false
 
   dispatch(
-    setProjectsAction(
-      response.projects,
-      response.users,
-      response.persons,
-      response.books,
-      response.boxes,
-    ),
+    setAllAction({
+      projects: response.projects,
+      users: response.users,
+      persons: response.persons,
+      books: response.books,
+      boxes: response.boxes,
+      timelines: response.timelines,
+    }),
   )
-  dispatch(setLoadingAction(false))
+
+  return true
 }

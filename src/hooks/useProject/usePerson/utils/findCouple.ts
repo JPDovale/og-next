@@ -1,5 +1,5 @@
 import { ICouple, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindCouple {

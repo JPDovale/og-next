@@ -1,8 +1,5 @@
-import { CardModelNewBox } from '@components/BoxesComponents/CardModelNewBox'
-import { CardModelNewPerson } from '@components/PersonsComponents/CardModelNewPerson'
-import { CardModelNewProject } from '@components/ProjectsComponents/CardModelNewProject'
+import { ModelsHeader } from '@components/ModelsHeader'
 import { Projects } from '@components/ProjectsComponents/Projects'
-import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
@@ -44,12 +41,7 @@ export default function ProjectsPage() {
         <Container>
           {!smallWindow && (
             <>
-              <Heading size="sm">Modelos:</Heading>
-              <ContainerGrid padding={0} columns={3} css={{ gap: '$8' }}>
-                <CardModelNewProject />
-                <CardModelNewPerson />
-                <CardModelNewBox />
-              </ContainerGrid>
+              <ModelsHeader />
               <Heading size="sm">Projetos:</Heading>
             </>
           )}

@@ -3,7 +3,7 @@ import { Text } from '@components/usefull/Text'
 import { UserCircleMinus, X } from 'phosphor-react'
 
 import { CardAuthorContainer, UnshareButton, UnshareConfirm } from './styles'
-// import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+// import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { UserContext } from '@contexts/user'

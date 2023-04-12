@@ -1,13 +1,10 @@
 import { Dispatch } from 'react'
 import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBoxAction,
-} from '@contexts/projects/reducer/actionsProjectsReducer'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 import { saveImagesRequest } from '@api/boxesRequests'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { responseDealings } from '@services/responseDealings'
+import { updateBoxAction } from '@contexts/projects/reducer/actions/boxes/updateBoxAction'
 
 interface ISaveArchiveImagesFunction {
   imagesToSave: ISaveImagesRequest
@@ -22,33 +19,18 @@ export async function saveArchiveImagesFunction({
 
   const response = await saveImagesRequest(imagesToSave)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => saveArchiveImagesFunction({ imagesToSave, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return saveArchiveImagesFunction({ imagesToSave, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const box = response.box as IBoxResponse
 
-  dispatch(updateBoxAction(box))
-  dispatch(setLoadingAction(false))
+  dispatch(updateBoxAction({ box }))
+
   return true
 }

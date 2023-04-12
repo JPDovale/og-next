@@ -1,5 +1,6 @@
 import lodash from 'lodash'
 import dayjs from 'dayjs'
+import { IDateResponse } from '@api/responsesTypes/ITimelinesResponse'
 
 export function orderElements(
   elements: any[],
@@ -57,7 +58,7 @@ export function orderElements(
 
         return date
       })
-      return elementsOrd.reverse() === undefined ? [] : elementsOrd
+      return elementsOrd === undefined ? [] : elementsOrd.reverse()
     }
 
     case 'update-desc': {
@@ -74,4 +75,14 @@ export function orderElements(
     default:
       return []
   }
+}
+
+export function orderDatesOfTimelines(
+  elements: IDateResponse[],
+): IDateResponse[] {
+  const elementsOrd = lodash.sortBy(elements, (object) => {
+    return object.dateDif
+  })
+
+  return elementsOrd === undefined ? [] : elementsOrd
 }

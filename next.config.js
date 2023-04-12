@@ -21,6 +21,8 @@ const nextConfig = {
     config.resolve.alias['@pages'] = path.join(__dirname, 'src/pages')
     config.resolve.alias['@services'] = path.join(__dirname, 'src/services')
     config.resolve.alias['@styles'] = path.join(__dirname, 'src/styles')
+    config.resolve.alias['@utils'] = path.join(__dirname, 'src/utils')
+    config.resolve.alias['@@types'] = path.join(__dirname, 'src/@types')
 
     return config
   },

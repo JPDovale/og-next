@@ -1,13 +1,10 @@
 import { createArchiveInBoxRequest } from '@api/boxesRequests'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBoxAction,
-} from '@contexts/projects/reducer/actionsProjectsReducer'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { ICreateArchiveInBoxRequest } from './../../../../api/boxesRequests/types/ICreateArchiveInBoxRequest'
+import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
+import { updateBoxAction } from '@contexts/projects/reducer/actions/boxes/updateBoxAction'
 
 interface ICreateArchiveInBoxFunction {
   newArchive: ICreateArchiveInBoxRequest
@@ -22,34 +19,18 @@ export async function createArchiveInBoxFunction({
 
   const response = await createArchiveInBoxRequest(newArchive)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => createArchiveInBoxFunction({ newArchive, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return createArchiveInBoxFunction({ newArchive, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
+  if (handledAnswer === false) return false
 
-      return false
-    }
-  }
+  const box = response.box as IBoxResponse
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
-
-  const boxReceipted = response.box as IBoxResponse
-
-  dispatch(updateBoxAction(boxReceipted))
-  dispatch(setLoadingAction(false))
+  dispatch(updateBoxAction({ box }))
 
   return true
 }

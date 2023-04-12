@@ -1,12 +1,9 @@
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { removeFrontCoverRequest } from '../../../../api/booksRequests'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { removeFrontCoverRequest } from '@api/booksRequests'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface IRemoveFrontCoverFunction {
   bookId: string
@@ -16,36 +13,23 @@ interface IRemoveFrontCoverFunction {
 export async function removeFrontCoverFunction({
   bookId,
   dispatch,
-}: IRemoveFrontCoverFunction): Promise<void> {
+}: IRemoveFrontCoverFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await removeFrontCoverRequest(bookId)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => removeFrontCoverFunction({ dispatch, bookId }),
+  })
 
-    if (isRefreshed) {
-      return removeFrontCoverFunction({ bookId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
+  if (handledAnswer === false) return false
 
-      return
-    }
-  }
+  const book = response as IBooksResponse
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
+  dispatch(updateBookAction({ book }))
 
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
-
-  const bookUpdated = response as IBooksResponse
-  dispatch(setLoadingAction(false))
-  dispatch(updateBookAction(bookUpdated))
+  return true
 }

@@ -8,7 +8,7 @@ export const api = axios.create({
   baseURL: 'https://ognare.com/api',
 
   // fullDevEnvironment
-  // baseURL: 'http://localhost:3030/',
+  baseURL: 'http://localhost:3030/',
 })
 
 export async function GetInfoUser() {

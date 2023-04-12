@@ -1,7 +1,7 @@
 import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
-import { IProjectResponse } from '../responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '../responsesTypes/IProjectResponse'
 
 export async function getProjectsRequest() {
   try {

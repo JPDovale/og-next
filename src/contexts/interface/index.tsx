@@ -19,6 +19,9 @@ interface IInterfaceContext {
   isList: boolean
   setIsList: (newState: boolean) => void
 
+  timelineIsOpen: boolean
+  setTimelineIsOpen: (newState: boolean) => void
+
   navigatorProjectIsOpen: boolean
   setNavigatorProjectIsOpen: (newState: boolean) => void
 
@@ -32,7 +35,7 @@ export const InterfaceContext = createContext({} as IInterfaceContext)
 
 export function InterfaceProvider({ children }: IInterfaceContextProps) {
   const [navIsOpen, setNavIsOpen] = useState(false)
-
+  const [timelineIsOpen, setTimelineIsOpen] = useState(true)
   const [isList, setIsList] = useState(false)
   const [orderBy, setOrderBy] = useState<IOrderBy>('a-z')
   const [navigatorProjectIsOpen, setNavigatorProjectIsOpen] = useState(false)
@@ -40,6 +43,7 @@ export function InterfaceProvider({ children }: IInterfaceContextProps) {
   function resetInterface() {
     setNavIsOpen(false)
     setNavigatorProjectIsOpen(false)
+    setTimelineIsOpen(true)
   }
 
   useEffect(() => {
@@ -50,16 +54,18 @@ export function InterfaceProvider({ children }: IInterfaceContextProps) {
 
     setIsList(config.list)
     setOrderBy(config.orderBy || 'time-asc')
+    setTimelineIsOpen(config.timelineIsOpen)
   }, [])
 
   useEffect(() => {
     const config = {
       list: isList,
       orderBy,
+      timelineIsOpen,
     }
 
     localStorage.setItem('@og-interface-config', JSON.stringify(config))
-  }, [isList, orderBy])
+  }, [isList, orderBy, timelineIsOpen])
 
   return (
     <InterfaceContext.Provider
@@ -69,6 +75,9 @@ export function InterfaceProvider({ children }: IInterfaceContextProps) {
 
         isList,
         setIsList,
+
+        timelineIsOpen,
+        setTimelineIsOpen,
 
         orderBy,
         setOrderBy,

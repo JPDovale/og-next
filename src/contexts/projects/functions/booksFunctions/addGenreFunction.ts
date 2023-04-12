@@ -1,12 +1,9 @@
 import { addGenreRequest } from '@api/booksRequests'
 import { IAddGenreRequest } from '@api/booksRequests/types/IAddGenreRequest'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '@contexts/projects/reducer/actionsProjectsReducer'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
 
 interface IAddGenreFunction {
@@ -17,38 +14,22 @@ interface IAddGenreFunction {
 export async function addGenreFunction({
   dispatch,
   genreRequest,
-}: IAddGenreFunction): Promise<void> {
+}: IAddGenreFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await addGenreRequest(genreRequest)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => addGenreFunction({ genreRequest, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return addGenreFunction({ genreRequest, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-
-    return
-  }
+  if (handledAnswer === false) return false
 
   const book = response.book as IBooksResponse
 
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+  dispatch(updateBookAction({ book }))
+  return true
 }

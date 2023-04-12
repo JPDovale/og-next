@@ -1,49 +1,38 @@
 import { Dispatch } from 'react'
-import { ICreateCommentDTO } from '../../../../api/dtos/ICreateNewCommentDTO'
-import { commentInPersonRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { commentInPersonRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updatePersonAction } from '@contexts/projects/reducer/actions/persons/updatePersonAction'
 
-export async function commentInPersonFunction(
-  newComment: ICreateCommentDTO,
-  personId: string,
-  dispatch: Dispatch<any>,
-): Promise<void> {
+interface ICommentInPersonFunction {
+  newComment: ICreateCommentDTO
+  personId: string
+  dispatch: Dispatch<any>
+}
+
+export async function commentInPersonFunction({
+  dispatch,
+  newComment,
+  personId,
+}: ICommentInPersonFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await commentInPersonRequest(newComment, personId)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => commentInPersonFunction({ newComment, personId, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return commentInPersonFunction(newComment, personId, dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
-      }),
-    )
-
-    return
-  }
+  if (handledAnswer === false) return false
 
   const person = response as IPersonsResponse
-  dispatch(setLoadingAction(false))
-  dispatch(updatePersonAction(person))
+
+  dispatch(updatePersonAction({ person }))
+
+  return true
 }

@@ -1,24 +1,29 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
+import { updatePersonAndBoxAction } from '@contexts/projects/reducer/actions/persons/updatePersonAndBoxAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { saveRefObjectiveOfPersonRequest } from '../../../../api/personsRequests'
+import { saveRefObjectiveOfPersonRequest } from '@api/personsRequests'
 import {
   IObjective,
   IPersonsResponse,
-} from '../../../../api/responsesTypes/IPersonsResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+} from '@api/responsesTypes/IPersonsResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
-export async function saveRefObjectiveFunction(
-  objective: IObjective,
-  personId: string,
-  projectId: string,
-  refId: string,
-  dispatch: Dispatch<any>,
-): Promise<boolean> {
+interface ISaveRefObjectiveFunction {
+  objective: IObjective
+  personId: string
+  projectId: string
+  refId: string
+  dispatch: Dispatch<any>
+}
+
+export async function saveRefObjectiveFunction({
+  objective,
+  personId,
+  projectId,
+  refId,
+  dispatch,
+}: ISaveRefObjectiveFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const newObjectReference = {
@@ -30,40 +35,26 @@ export async function saveRefObjectiveFunction(
 
   const response = await saveRefObjectiveOfPersonRequest(newObjectReference)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return saveRefObjectiveFunction(
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      saveRefObjectiveFunction({
         objective,
         personId,
         projectId,
         refId,
         dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
       }),
-    )
-    return false
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const person = response.person as IPersonsResponse
   const box = response.box as IBoxResponse
 
-  dispatch(updatePersonAction(person, box))
-  dispatch(setLoadingAction(false))
+  dispatch(updatePersonAndBoxAction({ person, box }))
 
   return true
 }
