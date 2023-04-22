@@ -11,15 +11,18 @@ export const NavigationBarContainer = styled('nav', {
   width: '26%',
   padding: '$8',
 
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
   background: '$gray900',
   overflowY: 'scroll',
 
   img: {
     objectFit: 'fill',
-    height: 80,
+    height: 90,
     width: 'auto',
     cursor: 'pointer',
+    background: '#101012',
+    padding: '$2 $8',
+    borderRadius: '$full',
   },
 
   '@media screen and (max-width: 768px)': {

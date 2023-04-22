@@ -1,10 +1,8 @@
 import { Dispatch } from 'react'
 import { ICreateProjectDTO } from '@api/dtos/ICreateProjectDTO'
 import { createProjectRequest } from '@api/projectsRequests'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 import { responseDealings } from '@services/responseDealings'
-import { addProjectAction } from '@contexts/projects/reducer/actions/projects/addProjectAction'
 
 interface ICreateProjectFunction {
   newProject: ICreateProjectDTO
@@ -26,10 +24,6 @@ export async function createProjectFunction({
   })
 
   if (handledAnswer === false) return false
-
-  const project = response as IProjectResponse
-
-  dispatch(addProjectAction({ project }))
 
   return true
 }

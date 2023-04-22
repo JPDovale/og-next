@@ -8,9 +8,10 @@ import {
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
+import { InterfaceContext } from '@contexts/interface'
 import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useProjects } from '@hooks/useProjects'
 import {
   ArrowDown,
   Calendar,
@@ -89,8 +90,10 @@ interface INewPersonModalProps {
 
 export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
   const [projectSelected, setProjectSelected] = useState('')
-  const { createNewPerson, projects } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { createNewPerson } = useContext(ProjectsContext)
+  const { theme } = useContext(InterfaceContext)
+
+  const isDarkMode = theme === 'dark'
 
   const { register, handleSubmit, formState, reset, setError } =
     useForm<NewPersonFormData>({
@@ -102,19 +105,11 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
       },
     })
 
+  const { projects, projectsEditablePerUser } = useProjects()
+
   const infosProjectSelected = projects.find(
     (project) => project.id === projectSelected,
   )
-
-  const projectsEditablePerUser = projects.map((project) => {
-    const userPermission = project.users.find((u) => u.id === user?.id)
-
-    if (userPermission?.permission !== 'edit') {
-      return undefined
-    }
-
-    return project
-  })
 
   async function handleNewPerson(data: NewPersonFormData) {
     if (!projectId && !projectSelected) {
@@ -164,7 +159,10 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
         }`
       }`}
     >
-      <NewPersonForm onSubmit={handleSubmit(handleNewPerson)}>
+      <NewPersonForm
+        onSubmit={handleSubmit(handleNewPerson)}
+        darkMode={isDarkMode}
+      >
         <ContainerGrid padding={0} columns={1}>
           {!projectId && (
             <Text as="label">
@@ -179,7 +177,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
               >
                 Projeto
                 <SelectRoot onValueChange={(e) => setProjectSelected(e)}>
-                  <SelectTrigger aria-label="Projetos">
+                  <SelectTrigger aria-label="Projetos" darkMode={isDarkMode}>
                     <SelectIcon>
                       <ArrowDown />
                     </SelectIcon>
@@ -188,7 +186,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                   </SelectTrigger>
 
                   <SelectPortal>
-                    <SelectContent>
+                    <SelectContent darkMode={isDarkMode}>
                       <SelectScrollUpButton />
 
                       <SelectViewport>
@@ -232,6 +230,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
 
             <TextInputRoot
               variant={formState.errors.name?.message ? 'denied' : 'default'}
+              css={{ background: !isDarkMode ? '$gray500' : '' }}
             >
               <TextInputIcon>
                 <IdentificationCard weight="bold" />
@@ -265,6 +264,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
               variant={
                 formState.errors.lastName?.message ? 'denied' : 'default'
               }
+              css={{ background: !isDarkMode ? '$gray500' : '' }}
             >
               <TextInputIcon>
                 <IdentificationCard weight="bold" />
@@ -296,6 +296,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
 
             <TextInputRoot
               variant={formState.errors.age?.message ? 'denied' : 'default'}
+              css={{ background: !isDarkMode ? '$gray500' : '' }}
             >
               <TextInputIcon>
                 <Calendar weight="bold" />
@@ -330,6 +331,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 variant={
                   formState.errors.birthHour?.message ? 'denied' : 'default'
                 }
+                css={{ background: !isDarkMode ? '$gray500' : '' }}
               >
                 <TextInputInput
                   placeholder="Hora do nascimento"
@@ -359,6 +361,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 variant={
                   formState.errors.birthMinute?.message ? 'denied' : 'default'
                 }
+                css={{ background: !isDarkMode ? '$gray500' : '' }}
               >
                 <TextInputInput
                   placeholder="Minuto do nascimento"
@@ -388,6 +391,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 variant={
                   formState.errors.birthSecond?.message ? 'denied' : 'default'
                 }
+                css={{ background: !isDarkMode ? '$gray500' : '' }}
               >
                 <TextInputInput
                   placeholder="Segundo do nascimento"
@@ -417,7 +421,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
             </Text>
 
             <Textarea
-              css={{ width: '100%' }}
+              css={{ width: '100%', background: !isDarkMode ? '$gray500' : '' }}
               variant={formState.errors.history?.message ? 'denied' : 'default'}
               placeholder="História do personagem"
               {...register('history')}

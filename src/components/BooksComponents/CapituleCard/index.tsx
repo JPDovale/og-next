@@ -63,7 +63,7 @@ export function CapituleCard({
       return setErrorIn('reorder-min')
     }
 
-    if (toSequenceSet === capitule.sequence) {
+    if (toSequenceSet === capitule.sequence.toString()) {
       setToSequenceSet('')
       setErrorIn('')
       return setReOrderSelected(false)
@@ -127,7 +127,7 @@ export function CapituleCard({
 
             <InfoDefault title="Capítulo">{capitule.sequence}</InfoDefault>
 
-            <InfoDefault title="Cenas">{capitule.scenes?.length}</InfoDefault>
+            <InfoDefault title="Cenas">{capitule?._count.scenes}</InfoDefault>
 
             <InfoDefault title="Palavras">{capitule.words || 0}</InfoDefault>
           </ContainerGrid>
@@ -145,19 +145,19 @@ export function CapituleCard({
 
             <InfoDefault title="Ato 1">
               <CapituleObjective family="body">
-                {capitule.structure?.act1 || 'Não definido'}
+                {capitule?.structure_act_1 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
 
             <InfoDefault title="Ato 2">
               <CapituleObjective family="body">
-                {capitule.structure?.act2 || 'Não definido'}
+                {capitule?.structure_act_2 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
 
             <InfoDefault title="Ato 3">
               <CapituleObjective family="body">
-                {capitule.structure?.act3 || 'Não definido'}
+                {capitule?.structure_act_3 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
           </ContainerGrid>

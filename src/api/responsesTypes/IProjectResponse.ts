@@ -1,69 +1,87 @@
-import { IAvatar } from './ICreateResponse'
-
-export interface ISharedWhitUsers {
-  id: string
-  permission: 'view' | 'edit' | 'comment'
-  email: string
-  username: string
-}
-
-interface IStructure {
-  act1?: string
-  act2?: string
-  act3?: string
-}
+import { IBooksResponse } from './IBooksResponse'
+import { IPersonsResponse } from './IPersonsResponse'
 
 export interface IResponse {
   id: string
-  userId: string
-  username: string
-  userAvatar: string
   content: string
-  createAt?: string
-  updateAt?: string
+  likes: number
+  unlikes: number
+  created_at: Date
+  user_id: string
+  comment_id: string
 }
 
 export interface IComment {
   id: string
-  userId: string
-  username: string
-  userAvatar: string
-  to: string
   content: string
-  responses?: IResponse[]
-  createAt?: string
-  updateAt?: string
+  to_unknown: string | null
+  likes: number
+  unlikes: number
+  created_at: Date
+  updated_at: Date
+  user_id: string
+  project_id: string | null
+  objective_id: string | null
+  personality_id: string | null
+  appearance_id: string | null
+  dream_id: string | null
+  fear_id: string | null
+  power_id: string | null
+  couple_id: string | null
+  value_id: string | null
+  wishe_id: string | null
+  trauma_id: string | null
+  book_id: string | null
+  capitule_id: string | null
+  scene_id: string | null
+  responses: IResponse[]
 }
 
-export interface IPlotProject {
-  onePhrase?: string
-  premise?: string
-  storyteller?: string
-  literaryGenere?: string
-  subgenre?: string
-  ambient?: string
-  countTime?: string
-  historicalFact?: string
-  details?: string
-  summary?: string
-  persons?: string[]
-  structure?: IStructure
-  urlOfText?: string
-  comments?: IComment[]
+export interface IUserInProject {
+  avatar_url?: string | null
+  email?: string
+  id: string
+  username?: string
+  name?: string
+}
+
+export interface IProjectUsers {
+  users: IUserInProject[]
 }
 
 export interface IProjectResponse {
   id: string
   name: string
-  createdPerUser: string
-  users: ISharedWhitUsers[]
-  private: boolean
-  password?: string
+  private?: boolean
+  password?: string | null
   type: string
-  createAt: string
-  updateAt: string
-  image?: IAvatar
-  plot: IPlotProject
-  errorMessage?: string
-  errorTitle?: string
+  created_at: Date
+  updated_at?: Date
+  image_url: string | null
+  image_filename?: string | null
+  one_phrase?: string | null
+  premise?: string | null
+  storyteller?: string | null
+  literary_genre?: string | null
+  subgenre?: string | null
+  ambient?: string | null
+  count_time?: string | null
+  historical_fact?: string | null
+  details?: string | null
+  summary?: string | null
+  url_text?: string | null
+  structure_act_1?: string | null
+  structure_act_2?: string | null
+  structure_act_3?: string | null
+  users_with_access_view: IProjectUsers | null
+  users_with_access_edit: IProjectUsers | null
+  users_with_access_comment: IProjectUsers | null
+  comments?: IComment[]
+  user: IUserInProject
+  books?: IBooksResponse[]
+  persons?: IPersonsResponse[]
+  _count: {
+    persons?: number
+    books?: number
+  }
 }

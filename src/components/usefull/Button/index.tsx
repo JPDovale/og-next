@@ -1,6 +1,7 @@
 import React, {
   ComponentProps,
   ElementType,
+  forwardRef,
   HTMLAttributes,
   ReactNode,
 } from 'react'
@@ -22,9 +23,11 @@ export interface IButtonRootProps
   children?: ReactNode
 }
 
-export function ButtonRoot(props: IButtonRootProps) {
-  return <ButtonContainer {...props} />
-}
+export const ButtonRoot = forwardRef<HTMLButtonElement, IButtonRootProps>(
+  (props, ref) => {
+    return <ButtonContainer {...props} ref={ref} />
+  },
+)
 
 ButtonRoot.displayName = 'Button.Root'
 

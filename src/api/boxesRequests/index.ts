@@ -123,3 +123,12 @@ export async function deleteBoxRequest(boxId: string) {
     return err.response.data
   }
 }
+
+export async function getBoxesRequest() {
+  try {
+    const response = await api.get(`/boxes`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

@@ -8,6 +8,7 @@ export const LoginPageContainer = styled('main', {
 
   a: {
     textDecoration: 'none',
+    color: '$text800',
   },
 
   '.logo2': {
@@ -28,7 +29,7 @@ export const LoginPageContainer = styled('main', {
 
     scale: '70%',
     transform: 'translateY(-75%)',
-    transition: 'all 500ms',
+    transition: 'ease-in-out 250ms',
 
     '@media screen and (min-width: 2000px)': {
       left: '$40',
@@ -54,7 +55,7 @@ export const BackgroundLogin = styled(Image, {
   right: -10,
   top: -10,
 
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
 
   '@media screen and (max-width: 768px)': {
     scale: '185%',
@@ -71,6 +72,23 @@ export const BackgroundLogin = styled(Image, {
 
   '@media screen and (min-width: 2000px)': {
     scale: '350%',
+  },
+
+  variants: {
+    darkMode: {
+      true: {},
+      false: {
+        transform: 'rotate(180deg)',
+        top: 'unset',
+        right: 'unset',
+        left: -250,
+        bottom: -10,
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 })
 
@@ -113,9 +131,9 @@ export const Links = styled('div', {
 
   span: {
     textDecoration: 'none',
-    color: '$base500',
+    color: '$text800',
     '&:hover': {
-      color: 'white',
+      color: '$base800',
     },
   },
 })

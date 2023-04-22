@@ -31,6 +31,10 @@ export async function responseDealings({
           dispatch(setLoadingAction(false))
           return false
         }
+
+        case 'user': {
+          return false
+        }
         default:
           return false
       }

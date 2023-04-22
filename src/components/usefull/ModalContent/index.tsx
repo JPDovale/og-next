@@ -2,7 +2,8 @@ import { styled } from '@styles/index'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
 import { Text } from '../Text'
-import { ReactNode } from 'react'
+import { ReactNode, useContext } from 'react'
+import { InterfaceContext } from '@contexts/interface'
 
 interface IModalContentProps {
   title?: string
@@ -15,18 +16,24 @@ export function ModalContent({
   title,
   sizeWid = 'md',
 }: IModalContentProps) {
+  const { theme } = useContext(InterfaceContext)
+
+  const isDarkMode = theme === 'dark'
+
   return (
     <Dialog.Portal>
       <ModalOverlay />
 
-      <ModalContentContainer sizeWid={sizeWid}>
+      <ModalContentContainer darkMode={isDarkMode} sizeWid={sizeWid}>
         <ModalClose>
           <X size={20} />
         </ModalClose>
 
         {title && (
           <ModalTitle asChild>
-            <Text as={'h3'}>{title}</Text>
+            <Text as={'h3'} css={{ color: isDarkMode ? '$white' : '' }}>
+              {title}
+            </Text>
           </ModalTitle>
         )}
 
@@ -80,6 +87,16 @@ const ModalContentContainer = styled(Dialog.Content, {
         },
       },
     },
+    darkMode: {
+      true: {},
+      false: {
+        background: '$gray100',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 
   '@media screen and (max-width: 768px)': {

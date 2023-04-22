@@ -9,6 +9,7 @@ import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
+import { InterfaceContext } from '@contexts/interface'
 import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Package, PlusCircle, X } from 'phosphor-react'
@@ -48,6 +49,9 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   const [tag, setTag] = useState('')
 
   const { createBox, boxes } = useContext(ProjectsContext)
+  const { theme } = useContext(InterfaceContext)
+
+  const isDarkMode = theme === 'dark'
 
   const boxesNotInternal = boxes?.filter((box) => !box.internal)
 
@@ -125,7 +129,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
   return (
     <ModalContent title="Nova box">
-      <NewBoxForm onSubmit={handleSubmit(handleNewBox)}>
+      <NewBoxForm onSubmit={handleSubmit(handleNewBox)} darkMode={isDarkMode}>
         <Text as="label">
           <Text
             family="body"
@@ -145,6 +149,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
           <TextInputRoot
             variant={formState.errors.name?.message ? 'denied' : 'default'}
+            css={{ background: !isDarkMode ? '$gray500' : '' }}
           >
             <TextInputIcon>
               <Package weight="bold" />
@@ -172,7 +177,12 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
           </Text>
 
           <Textarea
-            css={{ width: '100%', height: 160, resize: 'none' }}
+            css={{
+              width: '100%',
+              height: 160,
+              resize: 'none',
+              background: !isDarkMode ? '$gray500' : '',
+            }}
             variant={
               formState.errors.description?.message ? 'denied' : 'default'
             }
@@ -198,7 +208,11 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
+          <TextInputRoot
+            variant="noShadow"
+            size="sm"
+            css={{ background: !isDarkMode ? '$gray500' : '' }}
+          >
             <TextInputInput
               name="tag"
               value={tag}

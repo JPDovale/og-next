@@ -2,7 +2,7 @@ interface IReverbKeysR {
   onePhrase: string
   premise: string
   storyteller: string
-  literaryGenere: string
+  literaryGenre: string
   subgenre: string
   ambient: string
   countTime: string
@@ -17,7 +17,7 @@ export const reverbKeys: IReverbKeysR = {
   onePhrase: 'Ideia central',
   premise: 'Premissa',
   storyteller: 'Narrador',
-  literaryGenere: 'Gênero literário',
+  literaryGenre: 'Gênero literário',
   subgenre: 'Subgênero',
   ambient: 'Ambiente',
   countTime: 'Tempo em que se passa',
@@ -31,7 +31,7 @@ export type IReverbKeys =
   | 'onePhrase'
   | 'premise'
   | 'storyteller'
-  | 'literaryGenere'
+  | 'literaryGenre'
   | 'subgenre'
   | 'ambient'
   | 'countTime'

@@ -17,27 +17,18 @@ import { InterfaceContext } from '@contexts/interface'
 import { useWindowSize } from '@hooks/useWindow'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
+import { useProjects } from '@hooks/useProjects'
 
 export function NavigationBar() {
   const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
-  const { projects } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-
-  const projectsThisUser = projects?.filter(
-    (p) => p.createdPerUser === user?.id,
-  )
-
-  const projectsOfAnotherUsers = projects?.filter(
-    (p) => p.createdPerUser !== user?.id,
-  )
 
   const router = useRouter()
   const location = router.pathname.split('/')[1]
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
+
+  const { projectsThisUser, projectsSharedWithUser } = useProjects()
 
   return (
     <NavigationBarContainer navIsOpen={navIsOpen}>
@@ -85,22 +76,23 @@ export function NavigationBar() {
           <ButtonLabel>Projetos</ButtonLabel>
         </ButtonRoot>
 
-        {projectsThisUser.length > 0 && projectsOfAnotherUsers.length !== 0 && (
-          <ButtonRoot
-            type="button"
-            variant={location === 'myProjects' ? 'active' : 'default'}
-            onClick={() => {
-              router.push('/myProjects')
-              smallWindow && setNavIsOpen(false)
-            }}
-          >
-            <ButtonIcon>
-              <Bookmark />
-            </ButtonIcon>
+        {projectsThisUser?.length > 0 &&
+          projectsSharedWithUser?.length !== 0 && (
+            <ButtonRoot
+              type="button"
+              variant={location === 'myProjects' ? 'active' : 'default'}
+              onClick={() => {
+                router.push('/myProjects')
+                smallWindow && setNavIsOpen(false)
+              }}
+            >
+              <ButtonIcon>
+                <Bookmark />
+              </ButtonIcon>
 
-            <ButtonLabel>Meus projetos</ButtonLabel>
-          </ButtonRoot>
-        )}
+              <ButtonLabel>Meus projetos</ButtonLabel>
+            </ButtonRoot>
+          )}
 
         {/* <ButtonRoot
         type='button'
@@ -113,7 +105,7 @@ export function NavigationBar() {
           }}
         /> */}
 
-        {projectsOfAnotherUsers.length > 0 && (
+        {projectsSharedWithUser?.length > 0 && (
           <ButtonRoot
             type="button"
             variant={location === 'shared' ? 'active' : 'default'}

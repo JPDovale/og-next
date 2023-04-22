@@ -21,7 +21,6 @@ export function TimelineView({ timeline }: ITimelineViewProps) {
   const { timelineIsOpen, setTimelineIsOpen } = useContext(InterfaceContext)
 
   const datesInChronologicOrd = orderDatesOfTimelines(timeline.dates)
-  console.log(datesInChronologicOrd)
 
   return (
     <TimelineViewContainer isOpen={timelineIsOpen}>

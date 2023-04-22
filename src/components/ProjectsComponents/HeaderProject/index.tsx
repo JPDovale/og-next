@@ -48,7 +48,6 @@ export function HeaderProject({
             as="span"
             css={{
               marginLeft: -12,
-              color: '$base700',
               textTransform: 'uppercase',
             }}
             family="body"

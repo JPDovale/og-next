@@ -139,7 +139,7 @@ export function Avatares({
             >
               <AvatarWeb
                 size={size}
-                src={person?.image?.url}
+                src={person?.image_url ?? undefined}
                 selected={personSelected === person?.id && true}
                 error={!personSelected && error && true}
                 isClickable={isClickable}

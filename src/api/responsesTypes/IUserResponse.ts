@@ -1,23 +1,17 @@
-import { IAvatar } from './ICreateResponse'
-
 export interface INotification {
-  id?: string
+  id: string
   title: string
   content: string
-  isVisualized?: boolean
-  createAt: string
+  created_at: Date
 }
 export interface IUserResponse {
-  age: string
-  avatar?: IAvatar
+  avatar_url: string | null
   email: string
   id: string
-  sex: string
-  username: string
+  new_notifications: number
   notifications: INotification[]
-  createAt: string
-  updateAt: string
-  isInitialized: boolean
-  isSocialLogin: boolean
-  name: string
+  username: string
+  name?: string
+  avatar_filename?: string | null
+  created_at?: Date
 }

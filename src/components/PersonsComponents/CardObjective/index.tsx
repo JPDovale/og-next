@@ -1,7 +1,4 @@
-import {
-  IObjective,
-  IPersonsResponse,
-} from '@api/responsesTypes/IPersonsResponse'
+import { IObjective } from '@api/responsesTypes/IPersonsResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
@@ -21,8 +18,8 @@ import {
 
 interface ICardObjectiveProps {
   objective: IObjective
-  avoiders: IPersonsResponse[]
-  supporters: IPersonsResponse[]
+  avoiders: Array<{ id: string; name: string; image_url: string | null }>
+  supporters: Array<{ id: string; name: string; image_url: string | null }>
   permission: 'view' | 'edit' | 'comment' | undefined
 }
 
@@ -58,12 +55,12 @@ export function CardObjective({
           </Text>
           <Text
             css={{
-              color: objective.objectified
+              color: objective.it_be_realized
                 ? '$successDefault'
                 : '$errorDefault',
             }}
           >
-            {objective.objectified ? 'Sim' : 'Não'}
+            {objective.it_be_realized ? 'Sim' : 'Não'}
           </Text>
         </ItemInfo>
       </ObjectiveInfos>
@@ -84,7 +81,7 @@ export function CardObjective({
                   router.push(`/project/${projectId}/persons/${avoider.id}`)
                 }
               >
-                <AvatarWeb src={avoider?.image?.url} size="sm" />
+                <AvatarWeb src={avoider?.image_url ?? undefined} size="sm" />
                 <Text as="label" size="sm" family="body" height="shorter">
                   {avoider.name}
                 </Text>
@@ -112,7 +109,7 @@ export function CardObjective({
                   router.push(`/project/${projectId}/persons/${supporter.id}`)
                 }
               >
-                <AvatarWeb src={supporter?.image?.url} size="sm" />
+                <AvatarWeb src={supporter?.image_url ?? undefined} size="sm" />
                 <Text as="label" size="sm" family="body" height="shorter">
                   {supporter.name}
                 </Text>

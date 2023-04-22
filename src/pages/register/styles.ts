@@ -24,7 +24,7 @@ export const RegisterPageContainer = styled('main', {
 
     scale: '70%',
     transform: 'translateY(-75%)',
-    transition: 'all 500ms',
+    transition: 'ease-in-out 250ms',
 
     '@media screen and (min-width: 2000px)': {
       left: '$40',
@@ -50,7 +50,7 @@ export const BackgroundRegister = styled(Image, {
   right: -10,
   top: -10,
 
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
 
   '@media screen and (max-width: 768px)': {
     scale: '185%',
@@ -67,6 +67,23 @@ export const BackgroundRegister = styled(Image, {
 
   '@media screen and (min-width: 2000px)': {
     scale: '350%',
+  },
+
+  variants: {
+    darkMode: {
+      true: {},
+      false: {
+        transform: 'rotate(180deg)',
+        top: 'unset',
+        right: 'unset',
+        left: -250,
+        bottom: -10,
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 })
 
@@ -119,9 +136,9 @@ export const Links = styled('div', {
 
   a: {
     textDecoration: 'none',
-    color: '$base500',
+    color: '$text800',
     '&:hover': {
-      color: 'white',
+      color: '$base800',
     },
   },
 })
@@ -132,7 +149,8 @@ export const InputHeader = styled(Text, {
   justifyContent: 'space-between',
 
   [`> ${Text}`]: {
-    color: '$base700',
+    color: '$text800',
+    fontWeight: 'bold',
     lineHeight: 0,
   },
 })

@@ -14,4 +14,19 @@ export const ShareForm = styled('form', {
   button: {
     alignSelf: 'center',
   },
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+      },
+      false: {
+        background: '$gray300',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })

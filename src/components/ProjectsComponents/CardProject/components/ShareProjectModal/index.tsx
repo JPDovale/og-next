@@ -13,6 +13,7 @@ import {
 import { InputRadio } from '@components/usefull/InputRadio'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ModalContent } from '@components/usefull/ModalContent'
+import { InterfaceContext } from '@contexts/interface'
 
 interface IShareProjectModalProps {
   projectId: string
@@ -24,9 +25,13 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
   const [errorIn, setErrorIn] = useState('')
   const [sharePermission, setSharePermission] = useState('edit')
 
-  const { error, setError, shareProject, loading } = useContext(ProjectsContext)
+  const { error, setError } = useContext(ProjectsContext)
+  const { theme } = useContext(InterfaceContext)
 
-  const { projectName, project } = useProject(projectId)
+  const isDarkMode = theme === 'dark'
+
+  const { projectName, usersInProject, loadingProject, callEvent } =
+    useProject(projectId)
 
   async function handleShareProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -35,7 +40,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
       return setErrorIn('email')
     }
 
-    const userInExisteProject = project.users.find(
+    const userInExisteProject = usersInProject.find(
       (user) => user.email === shareEmail,
     )
 
@@ -46,12 +51,11 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
     const shareProjectWithUserInfos = {
       email: shareEmail,
       permission: sharePermission,
-      projectId: project.id as string,
     }
 
-    const shared = await shareProject(shareProjectWithUserInfos)
+    const { resolved } = await callEvent.share(shareProjectWithUserInfos)
 
-    if (shared) {
+    if (resolved) {
       setSuccessToastOpen(true)
       setShareEmail('')
     }
@@ -81,12 +85,15 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
         message={error?.message!}
       />
 
-      <ShareForm onSubmit={handleShareProject}>
-        <Text size="xs">
+      <ShareForm onSubmit={handleShareProject} darkMode={isDarkMode}>
+        <Text size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
           Informe o email do usuário que quer compartilhar o projeto
         </Text>
 
-        <TextInputRoot variant={errorIn === 'email' ? 'denied' : 'default'}>
+        <TextInputRoot
+          variant={errorIn === 'email' ? 'denied' : 'default'}
+          css={{ background: !isDarkMode ? '$gray500' : '' }}
+        >
           <TextInputIcon>
             <Envelope />
           </TextInputIcon>
@@ -96,10 +103,11 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
             type="email"
             onChange={(e) => setShareEmail(e.target.value)}
             value={shareEmail}
+            disabled={loadingProject}
           />
         </TextInputRoot>
 
-        <Text size="xs">
+        <Text size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
           Esse usuário poderá{' '}
           {sharePermission === 'edit'
             ? 'editar '
@@ -126,7 +134,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
           align="center"
           size="xs"
           variant="noShadow"
-          disabled={loading}
+          disabled={loadingProject}
         >
           <ButtonIcon>
             <Share />

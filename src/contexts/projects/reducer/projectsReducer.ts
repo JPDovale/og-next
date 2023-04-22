@@ -1,10 +1,8 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ITimelineResponse } from '@api/responsesTypes/ITimelinesResponse'
 import { projectsReducer as projectsProjectsReducer } from './reducers/projects/projectsReducer'
-import { IError } from '@@types/errors/IError'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { ProjectsBlockActions } from './actions/ActionsTypes'
 import { IActionReducer } from './actions/types/IActionReducer'
@@ -14,14 +12,11 @@ import { personsReducer } from './reducers/persons/personsReducer'
 import { timelinesReducer } from './reducers/timelines/timelinesReducer'
 
 export interface IProjectState {
-  projects: IProjectResponse[]
   persons: IPersonsResponse[]
   users: IUserResponse[]
   books: IBooksResponse[]
   boxes: IBoxResponse[]
   timelines: ITimelineResponse[]
-  error: IError | undefined
-  loading: boolean
 }
 
 export function projectsReducer(state: IProjectState, action: IActionReducer) {

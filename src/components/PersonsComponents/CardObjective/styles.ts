@@ -39,7 +39,7 @@ export const ItemInfo = styled('div', {
         gap: '$2',
 
         cursor: 'pointer',
-        transition: 'all ease-in-out 250ms',
+        transition: 'ease-in-out 250ms',
 
         '&:hover': {
           scale: '110%',
@@ -120,7 +120,7 @@ export const EditButton = styled('button', {
   border: 'none',
   outline: 'none',
   cursor: 'pointer',
-  transition: 'all ease-in-out 250ms',
+  transition: 'ease-in-out 250ms',
 
   '&:hover': {
     rotate: '360deg',

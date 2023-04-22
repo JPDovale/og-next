@@ -22,15 +22,22 @@ import {
   UserInfos,
   UserOptionsPopoverContainer,
 } from './style'
+import { useProjects } from '@hooks/useProjects'
+import { useUser } from '@hooks/useUser'
+import { InterfaceContext } from '@contexts/interface'
 
 export function UserOptionsPopover() {
-  const { user, logout } = useContext(UserContext)
+  const { logout } = useContext(UserContext)
+  const { theme } = useContext(InterfaceContext)
+
+  const { projectsSharedWithUser } = useProjects()
+  const { user } = useUser()
 
   const router = useRouter()
 
   return (
     <Popover.Portal>
-      <UserOptionsPopoverContainer>
+      <UserOptionsPopoverContainer darkMode={theme === 'dark'}>
         <PopoverArrow />
 
         <PopoverClose>
@@ -38,12 +45,20 @@ export function UserOptionsPopover() {
         </PopoverClose>
 
         <UserInfos>
-          <AvatarWeb size="sm" src={user?.avatar?.url as string} />
+          <AvatarWeb size="sm" src={user?.avatar_url as string} />
           <div>
-            <Text as={'h3'} size={'lg'}>
+            <Text
+              as={'h3'}
+              size={'lg'}
+              css={{ color: theme === 'dark' ? '$white' : '' }}
+            >
               {user?.username}
             </Text>
-            <Text as={'span'} family={'body'} size={'sm'}>
+            <Text
+              family={'body'}
+              size={'sm'}
+              css={{ color: theme === 'dark' ? '' : '$black' }}
+            >
               {user?.email}
             </Text>
           </div>
@@ -64,20 +79,22 @@ export function UserOptionsPopover() {
             <ButtonLabel>Configurações de usuário</ButtonLabel>
           </ButtonRoot>
 
-          <ButtonRoot
-            variant="noShadow"
-            size="xs"
-            type="button"
-            onClick={() => {
-              router.push('/shared')
-            }}
-          >
-            <ButtonIcon>
-              <UsersThree weight="bold" />
-            </ButtonIcon>
+          {projectsSharedWithUser.length !== 0 && (
+            <ButtonRoot
+              variant="noShadow"
+              size="xs"
+              type="button"
+              onClick={() => {
+                router.push('/shared')
+              }}
+            >
+              <ButtonIcon>
+                <UsersThree weight="bold" />
+              </ButtonIcon>
 
-            <ButtonLabel>Projetos compartilhados</ButtonLabel>
-          </ButtonRoot>
+              <ButtonLabel>Projetos compartilhados</ButtonLabel>
+            </ButtonRoot>
+          )}
 
           <ButtonRoot
             variant="noShadow"

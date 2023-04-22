@@ -1,15 +1,24 @@
 import axios from 'axios'
+import { CookieJar } from 'tough-cookie'
+import { wrapper } from 'axios-cookiejar-support'
+
+const cookieJar = new CookieJar()
 
 export const api = axios.create({
   // devEnvironment
   // baseURL: 'https://ogapi-teste.onrender.com',
 
   // deployEnvironment
-  baseURL: 'https://ognare.com/api',
+  // baseURL: 'https://ognare.com/api',
 
   // fullDevEnvironment
-  baseURL: 'http://localhost:3030/',
+  baseURL: 'http://localhost:3030/api',
 })
+
+wrapper(api)
+
+api.defaults.jar = cookieJar
+api.defaults.withCredentials = true
 
 export async function GetInfoUser() {
   try {

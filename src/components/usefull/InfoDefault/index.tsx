@@ -32,7 +32,7 @@ export function InfoDefault({
         {title}
       </Text>
 
-      <Text as={as} size={size}>
+      <Text as={as} size={size} weight="bold">
         {children}
       </Text>
     </InfoContainer>

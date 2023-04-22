@@ -28,6 +28,7 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { InterfaceContext } from '@contexts/interface'
 
 const resetPasswordFormSchema = z.object({
   password: z
@@ -45,6 +46,7 @@ export default function ResetPasswordPage() {
 
   const { error, setError, recoveryPassword, success, setSuccess } =
     useContext(UserContext)
+  const { theme } = useContext(InterfaceContext)
 
   const router = useRouter()
 
@@ -89,7 +91,12 @@ export default function ResetPasswordPage() {
       <ResetPasswordPageContainer>
         <Image className="logo" src={LogoToDown} alt="" />
         <Image className="logo2" src={Logo} alt="" />
-        <BackgroundResetPassword src={Back} alt="" priority />
+        <BackgroundResetPassword
+          src={Back}
+          alt=""
+          priority
+          darkMode={theme === 'dark'}
+        />
 
         <ResetPasswordFormContainer
           onSubmit={handleSubmit(handleResetPassword)}
@@ -102,7 +109,7 @@ export default function ResetPasswordPage() {
           {success && <ResponseInfoApi success={success} />}
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               NOVA SENHA
               <Text size="sm" as="span" family="body">
                 {formState.errors?.password?.message}
@@ -131,7 +138,7 @@ export default function ResetPasswordPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               CONFIRMAR NOVA SENHA
               <Text size="sm" as="span" family="body">
                 {formState.errors?.confirmPassword?.message}
@@ -168,7 +175,7 @@ export default function ResetPasswordPage() {
           </ButtonRoot>
           <Links>
             <Link href="/login">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Voltar para o login
               </Text>
             </Link>

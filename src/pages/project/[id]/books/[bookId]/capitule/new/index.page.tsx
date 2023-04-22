@@ -22,6 +22,7 @@ import {
   AddButton,
 } from './styles'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { useBook } from '@hooks/useBook'
 
 const newCapituleSchema = z.object({
   name: z
@@ -74,7 +75,7 @@ export default function NewCapitule() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const { project, useBook } = useProject(id as string)
+  const { projectName } = useProject(id as string)
   const { book, bookName } = useBook(bookId as string)
 
   async function handleCreateCapitule(data: newCapituleFormData) {
@@ -104,7 +105,7 @@ export default function NewCapitule() {
       />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros', bookName, 'Capítulos', 'Novo']}
         loading={loading}

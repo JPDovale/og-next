@@ -26,7 +26,7 @@ export const ProjectNavigationContainer = styled('nav', {
     borderRadius: '$full',
     background: 'transparent',
     cursor: 'pointer',
-    color: '$base100',
+    color: '$text800',
 
     scale: '80%',
 
@@ -62,11 +62,14 @@ export const ProjectNavigationContainer = styled('nav', {
 })
 
 export const Logo = styled('div', {
+  background: '#121210',
+  marginTop: '$2',
+  borderRadius: '$full',
+
   '.logo': {
     cursor: 'pointer',
     width: '100%',
     height: '100%',
-    paddingBottom: '$2',
   },
 })
 

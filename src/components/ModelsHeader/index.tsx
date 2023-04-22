@@ -3,23 +3,10 @@ import { CardModelNewPerson } from '@components/PersonsComponents/CardModelNewPe
 import { CardModelNewProject } from '@components/ProjectsComponents/CardModelNewProject'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
-import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
-import { useContext } from 'react'
+import { useProjects } from '@hooks/useProjects'
 
 export function ModelsHeader() {
-  const { projects } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-
-  const projectsEditablePerUser = projects.map((project) => {
-    const userPermission = project.users.find((u) => u.id === user?.id)
-
-    if (userPermission?.permission !== 'edit') {
-      return undefined
-    }
-
-    return project
-  })
+  const { projectsEditablePerUser } = useProjects()
 
   return (
     <>

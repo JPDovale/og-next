@@ -138,10 +138,6 @@ export const ItemsContainer = styled('div', {
   justifyContent: 'space-between',
 
   width: '100%',
-
-  p: {
-    color: '$base400',
-  },
 })
 
 export const AddItem = styled('div', {

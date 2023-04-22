@@ -1,3 +1,4 @@
+import { IError } from '@@types/errors/IError'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
@@ -6,30 +7,15 @@ import {
   TextInputRoot,
 } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { Toast } from '@components/usefull/Toast'
-import { ProjectsContext } from '@contexts/projects'
+import { ToastError } from '@components/usefull/ToastError'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/dist/client/router'
-import {
-  Books,
-  ArchiveBox,
-  Crosshair,
-  HeartBreak,
-  Lightning,
-  Person,
-  Presentation,
-  RainbowCloud,
-  SketchLogo,
-  TreeStructure,
-  UserCircleGear,
-  UserFocus,
-  Warning,
-} from 'phosphor-react'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ArchiveBox, Presentation } from 'phosphor-react'
+import { ChangeEvent, useState } from 'react'
 
 import { CardUserWithAccess } from './components/CardUserWithAccess'
 import { Creator, Info, SettingsProject } from './styles'
@@ -37,9 +23,7 @@ import { Creator, Info, SettingsProject } from './styles'
 export default function SettingsPage() {
   const [unshare, setUnshare] = useState('')
   const [name, setName] = useState('')
-
-  const { loading, unshareProject, error, updateNameProject, setError } =
-    useContext(ProjectsContext)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id } = router.query
@@ -47,51 +31,47 @@ export default function SettingsPage() {
   usePreventBack(`/project/${id}`)
 
   const {
+    loadingProject,
+    callEvent,
     project,
-    personsThisProject,
-    booksThisProject,
-    creator,
-    usersWithAccess,
-    objectsCreatedInProject,
+    // personsThisProject,
+    // booksThisProject,
+    usersInProject,
+    projectName,
+    projectType,
+    createdAt,
+    updatedAt,
   } = useProject(id as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
   function handleUnshare() {
-    const userToRemove = usersWithAccess.find((u) => u.id === unshare)
+    const userToRemove = usersInProject.find((user) => user.id === unshare)
 
     if (!userToRemove) return
 
-    return unshareProject(userToRemove.email, project?.id)
+    return callEvent.unshare(userToRemove.email)
   }
 
   async function handleUpdateNameProject() {
-    await updateNameProject({ projectId: id as string, name })
+    await callEvent.updateName(name)
     setName('')
   }
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-Configurações | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${projectName}-Configurações | Ognare`} noindex />
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Configurações']}
-        loading={loading}
-        inError={!loading && !project}
+        loading={loadingProject}
+        inError={!loadingProject && !project}
         isScrolling
       >
         <SettingsProject>
-          <Toast
-            title={error?.title!}
-            message={error?.message!}
-            open={!!error}
-            setOpen={() => setError(undefined)}
-          />
+          <ToastError error={error} setError={setError} />
 
           <Info isCard>
             <Text family="body" as="label">
@@ -102,7 +82,7 @@ export default function SettingsPage() {
                 </TextInputIcon>
 
                 <TextInputInput
-                  placeholder={project?.name || 'Carregando...'}
+                  placeholder={projectName}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setName(e.target.value)
                   }
@@ -127,7 +107,7 @@ export default function SettingsPage() {
           <Info isCard>
             <Text family="body" as="label">
               Tipo do projeto
-              <Text>{project?.type || 'Carregando...'}</Text>
+              <Text>{projectType}</Text>
               <Text family="body" as="label">
                 Outros tipos de projetos estarão disponíveis em breve para os
                 criadores do projeto...
@@ -156,38 +136,41 @@ export default function SettingsPage() {
             <Text family="body" as="label">
               Criador
               <Creator>
-                <AvatarWeb size="4xl" src={creator?.avatar?.url} />
+                <AvatarWeb
+                  size="4xl"
+                  src={project?.user.avatar_url ?? undefined}
+                />
                 <div>
                   <Text family="body" as="label">
                     Nome
-                    <Text>{creator?.name || 'Carregando...'}</Text>
+                    <Text>{project?.user.name || 'Carregando...'}</Text>
                   </Text>
                   <Text family="body" as="label">
                     Nome de usuário
-                    <Text>{creator?.username || 'Carregando...'}</Text>
+                    <Text>{project?.user.username || 'Carregando...'}</Text>
                   </Text>
                   <Text family="body" as="label">
                     Email
-                    <Text>{creator?.email || 'Carregando...'}</Text>
+                    <Text>{project?.user.email || 'Carregando...'}</Text>
                   </Text>
                 </div>
               </Creator>
             </Text>
             <Text family="body" as="div">
-              Usuários com acesso: {project?.users.length}
+              Usuários com acesso: {usersInProject.length}
               <Text family="body" as="label" height="shorter">
                 A opção de alterar a permissão em breve estará disponível... Se
                 precisar alterar, remova o usuário e o adicione novamente com a
                 permissão desejada.
               </Text>
               <Info columns={smallWindow ? 1 : 2}>
-                {usersWithAccess?.map((userWithAccess) => {
-                  if (userWithAccess?.id !== creator?.id) {
+                {usersInProject?.map((userWithAccess) => {
+                  if (userWithAccess?.id !== project?.user?.id) {
                     return (
                       <CardUserWithAccess
                         key={userWithAccess.id}
                         userWithAccess={userWithAccess}
-                        project={project}
+                        project={project!}
                         setUnshare={setUnshare}
                         unshare={unshare}
                         handleUnshare={handleUnshare}
@@ -204,16 +187,16 @@ export default function SettingsPage() {
           <Info isCard columns={2}>
             <Text family="body" as="label">
               <header>Data de criação</header>
-              <Text size="sm">{project?.createAt || 'Carregando...'}</Text>
+              <Text size="sm">{createdAt}</Text>
             </Text>
 
             <Text family="body" as="label">
               <header>Ultima alteração</header>
-              <Text size="sm">{project?.updateAt || 'Carregando...'}</Text>
+              <Text size="sm">{updatedAt}</Text>
             </Text>
           </Info>
 
-          <Info css={{ marginTop: '$6' }}>
+          {/* <Info css={{ marginTop: '$6' }}>
             <Text family="body" as="label">
               Ás referencias criadas não são contadas na listagem
             </Text>
@@ -307,7 +290,7 @@ export default function SettingsPage() {
               </header>
               <Text>{objectsCreatedInProject?.wishes.length || 0}</Text>
             </Text>
-          </Info>
+          </Info> */}
         </SettingsProject>
       </ProjectPageLayout>
     </>

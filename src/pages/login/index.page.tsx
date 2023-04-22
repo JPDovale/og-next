@@ -23,14 +23,15 @@ import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../contexts/user'
 
 import { NextSeo } from 'next-seo'
-import { Loading } from '@components/usefull/Loading'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { ToastError } from '@components/usefull/ToastError'
+import { useUser } from '@hooks/useUser'
+import { InterfaceContext } from '@contexts/interface'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -44,7 +45,9 @@ type LoginFormData = z.infer<typeof loginFormSchema>
 export default function LoginPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
 
-  const { createSession, userLogged, loading, error } = useContext(UserContext)
+  const { createSession, error, setError } = useContext(UserContext)
+  const { theme } = useContext(InterfaceContext)
+  const { userLogged, refetchUser } = useUser()
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
@@ -58,6 +61,7 @@ export default function LoginPage() {
     const isLogged = await createSession(newSession)
 
     if (isLogged) {
+      await refetchUser()
       router.push('/projects')
     }
   }
@@ -68,10 +72,6 @@ export default function LoginPage() {
     }
   }, [userLogged, router])
 
-  if (loading) {
-    return <Loading />
-  }
-
   return (
     <>
       <NextSeo title="Faça o login | Ognare" />
@@ -79,17 +79,17 @@ export default function LoginPage() {
       <LoginPageContainer>
         <Image className="logo" src={LogoToDown} alt="" />
         <Image className="logo2" src={Logo} alt="" />
-        <BackgroundLogin src={Back} alt="" />
+        <BackgroundLogin src={Back} alt="" darkMode={theme === 'dark'} />
 
         <LoginFormContainer onSubmit={handleSubmit(handleLogin)}>
           <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
             Efetue o login
           </Text>
 
-          {error && <ResponseInfoApi error={error} />}
+          {error && <ToastError error={error} setError={setError} />}
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               E-MAIL
               <Text size="sm" as="span" family="body">
                 {formState.errors?.email?.message}
@@ -111,7 +111,7 @@ export default function LoginPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               SUA SENHA
               <Text size="sm" as="span" family="body">
                 {formState.errors?.password?.message}
@@ -149,12 +149,12 @@ export default function LoginPage() {
 
           <Links>
             <Link href="/register">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Ainda não tenho cadastro
               </Text>
             </Link>
             <Link href="/user/password/forgot">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Esqueci minha senha
               </Text>
             </Link>

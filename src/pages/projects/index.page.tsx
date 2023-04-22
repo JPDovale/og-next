@@ -1,21 +1,23 @@
 import { NextSeo } from 'next-seo'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Projects } from '@components/ProjectsComponents/Projects'
-import { ProjectsContext } from '../../contexts/projects'
 import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'
 import { Heading } from '@components/usefull/Heading'
 import { Container } from './styles'
 import { useWindowSize } from '@hooks/useWindow'
-import { ToastError } from '@components/usefull/ToastError'
 import { ModelsHeader } from '@components/ModelsHeader'
+import { useProjects } from '@hooks/useProjects'
 
 export default function ProjectsPage() {
   usePreventBack()
+  const [query, setQuery] = useState<string | undefined>(undefined)
 
-  const [query, setQuery] = useState('')
-
-  const { projects, loading, error, setError } = useContext(ProjectsContext)
+  const { projects, loadingProjects } = useProjects({
+    config: {
+      query,
+    },
+  })
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -25,10 +27,10 @@ export default function ProjectsPage() {
       <NextSeo title="Projetos | Ognare" noindex />
 
       <DashboardPageLayout
-        window={`Projetos: ${projects ? projects.length : 0}`}
+        window={`Projetos: ${projects.length}`}
         query={query}
         setQuery={setQuery}
-        loading={loading}
+        loading={loadingProjects}
         queryless={projects && !!projects[0]}
       >
         <Container>
@@ -38,15 +40,14 @@ export default function ProjectsPage() {
               <Heading size="sm">Projetos:</Heading>
             </>
           )}
+
           <Projects
             listEmptyMessage="Você ainda não criou nenhum projeto"
             projects={projects}
             query={query}
-            isLoading={loading}
+            isLoading={loadingProjects}
           />
         </Container>
-
-        <ToastError error={error} setError={setError} />
       </DashboardPageLayout>
     </>
   )

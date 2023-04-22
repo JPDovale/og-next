@@ -126,7 +126,7 @@ export const Input = styled('label', {
   gap: '$2',
 
   background: '$purple600',
-  transition: 'all 250ms',
+  transition: 'ease-in-out 250ms',
   cursor: 'pointer',
 
   '&:hover': {

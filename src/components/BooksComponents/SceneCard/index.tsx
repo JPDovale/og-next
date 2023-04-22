@@ -8,8 +8,7 @@ import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
-import { useProject } from '@hooks/useProject'
-import { useRouter } from 'next/router'
+import { useBook } from '@hooks/useBook'
 import { List, PencilLine, Trash, X } from 'phosphor-react'
 import { ChangeEvent, useContext, useState } from 'react'
 import { z } from 'zod'
@@ -51,13 +50,9 @@ export function SceneCard({
   const [toSequenceSet, setToSequenceSet] = useState('')
   const [errorIn, setErrorIn] = useState('')
 
-  const router = useRouter()
-  const { id } = router.query
-
   const { setSceneToComplete, deleteScene, reorderScenes } =
     useContext(ProjectsContext)
 
-  const { useBook } = useProject(id as string)
   const { findCapitule } = useBook(bookId)
   const { capitule } = findCapitule(capituleId)
 
@@ -109,7 +104,7 @@ export function SceneCard({
       return setErrorIn('reorder-min')
     }
 
-    if (toSequenceSet === scene.sequence) {
+    if (toSequenceSet === scene.sequence.toString()) {
       setToSequenceSet('')
       setErrorIn('')
       return setReOrderSelected(false)
@@ -119,7 +114,7 @@ export function SceneCard({
     await reorderScenes({
       bookId,
       capituleId,
-      sequenceFrom: scene.sequence,
+      sequenceFrom: scene.sequence.toString(),
       sequenceTo: toSequenceSet,
     })
 
@@ -296,7 +291,7 @@ export function SceneCard({
           <SceneContent>
             {scene.complete && (
               <InfoDefault title="Palavras escritas:">
-                {scene.writtenWords}
+                {scene.written_words}
               </InfoDefault>
             )}
 
@@ -322,15 +317,15 @@ export function SceneCard({
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 1:">
-              {scene.structure.act1}
+              {scene.structure_act_1}
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 2:">
-              {scene.structure.act2}
+              {scene.structure_act_2}
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 3:">
-              {scene.structure.act3}
+              {scene.structure_act_3}
             </InfoDefault>
           </SceneContent>
         </>

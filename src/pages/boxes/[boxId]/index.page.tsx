@@ -5,7 +5,6 @@ import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
 import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
-import { useBox } from '@hooks/useBox'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
@@ -23,6 +22,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { AlertModal } from '@components/usefull/AlertModal'
+import { useBoxes } from '@hooks/useBoxes'
 
 const editBoxFormSchema = z.object({
   name: z
@@ -61,7 +61,7 @@ export default function BoxPage() {
   const router = useRouter()
   const { boxId } = router.query
 
-  const { findBox } = useBox()
+  const { findBox } = useBoxes()
   const { box, boxName } = findBox(boxId as string)
 
   const windowSize = useWindowSize()
@@ -82,7 +82,7 @@ export default function BoxPage() {
     resolver: zodResolver(editBoxFormSchema),
     defaultValues: {
       name: box?.name,
-      description: box?.description,
+      description: box?.description ?? undefined,
       tags: box?.tags,
     },
   })
@@ -345,12 +345,8 @@ export default function BoxPage() {
           </Text>
 
           <ContainerGrid padding={0}>
-            {box?.archives.map((archive) => (
-              <CardArchive
-                key={archive.archive.id}
-                archive={archive}
-                boxId={box.id}
-              />
+            {box?.archives?.map((archive) => (
+              <CardArchive key={archive.id} archive={archive} boxId={box.id} />
             ))}
           </ContainerGrid>
         </ContainerGrid>

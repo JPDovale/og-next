@@ -44,6 +44,8 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { useUser } from '@hooks/useUser'
+import { InterfaceContext } from '@contexts/interface'
 
 const registerFormSchema = z.object({
   name: z
@@ -78,7 +80,9 @@ type RegisterFormData = z.infer<typeof registerFormSchema>
 export default function RegisterPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
 
-  const { createUser, userLogged, error, loading } = useContext(UserContext)
+  const { createUser, error, loading } = useContext(UserContext)
+  const { theme } = useContext(InterfaceContext)
+  const { userLogged } = useUser()
 
   const { handleSubmit, register, formState, setError } =
     useForm<RegisterFormData>({
@@ -125,7 +129,7 @@ export default function RegisterPage() {
         <Image className="logo" src={LogoToDown} alt="Ognare" />
         <Image className="logo2" src={Logo} alt="Ognare" />
 
-        <BackgroundRegister src={Back} alt="" />
+        <BackgroundRegister src={Back} alt="" darkMode={theme === 'dark'} />
 
         <RegisterFormContainer onSubmit={handleSubmit(handleCreateUser)}>
           <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
@@ -146,7 +150,7 @@ export default function RegisterPage() {
           {error && <ResponseInfoApi error={error} />}
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               NOME COMPLETO
               <Text size="sm" as="span" family="body">
                 {formState.errors?.name?.message}
@@ -168,7 +172,7 @@ export default function RegisterPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               NOME DE USUÁRIO
               <Text size="sm" as="span" family="body">
                 {formState.errors?.username?.message}
@@ -189,7 +193,7 @@ export default function RegisterPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               E-MAIL VÁLIDO
               <Text size="sm" as="span" family="body">
                 {formState.errors?.email?.message}
@@ -211,7 +215,7 @@ export default function RegisterPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               SUA SENHA
               <Text size="sm" as="span" family="body">
                 {formState.errors?.password?.message}
@@ -240,7 +244,7 @@ export default function RegisterPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               CONFIRME A SUA SENHA
               <Text size="sm" as="span" family="body">
                 {formState.errors?.confirmPassword?.message}
@@ -280,7 +284,6 @@ export default function RegisterPage() {
             family="body"
             css={{
               marginTop: '-$4',
-              color: '$base700',
             }}
           >
             Ao clicar no botão você declara que aceita os termos de uso
@@ -288,7 +291,7 @@ export default function RegisterPage() {
 
           <Links>
             <Link href="/login">
-              <Text as="a" size="xs">
+              <Text as="a" size="xs" weight="bold">
                 Já tenho cadastro
               </Text>
             </Link>

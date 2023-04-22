@@ -1,5 +1,3 @@
-import { IUserResponse } from '@api/responsesTypes/IUserResponse'
-import { UserContext } from '@contexts/user'
 import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -9,7 +7,7 @@ import {
   Pencil,
   Trash,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { AvatarWeb } from '../Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '../Button'
 import { ContainerGrid } from '../ContainerGrid'
@@ -25,6 +23,8 @@ import {
   UserImage,
   UsersWhitAccess,
 } from './styles'
+import { useUser } from '@hooks/useUser'
+import { IAuthor } from '@api/responsesTypes/IBooksResponse'
 
 interface IInfos {
   infos: Array<{
@@ -43,12 +43,12 @@ interface IHeaderImageAndInfosProps {
   allInfos: IInfos[] | undefined
   withProgressBar?: boolean
   withAvatares?: boolean
-  avatares?: IUserResponse[]
+  avatares?: IAuthor[]
   initialValeu?: number
   finalValue?: number
 
   onUpdateCalled: (files: FileList | null) => Promise<void>
-  onRemoveCalled: (id: string) => Promise<void>
+  onRemoveCalled: (id: string) => Promise<boolean>
 }
 
 export function HeaderImageAndInfos({
@@ -69,8 +69,6 @@ export function HeaderImageAndInfos({
 }: IHeaderImageAndInfosProps) {
   const [onUpdateImage, setOnUpdateImage] = useState(false)
   const [onEditImg, setOnEditImg] = useState(false)
-
-  const { user: creator } = useContext(UserContext)
 
   const router = useRouter()
 
@@ -166,11 +164,18 @@ export function HeaderImageAndInfos({
         {allInfos.map((infos) => (
           <ContainerGrid key={JSON.stringify(infos)} columns={infos.columns}>
             {infos.infos.map((info) => (
-              <InfoDefault key={JSON.stringify(info)} title={info.label + ':'}>
-                <Text as="p" size="sm">
-                  {info.value}
-                </Text>
-              </InfoDefault>
+              <>
+                {info.label && info.value && (
+                  <InfoDefault
+                    key={JSON.stringify(info)}
+                    title={info.label + ':'}
+                  >
+                    <Text as="p" size="sm">
+                      {info.value}
+                    </Text>
+                  </InfoDefault>
+                )}
+              </>
             ))}
           </ContainerGrid>
         ))}
@@ -189,19 +194,12 @@ export function HeaderImageAndInfos({
           <ContainerGrid>
             <InfoDefault title="Autores">
               <UsersWhitAccess>
-                <UserImage first>
-                  <AvatarWeb
-                    whitShadow
-                    src={creator?.avatar?.url as string}
-                    size="xsm"
-                  />
-                </UserImage>
-                {avatares.map((u) => {
+                {avatares.map((u, i) => {
                   return (
-                    <UserImage key={u.id}>
+                    <UserImage key={u.id} first={i === 0}>
                       <AvatarWeb
                         whitShadow
-                        src={u.avatar?.url as string}
+                        src={u?.user.avatar_url ?? undefined}
                         size="xsm"
                       />
                     </UserImage>

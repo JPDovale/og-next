@@ -29,34 +29,34 @@ export function CardBox({ box, isInternal = false }: ICardBoxProps) {
       <Text size="xs">{box.name}</Text>
 
       <ContainerGrid padding={0}>
-        <InfoDefault title={`Arquivos ${box.archives.length}`}>
+        <InfoDefault title={`Arquivos ${box.archives?.length}`}>
           <ContainerGrid padding={0}>
-            {box.archives.map((file, index) => {
+            {box.archives?.map((file, index) => {
               if (index >= 2) return ''
 
               return (
-                <ContainerGrid key={file.archive.id} padding={0} darkBackground>
-                  {file.archive.description && file.archive.title && (
+                <ContainerGrid key={file.id} padding={0} darkBackground>
+                  {file.description && file.title && (
                     <InfoDefault title="Titulo">
-                      <Text size="xs">{file.archive.title}</Text>
+                      <Text size="xs">{file.title}</Text>
                     </InfoDefault>
                   )}
 
-                  {file.archive.description && file.archive.title && (
+                  {file.description && file.title && (
                     <InfoDefault title="Descrição">
-                      <Text size="xs">{file.archive.description}</Text>
+                      <Text size="xs">{file.description}</Text>
                     </InfoDefault>
                   )}
 
-                  {isInternal && (
+                  {/* {isInternal && (
                     <InfoDefault title="Número de atribuições">
                       <Text size="xs">{file.links?.length}</Text>
                     </InfoDefault>
-                  )}
+                  )} */}
 
                   {!isInternal && (
                     <InfoDefault title="Número de imagens">
-                      <Text size="xs">{file.images?.length || 0}</Text>
+                      <Text size="xs">{file.gallery?.length || 0}</Text>
                     </InfoDefault>
                   )}
                 </ContainerGrid>

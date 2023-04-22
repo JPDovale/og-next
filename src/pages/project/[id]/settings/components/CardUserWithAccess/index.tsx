@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import { Text } from '@components/usefull/Text'
 import { UserCircleMinus, X } from 'phosphor-react'
 
@@ -9,14 +8,14 @@ import {
   UnshareConfirm,
 } from './styles'
 import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
-import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
-import { UserContext } from '@contexts/user'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { IUserInProject, useProject } from '@hooks/useProject'
+import { useUser } from '@hooks/useUser'
 
 interface ICardUserWithAccessContainerProps {
   project: IProjectResponse
-  userWithAccess: IUserResponse
+  userWithAccess: IUserInProject
   unshare: string
   setUnshare: (newState: string) => void
   handleUnshare: () => void
@@ -29,21 +28,19 @@ export function CardUserWithAccess({
   setUnshare,
   handleUnshare,
 }: ICardUserWithAccessContainerProps) {
-  const { user } = useContext(UserContext)
+  const { user } = useUser()
+
+  const { permission } = useProject(project.id)
 
   const smallWindow = screen.width < 786
-
-  const permission = project.users.find(
-    (user) => user.id === userWithAccess.id,
-  )?.permission
 
   return (
     <CardUserWithAccessContainer>
       <AvatarWeb
         size={smallWindow ? '2xl' : '4xl'}
-        src={userWithAccess.avatar?.url}
+        src={userWithAccess.avatarImage}
       />
-      {project.createdPerUser === user?.id && (
+      {project.user.id === user?.id && (
         <UnshareButton
           className="unshare"
           wid="hug"

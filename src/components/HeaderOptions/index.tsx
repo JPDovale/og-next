@@ -33,6 +33,7 @@ import { NotificationsPopover } from './components/NotificationsPopover'
 import { UserOptionsPopover } from './components/UserOptionsPopover'
 import { NewProjectModal } from '@components/ProjectsComponents/NewProjectModal'
 import { NewBoxModal } from '@components/BoxesComponents/NewBoxModal'
+import { useUser } from '@hooks/useUser'
 
 interface IHeaderOptionsProps {
   windowName: string
@@ -54,19 +55,20 @@ export function HeaderOptions({
   queryless = false,
 }: IHeaderOptionsProps) {
   const [queryIsOpen, setQueryIsOpen] = useState(false)
+  const [modalCreateProjectIsOpen, setModalCreateProjectIsOpen] =
+    useState(false)
 
-  const { user, visualizeNotifications } = useContext(UserContext)
+  const { visualizeNotifications } = useContext(UserContext)
   const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
+
+  const { user } = useUser()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const newNotifications = !!user?.notifications?.find(
-    (notification) => notification.isVisualized === false,
-  )
-  const newNotificationsNumber = user?.notifications?.filter(
-    (notification) => notification.isVisualized === false,
-  ).length
+  const newNotifications =
+    user?.new_notifications !== undefined && user?.new_notifications !== 0
+  const newNotificationsNumber = user?.new_notifications
 
   return (
     <HeaderOptionsContainer NavIsOpen={navIsOpen}>
@@ -85,7 +87,7 @@ export function HeaderOptions({
       <Options>
         <Dialog.Root>
           <Dialog.Trigger asChild>
-            <button type="button" className="icon-button">
+            <button type="button" className="icon-button" disabled={isLoading}>
               <Package size={24} />
             </button>
           </Dialog.Trigger>
@@ -93,19 +95,24 @@ export function HeaderOptions({
           <NewBoxModal />
         </Dialog.Root>
 
-        <Dialog.Root>
+        <Dialog.Root
+          open={modalCreateProjectIsOpen}
+          onOpenChange={setModalCreateProjectIsOpen}
+        >
           <Dialog.Trigger asChild>
-            <button type="button" className="icon-button">
+            <button type="button" className="icon-button" disabled={isLoading}>
               <FilePlus size={24} />
             </button>
           </Dialog.Trigger>
 
-          <NewProjectModal />
+          <NewProjectModal
+            onSuccessCreateProject={() => setModalCreateProjectIsOpen(false)}
+          />
         </Dialog.Root>
 
         <Popover.Root>
           <Popover.Trigger asChild>
-            <button type="button" className="icon-button">
+            <button type="button" className="icon-button" disabled={isLoading}>
               <DotsNine size={'24'} />
             </button>
           </Popover.Trigger>
@@ -121,7 +128,9 @@ export function HeaderOptions({
                   padding: '$2',
                   boxShadow: 'none',
                   background: '$gray500',
+                  width: '100%',
                 }}
+                disabled={isLoading}
               >
                 <TextInputIcon>
                   <MagnifyingGlass size={24} />
@@ -130,6 +139,7 @@ export function HeaderOptions({
                 <TextInputInput
                   placeholder={'Procure por um projeto'}
                   value={query}
+                  css={{ width: '100%' }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setQuery && setQuery(e.target.value)
                   }}
@@ -139,6 +149,7 @@ export function HeaderOptions({
             <button
               type="button"
               className="icon-button"
+              disabled={isLoading}
               onClick={() => {
                 setNavIsOpen(false)
                 setQueryIsOpen(!queryIsOpen)
@@ -159,6 +170,7 @@ export function HeaderOptions({
             <button
               type="button"
               className="icon-button"
+              disabled={isLoading}
               onClick={() => {
                 setTimeout(() => {
                   newNotifications && visualizeNotifications()
@@ -181,10 +193,14 @@ export function HeaderOptions({
 
         <Popover.Root>
           <Popover.Trigger asChild>
-            <button type="button" className="icon-button avatar">
+            <button
+              type="button"
+              className="icon-button avatar"
+              disabled={isLoading}
+            >
               <AvatarWeb
                 size={smallWindow ? '2xs' : 'xsm'}
-                src={user?.avatar?.url as string}
+                src={user?.avatar_url ?? ''}
               />
             </button>
           </Popover.Trigger>

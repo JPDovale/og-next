@@ -3,6 +3,7 @@ export enum ProjectsActionsType {
   AddProject = 'addProject',
   UpdateProject = 'updateProject',
   DeleteProject = 'deleteProject',
+  SetProjects = 'setProjects',
 
   SetAll = 'setAll',
   SetError = 'setError',

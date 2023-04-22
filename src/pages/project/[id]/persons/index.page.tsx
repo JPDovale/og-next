@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { useRouter } from 'next/router'
 import { MagnifyingGlass, UserFocus, UserPlus } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
 import {
   FastAccessPersons,
@@ -11,7 +11,6 @@ import {
 } from './styles'
 
 import { NextSeo } from 'next-seo'
-import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
 import { useProject } from '@hooks/useProject'
@@ -26,15 +25,12 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
-import { ToastError } from '@components/usefull/ToastError'
 import { Toast } from '@components/usefull/Toast'
 import { NewPersonModal } from '@components/PersonsComponents/NewPersonModal'
 
 export default function PersonsPage() {
   const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [query, setQuery] = useState('')
-
-  const { loading, error, setError } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id } = router.query
@@ -43,7 +39,9 @@ export default function PersonsPage() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const { project, projectName, queryPerson } = useProject(id as string)
+  const { project, projectName, queryPerson, loadingProject } = useProject(
+    id as string,
+  )
   const finalPersonsToShow = queryPerson(query)
 
   return (
@@ -54,11 +52,10 @@ export default function PersonsPage() {
         projectName={projectName}
         projectId={`${id}`}
         paths={['Personagens']}
-        loading={loading}
-        inError={!loading && !project}
+        loading={loadingProject}
+        inError={!loadingProject && !project}
         isScrolling
       >
-        <ToastError error={error} setError={setError} />
         <Toast
           open={successToastOpen}
           setOpen={setSuccessToastOpen}
@@ -110,23 +107,27 @@ export default function PersonsPage() {
             size={smallWindow ? 'xsm' : 'sm'}
             columns={12}
             listEmptyMessage={
-              loading ? 'Carregando...' : 'Nenhum personagem foi criado ainda'
+              loadingProject
+                ? 'Carregando...'
+                : 'Nenhum personagem foi criado ainda'
             }
-            persons={finalPersonsToShow}
+            persons={finalPersonsToShow ?? []}
             isClickable
           />
         </FastAccessPersons>
 
         <PersonsContainer>
-          {finalPersonsToShow[0] ? (
+          {finalPersonsToShow && finalPersonsToShow[0] ? (
             finalPersonsToShow.map((person) => {
-              return <CardPerson key={person.id} person={person} isNotPreview />
+              return (
+                <CardPerson key={person.id} personId={person.id} isNotPreview />
+              )
             })
           ) : (
             <ListEmpty
-              isLoading={loading}
+              isLoading={loadingProject}
               message="Você ainda não criou nenhum personagem para esse projeto."
-              icon={<UserFocus size={loading ? 0 : 90} />}
+              icon={<UserFocus size={loadingProject ? 0 : 90} />}
             />
           )}
         </PersonsContainer>

@@ -4,7 +4,7 @@ import { Heading } from '@components/usefull/Heading'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
-import { useBox } from '@hooks/useBox'
+import { useBoxes } from '@hooks/useBoxes'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
@@ -19,7 +19,7 @@ export default function BoxesPage() {
 
   const { loading, error, setError } = useContext(ProjectsContext)
 
-  const { boxes } = useBox()
+  const { boxes } = useBoxes()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786

@@ -1,4 +1,4 @@
-import { ReactNode, useContext } from 'react'
+import { ReactNode } from 'react'
 import { Text } from '@components/usefull/Text'
 import { Eye, Pencil } from 'phosphor-react'
 import {
@@ -12,15 +12,17 @@ import {
   SubObjects,
 } from './styles'
 import { useRouter } from 'next/router'
-import { ProjectsContext } from '@contexts/projects'
 import { AvatarWeb } from '@components/usefull/Avatar'
+import { useProject } from '@hooks/useProject'
 
 interface IGenericObject {
   id?: string
   title: string
   description: string
-  personId?: string
-  final?: boolean
+  coupleWithPerson?: {
+    person_id: string
+  }
+  until_end?: boolean
 }
 
 interface IGenericCardObjectProps {
@@ -46,13 +48,15 @@ export function GenericCardObject({
 
   functionToButton,
 }: IGenericCardObjectProps) {
-  const { persons } = useContext(ProjectsContext)
-  const relationalPerson = persons.find(
-    (person) => person.id === object.personId,
-  )
-
   const router = useRouter()
   const { id, personId } = router.query
+
+  const { personsThisProject } = useProject(id as string)
+  const relationalPerson = personsThisProject?.find(
+    (person) => person.id === object.coupleWithPerson?.person_id,
+  )
+
+  console.log(object)
 
   return (
     <GenericCardObjectContainer>
@@ -112,7 +116,10 @@ export function GenericCardObject({
                 Personagem
               </Text>
               <Relational>
-                <AvatarWeb src={relationalPerson?.image?.url} size="lg" />
+                <AvatarWeb
+                  src={relationalPerson?.image_url ?? undefined}
+                  size="lg"
+                />
                 <RelationalInfos>
                   <Text as="label" size="lg" family="body" height="shorter">
                     {relationalPerson?.name}
@@ -130,10 +137,10 @@ export function GenericCardObject({
               </Text>
               <Text
                 css={{
-                  color: object.final ? '$successDefault' : '$errorDefault',
+                  color: object.until_end ? '$successDefault' : '$errorDefault',
                 }}
               >
-                {object.final ? 'Sim' : 'Não'}
+                {object.until_end ? 'Sim' : 'Não'}
               </Text>
             </ItemInfo>
           </>

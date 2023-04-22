@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { EditContainer, Info } from './styles'
 import {
-  Chats,
   Crosshair,
   HeartBreak,
   Lightning,
@@ -31,6 +30,8 @@ import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { TextEditor } from '@components/TextEditor'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ToastError } from '@components/usefull/ToastError'
+import { usePerson } from '@hooks/usePerson'
+import { getDate } from '@utils/dates/getDate'
 
 const personFormSchema = z.object({
   name: z.string(),
@@ -58,9 +59,7 @@ export default function EditPersonPage() {
   const age = watch('age')
   const history = watch('history')
 
-  const { project, projectName, usePerson, permission } = useProject(
-    id as string,
-  )
+  const { project, projectName, permission } = useProject(id as string)
   const { person, personName } = usePerson(personId as string)
 
   const windowSize = useWindowSize()
@@ -73,10 +72,10 @@ export default function EditPersonPage() {
   async function handleUpdatePerson() {
     const updatedPerson: ICreatePersonDTO = {
       name: name || (person?.name as string),
-      lastName: lastName || (person?.lastName as string),
-      age: age || (person?.age as string),
+      lastName: lastName || (person?.last_name as string),
+      age: age || (person?.age.toString() as string),
       history: history || (person?.history as string),
-      projectId: project.id,
+      projectId: project!.id,
     }
 
     await updatePerson(updatedPerson, person?.id as string)
@@ -115,7 +114,7 @@ export default function EditPersonPage() {
               Sobrenome
               <TextInputRoot>
                 <TextInputInput
-                  placeholder={person?.lastName || 'Carregando...'}
+                  placeholder={person?.last_name || 'Carregando...'}
                   {...register('lastName')}
                 />
               </TextInputRoot>
@@ -125,7 +124,7 @@ export default function EditPersonPage() {
               Idade
               <TextInputRoot>
                 <TextInputInput
-                  placeholder={person?.age || 'Carregando...'}
+                  placeholder={person?.age.toString() || 'Carregando...'}
                   {...register('age')}
                 />
               </TextInputRoot>
@@ -173,12 +172,20 @@ export default function EditPersonPage() {
           <Info isCard columns={2}>
             <Text family="body" as="label">
               <header>Data de criação</header>
-              <Text size="sm">{person?.createAt || 'Carregando...'}</Text>
+              <Text size="sm">
+                {person?.created_at
+                  ? getDate(person.created_at)
+                  : 'Carregando...'}
+              </Text>
             </Text>
 
             <Text family="body" as="label">
               <header>Ultima alteração</header>
-              <Text size="sm">{person?.updateAt || 'Carregando...'}</Text>
+              <Text size="sm">
+                {person?.updated_at
+                  ? getDate(person.updated_at)
+                  : 'Carregando...'}
+              </Text>
             </Text>
           </Info>
 
@@ -188,7 +195,7 @@ export default function EditPersonPage() {
                 <Crosshair />
                 Objetivos criados
               </header>
-              <Text>{person?.objectives.length || 0}</Text>
+              <Text>{person?.objectives?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -196,7 +203,7 @@ export default function EditPersonPage() {
                 <RainbowCloud />
                 Sonhos criados
               </header>
-              <Text>{person?.dreams.length || 0}</Text>
+              <Text>{person?.dreams?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -204,7 +211,7 @@ export default function EditPersonPage() {
                 <Warning />
                 Medos criados
               </header>
-              <Text>{person?.fears.length || 0}</Text>
+              <Text>{person?.fears?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -212,7 +219,7 @@ export default function EditPersonPage() {
                 <Person />
                 Aparências criadas
               </header>
-              <Text>{person?.appearance.length || 0}</Text>
+              <Text>{person?.appearances?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -220,7 +227,7 @@ export default function EditPersonPage() {
                 <UserCircleGear />
                 Personalidades criadas
               </header>
-              <Text>{person?.personality.length || 0}</Text>
+              <Text>{person?.personalities?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -228,7 +235,7 @@ export default function EditPersonPage() {
                 <Lightning />
                 Poderes criados
               </header>
-              <Text>{person?.powers.length || 0}</Text>
+              <Text>{person?.powers?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -236,7 +243,7 @@ export default function EditPersonPage() {
                 <HeartBreak />
                 Traumas criados
               </header>
-              <Text>{person?.traumas.length || 0}</Text>
+              <Text>{person?.traumas?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -244,7 +251,7 @@ export default function EditPersonPage() {
                 <TreeStructure />
                 Valores criados
               </header>
-              <Text>{person?.values.length || 0}</Text>
+              <Text>{person?.values?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -252,7 +259,7 @@ export default function EditPersonPage() {
                 <SketchLogo />
                 Desejos criados
               </header>
-              <Text>{person?.wishes.length || 0}</Text>
+              <Text>{person?.wishes?.length || 0}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -260,15 +267,7 @@ export default function EditPersonPage() {
                 <Users />
                 Casais
               </header>
-              <Text>{person?.couples.length || 0}</Text>
-            </Text>
-
-            <Text family="body" as="label">
-              <header>
-                <Chats />
-                Comentários
-              </header>
-              <Text>{person?.comments.length || 0}</Text>
+              <Text>{person?.couples?.length || 0}</Text>
             </Text>
           </Info>
         </EditContainer>

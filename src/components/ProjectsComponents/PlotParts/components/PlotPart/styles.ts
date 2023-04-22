@@ -17,7 +17,7 @@ export const PlotPartContainer = styled(Box, {
   border: 'none',
   cursor: 'pointer',
   overflow: 'hidden',
-  transition: 'ease-in 250ms',
+  transition: 'ease-in-out 250ms',
   boxShadow: 'none',
 
   header: {

@@ -44,6 +44,8 @@ export function ProjectPageLayout({
             statusCode={404}
             errorMessage="Não foi possível encontrar o recurso. Volte a tela inicial e tente novamente..."
           />
+        ) : loading ? (
+          ''
         ) : (
           <ProjectContainer
             isFullScreen={isFullScreen}

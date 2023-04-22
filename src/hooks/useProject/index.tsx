@@ -1,286 +1,278 @@
-import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
-import { IArchive } from '@api/responsesTypes/IBoxResponse'
+import { getProjectRequest } from '@api/projectsRequests'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
-import { IUserResponse } from '@api/responsesTypes/IUserResponse'
-import { InterfaceContext } from '@contexts/interface'
-import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
-import { orderElements } from '@services/orderElements'
-import { useContext, useMemo } from 'react'
-import {
-  IFindCapituleResponse,
-  IInfos,
-  useBook as useBookInternal,
-} from './useBook'
-import { usePerson as usePeronInternal } from './usePerson/index'
+import { refreshSessionRequest } from '@api/userRequest'
+import { useProjects } from '@hooks/useProjects'
+import { useUser } from '@hooks/useUser'
+import { getDate } from '@utils/dates/getDate'
+import { useState } from 'react'
+import { useQuery } from 'react-query'
+import { deleteProject } from './events/delete'
+import { quitProject } from './events/quit'
+import { shareProject } from './events/share'
+import { ICallEvent } from './types/ICallEvent'
 
-interface IFindBookResponse {
-  book: IBooksResponse | undefined
-  bookName: string
-  bookInfos: IInfos[]
-  bookAuthors: IUserResponse[]
-  bookWords: number
-  bookWrittenWords: number
-
-  findCapitule: (id: string) => IFindCapituleResponse
-}
-
-interface IFindManyPersonsOptions {
-  reverse: boolean
-}
-
-interface IObjects {
-  objectives: IArchive[]
-  dreams: IArchive[]
-  fears: IArchive[]
-  appearance: IArchive[]
-  personality: IArchive[]
-  powers: IArchive[]
-  traumas: IArchive[]
-  values: IArchive[]
-  wishes: IArchive[]
+export interface IUserInProject {
+  id: string
+  avatar_url: string | undefined
+  name: string
+  username: string
+  email: string
 }
 
 export function useProject(id: string) {
-  const { projects, books, persons, users, boxes, timelines } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-  const { orderBy } = useContext(InterfaceContext)
+  const [loading, setLoading] = useState(true)
 
-  const project = projects?.find(
-    (project) => project.id === id,
-  ) as IProjectResponse
+  const { loadingUser, user, isRefreshingSession } = useUser()
+  const { refetchProjects, setLoadingProjects } = useProjects()
 
-  const objectsCreatedInProject = useMemo(() => {
-    const findObjects: IObjects = {
-      objectives: [],
-      dreams: [],
-      fears: [],
-      appearance: [],
-      personality: [],
-      powers: [],
-      traumas: [],
-      values: [],
-      wishes: [],
-    }
+  const { data, isLoading, refetch } = useQuery(
+    `project-${id}`,
+    async () => {
+      if (!id || isRefreshingSession) return
 
-    boxes
-      .find((box) => box.name === 'persons/objectives')
-      ?.archives.map((file) => {
-        return findObjects.objectives.push(file)
-      })
+      let response = await getProjectRequest(id)
+      let errorMessage: string | null = null
+      let errorTitle: string | null = null
 
-    boxes
-      .find((box) => box.name === 'persons/dreams')
-      ?.archives.map((file) => {
-        return findObjects.dreams.push(file)
-      })
+      if (response.errorMessage === 'Invalid token' && !isRefreshingSession) {
+        const refresh = await refreshSessionRequest()
 
-    boxes
-      .find((box) => box.name === 'persons/fears')
-      ?.archives.map((file) => {
-        return findObjects.fears.push(file)
-      })
+        if (!refresh.errorMessage) {
+          response = await getProjectRequest(id)
+        } else {
+          errorMessage = refresh.errorMessage
+          errorTitle = refresh.errorTitle
+        }
+      }
 
-    boxes
-      .find((box) => box.name === 'persons/appearance')
-      ?.archives.map((file) => {
-        return findObjects.appearance.push(file)
-      })
+      const project = response.project as IProjectResponse
 
-    boxes
-      .find((box) => box.name === 'persons/personality')
-      ?.archives.map((file) => {
-        return findObjects.personality.push(file)
-      })
-
-    boxes
-      .find((box) => box.name === 'persons/powers')
-      ?.archives.map((file) => {
-        return findObjects.powers.push(file)
-      })
-
-    boxes
-      .find((box) => box.name === 'persons/traumas')
-      ?.archives.map((file) => {
-        return findObjects.traumas.push(file)
-      })
-
-    boxes
-      .find((box) => box.name === 'persons/values')
-      ?.archives.map((file) => {
-        return findObjects.values.push(file)
-      })
-
-    boxes
-      .find((box) => box.name === 'persons/wishes')
-      ?.archives.map((file) => {
-        return findObjects.wishes.push(file)
-      })
-
-    return findObjects
-  }, [boxes])
-
-  const projectName = project?.name || 'Carregando...'
-
-  const booksThisProject = books?.filter(
-    (book) => book.defaultProject === project?.id,
+      return { project, errorMessage, errorTitle }
+    },
+    {
+      staleTime: 1000 * 60 * 60, // 1 hour
+      onError: () => setLoading(false),
+      onSuccess: () => setLoading(false),
+    },
   )
 
-  const personsThisProject = persons?.filter(
-    (person) => person.defaultProject === project?.id,
+  const refetchProject = refetch
+  const loadingProject = !(!isLoading && !loading && !loadingUser)
+  const project = data?.project ?? null
+  const createdAt = project?.created_at
+    ? getDate(project.created_at)
+    : 'Carregando...'
+  const updatedAt = project?.updated_at
+    ? getDate(project.updated_at)
+    : 'Carregando...'
+  const projectName = project?.name ?? 'Carregando...'
+  const projectType = project?.type ?? 'Carregando...'
+  const projectImage = project?.image_url ?? undefined
+  let permission: 'edit' | 'view' | 'comment' = 'view'
+  const usersInProject: IUserInProject[] = []
+
+  project?.users_with_access_comment?.users.map((user) =>
+    usersInProject.push({
+      name: user.name ?? 'Carregando...',
+      username: user.username ?? 'Carregando...',
+      email: user.email ?? 'Carregando...',
+      id: user.id,
+      avatar_url: user.avatar_url ?? undefined,
+    }),
+  )
+  project?.users_with_access_view?.users.map((user) =>
+    usersInProject.push({
+      name: user.name ?? 'Carregando...',
+      username: user.username ?? 'Carregando...',
+      email: user.email ?? 'Carregando...',
+      id: user.id,
+      avatar_url: user.avatar_url ?? undefined,
+    }),
+  )
+  project?.users_with_access_edit?.users.map((user) =>
+    usersInProject.push({
+      name: user.name ?? 'Carregando...',
+      username: user.username ?? 'Carregando...',
+      email: user.email ?? 'Carregando...',
+      id: user.id,
+      avatar_url: user.avatar_url ?? undefined,
+    }),
   )
 
-  const boxesThisProject = boxes?.filter(
-    (box) => box?.projectId === project?.id,
-  )
+  if (!loadingProject && project) {
+    if (project?.user.id !== user?.id) {
+      const userWithAccessComment =
+        !!project.users_with_access_comment?.users.find(
+          (userWithAccess) => userWithAccess.id === user?.id,
+        )
+      const userWithAccessEdit = !!project.users_with_access_edit?.users.find(
+        (userWithAccess) => userWithAccess.id === user?.id,
+      )
+      const userWithAccessView = !!project.users_with_access_view?.users.find(
+        (userWithAccess) => userWithAccess.id === user?.id,
+      )
 
-  const timelinesThisProject = timelines?.filter(
-    (timeline) => timeline.projectId === project?.id,
-  )
-  const timelineOfProject = timelines?.find(
-    (timeline) => timeline.to === project?.id,
-  )
-
-  const userCreatorFinde = users?.find(
-    (user) => user.id === project?.createdPerUser,
-  )
-  const creator = userCreatorFinde || (user as IUserResponse)
-
-  const personsOrd = orderElements(
-    personsThisProject,
-    orderBy,
-  ) as IPersonsResponse[]
-
-  const userWhitAccessFind = users.filter((u) => {
-    return project?.users.find((user) => user.id === u.id)
-  })
-  const usersWithAccess = [...userWhitAccessFind, user] as IUserResponse[]
-
-  const permission = project?.users.find((u) => u.id === user?.id)?.permission
-
-  function useBook(id: string): IFindBookResponse {
-    const {
-      book,
-      bookName,
-      bookInfos,
-      bookAuthors,
-      findCapitule,
-      bookWords,
-      bookWrittenWords,
-    } = useBookInternal(books, id)
-
-    return {
-      book,
-      bookName,
-      bookInfos,
-      bookAuthors,
-      findCapitule,
-      bookWords,
-      bookWrittenWords,
+      if (userWithAccessView) {
+        permission = 'view'
+      } else if (userWithAccessComment) {
+        permission = 'comment'
+      } else if (userWithAccessEdit) {
+        permission = 'edit'
+      } else {
+        permission = 'view'
+      }
+    } else {
+      permission = 'edit'
     }
   }
 
-  function usePerson(id: string) {
-    const {
-      person,
-      historyPersons,
-      objectives,
-      personInfos,
-      personBoxes,
-      findObjective,
-      findPersonality,
-      findValue,
-      findTrauma,
-      findAppearance,
-      findDream,
-      findFear,
-      findWishe,
-      findCouple,
-      findPower,
-      personName,
-    } = usePeronInternal(persons, id, boxesThisProject)
+  function findBook(id: string) {
+    const book = project?.books?.find((book) => book.id === id)
+
+    const bookTitle = book?.title
+      ? `${book?.title}${book?.subtitle ? ` - ${book?.subtitle}` : ''}`
+      : 'Carregando...'
+    const literaryGenre = book?.literary_genre
+      ? book?.literary_genre
+      : 'Carregando...'
+    const createdAt = book?.created_at
+      ? getDate(book.created_at)
+      : 'Carregando...'
+    const updatedAt = book?.updated_at
+      ? getDate(book.updated_at)
+      : 'Carregando...'
+    const isbn = loadingProject
+      ? 'Carregando...'
+      : !loadingProject && !book?.isbn
+      ? 'Você ainda não definiu seu isnb'
+      : book?.isbn
+    const bookFrontCover = book?.front_cover_url ?? undefined
+
+    return {
+      book: book ?? null,
+      bookTitle,
+      literaryGenre,
+      createdAt,
+      updatedAt,
+      isbn,
+      bookFrontCover,
+    }
+  }
+
+  function findPerson(id: string) {
+    const person = project?.persons?.find((person) => person.id === id)
+
+    const personName = person?.name
+      ? `${person.name} ${person.last_name}`
+      : 'Carregando...'
+    const personImage = person?.image_url ?? undefined
+    const createdAt = person?.created_at
+      ? getDate(person.created_at)
+      : 'Carregando...'
+    const updatedAt = person?.updated_at
+      ? getDate(person.updated_at)
+      : 'Carregando...'
 
     return {
       person,
-      historyPersons,
-      objectives,
-      personInfos,
-      personBoxes,
-      findObjective,
-      findPersonality,
-      findValue,
-      findTrauma,
-      findAppearance,
-      findDream,
-      findFear,
-      findWishe,
-      findCouple,
-      findPower,
       personName,
+      personImage,
+      createdAt,
+      updatedAt,
+    }
+  }
+
+  function findManyPersons(
+    ids: string[],
+    config?: {
+      reverse: boolean
+    },
+  ) {
+    const reverse = config?.reverse ?? false
+
+    if (reverse) {
+      const filteredPersons = project?.persons?.filter((person) => {
+        const personToRemove = ids?.find((id) => id === person.id)
+
+        if (personToRemove) return false
+
+        return true
+      }) as IPersonsResponse[]
+
+      return filteredPersons ?? []
+    } else {
+      const queryPersons = ids?.map((id) => {
+        const person = project?.persons?.find((person) => person.id === id)
+
+        return person
+      })
+
+      const persons = queryPersons?.filter(
+        (queriedPerson) => queriedPerson !== undefined,
+      ) as IPersonsResponse[]
+
+      return persons ?? []
     }
   }
 
   function queryPerson(query: string) {
-    const final = query
-      ? personsOrd?.filter(
-          (person) =>
-            person.name.toLowerCase().includes(query.toLowerCase()) ||
-            person.lastName.toLowerCase().includes(query.toLowerCase()),
-        )
-      : personsOrd
-    return final
+    const filteredPersons = project?.persons?.filter(
+      (person) =>
+        person.name.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+        person.last_name
+          .toLowerCase()
+          .trim()
+          .includes(query.toLowerCase().trim()) ||
+        person.history
+          .toLowerCase()
+          .trim()
+          .includes(query.toLowerCase().trim()),
+    )
+
+    return filteredPersons
   }
 
-  function findManyPersons(ids: string[], options?: IFindManyPersonsOptions) {
-    const isReverse = options?.reverse || false
+  const callEvent: ICallEvent = {
+    delete: () =>
+      deleteProject(project!.id, refetchProjects, setLoadingProjects),
+    quit: () => quitProject(project!.id, refetchProjects, setLoadingProjects),
+    share: (shareInfos) =>
+      shareProject(
+        shareInfos,
+        project!.id,
+        refetchProjects,
+        setLoadingProjects,
+      ),
+    updatePlot: (plot) => {},
+    updateName: (newName) => {},
+    updateImage: (file) => {},
+    unshare: (email) => {},
+    removeImage: () => {},
 
-    const personsSelected = personsThisProject.filter((person) => {
-      const personIn = ids?.find((p) => p === person.id)
-
-      if (personIn) return !isReverse
-      return !!isReverse
-    })
-
-    return personsSelected
-  }
-
-  function findBoxOfProject(id: string) {
-    const box = boxesThisProject.find((b) => b.id === id)
-
-    return box
-  }
-
-  function findPersonOfProject(id: string) {
-    const person = personsThisProject.find((p) => p.id === id)
-
-    return person
+    createBook: (newBook) => {},
   }
 
   return {
     project,
+    createdAt,
+    updatedAt,
     projectName,
-    creator,
-    usersWithAccess,
-    objectsCreatedInProject,
+    projectType,
+    projectImage,
+    refetchProject,
+    callEvent,
 
-    booksThisProject,
+    loadingProject,
+    booksThisProject: project?.books ?? [],
+    personsThisProject: project?.persons ?? [],
+    permission,
+    timelineOfProject: [],
+    usersInProject: usersInProject ?? [],
 
-    timelinesThisProject,
-    timelineOfProject,
-
-    boxesThisProject,
-    findBoxOfProject,
-
-    personsThisProject: personsOrd,
+    findBook,
+    findPerson,
     queryPerson,
     findManyPersons,
-    findPersonOfProject,
-
-    permission,
-    useBook,
-
-    usePerson,
   }
 }

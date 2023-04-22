@@ -111,6 +111,7 @@ export const HeadingPart = styled(Heading, {
     padding: '$2',
     boxShadow: '$default',
     borderRadius: '$xs',
+    color: '$base100',
   },
 })
 
@@ -123,7 +124,7 @@ export const EditImgForm = styled('form', {
   width: '40%',
   marginLeft: '-50%',
   marginTop: '-20%',
-  transition: 'ease-in 250ms',
+  transition: 'ease-in-out 250ms',
 
   '@media screen and (max-width: 768px)': {
     marginTop: '-60px',

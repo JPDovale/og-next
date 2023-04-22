@@ -16,10 +16,10 @@ export const TextareaContainer = styled('textarea', {
   background: '$gray700',
   borderRadius: '$sm',
   boxSizing: 'border-box',
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
   border: 'none',
   outline: 'none',
-  color: '$base100',
+  color: '$text800',
   resize: 'vertical',
 
   '&:focus': {

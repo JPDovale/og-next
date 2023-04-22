@@ -11,8 +11,23 @@ export const NewPersonForm = styled('form', {
   maxHeight: '980px',
 
   borderRadius: '0 0 $sm $sm',
-  background: '$gray900',
   transition: 'ease-in-out 250ms',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+        color: '$white',
+      },
+      false: {
+        background: '$gray300',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 
   '@media screen and (max-width: 768px)': {
     maxHeight: '2090px',
@@ -36,6 +51,21 @@ export const SelectTrigger = styled(Select.Trigger, {
   color: '$base600',
   cursor: 'pointer',
   transition: 'ease-in-out 250ms',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray600',
+      },
+      false: {
+        background: '$gray500',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const SelectValue = styled(Select.Value, {})
@@ -49,10 +79,25 @@ export const SelectPortal = styled(Select.Portal, {})
 export const SelectContent = styled(Select.Content, {
   zIndex: 100,
   overflow: 'hidden',
-  background: '$gray300',
   borderRadius: '$sm',
   boxShadow:
     '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray300',
+      },
+      false: {
+        background: '$gray500',
+        color: '$white',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const SelectScrollUpButton = styled(Select.ScrollUpButton, {})

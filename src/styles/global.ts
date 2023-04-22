@@ -19,16 +19,13 @@ export const globalStyles = globalCss({
     },
 
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#eeeeee30',
-      borderRadius: 10,
-      border: '1px solid #321a30',
+      backgroundColor: '#121416',
+      border: '1px solid #ffffff20',
     },
   },
 
   body: {
     overflowX: 'hidden',
-    background: '$gray900',
-    color: '$base100',
     '-webkit-font-smoothing': 'antialiased',
   },
 })

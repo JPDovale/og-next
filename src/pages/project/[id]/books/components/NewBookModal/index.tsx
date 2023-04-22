@@ -2,12 +2,11 @@ import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { MultiStep } from '@components/usefull/MultiStep'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
 import { useRouter } from 'next/router'
 import { ArrowLeft, ArrowRight } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { NewBookStep1 } from '../NewBookStep1'
@@ -84,8 +83,6 @@ interface INewBookModalProps {
 export function NewBookModal({ openToast }: INewBookModalProps) {
   const [step, setStep] = useState(1)
 
-  const { createBook } = useContext(ProjectsContext)
-
   const {
     watch,
     clearErrors,
@@ -105,7 +102,7 @@ export function NewBookModal({ openToast }: INewBookModalProps) {
   const router = useRouter()
   const { id } = router.query
 
-  const { project } = useProject(id as string)
+  const { callEvent } = useProject(id as string)
 
   async function validateFormToNextStep(
     fields: fieldNames[],
@@ -170,10 +167,9 @@ export function NewBookModal({ openToast }: INewBookModalProps) {
   }
 
   async function handleCreateBook(data: newBookFormData) {
-    const created = await createBook({ newBook: data, project })
+    const { resolved } = await callEvent.createBook(data)
 
-    if (created) {
-      router.push(`/project/${id}/books`)
+    if (resolved) {
       reset()
       setStep(1)
       openToast()

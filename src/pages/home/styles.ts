@@ -1,6 +1,8 @@
 import { styled } from '@styles/index'
+
 export const HomePageContainer = styled('main', {
   position: 'relative',
+  background: '$gray900',
 })
 
 export const HomeContent = styled('div', {
@@ -10,8 +12,8 @@ export const HomeContent = styled('div', {
 
   width: '100%',
 
-  marginTop: 120,
-  paddingBottom: 120,
+  paddingTop: '$40',
+  paddingBottom: '$40',
 })
 
 export const SideInfo = styled('div', {
@@ -25,7 +27,7 @@ export const SideInfo = styled('div', {
   minHeight: '1000px',
   paddingBottom: 180,
 
-  background: '$purple800',
+  background: '$gray500',
   borderRadius: '$full',
   boxShadow: '$inFocus',
 

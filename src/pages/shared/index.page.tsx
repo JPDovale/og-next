@@ -5,6 +5,7 @@ import { ToastError } from '@components/usefull/ToastError'
 import { ProjectsContext } from '@contexts/projects'
 import { UserContext } from '@contexts/user'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProjects } from '@hooks/useProjects'
 import { useWindowSize } from '@hooks/useWindow'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import { NextSeo } from 'next-seo'
@@ -12,15 +13,11 @@ import { useContext, useState } from 'react'
 import { Container } from './styles'
 
 export default function SharedPage() {
+  usePreventBack()
   const [query, setQuery] = useState('')
 
-  const { projects, loading, error, setError } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-
-  usePreventBack()
-
-  const projectsSharedWhitUser =
-    projects?.filter((project) => project.createdPerUser !== user?.id) || []
+  const { loading, error, setError } = useContext(ProjectsContext)
+  const { projectsSharedWithUser } = useProjects()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -31,11 +28,11 @@ export default function SharedPage() {
 
       <DashboardPageLayout
         window={`Compartilhados: ${
-          projectsSharedWhitUser ? projectsSharedWhitUser.length : 0
+          projectsSharedWithUser ? projectsSharedWithUser.length : 0
         }`}
         query={query}
         setQuery={setQuery}
-        queryless={!!projectsSharedWhitUser[0]}
+        queryless={!!projectsSharedWithUser[0]}
       >
         <Container>
           {!smallWindow && (
@@ -46,7 +43,7 @@ export default function SharedPage() {
           )}
 
           <Projects
-            projects={projectsSharedWhitUser}
+            projects={projectsSharedWithUser}
             listEmptyMessage="Nenhum projeto foi compartilhado com você ainda"
             query={query}
             isLoading={loading}

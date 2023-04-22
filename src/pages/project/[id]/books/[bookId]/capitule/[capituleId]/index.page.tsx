@@ -37,6 +37,9 @@ import {
   InputContainer,
 } from './styles'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { useBook } from '@hooks/useBook'
+import { useCapitule } from '@hooks/useCapitule'
+import { IError } from '@@types/errors/IError'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -69,9 +72,9 @@ export default function CapitulePage() {
   const [isAddingScene, setIsAddingScene] = useState(false)
   const [onEditScene, setOnEditScene] = useState('')
   const [isSelectedDelete, setIsSelectedDelete] = useState(false)
+  const [error, setError] = useState<IError | null>(null)
 
-  const { loading, error, setError, updateCapitule, deleteCapitule } =
-    useContext(ProjectsContext)
+  const { updateCapitule, deleteCapitule } = useContext(ProjectsContext)
 
   const {
     register,
@@ -84,19 +87,20 @@ export default function CapitulePage() {
 
   const router = useRouter()
   const { id, bookId, capituleId } = router.query
+
   const pathGoBack = `/project/${id}/books/${bookId}`
   const { GoBackButton } = usePreventBack(pathGoBack)
 
-  const { project, useBook, findManyPersons, permission } = useProject(
-    id as string,
-  )
-  const { book, bookName, findCapitule, bookWords, bookWrittenWords } = useBook(
+  const { project, projectName, permission } = useProject(id as string)
+
+  const { bookName, book, bookWrittenWords, bookWords } = useBook(
     bookId as string,
   )
-  const { capitule, capituleName, findScene, capituleWords } = findCapitule(
-    capituleId as string,
-  )
-  const sceneToUpdate = findScene(onEditScene)
+
+  const { capitule, capituleName, loadingCapitule, capituleWords, findScene } =
+    useCapitule(capituleId as string)
+
+  const { scene: sceneToUpdate } = findScene(onEditScene)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -136,11 +140,11 @@ export default function CapitulePage() {
       <NextSeo title={`${bookName}-${capituleName} | Ognare`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros', bookName, 'Capítulo', capituleName]}
-        loading={loading}
-        inError={!loading && (!book || !capitule)}
+        loading={loadingCapitule}
+        inError={!loadingCapitule && (!book || !capitule)}
         isScrolling
       >
         {error && (
@@ -176,7 +180,7 @@ export default function CapitulePage() {
 
                   <TextInputRoot>
                     <TextInputInput
-                      placeholder={capitule?.name || 'Carregando...'}
+                      placeholder={capituleName}
                       {...register('name')}
                     />
                   </TextInputRoot>
@@ -206,7 +210,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure?.act1 || 'Não definido'}
+                      placeholder={capitule?.structure_act_1 || 'Não definido'}
                       {...register('act1')}
                     />
                   </InputContainer>
@@ -221,7 +225,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure?.act2 || 'Não definido'}
+                      placeholder={capitule?.structure_act_2 || 'Não definido'}
                       {...register('act2')}
                     />
                   </InputContainer>
@@ -236,7 +240,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure?.act3 || 'Não definido'}
+                      placeholder={capitule?.structure_act_3 || 'Não definido'}
                       {...register('act3')}
                     />
                   </InputContainer>
@@ -348,14 +352,14 @@ export default function CapitulePage() {
           {isAddingScene ? (
             <AddScene
               onClose={() => setIsAddingScene(false)}
-              projectId={project.id}
-              bookId={book?.id!}
+              projectId={project!.id}
+              bookId={book!.id}
               capitule={capitule!}
             />
           ) : onEditScene ? (
             <EditScene
-              projectId={project.id}
-              bookId={book?.id!}
+              projectId={project!.id}
+              bookId={book!.id}
               capitule={capitule!}
               scene={sceneToUpdate!}
               onClose={() => setOnEditScene('')}
@@ -372,8 +376,6 @@ export default function CapitulePage() {
             >
               {capitule?.scenes && capitule.scenes[0] ? (
                 capitule?.scenes?.map((scene) => {
-                  const personsInThisScene = findManyPersons(scene.persons)
-
                   return (
                     <SceneCard
                       setOnEditScene={setOnEditScene}
@@ -381,7 +383,7 @@ export default function CapitulePage() {
                       bookId={book?.id!}
                       capituleId={capitule.id!}
                       scene={scene}
-                      persons={personsInThisScene}
+                      persons={scene.persons}
                     />
                   )
                 })

@@ -6,6 +6,7 @@ import { deleteProjectFunctionReducer } from './functions/deleteProjectFunctionR
 import { setAllFunctionReducer } from './functions/setAllFunctionReducer'
 import { setErrorFunctionReducer } from './functions/setErrorFunctionReducer'
 import { setLoadingFunctionReducer } from './functions/setLoadingFunctionReducer'
+import { setProjectsFunctionReducer } from './functions/setProjectsFunctionReducer'
 import { updateProjectFunctionReducer } from './functions/updateProjectFunctionReducer'
 
 export function projectsReducer(state: IProjectState, action: IActionReducer) {
@@ -32,6 +33,10 @@ export function projectsReducer(state: IProjectState, action: IActionReducer) {
 
     case ProjectsActionsType.SetLoading: {
       return setLoadingFunctionReducer(state, action)
+    }
+
+    case ProjectsActionsType.SetProjects: {
+      return setProjectsFunctionReducer(state, action)
     }
 
     default:

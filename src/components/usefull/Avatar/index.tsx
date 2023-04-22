@@ -57,13 +57,14 @@ const AvatarRoot = styled(Avatar.Root, {
 
   borderRadius: '$full',
   background: '$blue100',
-  transition: 'all ease-in-out 250ms',
+  transition: 'ease-in-out 250ms',
 
   svg: {
     minWidth: 58,
     minHeight: 58,
     width: 58,
     height: 58,
+    color: '$text800',
   },
 
   variants: {
@@ -287,8 +288,6 @@ const AvatarFallback = styled(Avatar.Fallback, {
   width: 'auto',
   height: 'auto',
 
-  color: 'white',
-
   borderRadius: '$full',
 
   background: '$gray400',
@@ -302,6 +301,7 @@ const AvatarFallback = styled(Avatar.Fallback, {
         minWidth: '100%',
 
         svg: {
+          color: '$text800',
           width: '50%',
           height: '50%',
         },

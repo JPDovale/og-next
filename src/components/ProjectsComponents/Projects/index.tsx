@@ -1,10 +1,9 @@
 import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { InterfaceContext } from '@contexts/interface'
-import { UserContext } from '@contexts/user'
-import { orderElements } from '@services/orderElements'
+import { useUser } from '@hooks/useUser'
 import { ProjectorScreenChart } from 'phosphor-react'
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import { CardProject } from '../CardProject'
 import { ProjectsContainer } from './styles'
 
@@ -19,44 +18,36 @@ interface IProjectProps {
 export function Projects({
   projects,
   listEmptyMessage,
-  query = '',
+  query,
   isLoading,
   isFirst = false,
 }: IProjectProps) {
-  const { isList, navIsOpen, orderBy } = useContext(InterfaceContext)
-  const { user } = useContext(UserContext)
-
-  const projectsOrd = useMemo(() => {
-    const projectsInOrd = orderElements(projects, orderBy) as IProjectResponse[]
-
-    return projectsInOrd?.filter((project) =>
-      project.name.toLowerCase().includes(query.toLowerCase()),
-    )
-  }, [query, orderBy, projects])
+  const { isList, navIsOpen } = useContext(InterfaceContext)
+  const { user } = useUser()
 
   return (
     <ProjectsContainer
       isFirst={isFirst}
       isList={isList}
       navIsOpen={navIsOpen}
-      isEmpty={projectsOrd && !projectsOrd[0]}
+      isEmpty={projects && !projects[0]}
     >
       {isList && (
         <CardProject project={{} as IProjectResponse} isList="example" />
       )}
 
-      {projectsOrd?.map((project) => {
+      {projects?.map((project) => {
         return (
           <CardProject
             key={project.id}
             isList={isList}
-            isSharable={project.createdPerUser === user?.id}
+            isSharable={project?.user.id === user?.id}
             project={project}
           />
         )
       })}
 
-      {projectsOrd && !projectsOrd[0] && (
+      {projects && !projects[0] && (
         <ListEmpty
           isLoading={isLoading}
           icon={<ProjectorScreenChart size={98} />}

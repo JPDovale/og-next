@@ -30,7 +30,7 @@ export function MindMap() {
   const router = useRouter()
   const { id } = router.query
 
-  const { project, personsThisProject, boxesThisProject } = useProject(
+  const { project, personsThisProject } = useProject(
     id as string,
   )
 
@@ -55,7 +55,7 @@ export function MindMap() {
         >
           <MindMapContent>
             <ProjectContent>
-              <CardProject project={project} />
+              <CardProject project={project!} />
             </ProjectContent>
             <PersonsContent>
               <Persons>

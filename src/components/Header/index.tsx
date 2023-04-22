@@ -1,38 +1,36 @@
-import { useContext } from 'react'
+import { useUser } from '@hooks/useUser'
+import { useWindowSize } from '@hooks/useWindow'
 import Image from 'next/image'
-
+import { useRouter } from 'next/router'
 import { ButtonsContent, HeaderContainer, ImageContent } from './styles'
 
 import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
 import logoImg from '../../assets/logos/logo.svg'
 
 import { ProjectorScreen, SignIn, UserCirclePlus } from 'phosphor-react'
-import { AvatarWeb } from '@components/usefull/Avatar'
-import { useRouter } from 'next/router'
-import { useWindowSize } from '@hooks/useWindow'
-import { UserContext } from '@contexts/user'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { AvatarWeb } from '@components/usefull/Avatar'
 
 export function Header() {
-  const { userLogged, user } = useContext(UserContext)
-
   const router = useRouter()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
+  const { user } = useUser()
+
   return (
     <HeaderContainer>
       <ImageContent>
         {smallWindow ? (
-          <Image src={aloneLogoImg} alt="Ognare" priority />
+          <Image src={aloneLogoImg} alt="Ognare" quality={100} priority />
         ) : (
-          <Image src={logoImg} alt="Ognare" priority />
+          <Image src={logoImg} alt="Ognare" quality={100} priority />
         )}
       </ImageContent>
 
       <ButtonsContent>
-        {userLogged ? (
+        {user ? (
           <>
             <ButtonRoot wid="hug" onClick={() => router.push('/projects')}>
               <ButtonIcon>
@@ -40,7 +38,8 @@ export function Header() {
               </ButtonIcon>
               <ButtonLabel>Dashboard</ButtonLabel>
             </ButtonRoot>
-            <AvatarWeb src={user?.avatar?.url} size="xsm" />
+
+            <AvatarWeb src={user?.avatar_url ?? undefined} size="xsm" />
           </>
         ) : (
           <>

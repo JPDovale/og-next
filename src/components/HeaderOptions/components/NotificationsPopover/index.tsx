@@ -1,6 +1,5 @@
 import * as Popover from '@radix-ui/react-popover'
 import lodash from 'lodash'
-import { useContext } from 'react'
 import { EnvelopeOpen, X } from 'phosphor-react'
 import {
   HeaderNotifications,
@@ -10,25 +9,26 @@ import {
   PopoverArrow,
   PopoverClose,
 } from './styles'
-import { UserContext } from '@contexts/user'
-import { IReverbKeys, reverbKeys } from '@services/reverbKeys'
 import { Text } from '@components/usefull/Text'
+import { getDate } from '@utils/dates/getDate'
+import { useUser } from '@hooks/useUser'
+import { useContext } from 'react'
+import { InterfaceContext } from '@contexts/interface'
 
 export function NotificationsPopover() {
-  const { user } = useContext(UserContext)
+  const { user } = useUser()
+
+  const { theme } = useContext(InterfaceContext)
 
   const notificationInHourOrd = lodash
-    .sortBy(user?.notifications, (notification) => {
-      const dateSepare = notification.createAt.split(' ')[0].split('/')
-      const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
-
-      return new Date(dateInFormat)
-    })
+    .sortBy(user?.notifications, (notification) => notification.created_at)
     .reverse()
+
+  const isDarkMode = theme === 'dark'
 
   return (
     <Popover.Portal>
-      <NotificationPopoverContainer>
+      <NotificationPopoverContainer darkMode={isDarkMode}>
         <PopoverArrow />
 
         <PopoverClose>
@@ -36,32 +36,36 @@ export function NotificationsPopover() {
         </PopoverClose>
 
         <HeaderNotifications>
-          <Text as={'h3'} size={'lg'}>
+          <Text
+            as={'h3'}
+            size={'lg'}
+            css={{ color: isDarkMode ? '$base100' : '' }}
+          >
             Notificações
           </Text>
         </HeaderNotifications>
 
         <Notifications isEmpty={user?.notifications && !user?.notifications[0]}>
-          {user?.notifications ? (
+          {user?.notifications.length !== 0 ? (
             notificationInHourOrd?.map((notification, i) => {
-              const [pre, comment] = notification.content.split(':')
-              const commentedIn =
-                reverbKeys[`${pre.split('|')[1]}` as IReverbKeys]
-              const prefix = `${pre.split('|')[0]} ${commentedIn || ''}`
+              const createdAt = notification.created_at
+                ? getDate(notification.created_at)
+                : ''
 
               return (
                 <Notification
                   key={notification.id}
-                  isVisualized={notification.isVisualized}
+                  isVisualized={true}
+                  darkMode={isDarkMode}
                 >
                   <Text as="h4">
                     <Text as="span" size="sm" spacing="minimus">
                       {notification.title}
                     </Text>
-                    <Text size="xxs">{notification?.createAt}</Text>
+                    <Text size="xxs">{createdAt}</Text>
                   </Text>
                   <Text family={'body'} height={'short'}>
-                    {prefix} {comment && ':' + comment}
+                    {notification.content}
                   </Text>
                 </Notification>
               )
@@ -69,7 +73,7 @@ export function NotificationsPopover() {
           ) : (
             <>
               <EnvelopeOpen size={80} />
-              <Text family={'body'} size={'xl'} spacing={'medium'}>
+              <Text size="sm" spacing="medium" css={{ text: 'center' }}>
                 Sua caixa de notificações está vazia!
               </Text>
             </>

@@ -4,18 +4,17 @@ import { ISuccess } from '../../../@types/success/ISuccess'
 import { ICreateUserDTO } from '../../../api/dtos/ICreateUserDTO'
 import { INewInitializeDTO } from '../../../api/dtos/INewInitializeDTO'
 import { INewSessionDTO } from '../../../api/dtos/INewSessionDTO'
-import { ICreateSessionResponse } from '../../../api/responsesTypes/ICreateResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
 
 export interface IUserContext {
   loading: boolean
-  user: IUserResponse | undefined
   userLogged: boolean
-  error: IError | undefined
-  success: ISuccess | undefined
+  error: IError | null
+  success: ISuccess | null
 
-  setError: (newState: IError | undefined) => void
-  setSuccess: (success: ISuccess | undefined) => void
+  setError: (newState: IError | null) => void
+  setSuccess: (success: ISuccess | null) => void
+  setLoading: (newState: boolean) => void
 
   createUser: (user: ICreateUserDTO) => Promise<boolean>
   createSession: (user: INewSessionDTO) => Promise<boolean>
@@ -29,7 +28,7 @@ export interface IUserContext {
   updateAvatar: (file: File) => Promise<void>
   updatePassword: (oldPassword: string, password: string) => Promise<void>
   loginWithGoogle: (user: any) => Promise<void>
-  setUser: (loggedUser: ICreateSessionResponse) => void
+  setUser: (loggedUser: IUserResponse | null) => void
   deleteAvatar: () => Promise<void>
   sendMailForgotPassword: (email: string) => Promise<void>
   recoveryPassword: (password: string, token: string) => Promise<void>

@@ -8,9 +8,8 @@ export const DashboardPageLayoutContainer = styled('main', {
   height: '100vh',
 
   background: '$gray800',
-  borderTopLeftRadius: '48px',
   boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.5)',
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
   overflowY: 'auto',
 
   variants: {

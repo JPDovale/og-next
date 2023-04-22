@@ -1,3 +1,4 @@
+import { IShareProjectDTO } from '@api/dtos/IShareProjectDTO'
 import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
@@ -6,10 +7,18 @@ import { IProjectResponse } from '../responsesTypes/IProjectResponse'
 export async function getProjectsRequest() {
   try {
     const response = await api.get('/projects')
-
     return response.data
   } catch (err: any) {
-    return []
+    return err.response.data
+  }
+}
+
+export async function getProjectRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
   }
 }
 
@@ -86,9 +95,15 @@ export async function updateImageProjectRequest(projectId: string, file: File) {
   }
 }
 
-export async function shareProjectRequest(share: any) {
+export async function shareProjectRequest(
+  share: IShareProjectDTO,
+  projectId: string,
+) {
   try {
-    const response = await api.patch('/projects/share', share)
+    const response = await api.patch(`/projects/${projectId}/share`, {
+      permission: share.permission,
+      email: share.email,
+    })
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -109,7 +124,7 @@ export async function updatePlotRequest(
 
 export async function deleteProjectRequest(projectId: string) {
   try {
-    const response = await api.patch('/projects', { projectId })
+    const response = await api.delete(`/projects/${projectId}`)
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -152,7 +167,7 @@ interface IQuitProjectRequest {
 
 export async function quitProjectRequest({ projectId }: IQuitProjectRequest) {
   try {
-    const response = await api.put('projects/quit', { projectId })
+    const response = await api.put(`/projects/${projectId}/quit`)
     return response.data
   } catch (err: any) {
     return err.response.data

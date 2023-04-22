@@ -19,6 +19,15 @@ export async function getAllPersonsThisUserRequest(projectId: string) {
   }
 }
 
+export async function getPersonRequest(personId: string) {
+  try {
+    const response = await api.get(`/persons/${personId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 // POST
 export async function createPersonRequest(person: ICreatePersonDTO) {
   try {

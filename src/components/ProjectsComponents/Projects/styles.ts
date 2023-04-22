@@ -6,7 +6,7 @@ export const ProjectsContainer = styled('div', {
   padding: '0 0 $10 0',
   marginTop: '120px',
 
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
 
   variants: {
     isFirst: {

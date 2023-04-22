@@ -187,3 +187,23 @@ export async function deleteBookRequest(bookId: string) {
     return err.response.data
   }
 }
+
+// GET
+
+export async function getBookRequest(bookId: string) {
+  try {
+    const response = await api.get(`/books/${bookId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getCapituleRequest(capituleId: string) {
+  try {
+    const response = await api.get(`/books/capitules/${capituleId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

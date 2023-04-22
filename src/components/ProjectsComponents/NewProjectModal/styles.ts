@@ -10,9 +10,23 @@ export const NewProjectForm = styled('form', {
   alignItems: 'center',
   padding: '$8',
 
-  background: '$gray900',
   overflowY: 'auto',
   borderRadius: '0 0 $md $md',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+      },
+      false: {
+        background: '$gray300',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const Input = styled(Text, {

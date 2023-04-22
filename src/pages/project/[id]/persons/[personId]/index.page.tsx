@@ -14,6 +14,7 @@ import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ProjectsContext } from '@contexts/projects'
+import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
@@ -42,15 +43,17 @@ import {
 } from './styles'
 
 export default function PersonPage() {
-  const { loading, updateImageFromPerson, deleteImagePerson } =
+  const { updateImageFromPerson, deleteImagePerson } =
     useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, personId } = router.query
   usePreventBack(`/project/${id}/persons`)
 
-  const { project, permission, usePerson } = useProject(id as string)
-  const { person, objectives, personInfos } = usePerson(personId as string)
+  const { project, permission, projectName } = useProject(id as string)
+  const { person, personInfos, personName, loadingPerson } = usePerson(
+    personId as string,
+  )
 
   async function handleUpdateImage(files: FileList | null): Promise<void> {
     if (!files) return
@@ -68,20 +71,20 @@ export default function PersonPage() {
 
   return (
     <>
-      <NextSeo title={`${person?.name || 'Carregando...'} | Ognare`} noindex />
+      <NextSeo title={`${personName} | Ognare`} noindex />
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
-        paths={['Personagens', `${person?.name || 'Carregando...'}`]}
-        loading={loading}
-        inError={!loading && (!project?.id || !person?.name)}
+        paths={['Personagens', `${personName}`]}
+        loading={loadingPerson}
+        inError={!loadingPerson && (!project?.id || !person?.name)}
         isScrolling
       >
         <HeaderImageAndInfos
           idObject={person?.id as string}
           onUpdateCalled={handleUpdateImage}
           onRemoveCalled={handleDeleteImage}
-          url={person?.image?.url}
+          url={person?.image_url ?? undefined}
           pathGoBack={`/project/${id}/persons`}
           permission={permission}
           allInfos={personInfos}
@@ -113,15 +116,15 @@ export default function PersonPage() {
           />
 
           <ObjectivesContent>
-            {objectives && objectives[0] ? (
-              objectives.map((objective) => {
+            {person?.objectives && person?.objectives[0] ? (
+              person?.objectives?.map((objective) => {
                 return (
                   <CardObjective
                     permission={permission}
                     key={objective.id}
-                    objective={objective.objectiveDefault}
-                    avoiders={objective.avoiders}
-                    supporters={objective.supporting}
+                    objective={objective}
+                    avoiders={objective.avoiders?.persons ?? []}
+                    supporters={objective.supporters?.persons ?? []}
                   />
                 )
               })
@@ -135,18 +138,18 @@ export default function PersonPage() {
         </ObjectContainer>
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<UserCircleGear size={40} />}
           title="Personalidade"
           keyIndex="personality"
-          objectOfCampu={person?.personality as IPersonality[]}
+          objectOfCampu={person?.personalities as IPersonality[]}
           withSubObjects="consequências"
           columns={2}
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<TreeStructure size={40} />}
           title="Valores"
@@ -157,7 +160,7 @@ export default function PersonPage() {
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<HeartBreak size={40} />}
           title="Traumas"
@@ -168,16 +171,16 @@ export default function PersonPage() {
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<Person size={40} />}
           title="Aparência"
           keyIndex="appearance"
-          objectOfCampu={person?.appearance as IAppearance[]}
+          objectOfCampu={person?.appearances as IAppearance[]}
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<RainbowCloud size={48} />}
           title="Sonhos"
@@ -186,7 +189,7 @@ export default function PersonPage() {
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<Warning size={40} />}
           title="Medos"
@@ -195,7 +198,7 @@ export default function PersonPage() {
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<SketchLogo size={40} />}
           title="Desejos"
@@ -204,7 +207,7 @@ export default function PersonPage() {
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<Users size={40} />}
           title="Casais"
@@ -214,7 +217,7 @@ export default function PersonPage() {
         />
 
         <Campu
-          isLoading={loading}
+          isLoading={loadingPerson}
           permission={permission}
           icon={<Lightning size={40} />}
           title="poderes"

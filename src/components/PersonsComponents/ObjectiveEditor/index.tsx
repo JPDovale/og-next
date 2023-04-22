@@ -93,14 +93,14 @@ export function ObjectiveEditor({
   ) as IPersonsResponse
 
   const personsThisProject = persons.filter(
-    (person) => person.defaultProject === projectId,
+    (person) => person.project_id === projectId,
   )
 
   const initialSupporters = objective
     ? supporting ||
       personsThisProject.filter((person) => {
-        const isSupporter = !!objective.supporting.find(
-          (support) => support === person.id,
+        const isSupporter = !!objective.supporters?.persons?.find(
+          (support) => support.id === person.id,
         )
 
         return isSupporter
@@ -110,8 +110,8 @@ export function ObjectiveEditor({
   const initialAvoiders = objective
     ? avoiders ||
       personsThisProject.filter((person) => {
-        const isAvoider = !!objective.avoiders.find(
-          (avoider) => avoider === person.id,
+        const isAvoider = !!objective.avoiders?.persons?.find(
+          (avoider) => avoider.id === person.id,
         )
 
         return isAvoider
@@ -217,7 +217,7 @@ export function ObjectiveEditor({
     const avoidersToObjective = avoiders?.map((avoiders) => avoiders.id)
     const supportersToObjective = supporting?.map((supporter) => supporter.id)
 
-    let objectifiedToObjective = objective?.objectified || false
+    let objectifiedToObjective = objective?.it_be_realized || false
 
     if (objectified !== undefined) {
       objectifiedToObjective = objectified
@@ -227,7 +227,7 @@ export function ObjectiveEditor({
       title: title || objective?.title || '',
       description: description || objective?.description || '',
       avoiders: avoidersToObjective || objective?.avoiders || [],
-      supporting: supportersToObjective || objective?.supporting || [],
+      supporting: supportersToObjective || objective?.supporters || [],
       objectified: objectifiedToObjective,
     }
 
@@ -418,13 +418,13 @@ export function ObjectiveEditor({
               {permission !== 'edit' && (
                 <Text
                   css={{
-                    color: objective?.objectified
+                    color: objective?.it_be_realized
                       ? '$successDefault'
                       : '$errorDefault',
                     marginTop: '-$4',
                   }}
                 >
-                  {objective?.objectified ? 'Sim' : 'Não'}
+                  {objective?.it_be_realized ? 'Sim' : 'Não'}
                 </Text>
               )}
 

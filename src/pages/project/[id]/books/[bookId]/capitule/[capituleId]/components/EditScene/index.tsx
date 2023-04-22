@@ -87,12 +87,12 @@ export function EditScene({
   } = useForm<editSceneBodyData>({
     resolver: zodResolver(editSceneSchema),
     defaultValues: {
-      act1: scene.structure.act1,
-      act2: scene.structure.act2,
-      act3: scene.structure.act3,
+      act1: scene.structure_act_1,
+      act2: scene.structure_act_2,
+      act3: scene.structure_act_3,
       objective: scene.objective,
-      persons: scene.persons || [],
-      writtenWords: scene.writtenWords || '0',
+      persons: [],
+      writtenWords: scene.written_words.toString() || '0',
       complete: scene.complete,
     },
   })
@@ -150,7 +150,7 @@ export function EditScene({
     setFormUpdated(true)
 
     if (updatedComplete) {
-      setValue('writtenWords', scene.writtenWords)
+      setValue('writtenWords', scene.written_words.toString())
     } else {
       setValue('writtenWords', '0')
     }

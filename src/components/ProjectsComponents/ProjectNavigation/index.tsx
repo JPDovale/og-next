@@ -32,21 +32,23 @@ import {
   UsersFour,
   XSquare,
   House,
-  TreeStructure,
+  // TreeStructure,
   UserMinus,
-  Package,
+  Moon,
+  Sun,
 } from 'phosphor-react'
 import { useContext, useState } from 'react'
 
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
 import { InterfaceContext } from '@contexts/interface'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 import { Box } from '@components/usefull/Box'
 import { useScroll } from '@hooks/useScroll'
+import { useProject } from '@hooks/useProject'
+import { useUser } from '@hooks/useUser'
 
 interface IProjectNavigationProps {
   isFullDisabled?: boolean
@@ -58,14 +60,14 @@ export function ProjectNavigation({
   const [onOpenDelete, setOnOpenDelete] = useState(false)
   const [onOpenQuit, setOnOpenQuit] = useState(false)
 
-  const { deleteProject, projects, loading, quitProject } =
-    useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
+  const { quitProject } = useContext(ProjectsContext)
   const {
     navigatorProjectIsOpen,
     setNavigatorProjectIsOpen,
     orderBy,
     setOrderBy,
+    theme,
+    setThemeFunction,
   } = useContext(InterfaceContext)
 
   const router = useRouter()
@@ -75,14 +77,16 @@ export function ProjectNavigation({
 
   const { handleScroll, scrollRef } = useScroll<HTMLDivElement>()
 
-  const project = projects?.find((project) => project.id === id)
+  const { project, loadingProject, callEvent } = useProject(id as string)
+  const { user } = useUser()
+
   const onWindow = pathname.split('/')[3]
 
   // const smallWindow = screen.width < 786
 
   async function handleDeleteProject() {
     router.push('/projects')
-    await deleteProject(id as string)
+    await callEvent.delete()
   }
 
   async function handleQuitProject() {
@@ -116,19 +120,19 @@ export function ProjectNavigation({
 
         {navigatorProjectIsOpen && (
           <>
-            <Text css={{ color: '$base700' }}>Opções de visualização</Text>
+            <Text>Opções de visualização</Text>
             <Text size="xs" css={{ color: '$base800' }}>
               Ordenar por
             </Text>
             <Options isOpen={navigatorProjectIsOpen}>
-              <Label size="xxs">
+              <Label size="xxs" weight="bold">
                 A para Z
                 <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
                   variant={orderBy === 'a-z' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   onClick={() => {
                     setOrderBy(`a-z`)
                     setNavigatorProjectIsOpen(false)
@@ -140,14 +144,14 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
 
-              <Label size="xxs">
+              <Label size="xxs" weight="bold">
                 Z para A
                 <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
                   variant={orderBy === 'z-a' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   onClick={() => {
                     setOrderBy(`z-a`)
                     setNavigatorProjectIsOpen(false)
@@ -159,14 +163,14 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
 
-              <Label size="xxs">
+              <Label size="xxs" weight="bold">
                 Mais novos primeiro
                 <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
                   variant={orderBy === 'time-asc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   onClick={() => {
                     setOrderBy(`time-asc`)
                     setNavigatorProjectIsOpen(false)
@@ -178,14 +182,14 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
 
-              <Label size="xxs">
+              <Label size="xxs" weight="bold">
                 Mais velhos primeiro
                 <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
                   variant={orderBy === 'time-desc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   onClick={() => {
                     setOrderBy(`time-desc`)
                     setNavigatorProjectIsOpen(false)
@@ -197,14 +201,14 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
 
-              <Label size="xxs">
+              <Label size="xxs" weight="bold">
                 Atualização mais recente primeiro
                 <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
                   variant={orderBy === 'update-asc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   onClick={() => {
                     setOrderBy(`update-asc`)
                     setNavigatorProjectIsOpen(false)
@@ -216,14 +220,14 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
 
-              <Label size="xxs">
+              <Label size="xxs" weight="bold">
                 Atualização mais antiga primeiro
                 <ButtonRoot
                   type="button"
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
                   variant={orderBy === 'update-desc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   onClick={() => {
                     setOrderBy(`update-desc`)
                     setNavigatorProjectIsOpen(false)
@@ -235,21 +239,60 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
             </Options>
+            <Text size="xs" css={{ color: '$base800' }}>
+              Tema
+            </Text>
+            <Options isOpen={navigatorProjectIsOpen}>
+              <Label size="xxs" weight="bold">
+                Dark mode
+                <ButtonRoot
+                  type="button"
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={theme === 'dark' ? 'active' : 'default'}
+                  disabled={isFullDisabled || !!loadingProject}
+                  onClick={() => {
+                    if (theme === 'dark') return
+                    setThemeFunction()
+                  }}
+                >
+                  <ButtonIcon>
+                    <Moon />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+              <Label size="xxs" weight="bold">
+                Light mode
+                <ButtonRoot
+                  type="button"
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={theme === 'light' ? 'active' : 'default'}
+                  disabled={isFullDisabled || !!loadingProject}
+                  onClick={() => {
+                    if (theme === 'light') return
+                    setThemeFunction()
+                  }}
+                >
+                  <ButtonIcon>
+                    <Sun />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            </Options>
           </>
         )}
 
-        {navigatorProjectIsOpen && (
-          <Text css={{ color: '$base700' }}>Opções do projeto</Text>
-        )}
+        {navigatorProjectIsOpen && <Text>Opções do projeto</Text>}
         <Options
           ref={scrollRef}
           onScroll={handleScroll}
           isOpen={navigatorProjectIsOpen}
         >
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Projeto
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
@@ -264,7 +307,7 @@ export function ProjectNavigation({
             </ButtonRoot>
           </Label>
 
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Livros
             <ButtonRoot
               type="button"
@@ -282,10 +325,10 @@ export function ProjectNavigation({
             </ButtonRoot>
           </Label>
 
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Plot
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
@@ -301,7 +344,7 @@ export function ProjectNavigation({
             </ButtonRoot>
           </Label>
 
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Planetas
             <ButtonRoot
               type="button"
@@ -319,7 +362,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Nações
             <ButtonRoot
               type="button"
@@ -337,10 +380,10 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Personagens
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
@@ -355,7 +398,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Cidades
             <ButtonRoot
               type="button"
@@ -373,7 +416,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Raças
             <ButtonRoot
               type="button"
@@ -391,7 +434,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Religiões
             <ButtonRoot
               type="button"
@@ -409,7 +452,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Poderes
             <ButtonRoot
               type="button"
@@ -427,7 +470,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Famílias
             <ButtonRoot
               type="button"
@@ -445,7 +488,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Linguagens
             <ButtonRoot
               type="button"
@@ -463,7 +506,7 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Instituições
             <ButtonRoot
               type="button"
@@ -481,8 +524,8 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          <Label size="xxs">
-            Time lines
+          <Label size="xxs" weight="bold">
+            Timelines
             <ButtonRoot
               type="button"
               disabled
@@ -500,25 +543,7 @@ export function ProjectNavigation({
             </ButtonRoot>
           </Label>
 
-          <Label size="xxs">
-            Boxes
-            <ButtonRoot
-              type="button"
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'boxes' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/boxes`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Package />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-
-          <Label size="xxs">
+          {/* <Label size=xxs" weight='bold'>
             Mind map
             <ButtonRoot
               type="button"
@@ -534,12 +559,12 @@ export function ProjectNavigation({
                 <TreeStructure />
               </ButtonIcon>
             </ButtonRoot>
-          </Label>
+          </Label> */}
 
-          <Label size="xxs">
+          <Label size="xxs" weight="bold">
             Configurações
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               wid={navigatorProjectIsOpen ? 'full' : 'hug'}
               align="center"
@@ -554,11 +579,11 @@ export function ProjectNavigation({
               </ButtonIcon>
             </ButtonRoot>
           </Label>
-          {project?.createdPerUser !== user?.id && (
-            <Label size="xxs">
+          {project?.user.id !== user?.id && (
+            <Label size="xxs" weight="bold">
               Sair
               <ButtonRoot
-                disabled={isFullDisabled || !!loading}
+                disabled={isFullDisabled || !!loadingProject}
                 type="button"
                 css={{
                   background: 'DarkRed',
@@ -573,7 +598,7 @@ export function ProjectNavigation({
               </ButtonRoot>
             </Label>
           )}
-          {project?.createdPerUser === user?.id && (
+          {project?.user.id === user?.id && (
             <>
               <Label
                 size="xxs"
@@ -584,7 +609,7 @@ export function ProjectNavigation({
               >
                 Apagar
                 <ButtonRoot
-                  disabled={isFullDisabled || !!loading}
+                  disabled={isFullDisabled || !!loadingProject}
                   type="button"
                   css={{
                     background: 'DarkRed',
@@ -602,7 +627,7 @@ export function ProjectNavigation({
           )}
         </Options>
       </ProjectNavigationContainer>
-      {onOpenDelete && project?.createdPerUser === user?.id && (
+      {onOpenDelete && project?.user.id === user?.id && (
         <DeletePopUp>
           <Box as="div">
             <Text size="sm">
@@ -610,7 +635,7 @@ export function ProjectNavigation({
               isso.
             </Text>
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               css={{
                 background: 'DarkRed',
@@ -626,7 +651,7 @@ export function ProjectNavigation({
             </ButtonRoot>
 
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               align="center"
               onClick={() => setOnOpenDelete(false)}
@@ -641,7 +666,7 @@ export function ProjectNavigation({
         </DeletePopUp>
       )}
 
-      {onOpenQuit && project?.createdPerUser !== user?.id && (
+      {onOpenQuit && project?.user.id !== user?.id && (
         <DeletePopUp>
           <Box as="div">
             <Text size="sm">
@@ -649,7 +674,7 @@ export function ProjectNavigation({
               isso. Você não poderá mais ver o projeto na sua aba de projetos.
             </Text>
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               css={{
                 background: 'DarkRed',
@@ -665,7 +690,7 @@ export function ProjectNavigation({
             </ButtonRoot>
 
             <ButtonRoot
-              disabled={isFullDisabled || !!loading}
+              disabled={isFullDisabled || !!loadingProject}
               type="button"
               align="center"
               onClick={() => setOnOpenDelete(false)}

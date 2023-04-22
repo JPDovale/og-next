@@ -27,6 +27,7 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { InterfaceContext } from '@contexts/interface'
 
 const resetPasswordFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -37,6 +38,7 @@ type ForgotPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 export default function ForgotPasswordPage() {
   const { error, success, sendMailForgotPassword, setSuccess, setError } =
     useContext(UserContext)
+  const { theme } = useContext(InterfaceContext)
 
   const { register, handleSubmit, formState, reset } =
     useForm<ForgotPasswordFormData>({
@@ -59,7 +61,12 @@ export default function ForgotPasswordPage() {
       <ForgotPasswordPageContainer>
         <Image className="logo" src={LogoToDown} alt="" />
         <Image className="logo2" src={Logo} alt="" />
-        <BackgroundForgotPassword src={Back} alt="" priority />
+        <BackgroundForgotPassword
+          src={Back}
+          alt=""
+          priority
+          darkMode={theme === 'dark'}
+        />
 
         <ForgotPasswordFormContainer
           onSubmit={handleSubmit(handleForgotPassword)}
@@ -72,7 +79,7 @@ export default function ForgotPasswordPage() {
           {success && <ResponseInfoApi success={success} />}
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               Email
               <Text size="sm" as="span" family="body">
                 {formState.errors?.email?.message}
@@ -100,13 +107,7 @@ export default function ForgotPasswordPage() {
           >
             <ButtonLabel>Enviar email de recuperação</ButtonLabel>
           </ButtonRoot>
-          <Text
-            family="body"
-            spacing="minimus"
-            size="sm"
-            weight="regular"
-            css={{ color: '$base700' }}
-          >
+          <Text family="body" spacing="minimus" size="sm" weight="regular">
             Um e-mail de recuperação de senha será enviada para você com as
             instruções para alterar a sua senha.
             <br />
@@ -117,12 +118,12 @@ export default function ForgotPasswordPage() {
 
           <Links>
             <Link href="/login">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Voltar para o login
               </Text>
             </Link>
             <Link href="/register">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Ainda não teno uma conta
               </Text>
             </Link>

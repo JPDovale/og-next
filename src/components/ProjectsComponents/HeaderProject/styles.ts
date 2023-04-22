@@ -87,7 +87,7 @@ export const Buttons = styled('div', {
     borderRadius: '$full',
     background: 'transparent',
     cursor: 'pointer',
-    color: '$base100',
+    color: '$text800',
 
     '&:focus': {
       boxShadow: '$inFocus',
