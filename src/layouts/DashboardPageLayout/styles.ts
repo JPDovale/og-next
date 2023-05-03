@@ -15,13 +15,16 @@ export const DashboardPageLayoutContainer = styled('main', {
   variants: {
     NavIsOpen: {
       true: {
-        width: '74%',
+        width: '82%',
         '@media screen and (max-width: 768px)': {
           width: '100%',
         },
       },
       false: {
-        width: '100%',
+        width: '95%',
+        '@media screen and (max-width: 768px)': {
+          width: '100%',
+        },
       },
     },
   },

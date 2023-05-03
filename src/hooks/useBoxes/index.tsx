@@ -1,14 +1,11 @@
 import { getBoxesRequest } from '@api/boxesRequests'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { refreshSessionRequest } from '@api/userRequest'
-import { ProjectsContext } from '@contexts/projects'
 import { useUser } from '@hooks/useUser'
 import lodash from 'lodash'
-import { useContext } from 'react'
 import { useQuery } from 'react-query'
 
 export function useBoxes() {
-  const { loading, setLoading } = useContext(ProjectsContext)
   const { isRefreshingSession, loadingUser } = useUser()
 
   const { data, isLoading } = useQuery(
@@ -37,12 +34,10 @@ export function useBoxes() {
     },
     {
       staleTime: 1000 * 60 * 60, // 1hour
-      onError: () => setLoading(false),
-      onSuccess: () => setLoading(false),
     },
   )
 
-  const loadingBoxes = loading || loadingUser || isLoading
+  const loadingBoxes = !loadingUser && !isLoading
   const boxes = data?.boxes ?? []
 
   function findBox(id: string) {

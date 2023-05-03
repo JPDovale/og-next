@@ -10,6 +10,7 @@ export const SubContainer = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(6, 1fr)',
   gap: '$4',
+  width: '100%',
 
   variants: {
     columns: {
@@ -42,16 +43,10 @@ export const SubContainer = styled('div', {
 export const AddGenreForm = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  gap: '$6',
 
-  padding: '$6',
+  gap: '$4',
+  padding: '$4',
 
   borderRadius: '$md',
   background: '$gray900',
-
-  'div, button': {
-    padding: '$3',
-    width: '100%',
-  },
 })

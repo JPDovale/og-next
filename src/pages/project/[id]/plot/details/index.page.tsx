@@ -49,7 +49,7 @@ export default function DetailsPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Detalhes | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Detalhes | Magiscrita`} noindex />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}

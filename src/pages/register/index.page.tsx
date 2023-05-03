@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  BackgroundRegister,
+  CardRegister,
   InputContainer,
   InputHeader,
   Links,
@@ -10,9 +10,7 @@ import {
 
 import { useForm } from 'react-hook-form'
 
-import Back from '../../assets/back.svg'
-import LogoToDown from '../../assets/logos/logoToDown.svg'
-import Logo from '../../assets/logos/logo.svg'
+import LogoToDown from '../../assets/logos/logoOG.png'
 import Image from 'next/image'
 import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
@@ -45,7 +43,6 @@ import {
   TextInputRoot,
 } from '@components/usefull/InputText'
 import { useUser } from '@hooks/useUser'
-import { InterfaceContext } from '@contexts/interface'
 
 const registerFormSchema = z.object({
   name: z
@@ -80,9 +77,8 @@ type RegisterFormData = z.infer<typeof registerFormSchema>
 export default function RegisterPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
 
-  const { createUser, error, loading } = useContext(UserContext)
-  const { theme } = useContext(InterfaceContext)
-  const { userLogged } = useUser()
+  const { createUser, error } = useContext(UserContext)
+  const { userLogged, loadingUser } = useUser()
 
   const { handleSubmit, register, formState, setError } =
     useForm<RegisterFormData>({
@@ -117,22 +113,61 @@ export default function RegisterPage() {
   //   if (session?.data?.loggedUser!) setUser(session?.data?.loggedUser!)
   // }, [session, setUser])
 
-  if (loading) {
+  if (loadingUser) {
     return <Loading />
   }
 
   return (
     <>
-      <NextSeo title="Crie uma conta | Ognare" />
+      <NextSeo title="Crie uma conta | Magiscrita" />
 
       <RegisterPageContainer>
-        <Image className="logo" src={LogoToDown} alt="Ognare" />
-        <Image className="logo2" src={Logo} alt="Ognare" />
+        <CardRegister>
+          <Image className="logo" src={LogoToDown} alt="Magiscrita" />
 
-        <BackgroundRegister src={Back} alt="" darkMode={theme === 'dark'} />
+          <Text size="3xl" family="headingText" className="logo">
+            MagiScrita
+          </Text>
+
+          <Text size="lg" height="shorter" family="body" weight="bold">
+            Excelente! Está animado para começar a escrever e compartilhar suas
+            histórias no MagiScrita? Para começar, você precisará criar uma
+            conta em nossa plataforma. Não se preocupe, é rápido e fácil.
+            <br />
+            <br /> Para se cadastrar, basta preencher o formulário de inscrição
+            com suas informações pessoais e clicar no botão
+            &quot;Cadastrar&quot;. Você precisará fornecer seu nome completo,
+            endereço de e-mail e uma senha segura para acessar sua conta. Não se
+            preocupe, todas as informações que você fornecer serão mantidas em
+            segurança em nosso sistema.
+            <br />
+            <br /> Depois de criar sua conta, você terá acesso a todas as
+            funcionalidades da plataforma MagiScrita. Você poderá criar e salvar
+            seus escritos, compartilhar suas histórias com outros membros da
+            comunidade, participar de desafios criativos, interagir com outros
+            escritores e receber feedback valioso sobre suas obras. <br />
+            <br />
+            Além disso, ao se cadastrar no MagiScrita, você também terá acesso
+            exclusivo a recursos de escrita, como artigos sobre técnicas de
+            escrita, dicas para melhorar suas habilidades literárias e
+            informações sobre eventos e workshops que podem ajudá-lo a aprimorar
+            ainda mais sua escrita.
+            <br />
+            <br />
+            Então, não perca mais tempo e crie sua conta no MagiScrita agora
+            mesmo! Estamos ansiosos para recebê-lo em nossa comunidade de
+            escritores talentosos e apaixonados. Junte-se a nós e comece a
+            escrever histórias incríveis!
+          </Text>
+        </CardRegister>
 
         <RegisterFormContainer onSubmit={handleSubmit(handleCreateUser)}>
-          <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
+          <Text
+            size="2xl"
+            css={{ textTransform: 'uppercase' }}
+            as="span"
+            family="headingText"
+          >
             Efetue seu cadastro
           </Text>
 
@@ -158,6 +193,7 @@ export default function RegisterPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={formState.errors.name?.message ? 'denied' : 'default'}
             >
               <TextInputIcon>
@@ -180,6 +216,7 @@ export default function RegisterPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.username?.message ? 'denied' : 'default'
               }
@@ -201,6 +238,7 @@ export default function RegisterPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={formState.errors.email?.message ? 'denied' : 'default'}
             >
               <TextInputIcon>
@@ -223,6 +261,7 @@ export default function RegisterPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
@@ -252,6 +291,7 @@ export default function RegisterPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.confirmPassword?.message ? 'denied' : 'default'
               }

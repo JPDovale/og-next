@@ -28,7 +28,7 @@ export function InfoDefault({
 }: IInfoDefaultProps) {
   return (
     <InfoContainer {...props}>
-      <Text as="span" size={size} family="body" height="shorter">
+      <Text as="span" size={size} family="body" height="shorter" weight="bold">
         {title}
       </Text>
 

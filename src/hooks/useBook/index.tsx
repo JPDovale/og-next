@@ -1,9 +1,17 @@
 import { getBookRequest } from '@api/booksRequests'
 import { IBooksResponse, ICapitule } from '@api/responsesTypes/IBooksResponse'
 import { refreshSessionRequest } from '@api/userRequest'
+import { useProject } from '@hooks/useProject'
 import { useUser } from '@hooks/useUser'
-import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { createCapitule } from './events/createCapitule'
+import { createGenre } from './events/createGenre'
+import { deleteBook } from './events/deleteBook'
+import { deleteGenre } from './events/deleteGenre'
+import { removeFrontCoverBook } from './events/removeFrontCoverBook'
+import { reorderCapitules } from './events/reorderCapitules'
+import { updateBook } from './events/updateBook'
+import { updateFrontCoverBook } from './events/updateFrontCoverBook'
 import { ICallEvent } from './types/ICallEvent'
 import { constructInfosBook } from './utils/constructInfosBook'
 
@@ -22,10 +30,9 @@ export interface IFindCapituleResponse {
 }
 
 export function useBook(id: string) {
-  const [loading, setLoading] = useState(true)
   const { isRefreshingSession, loadingUser } = useUser()
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     `book-${id}`,
     async () => {
       if (!id || isRefreshingSession) return
@@ -51,15 +58,15 @@ export function useBook(id: string) {
     },
     {
       staleTime: 1000 * 60 * 60, // 1hour
-      onError: () => setLoading(false),
-      onSuccess: () => setLoading(false),
     },
   )
 
+  const { refetchProject } = useProject(data?.book.project_id ?? '')
+
   const book = data?.book ?? null
 
-  const loadingBook = loadingUser || isLoading || loading
-
+  const refetchBook = refetch
+  const loadingBook = !(!loadingUser && !isLoading)
   const bookName = loadingBook
     ? 'Carregando...'
     : `${book?.title}
@@ -80,11 +87,17 @@ export function useBook(id: string) {
   }
 
   const callEvent: ICallEvent = {
-    updateFrontCover: (file) => {},
-    removeFrontCover: () => {},
-    addGenre: (genre) => {},
-    removeGenre: (genre) => {},
-    delete: () => {},
+    reorderCapitules: (reorder) =>
+      reorderCapitules(book!.id, reorder, refetchBook),
+    removeFrontCover: () => removeFrontCoverBook(book!.id, refetchBook),
+    delete: () => deleteBook(book!.id, refetchProject),
+    updateFrontCover: (file) =>
+      updateFrontCoverBook(book!.id, file, refetchBook),
+    update: (bookUpdated) => updateBook(book!.id, bookUpdated, refetchBook),
+    createCapitule: (newCapitule) =>
+      createCapitule(book!.id, newCapitule, refetchBook),
+    removeGenre: (genreId) => deleteGenre(book!.id, genreId, refetchBook),
+    addGenre: (genre) => createGenre(book!.id, genre, refetchBook),
   }
 
   return {
@@ -97,5 +110,6 @@ export function useBook(id: string) {
     bookWrittenWords,
     loadingBook,
     callEvent,
+    refetchBook,
   }
 }

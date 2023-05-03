@@ -19,7 +19,7 @@
 
 //   return (
 //     <>
-//       <NextSeo title={`${projectName}-Mind map view | Ognare`} noindex />
+//       <NextSeo title={`${projectName}-Mind map view | Magiscrita`} noindex />
 
 //       <ProjectPageLayout
 //         projectName={projectName}

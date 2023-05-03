@@ -48,7 +48,7 @@ export default function PlotPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Plot | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Plot | Magiscrita`} noindex />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}

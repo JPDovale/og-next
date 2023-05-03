@@ -21,7 +21,7 @@ export async function responseDealings<TypeCallback>({
     if (isRefreshed) {
       await callback()
       return {
-        handledAnswer: true,
+        handledAnswer: false,
       }
     } else {
       return {

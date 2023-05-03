@@ -49,7 +49,7 @@ export default function StorytellerPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Narrador | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Narrador | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

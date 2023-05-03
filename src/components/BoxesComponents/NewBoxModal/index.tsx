@@ -48,22 +48,12 @@ interface INewBoxModalProps {
 export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   const [tag, setTag] = useState('')
 
-  const { createBox, boxes } = useContext(ProjectsContext)
+  const { createBox } = useContext(ProjectsContext)
   const { theme } = useContext(InterfaceContext)
 
   const isDarkMode = theme === 'dark'
 
-  const boxesNotInternal = boxes?.filter((box) => !box.internal)
-
   const tagsAlreadyExistesInBoxes: Array<{ name: string }> = []
-
-  boxesNotInternal?.filter((box) => {
-    box.tags?.map((tag) => {
-      return tagsAlreadyExistesInBoxes.push(tag)
-    })
-
-    return ''
-  })
 
   const tagsAlreadyExistesInBoxesFiltered = tagsAlreadyExistesInBoxes.filter(
     (tag, i, self) => i === self.findIndex((t) => t.name === tag.name),
@@ -149,7 +139,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
           <TextInputRoot
             variant={formState.errors.name?.message ? 'denied' : 'default'}
-            css={{ background: !isDarkMode ? '$gray500' : '' }}
+            css={{ background: !isDarkMode ? '$base600' : '' }}
           >
             <TextInputIcon>
               <Package weight="bold" />
@@ -181,7 +171,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
               width: '100%',
               height: 160,
               resize: 'none',
-              background: !isDarkMode ? '$gray500' : '',
+              background: !isDarkMode ? '$base600' : '',
             }}
             variant={
               formState.errors.description?.message ? 'denied' : 'default'
@@ -211,7 +201,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
           <TextInputRoot
             variant="noShadow"
             size="sm"
-            css={{ background: !isDarkMode ? '$gray500' : '' }}
+            css={{ background: !isDarkMode ? '$base600' : '' }}
           >
             <TextInputInput
               name="tag"
@@ -262,6 +252,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
                   return (
                     <TagCard
+                      darkMode={isDarkMode}
                       onClick={() => handleAddTag(t.name)}
                       key={t.name}
                       css={{ cursor: 'pointer', background: '$purple800' }}
@@ -286,7 +277,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
             {tags && tags[0] ? (
               <>
                 {tags.map((t) => (
-                  <TagCard key={t.name}>
+                  <TagCard darkMode={isDarkMode} key={t.name}>
                     <Text>{t.name}</Text>
 
                     <button

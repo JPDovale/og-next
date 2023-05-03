@@ -4,9 +4,9 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
+import { useBook } from '@hooks/useBook'
 import { List, X } from 'phosphor-react'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { z } from 'zod'
 import { HeaderButton } from '../SceneCard/styles'
 
@@ -28,8 +28,8 @@ interface ICapituleCardProps {
   redirectFunction?: () => void
 }
 
-const writtenWordsInput = z.string().regex(/^([0-9]+)$/, {
-  message: 'Coloque apenas números na idade do personagem.',
+const writtenWordsInput = z.coerce.number({
+  invalid_type_error: 'Coloque apenas números na idade do personagem.',
 })
 
 export function CapituleCard({
@@ -42,7 +42,7 @@ export function CapituleCard({
   const [toSequenceSet, setToSequenceSet] = useState('')
   const [errorIn, setErrorIn] = useState('')
 
-  const { reorderCapitules } = useContext(ProjectsContext)
+  const { callEvent } = useBook(bookId)
 
   async function handleReorderCapitules() {
     setErrorIn('')
@@ -70,10 +70,9 @@ export function CapituleCard({
     }
 
     setErrorIn('')
-    await reorderCapitules({
-      bookId,
+    await callEvent.reorderCapitules({
       sequenceFrom: capitule.sequence,
-      sequenceTo: toSequenceSet,
+      sequenceTo: Number(toSequenceSet),
     })
 
     setReOrderSelected(false)
@@ -84,7 +83,9 @@ export function CapituleCard({
     <CapituleCardContainer data-testid="capitule">
       <CapituleName as="div">
         <div>
-          <Text as="span">{capitule.name}</Text>
+          <Text as="span" weight="bold">
+            {capitule.name}
+          </Text>
           <Text size="sm" family="body" css={{ color: '$base800' }}>
             Clique para abrir a grade de cenas
           </Text>
@@ -114,11 +115,21 @@ export function CapituleCard({
             <InfoDefault title="Completo">
               <CapituleComplete as="div" size="sm" complete={capitule.complete}>
                 {capitule.complete ? (
-                  <Text size="sm" data-testid="complete" family="body">
+                  <Text
+                    data-testid="complete"
+                    family="body"
+                    size="lg"
+                    weight="bold"
+                  >
                     Completo
                   </Text>
                 ) : (
-                  <Text size="sm" data-testid="incomplete" family="body">
+                  <Text
+                    data-testid="incomplete"
+                    family="body"
+                    size="lg"
+                    weight="bold"
+                  >
                     Incompleto
                   </Text>
                 )}

@@ -10,8 +10,8 @@ import {
 } from 'react-query'
 
 export async function shareProject(
-  shareInfos: IShareProjectDTO,
   projectId: string,
+  shareInfos: IShareProjectDTO,
   refetchProjects: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
   ) => Promise<
@@ -24,22 +24,18 @@ export async function shareProject(
       unknown
     >
   >,
-  setLoading: (newState: boolean) => void,
 ): Promise<IResolveEvent> {
-  setLoading(true)
   const response = await shareProjectRequest(shareInfos, projectId)
 
   const { handledAnswer, error } = await responseDealings<IResolveEvent>({
     response,
-    callback: () =>
-      shareProject(shareInfos, projectId, refetchProjects, setLoading),
+    callback: () => shareProject(projectId, shareInfos, refetchProjects),
   })
 
   if (handledAnswer) {
     refetchProjects()
   }
 
-  setLoading(false)
   return {
     resolved: handledAnswer,
     error,

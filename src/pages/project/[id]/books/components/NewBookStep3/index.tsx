@@ -7,12 +7,19 @@ import { newBookFormData } from '../NewBookModal'
 interface INewBookStep3Props {
   register: UseFormRegister<newBookFormData>
   errors: Partial<FieldErrorsImpl<newBookFormData>>
+  isDarkMode: boolean
 }
 
-export function NewBookStep3({ register, errors }: INewBookStep3Props) {
+export function NewBookStep3({
+  register,
+  errors,
+  isDarkMode,
+}: INewBookStep3Props) {
   return (
     <ContainerGrid padding={0}>
-      <Text size="sm">Termos técnicos</Text>
+      <Text size="sm" weight="bold">
+        Termos técnicos
+      </Text>
 
       <ContainerGrid padding={0}>
         <Text as="label">
@@ -24,12 +31,19 @@ export function NewBookStep3({ register, errors }: INewBookStep3Props) {
               size="sm"
               css={{ color: '$errorDefault', float: 'right' }}
             >
-              {errors.literaryGenere?.message}
+              {errors.literaryGenre?.message}
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
-            <TextInputInput {...register('literaryGenere')} />
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+            variant={!isDarkMode ? 'default' : 'noShadow'}
+            size="sm"
+          >
+            <TextInputInput
+              placeholder="Romance"
+              {...register('literaryGenre')}
+            />
           </TextInputRoot>
         </Text>
 
@@ -46,8 +60,15 @@ export function NewBookStep3({ register, errors }: INewBookStep3Props) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
-            <TextInputInput {...register('isbn')} />
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+            variant={!isDarkMode ? 'default' : 'noShadow'}
+            size="sm"
+          >
+            <TextInputInput
+              placeholder="978-0-553-59168-4"
+              {...register('isbn')}
+            />
           </TextInputRoot>
         </Text>
       </ContainerGrid>

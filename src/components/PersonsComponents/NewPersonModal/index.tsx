@@ -15,6 +15,7 @@ import { useProjects } from '@hooks/useProjects'
 import {
   ArrowDown,
   Calendar,
+  CaretUp,
   CircleWavyCheck,
   IdentificationCard,
   PlusCircle,
@@ -187,7 +188,9 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
 
                   <SelectPortal>
                     <SelectContent darkMode={isDarkMode}>
-                      <SelectScrollUpButton />
+                      <SelectScrollUpButton asChild>
+                        <CaretUp fontWeight="bold" size={18} />
+                      </SelectScrollUpButton>
 
                       <SelectViewport>
                         {projectsEditablePerUser.map((project) => {
@@ -230,7 +233,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
 
             <TextInputRoot
               variant={formState.errors.name?.message ? 'denied' : 'default'}
-              css={{ background: !isDarkMode ? '$gray500' : '' }}
+              css={{ background: !isDarkMode ? '$base600' : '' }}
             >
               <TextInputIcon>
                 <IdentificationCard weight="bold" />
@@ -264,7 +267,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
               variant={
                 formState.errors.lastName?.message ? 'denied' : 'default'
               }
-              css={{ background: !isDarkMode ? '$gray500' : '' }}
+              css={{ background: !isDarkMode ? '$base600' : '' }}
             >
               <TextInputIcon>
                 <IdentificationCard weight="bold" />
@@ -296,7 +299,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
 
             <TextInputRoot
               variant={formState.errors.age?.message ? 'denied' : 'default'}
-              css={{ background: !isDarkMode ? '$gray500' : '' }}
+              css={{ background: !isDarkMode ? '$base600' : '' }}
             >
               <TextInputIcon>
                 <Calendar weight="bold" />
@@ -331,7 +334,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 variant={
                   formState.errors.birthHour?.message ? 'denied' : 'default'
                 }
-                css={{ background: !isDarkMode ? '$gray500' : '' }}
+                css={{ background: !isDarkMode ? '$base600' : '' }}
               >
                 <TextInputInput
                   placeholder="Hora do nascimento"
@@ -361,7 +364,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 variant={
                   formState.errors.birthMinute?.message ? 'denied' : 'default'
                 }
-                css={{ background: !isDarkMode ? '$gray500' : '' }}
+                css={{ background: !isDarkMode ? '$base600' : '' }}
               >
                 <TextInputInput
                   placeholder="Minuto do nascimento"
@@ -391,7 +394,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 variant={
                   formState.errors.birthSecond?.message ? 'denied' : 'default'
                 }
-                css={{ background: !isDarkMode ? '$gray500' : '' }}
+                css={{ background: !isDarkMode ? '$base600' : '' }}
               >
                 <TextInputInput
                   placeholder="Segundo do nascimento"
@@ -421,7 +424,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
             </Text>
 
             <Textarea
-              css={{ width: '100%', background: !isDarkMode ? '$gray500' : '' }}
+              css={{ width: '100%', background: !isDarkMode ? '$base600' : '' }}
               variant={formState.errors.history?.message ? 'denied' : 'default'}
               placeholder="História do personagem"
               {...register('history')}

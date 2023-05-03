@@ -125,7 +125,7 @@ export function HeaderOptions({
             {queryIsOpen && (
               <TextInputRoot
                 css={{
-                  padding: '$2',
+                  padding: '$1',
                   boxShadow: 'none',
                   background: '$gray500',
                   width: '100%',
@@ -139,7 +139,7 @@ export function HeaderOptions({
                 <TextInputInput
                   placeholder={'Procure por um projeto'}
                   value={query}
-                  css={{ width: '100%' }}
+                  css={{ minWidth: '100%' }}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     setQuery && setQuery(e.target.value)
                   }}
@@ -180,7 +180,7 @@ export function HeaderOptions({
               <BellSimple size={'24'} />
               {newNotifications && (
                 <NewNotificationAlert>
-                  <Text size="sm" family="body">
+                  <Text size="sm" family="body" colorInvert>
                     {newNotificationsNumber}
                   </Text>
                 </NewNotificationAlert>

@@ -14,5 +14,6 @@ export const HeadingPartContainer = styled(Heading, {
     padding: '$2',
     boxShadow: '$default',
     borderRadius: '$xs',
+    color: '$white',
   },
 })

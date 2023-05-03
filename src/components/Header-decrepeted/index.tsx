@@ -24,9 +24,9 @@ export function Header() {
     <HeaderContainer>
       <ImageContent>
         {smallWindow ? (
-          <Image src={aloneLogoImg} alt="Ognare" priority />
+          <Image src={aloneLogoImg} alt="Magiscrita" priority />
         ) : (
-          <Image src={logoImg} alt="Ognare" priority />
+          <Image src={logoImg} alt="Magiscrita" priority />
         )}
       </ImageContent>
 

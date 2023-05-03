@@ -50,7 +50,7 @@ export default function CountTimePage() {
   return (
     <>
       <NextSeo
-        title={`${projectName}-Tempo em que se passa | Ognare`}
+        title={`${projectName}-Tempo em que se passa | Magiscrita`}
         noindex
       />
       <ProjectPageLayout

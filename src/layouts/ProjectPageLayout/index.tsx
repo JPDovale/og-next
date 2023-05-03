@@ -15,6 +15,7 @@ interface IProjectPageLayout {
   isScrolling?: boolean
   isFullScreen?: boolean
   inError: boolean
+  inErrorNotAuthorized?: boolean
   isTimelineInWindow?: boolean
 }
 
@@ -28,6 +29,7 @@ export function ProjectPageLayout({
   isFullScreen = false,
   isTimelineInWindow = true,
   inError,
+  inErrorNotAuthorized = false,
 }: IProjectPageLayout) {
   return (
     <>
@@ -46,6 +48,11 @@ export function ProjectPageLayout({
           />
         ) : loading ? (
           ''
+        ) : inErrorNotAuthorized ? (
+          <Error
+            statusCode={401}
+            errorMessage="Você não tem acesso a essas funções"
+          />
         ) : (
           <ProjectContainer
             isFullScreen={isFullScreen}

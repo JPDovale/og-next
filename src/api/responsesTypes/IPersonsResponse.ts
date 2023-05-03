@@ -3,11 +3,17 @@ import { IComment } from './IProjectResponse'
 export interface IObjectiveAvoiders {
   id: number
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  _count?: {
+    persons: number
+  }
 }
 
 export interface IObjectiveSupporters {
   id: number
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  _count?: {
+    persons: number
+  }
 }
 export interface IObjective {
   id: string
@@ -17,8 +23,8 @@ export interface IObjective {
   created_at: Date
   avoiders_id: number | null
   supporters_id: number | null
-  avoiders?: IObjectiveAvoiders
-  supporters?: IObjectiveSupporters
+  avoiders?: IObjectiveAvoiders | null
+  supporters?: IObjectiveSupporters | null
   comments?: IComment[]
   persons?: Array<{ id: string; name: string; image_url: string | null }>
 }
@@ -39,6 +45,7 @@ export interface IPersonality {
   created_at: Date
   consequences?: IConsequence[]
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface IAppearance {
@@ -47,6 +54,7 @@ export interface IAppearance {
   description: string
   created_at: Date
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface IDream {
@@ -55,6 +63,7 @@ export interface IDream {
   description: string
   created_at: Date
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface IFear {
@@ -63,6 +72,7 @@ export interface IFear {
   description: string
   created_at: Date
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface IWishe {
@@ -71,6 +81,7 @@ export interface IWishe {
   description: string
   created_at: Date
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface ITrauma {
@@ -80,6 +91,7 @@ export interface ITrauma {
   created_at: Date
   consequences?: IConsequence[]
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface IPower {
@@ -88,16 +100,7 @@ export interface IPower {
   description: string
   created_at: Date
   persons?: Array<{ id: string; name: string; image_url: string | null }>
-}
-
-export interface ICouple {
-  id: string
-  title: string
-  description: string
-  until_end: boolean
-  created_at: Date
-  person_id: string
-  couple_with_person_id: number
+  comments?: IComment[]
 }
 
 export interface ICoupleWithPerson {
@@ -109,6 +112,18 @@ export interface ICoupleWithPerson {
     name: string
     image_url: string | null
   }
+}
+
+export interface ICouple {
+  id: string
+  title: string
+  description: string
+  until_end: boolean
+  created_at: Date
+  person_id: string
+  coupleWithPerson: ICoupleWithPerson
+  couple_with_person_id: number
+  comments?: IComment[]
 }
 
 interface IException {
@@ -127,6 +142,7 @@ export interface IValue {
 
   exceptions?: IException[]
   persons?: Array<{ id: string; name: string; image_url: string | null }>
+  comments?: IComment[]
 }
 
 export interface IPersonsResponse {

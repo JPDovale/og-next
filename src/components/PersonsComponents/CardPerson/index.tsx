@@ -1,4 +1,5 @@
 import { ButtonIcon } from '@components/usefull/Button'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Text } from '@components/usefull/Text'
 import { InterfaceContext } from '@contexts/interface'
 import { useProject } from '@hooks/useProject'
@@ -11,7 +12,6 @@ import {
   EditPersonButton,
   HistoryContent,
   ItemInfo,
-  ItemsContainer,
   ObjectsOfPerson,
   PersonHistory,
   PersonInfos,
@@ -34,8 +34,7 @@ export function CardPerson({
   const { theme } = useContext(InterfaceContext)
 
   const { findPerson } = useProject(id as string)
-  const { createdAt, person, personImage, personName, updatedAt } =
-    findPerson(personId)
+  const { person, personImage, personName } = findPerson(personId)
 
   return (
     <CardPersonContainer
@@ -71,216 +70,150 @@ export function CardPerson({
                 weight="thin"
                 size={64}
                 alt=""
-                color={
-                  isNotPreview
-                    ? '#e3e3e3'
-                    : theme === 'dark'
-                    ? '#e3e3e3'
-                    : '#030303'
-                }
+                color={theme === 'dark' ? '#e3e3e3' : '#030303'}
               />
             )}
           </div>
-          <PersonInfos>
-            <ItemInfo>
-              <Text as="label" size="sm" family="body" height="shorter">
-                Nome:
-              </Text>
-              <Text
-                size="sm"
-                weight="bold"
-                colorInvert={isNotPreview && theme === 'light'}
-              >
-                {personName}
-              </Text>
-            </ItemInfo>
-            <ItemInfo>
-              <Text as="label" size="sm" family="body" height="shorter">
-                Idade:
-              </Text>
-              <Text
-                size="sm"
-                weight="bold"
-                colorInvert={isNotPreview && theme === 'light'}
-              >
-                {person?.age} anos
-              </Text>
-            </ItemInfo>
-
-            <ItemsContainer>
+          <ContainerGrid padding={0} columns={2}>
+            <PersonInfos>
               <ItemInfo>
                 <Text as="label" size="sm" family="body" height="shorter">
-                  Criado em:
+                  Nome:
                 </Text>
-                <Text
-                  size="xxs"
-                  colorInvert={isNotPreview && theme === 'light'}
-                >
-                  {createdAt}
+                <Text size="sm" weight="bold">
+                  {personName}
                 </Text>
               </ItemInfo>
               <ItemInfo>
                 <Text as="label" size="sm" family="body" height="shorter">
-                  Atualizado em:
+                  Idade:
                 </Text>
-                <Text
-                  size="xxs"
-                  colorInvert={isNotPreview && theme === 'light'}
-                >
-                  {updatedAt}
+                <Text size="sm" weight="bold">
+                  {person?.age} anos
                 </Text>
               </ItemInfo>
-            </ItemsContainer>
 
+              {isNotPreview && (
+                <ObjectsOfPerson>
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Objetivos:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.objectives || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Sonhos:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.dreams || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Medos:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.fears || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Casais:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.couples || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Aparência:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.appearances || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Personalidade:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.personalities || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Poderes:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.powers || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Traumas:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.traumas || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Valores:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.values || 0}
+                    </Text>
+                  </ItemInfo>
+
+                  <ItemInfo isObject>
+                    <Text as="label" size="xs" family="body" height="shorter">
+                      Desejos:
+                    </Text>
+                    <Text weight="bold" size="xs">
+                      {person?._count.wishes || 0}
+                    </Text>
+                  </ItemInfo>
+                </ObjectsOfPerson>
+              )}
+            </PersonInfos>
             {isNotPreview && (
-              <ObjectsOfPerson>
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Objetivos:
+              <>
+                <PersonHistory>
+                  <Text as="label" size="xl">
+                    História:
                   </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.objectives || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Sonhos:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.dreams || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Medos:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.fears || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Casais:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.couples || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Aparência:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.appearances || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Personalidade:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.personalities || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Poderes:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.powers || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Traumas:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.traumas || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Valores:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.values || 0}
-                  </Text>
-                </ItemInfo>
-
-                <ItemInfo isObject>
-                  <Text as="label" size="xs" family="body" height="shorter">
-                    Desejos:
-                  </Text>
-                  <Text
-                    size="xs"
-                    colorInvert={isNotPreview && theme === 'light'}
-                  >
-                    {person?._count.wishes || 0}
-                  </Text>
-                </ItemInfo>
-              </ObjectsOfPerson>
+                  <HistoryContent
+                    dangerouslySetInnerHTML={{
+                      __html: `${person?.history!.slice(0, 400)}...`,
+                    }}
+                  />
+                </PersonHistory>
+                <EditPersonButton
+                  size="xs"
+                  variant="noShadow"
+                  wid="hug"
+                  onClick={() =>
+                    router.push(`/project/${id}/persons/${personId}`)
+                  }
+                >
+                  <ButtonIcon>
+                    <Pencil weight="bold" size={32} />
+                  </ButtonIcon>
+                </EditPersonButton>
+              </>
             )}
-          </PersonInfos>
-
-          {isNotPreview && (
-            <>
-              <PersonHistory>
-                <Text as="label" size="xl">
-                  História:
-                </Text>
-                <HistoryContent
-                  dangerouslySetInnerHTML={{ __html: person?.history! }}
-                />
-              </PersonHistory>
-              <EditPersonButton
-                size="xs"
-                variant="noShadow"
-                wid="hug"
-                onClick={() =>
-                  router.push(`/project/${id}/persons/${personId}`)
-                }
-              >
-                <ButtonIcon>
-                  <Pencil weight="bold" size={32} />
-                </ButtonIcon>
-              </EditPersonButton>
-            </>
-          )}
+          </ContainerGrid>
         </>
       )}
     </CardPersonContainer>

@@ -23,7 +23,6 @@ import {
   UserImage,
   UsersWhitAccess,
 } from './styles'
-import { useUser } from '@hooks/useUser'
 import { IAuthor } from '@api/responsesTypes/IBooksResponse'
 
 interface IInfos {
@@ -166,11 +165,14 @@ export function HeaderImageAndInfos({
             {infos.infos.map((info) => (
               <>
                 {info.label && info.value && (
-                  <InfoDefault
-                    key={JSON.stringify(info)}
-                    title={info.label + ':'}
-                  >
-                    <Text as="p" size="sm">
+                  <InfoDefault key={JSON.stringify(info)} title={info.label}>
+                    <Text
+                      as="p"
+                      size="xl"
+                      height="shorter"
+                      weight="bold"
+                      family="body"
+                    >
                       {info.value}
                     </Text>
                   </InfoDefault>

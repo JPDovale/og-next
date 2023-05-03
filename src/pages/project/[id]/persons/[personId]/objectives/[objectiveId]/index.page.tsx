@@ -1,0 +1,194 @@
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
+import { Avatares } from '@components/usefull/Avatares'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { HeadingPart } from '@components/usefull/HeadingPart'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { Text } from '@components/usefull/Text'
+import { ProjectsContext } from '@contexts/projects'
+import { useObjectives } from '@hooks/useObjectives'
+import { usePerson } from '@hooks/usePerson'
+import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProject } from '@hooks/useProject'
+import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { getDate } from '@utils/dates/getDate'
+import { NextSeo } from 'next-seo'
+import { useRouter } from 'next/router'
+import { Crosshair, Skull, UsersThree } from 'phosphor-react'
+import { useContext } from 'react'
+
+export default function ObjectivePage() {
+  const { commentInPerson } = useContext(ProjectsContext)
+
+  const router = useRouter()
+  const { id, personId, objectiveId } = router.query
+  const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
+
+  const { permission, projectName, findManyPersons } = useProject(id as string)
+  const { person, findObjective, personName, loadingPerson } = usePerson(
+    personId as string,
+  )
+  const { objective } = findObjective(objectiveId as string)
+
+  const { findObjective: findFinalObjective } = useObjectives(id as string)
+  const { objective: finalObjective } = findFinalObjective(
+    objectiveId as string,
+  )
+
+  const personsInObjectiveIds = finalObjective?.persons?.map((person) => {
+    if (person.id === personId) return ''
+    return person.id
+  })
+  const personsInObjective = findManyPersons(personsInObjectiveIds ?? [])
+
+  const supportersIds = objective?.supporters?.persons?.map(
+    (supporter) => supporter.id,
+  )
+  const supporters = findManyPersons(supportersIds ?? [])
+
+  const avoidersIds = objective?.avoiders?.persons?.map(
+    (supporter) => supporter.id,
+  )
+  const avoiders = findManyPersons(avoidersIds ?? [])
+
+  async function handleCommentInObjective(newComment: ICreateCommentDTO) {
+    if (!newComment) return
+
+    await commentInPerson(newComment, person?.id as string)
+  }
+
+  return (
+    <>
+      <NextSeo title={`${personName}-${objective?.title} | Magiscrita`} noindex />
+
+      <ProjectPageLayout
+        projectName={projectName}
+        projectId={`${id}`}
+        paths={[
+          'Personagens',
+          `${personName}`,
+          'Objetivos',
+          objective?.title ?? 'Carregando...',
+        ]}
+        loading={loadingPerson}
+        inError={!loadingPerson && !person}
+        isScrolling
+      >
+        <ContainerGrid padding={4} isRelativePosition>
+          <GoBackButton topDistance={4} />
+
+          <HeadingPart
+            permission={permission}
+            icon={<Crosshair size={40} />}
+            label="Objetivo"
+            customFunctionOnClickSideButton={() =>
+              router.push(
+                `/project/${id}/persons/${personId}/objectives/${objective}/edit`,
+              )
+            }
+            isToEdit
+            inTop
+          />
+
+          <ContainerGrid padding={4} darkBackground>
+            <InfoDefault size="lg" title="Titulo:">
+              <Text family="body" size="3xl" height="shorter" weight="bold">
+                {objective?.title}
+              </Text>
+            </InfoDefault>
+
+            <InfoDefault title="Descrição:">
+              <Text family="body" size="xl" height="shorter" weight="bold">
+                {objective?.description}
+              </Text>
+            </InfoDefault>
+
+            <InfoDefault size="lg" title="Será concretizado?:">
+              <Text
+                family="body"
+                size="xl"
+                height="shorter"
+                weight="bold"
+                css={{
+                  color: objective?.it_be_realized
+                    ? '$successDefault'
+                    : '$fullError',
+                }}
+              >
+                {objective?.it_be_realized ? 'SIM' : 'NÃO'}
+              </Text>
+            </InfoDefault>
+
+            <InfoDefault title="Apoiadores:">
+              <Text family="body" size="xl" height="shorter" weight="bold">
+                <Avatares
+                  persons={supporters}
+                  columns={10}
+                  size="2xl"
+                  listEmptyIcon={<UsersThree />}
+                  listEmptyMessage="Nenhum apoiador adicionado a lista"
+                  isClickable
+                />
+              </Text>
+            </InfoDefault>
+
+            <InfoDefault title="Contras:">
+              <Text family="body" size="xl" height="shorter" weight="bold">
+                <Avatares
+                  persons={avoiders}
+                  columns={10}
+                  size="2xl"
+                  listEmptyIcon={<Skull />}
+                  listEmptyMessage="Nenhum contra adicionado a lista"
+                  isClickable
+                />
+              </Text>
+            </InfoDefault>
+
+            <InfoDefault title="Criado em:">
+              <Text family="body" size="sm" height="shorter" weight="bold">
+                {objective?.created_at
+                  ? getDate(objective?.created_at)
+                  : 'Carregando...'}
+              </Text>
+            </InfoDefault>
+          </ContainerGrid>
+
+          {personsInObjective && personsInObjective[0] && (
+            <ContainerGrid padding={4} darkBackground>
+              <InfoDefault title="Personagens atribuídos a esse objetivo">
+                <Text family="body" size="xl" height="shorter" weight="bold">
+                  <Avatares
+                    persons={personsInObjective}
+                    columns={10}
+                    size="2xl"
+                    listEmptyMessage=""
+                    isClickable
+                  />
+                </Text>
+              </InfoDefault>
+            </ContainerGrid>
+          )}
+        </ContainerGrid>
+
+        <CommentsOnPage
+          onNewComment={handleCommentInObjective}
+          permission={permission}
+          comments={objective?.comments}
+        />
+        {/* <EditorAndCommentsToObjective
+          isNew={objectiveId === 'new'}
+          objective={objective}
+          onNewComment={CommentInPerson}
+          permission={permission}
+          personId={person?.id as string}
+          persons={personsThisProject}
+          projectCreatedPerUser={project?.user.id}
+          projectId={project?.id as string}
+          referenceArchives={[]}
+          comments={objective?.comments ?? []}
+        /> */}
+      </ProjectPageLayout>
+    </>
+  )
+}

@@ -4,7 +4,7 @@ import { UserCircle } from 'phosphor-react'
 
 interface IAvatarProps {
   src: string | undefined
-  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | 'full' | '2xs'
+  size?: 'md' | 'sm' | 'xsm' | 'lg' | '2xl' | '4xl' | '5xl' | 'full' | '2xs'
   selected?: boolean
   error?: boolean
   whitShadow?: boolean
@@ -160,6 +160,20 @@ const AvatarRoot = styled(Avatar.Root, {
           maxHeight: 160,
         },
       },
+
+      '5xl': {
+        minWidth: 240,
+        minHeight: 240,
+        maxWidth: 240,
+        maxHeight: 240,
+
+        svg: {
+          minWidth: 240,
+          minHeight: 240,
+          maxWidth: 240,
+          maxHeight: 240,
+        },
+      },
     },
     error: {
       true: {
@@ -261,6 +275,15 @@ const AvatarImage = styled(Avatar.Image, {
         width: 'auto',
         height: 'auto',
       },
+
+      '5xl': {
+        minWidth: 240,
+        minHeight: 240,
+        maxWidth: 240,
+        maxHeight: 240,
+        width: 'auto',
+        height: 'auto',
+      },
     },
     whitShadow: {
       true: {
@@ -330,6 +353,7 @@ const AvatarFallback = styled(Avatar.Fallback, {
       lg: { minWidth: 64, minHeight: 64, width: 64, height: 64 },
       '2xl': { minWidth: 80, minHeight: 80, width: 80, height: 80 },
       '4xl': { minWidth: 160, minHeight: 160, width: 160, height: 160 },
+      '5xl': { minWidth: 240, minHeight: 240, width: 240, height: 240 },
     },
     whitShadow: {
       true: {

@@ -1,12 +1,13 @@
+import { IGenre } from '@api/responsesTypes/IBooksResponse'
 import { Box } from '@components/usefull/Box'
 import { Text } from '@components/usefull/Text'
 import { styled } from '@styles/index'
 import { X } from 'phosphor-react'
 
 interface IBookGenereProps {
-  genere: string
+  genere: IGenre
   isNotRemovable?: boolean
-  onRemove: (genere: string) => void
+  onRemove: (genereId: string) => void
 }
 
 export function BookGenere({
@@ -16,12 +17,12 @@ export function BookGenere({
 }: IBookGenereProps) {
   return (
     <BookGenereContainer>
-      <Genere>{genere}</Genere>
+      <Genere>{genere.name}</Genere>
       {!isNotRemovable && (
         <button
           type="button"
           title="Remover gênero do livro"
-          onClick={() => onRemove(genere)}
+          onClick={() => onRemove(genere.id)}
         >
           <X />
         </button>

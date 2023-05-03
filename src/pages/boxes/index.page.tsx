@@ -28,7 +28,7 @@ export default function BoxesPage() {
 
   return (
     <>
-      <NextSeo title="Boxes | Ognare" noindex />
+      <NextSeo title="Boxes | Magiscrita" noindex />
 
       <DashboardPageLayout
         window={`Boxes: ${boxes ? boxes.length : 0}`}

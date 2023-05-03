@@ -49,7 +49,7 @@ export default function LiteraryGenerePage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Gênero literário | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Gênero literário | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

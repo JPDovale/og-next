@@ -65,20 +65,23 @@ export const TextInputPrefixContainer = styled('span', {
 
 export const Input = styled('input', {
   width: '100%',
+  minWidth: '100%',
   height: '100%',
 
   background: '$transparent',
   border: 'none',
   outline: 'none',
-  color: '$white',
+  color: '$text800',
   cursor: 'pointer',
+  fontFamily: '$bodyText',
+  fontSize: '$lg',
 
   '&:disabled': {
     cursor: 'not-allowed',
   },
 
   '&::placeholder': {
-    fontSize: '$xs',
+    fontSize: '$md',
   },
 })
 

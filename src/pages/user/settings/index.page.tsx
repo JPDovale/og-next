@@ -218,7 +218,7 @@ export default function UserSettingsPage() {
 
   return (
     <>
-      <NextSeo title={`Configurações-${user?.username} | Ognare`} noindex />
+      <NextSeo title={`Configurações-${user?.username} | Magiscrita`} noindex />
 
       <DashboardPageLayout window="Configurações do usuário" loading={loading}>
         <UserSettingsPageContainer>

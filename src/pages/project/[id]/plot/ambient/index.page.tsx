@@ -49,7 +49,7 @@ export default function AmbientPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Ambientação | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Ambientação | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

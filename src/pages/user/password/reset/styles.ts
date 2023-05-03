@@ -1,103 +1,53 @@
 import { Text } from '@components/usefull/Text'
 import { styled } from '@styles/index'
-import Image from 'next/image'
 
 export const ResetPasswordPageContainer = styled('main', {
-  display: 'flex',
-  justifyContent: 'flex-end',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 1fr)',
+  alignItems: 'center',
+
+  minHeight: '100vh',
+
+  backgroundColor: 'rgb(128, 82, 193)',
+  background:
+    'linear-gradient(133deg, rgba(128,82,193,1) 0%, rgba(223,223,223,1) 100%)',
 
   a: {
     textDecoration: 'none',
-  },
-
-  '.logo2': {
-    display: 'none',
-
-    marginTop: '$10',
-
-    '@media screen and (max-width: 768px)': {
-      display: 'block',
-      marginBottom: '$8',
-    },
-  },
-
-  '.logo': {
-    position: 'fixed',
-    top: '50%',
-    left: '$14',
-
-    scale: '70%',
-    transform: 'translateY(-75%)',
-    transition: 'ease-in-out 250ms',
-
-    '@media screen and (min-width: 2000px)': {
-      left: '$40',
-
-      scale: '120%',
-    },
-
-    '@media screen and (max-width: 768px)': {
-      display: 'none',
-    },
+    color: '$text800',
   },
 
   '@media screen and (max-width: 768px)': {
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column-reverse',
   },
 })
 
-export const BackgroundResetPassword = styled(Image, {
-  zIndex: -1,
-  position: 'fixed',
+export const CardResetPassword = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  width: '85%',
+  justifySelf: 'center',
+  alignSelf: 'center',
+  borderRadius: '$lg',
+  padding: '$4',
 
-  right: -10,
-  top: -10,
+  '.logo': {
+    width: '90px',
+    height: '90px',
 
-  transition: 'ease-in-out 250ms',
-
-  '@media screen and (max-width: 768px)': {
-    scale: '185%',
-  },
-
-  '@media screen and (max-width: 1024px)': {
-    top: -200,
-    right: -200,
-  },
-
-  '@media screen and (min-width: 1500px)': {
-    scale: '200%',
-  },
-
-  '@media screen and (min-width: 2000px)': {
-    scale: '350%',
-  },
-
-  variants: {
-    darkMode: {
-      true: {},
-      false: {
-        transform: 'rotate(180deg)',
-        top: 'unset',
-        right: 'unset',
-        left: -250,
-        bottom: -10,
-      },
-    },
-  },
-
-  defaultVariants: {
-    darkMode: false,
+    transition: 'ease-in-out 250ms',
   },
 })
 
 export const ResetPasswordFormContainer = styled('form', {
   display: 'flex',
   flexDirection: 'column',
+  justifySelf: 'center',
   gap: '$5',
 
   padding: '$14',
-  width: '50%',
+  width: '85%',
 
   span: {
     textAlign: 'center',

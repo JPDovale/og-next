@@ -25,7 +25,7 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <NextSeo title="Meus projetos | Ognare" noindex />
+      <NextSeo title="Meus projetos | Magiscrita" noindex />
 
       <DashboardPageLayout
         window={`Meus projetos: ${
@@ -34,7 +34,7 @@ export default function ProjectsPage() {
         query={query}
         setQuery={setQuery}
         loading={loadingProjects}
-        queryless={projectsThisUser && !!projectsThisUser[0]}
+        queryless
       >
         <Container>
           {!smallWindow && (

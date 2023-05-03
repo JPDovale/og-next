@@ -1,52 +1,35 @@
-import { createContext, useContext, useReducer } from 'react'
+import { createContext, useReducer } from 'react'
 import { IEditorTo } from '@@types/editores/IEditorTo'
 import { IGenericObject } from '@@types/editores/IGenericObject'
-import { ICreateCapituleRequest } from '@api/booksRequests/types/ICreateCapituleRequest'
-import { ICreateSceneRequest } from '@api/booksRequests/types/ICreateSceneRequest'
 import { IDeleteSceneRequest } from '@api/booksRequests/types/IDeleteSceneRequest'
 import { IReorderScenesRequest } from '@api/booksRequests/types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
-import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
-import { IUpdateSceneRequest } from '@api/booksRequests/types/IUpdateSceneRequest'
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
 import { IObjective } from '@api/responsesTypes/IPersonsResponse'
-import { Error } from '@components/usefull/Error'
-import { UserContext } from '../user'
-import { createCapituleFunction } from './functions/booksFunctions/createCapituleFunction'
-import { createSceneFunction } from './functions/booksFunctions/createSceneFunction'
 import { deleteSceneFunction } from './functions/booksFunctions/deleteSceneFunction'
 import { reorderScenesFunction } from './functions/booksFunctions/reorderScenesFunction'
 import { setSceneToCompleteFunction } from './functions/booksFunctions/setSceneToCompleteFunction'
-import { updateCapituleFunction } from './functions/booksFunctions/updateCapituleFunction'
-import { updateSceneFunction } from './functions/booksFunctions/updateSceneFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
 import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
 import { createObjetiveOfPersonFunction } from './functions/personsFunctions/createObjetiveOfPersonFunction'
-import { deleteImagePersonFunction } from './functions/personsFunctions/deleteImagePersonFunction'
 import { deleteObjectGenericFunction } from './functions/personsFunctions/deleteObjectGenericFunction'
 import { deleteObjectiveFunction } from './functions/personsFunctions/deleteObjectiveFunction'
 import { responseCommentInPersonFunction } from './functions/personsFunctions/responseCommentInPersonFunction'
 import { saveRefObjectGenericFunction } from './functions/personsFunctions/saveRefObjectGenericFunction'
 import { saveRefObjectiveFunction } from './functions/personsFunctions/saveRefObjectiveFunction'
-import { updateImageFromPersonFunction } from './functions/personsFunctions/updateImageFromPersonFunction'
 import { updateObjectGenericFunction } from './functions/personsFunctions/updateObjectGenericFunction'
 import { updateObjetiveOfPersonFunction } from './functions/personsFunctions/updateObjetiveOfPersonFunction'
 import { updatedPersonFunction } from './functions/personsFunctions/updatePersonFunction'
 import { commentInPlotFunction } from './functions/projectFunctions/commentInPlotFunction'
 import { responseCommentInPlotFunction } from './functions/projectFunctions/responseCommentInPlotFunction'
 import { projectsReducer } from './reducer/projectsReducer'
-import { IDeleteImagePerson } from './types/interfaceFunctions/IDeleteImagePerson'
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import {
   IProjectsContext,
   IProjectsContextProps,
 } from './types/IProjectContext'
-import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
-import { deleteCapituleFunction } from './functions/booksFunctions/deleteCapituleFunction'
-import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
-import { reorderCapitulesFunction } from './functions/booksFunctions/reorderCapitulesFunction'
 import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
 import { createBoxFunction } from './functions/boxesFunctions/createBoxFunction'
 import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
@@ -75,12 +58,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     boxes: [],
     timelines: [],
   })
-
-  const {
-    userLogged,
-    loading: loadingUser,
-    error: errorUser,
-  } = useContext(UserContext)
 
   const { users, persons, books, boxes, timelines } = projectState
 
@@ -123,10 +100,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
 
   async function createNewPerson(person: ICreatePersonDTO) {
     return createNewPersonFunction({ newPerson: person, dispatch })
-  }
-
-  async function updateImageFromPerson(personId: string, file: File) {
-    return updateImageFromPersonFunction({ file, personId, dispatch })
   }
 
   async function updateObjective(
@@ -259,33 +232,8 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return updatedPersonFunction({ person, personId, dispatch })
   }
 
-  async function deleteImagePerson({ personId }: IDeleteImagePerson) {
-    return deleteImagePersonFunction({ personId, dispatch })
-  }
-
   async function deleteObjective({ objectiveId, personId }: IDeleteObjective) {
     return deleteObjectiveFunction({ objectiveId, personId, dispatch })
-  }
-
-  async function createCapitule(capitule: ICreateCapituleRequest) {
-    return createCapituleFunction({
-      newCapitule: capitule,
-      dispatch,
-    })
-  }
-
-  async function updateCapitule(capitule: IUpdateCapituleRequest) {
-    return updateCapituleFunction({
-      updatedCapitule: capitule,
-      dispatch,
-    })
-  }
-
-  async function createScene(scene: ICreateSceneRequest) {
-    return createSceneFunction({
-      newScene: scene,
-      dispatch,
-    })
   }
 
   async function setSceneToComplete(
@@ -316,37 +264,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
       capituleId,
       sequenceFrom,
       sequenceTo,
-      dispatch,
-    })
-  }
-
-  async function reorderCapitules({
-    bookId,
-    sequenceFrom,
-    sequenceTo,
-  }: IReorderCapitulesRequest) {
-    return reorderCapitulesFunction({
-      bookId,
-      sequenceFrom,
-      sequenceTo,
-      dispatch,
-    })
-  }
-
-  async function updateScene(sceneUpdate: IUpdateSceneRequest) {
-    return updateSceneFunction({
-      sceneUpdate,
-      dispatch,
-    })
-  }
-
-  async function deleteCapitule({
-    bookId,
-    capituleId,
-  }: IDeleteCapituleRequest) {
-    return deleteCapituleFunction({
-      bookId,
-      capituleId,
       dispatch,
     })
   }
@@ -428,21 +345,13 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         responseCommentToPerson,
         saveRefObjectGeneric,
         saveRefObjective,
-        updateImageFromPerson,
         updateObjectGeneric,
         updateObjective,
         updatePerson,
-        deleteImagePerson,
         deleteObjective,
-        createCapitule,
-        updateCapitule,
-        createScene,
         setSceneToComplete,
         deleteScene,
         reorderScenes,
-        updateScene,
-        deleteCapitule,
-        reorderCapitules,
         createBox,
         createArchiveInBox,
         saveArchiveImages,
@@ -453,11 +362,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         deleteBox,
       }}
     >
-      {!loadingUser && !userLogged && errorUser?.title === 'Access denied' ? (
-        <Error isRedirectable />
-      ) : (
-        children
-      )}
+      {children}
     </ProjectsContext.Provider>
   )
 }

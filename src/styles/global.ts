@@ -10,8 +10,8 @@ export const globalStyles = globalCss({
     scrollbarColor: '#00000000 #00000000',
 
     '&::-webkit-scrollbar': {
-      width: 8,
-      height: 8,
+      width: 3,
+      height: 3,
     },
 
     '&::-webkit-scrollbar-track': {
@@ -19,8 +19,9 @@ export const globalStyles = globalCss({
     },
 
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#121416',
+      backgroundColor: '$purple800',
       border: '1px solid #ffffff20',
+      borderRadius: '$full',
     },
   },
 

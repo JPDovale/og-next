@@ -1,10 +1,10 @@
 import { getPersonRequest } from '@api/personsRequests'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { refreshSessionRequest } from '@api/userRequest'
-import { ProjectsContext } from '@contexts/projects'
 import { useUser } from '@hooks/useUser'
-import { useContext } from 'react'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { ICallEvent } from './types/ICallEvent'
 import { constructInfos } from './utils/constructInfos'
 import { findAppearanceUtil } from './utils/findAppearances'
 import { findCoupleUtil } from './utils/findCouple'
@@ -18,7 +18,6 @@ import { findValueUtil } from './utils/findValue'
 import { findWisheUtil } from './utils/findWishe'
 
 export function usePerson(id: string) {
-  const { loading, setLoading } = useContext(ProjectsContext)
   const { isRefreshingSession, loadingUser } = useUser()
 
   const { data, isLoading } = useQuery(
@@ -47,13 +46,11 @@ export function usePerson(id: string) {
     },
     {
       staleTime: 1000 * 60 * 60, // 1hour
-      onError: () => setLoading(false),
-      onSuccess: () => setLoading(false),
     },
   )
 
   const person = data?.person ?? null
-  const loadingPerson = loading || loadingUser || isLoading
+  const loadingPerson = !(!loadingUser && !isLoading)
   const historyPersons = person?.history ?? 'Carregando...'
   const personName = person?.name
     ? `${person?.name} ${person?.last_name}`
@@ -101,6 +98,11 @@ export function usePerson(id: string) {
     return findPowerUtil({ id, person })
   }
 
+  const callEvent: ICallEvent = {
+    updateImage: (file) => {},
+    deleteImage: () => {},
+  }
+
   return {
     person,
     loadingPerson,
@@ -118,5 +120,7 @@ export function usePerson(id: string) {
     findWishe,
     findCouple,
     findPower,
+
+    callEvent,
   }
 }

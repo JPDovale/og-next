@@ -8,7 +8,7 @@ export const NewProjectForm = styled('form', {
   gap: '$2',
   height: '100%',
   alignItems: 'center',
-  padding: '$8',
+  padding: '$4',
 
   overflowY: 'auto',
   borderRadius: '0 0 $md $md',
@@ -19,7 +19,7 @@ export const NewProjectForm = styled('form', {
         background: '$gray900',
       },
       false: {
-        background: '$gray300',
+        background: '$base400',
       },
     },
   },

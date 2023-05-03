@@ -31,7 +31,11 @@ export function ModalContent({
 
         {title && (
           <ModalTitle asChild>
-            <Text as={'h3'} css={{ color: isDarkMode ? '$white' : '' }}>
+            <Text
+              size="lg"
+              weight="bold"
+              css={{ color: isDarkMode ? '$white' : '' }}
+            >
               {title}
             </Text>
           </ModalTitle>
@@ -50,7 +54,7 @@ const ModalOverlay = styled(Dialog.Overlay, {
   height: '100vh',
   inset: 0,
 
-  background: '#000000a0',
+  background: '#000000bf',
 })
 
 const ModalContentContainer = styled(Dialog.Content, {
@@ -90,7 +94,7 @@ const ModalContentContainer = styled(Dialog.Content, {
     darkMode: {
       true: {},
       false: {
-        background: '$gray100',
+        background: '$base700',
       },
     },
   },

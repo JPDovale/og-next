@@ -1,14 +1,9 @@
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { getUserRequest, refreshSessionRequest } from '@api/userRequest'
-import { UserContext } from '@contexts/user'
 import LogRocket from 'logrocket'
-import { useRouter } from 'next/router'
-import { useContext } from 'react'
 import { useQuery } from 'react-query'
 
 export function useUser() {
-  const { loading, setLoading } = useContext(UserContext)
-
   const { data, isLoading, refetch } = useQuery(
     'user',
     async () => {
@@ -36,22 +31,14 @@ export function useUser() {
     },
     {
       staleTime: 1000 * 60 * 60 * 24, // 1 day
-      onSuccess: () => setLoading(false),
-      onError: () => setLoading(false),
     },
   )
 
   const refetchUser = refetch
   const user = data?.user ?? null
   const userLogged = !!user
-  const loadingUser = isLoading || loading
+  const loadingUser = isLoading
   const isRefreshingSession = data?.isRefreshingSession
-
-  const router = useRouter()
-
-  if (!loadingUser && !userLogged && router.pathname.includes('project')) {
-    router.push('/login')
-  }
 
   if (!loadingUser && userLogged && user) {
     LogRocket.identify(user.id, {

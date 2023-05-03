@@ -13,7 +13,6 @@ import { CardObjective } from '@components/PersonsComponents/CardObjective'
 import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { ProjectsContext } from '@contexts/projects'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -33,7 +32,6 @@ import {
   Users,
   Warning,
 } from 'phosphor-react'
-import { useContext } from 'react'
 import { Campu } from './components/Campu'
 import {
   History,
@@ -43,17 +41,13 @@ import {
 } from './styles'
 
 export default function PersonPage() {
-  const { updateImageFromPerson, deleteImagePerson } =
-    useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId } = router.query
   usePreventBack(`/project/${id}/persons`)
 
   const { project, permission, projectName } = useProject(id as string)
-  const { person, personInfos, personName, loadingPerson } = usePerson(
-    personId as string,
-  )
+  const { person, personInfos, personName, loadingPerson, callEvent } =
+    usePerson(personId as string)
 
   async function handleUpdateImage(files: FileList | null): Promise<void> {
     if (!files) return
@@ -62,16 +56,17 @@ export default function PersonPage() {
 
     if (file.type !== 'image/jpeg' && file.type !== 'image/png') return
 
-    await updateImageFromPerson(personId as string, file)
+    await callEvent.updateImage(file)
   }
 
   async function handleDeleteImage(id: string) {
-    return deleteImagePerson({ personId: id })
+    callEvent.deleteImage()
+    return true
   }
 
   return (
     <>
-      <NextSeo title={`${personName} | Ognare`} noindex />
+      <NextSeo title={`${personName} | Magiscrita`} noindex />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}

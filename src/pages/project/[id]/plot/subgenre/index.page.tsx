@@ -49,7 +49,7 @@ export default function SubgenrePage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Subgênero | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Subgênero | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

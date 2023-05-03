@@ -5,7 +5,6 @@ import { styled } from '@styles/index'
 export const CardPersonContainer = styled(Box, {
   display: 'flex',
   flexDirection: 'column',
-  gap: '$2',
   position: 'relative',
 
   padding: 0,
@@ -63,24 +62,22 @@ export const CardPersonContainer = styled(Box, {
 
     isNotPreview: {
       true: {
-        display: 'grid',
-        gridTemplateColumns: '4fr 4fr 6fr',
+        display: 'flex',
+        flexDirection: 'column',
 
         minHeight: '400px',
 
-        background:
-          'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(63,28,87,1) 100%)',
+        background: '$gray900',
+        color: '$text800',
 
         '.person-image': {
           minHeight: '400px',
           width: '100%',
-          height: 'auto',
+          height: '400px',
 
           img: {
-            maxHeight: '400px',
-            minHeight: '400px',
-            width: '100%',
-            height: 'auto',
+            minWidth: '100%',
+            minHeight: '100%',
           },
         },
 
@@ -133,13 +130,6 @@ export const ItemInfo = styled('div', {
   },
 })
 
-export const ItemsContainer = styled('div', {
-  display: 'flex',
-  justifyContent: 'space-between',
-
-  width: '100%',
-})
-
 export const AddItem = styled('div', {
   display: 'flex',
   flexDirection: 'column',
@@ -156,10 +146,12 @@ export const AddItem = styled('div', {
 
 export const ObjectsOfPerson = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  justifyContent: 'center',
+  alignItems: 'center',
 
   width: '100%',
-  marginTop: '$8',
+  marginTop: '$2',
   gap: '$2',
 
   '@media screen and (max-width: 768px)': {
@@ -175,11 +167,8 @@ export const PersonHistory = styled('div', {
   width: '100%',
   maxHeight: '400px',
 
-  background: '#00000030',
-  boxShadow: '0 -3px 4px #000000d0',
-
   label: {
-    color: '$base700',
+    color: '$base900',
   },
 })
 
@@ -187,10 +176,11 @@ export const HistoryContent = styled('div', {
   display: 'inline',
   padding: '$2',
 
-  background: '$base300',
-  boxShadow: '$onActive',
+  background: '$gray700',
   borderRadius: '$xs',
-  color: '$black',
+  fontSize: '$xs',
+  color: '$text800',
+  textAlign: 'justify',
 
   p: {
     display: 'block',

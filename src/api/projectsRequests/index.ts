@@ -173,3 +173,84 @@ export async function quitProjectRequest({ projectId }: IQuitProjectRequest) {
     return err.response.data
   }
 }
+
+export async function getObjectivesRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/objectives`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getPersonalitiesRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/personalities`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getValuesRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/values`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getTraumasRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/traumas`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getAppearancesRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/appearances`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getDreamsRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/dreams`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getFearsRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/fears`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getWishesRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/wishes`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getPowersRequest(projectId: string) {
+  try {
+    const response = await api.get(`/projects/${projectId}/powers`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}

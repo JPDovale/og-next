@@ -2,8 +2,10 @@ import { IObjective } from '@api/responsesTypes/IPersonsResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
+import { InterfaceContext } from '@contexts/interface'
 import { useRouter } from 'next/router'
-import { Eye, Pencil, Skull, UsersThree } from 'phosphor-react'
+import { Eye, Skull, UsersThree } from 'phosphor-react'
+import { useContext } from 'react'
 
 import {
   AvoiderContainer,
@@ -20,15 +22,15 @@ interface ICardObjectiveProps {
   objective: IObjective
   avoiders: Array<{ id: string; name: string; image_url: string | null }>
   supporters: Array<{ id: string; name: string; image_url: string | null }>
-  permission: 'view' | 'edit' | 'comment' | undefined
 }
 
 export function CardObjective({
   objective,
   avoiders,
   supporters,
-  permission,
 }: ICardObjectiveProps) {
+  const { theme } = useContext(InterfaceContext)
+
   const router = useRouter()
   const { id: projectId, personId } = router.query
 
@@ -39,14 +41,18 @@ export function CardObjective({
           <Text as="label" size="sm" family="body" height="shorter">
             Titulo
           </Text>
-          <Text>{objective.title}</Text>
+          <Text weight="bold" size="2xl" family="body" height="shorter">
+            {objective.title}
+          </Text>
         </ItemInfo>
 
         <ItemInfo>
           <Text as="label" size="sm" family="body" height="shorter">
             Descrição
           </Text>
-          <Text size="sm">{objective.description}</Text>
+          <Text size="xl" family="body" weight="bold" height="shorter">
+            {objective.description}
+          </Text>
         </ItemInfo>
 
         <ItemInfo>
@@ -54,6 +60,7 @@ export function CardObjective({
             O objetivo sera concluído?
           </Text>
           <Text
+            weight="bold"
             css={{
               color: objective.it_be_realized
                 ? '$successDefault'
@@ -68,7 +75,7 @@ export function CardObjective({
       <AvoiderContainer>
         <ItemInfo>
           <Text as="label" size="md" weight="bold" height="shorter">
-            Inimigos
+            Contras
           </Text>
         </ItemInfo>
         <Avoiders isEmpty={!avoiders[0]}>
@@ -128,11 +135,7 @@ export function CardObjective({
           )
         }
       >
-        {permission === 'edit' ? (
-          <Pencil size={20} color="#fffddd" />
-        ) : (
-          <Eye size={20} color="#fffddd" />
-        )}
+        <Eye size={20} color={theme === 'dark' ? '#fffddd' : '#121214'} />
       </EditButton>
     </CardObjectiveContainer>
   )

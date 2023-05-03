@@ -13,6 +13,7 @@ import { QueryClientProvider, QueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { useState } from 'react'
 import { lightMode } from '@styles/theme/light'
+import { Analytics } from '@vercel/analytics/react'
 
 LogRocket.init('iaiad2/og')
 
@@ -42,17 +43,18 @@ export default function App({ Component, pageProps }: AppProps) {
                 openGraph={{
                   type: 'website',
                   locale: 'pt-br',
-                  url: 'https://ognare.com',
-                  siteName: 'Ognare',
-                  title: 'Ognare',
+                  url: 'https://magiscrita.com',
+                  siteName: 'Magiscrita',
+                  title: 'Magiscrita',
                   description: 'A origem das suas ideias...',
                 }}
-                defaultTitle="Ognare"
+                defaultTitle="Magiscrita"
                 description="A origem das suas ideias..."
-                title="Ognare"
+                title="Magiscrita"
               />
               <div className={theme}>
                 <Component {...pageProps} />
+                <Analytics />
               </div>
             </ProjectsProvider>
           </UserProvider>

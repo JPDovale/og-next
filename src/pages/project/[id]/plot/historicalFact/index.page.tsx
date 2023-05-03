@@ -49,7 +49,7 @@ export default function HistoricalFactPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Fato histórico | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Fato histórico | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

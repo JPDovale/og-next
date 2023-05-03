@@ -61,7 +61,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Configurações | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Configurações | Magiscrita`} noindex />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}

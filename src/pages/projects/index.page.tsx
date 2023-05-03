@@ -24,14 +24,14 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <NextSeo title="Projetos | Ognare" noindex />
+      <NextSeo title="Projetos | Magiscrita" noindex />
 
       <DashboardPageLayout
         window={`Projetos: ${projects.length}`}
         query={query}
         setQuery={setQuery}
         loading={loadingProjects}
-        queryless={projects && !!projects[0]}
+        queryless
       >
         <Container>
           {!smallWindow && (

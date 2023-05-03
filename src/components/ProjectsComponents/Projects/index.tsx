@@ -22,14 +22,13 @@ export function Projects({
   isLoading,
   isFirst = false,
 }: IProjectProps) {
-  const { isList, navIsOpen } = useContext(InterfaceContext)
+  const { isList } = useContext(InterfaceContext)
   const { user } = useUser()
 
   return (
     <ProjectsContainer
       isFirst={isFirst}
       isList={isList}
-      navIsOpen={navIsOpen}
       isEmpty={projects && !projects[0]}
     >
       {isList && (
@@ -52,7 +51,9 @@ export function Projects({
           isLoading={isLoading}
           icon={<ProjectorScreenChart size={98} />}
           message={
-            query ? `Nenhum projeto encontrado para ${query}` : listEmptyMessage
+            query
+              ? `Nenhum projeto encontrado para: "${query}"... O campo de pesquisa mostra resultados para projetos que incluem o nome do criador, o nome do projeto ou a data de criação do projeto`
+              : listEmptyMessage
           }
           isInLine
         />

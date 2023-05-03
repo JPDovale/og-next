@@ -86,20 +86,24 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
       />
 
       <ShareForm onSubmit={handleShareProject} darkMode={isDarkMode}>
-        <Text size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
+        <Text
+          weight="bold"
+          family="body"
+          css={{ color: isDarkMode ? '$white' : '' }}
+        >
           Informe o email do usuário que quer compartilhar o projeto
         </Text>
 
         <TextInputRoot
           variant={errorIn === 'email' ? 'denied' : 'default'}
-          css={{ background: !isDarkMode ? '$gray500' : '' }}
+          css={{ background: !isDarkMode ? '$base600' : '' }}
         >
           <TextInputIcon>
             <Envelope />
           </TextInputIcon>
 
           <TextInputInput
-            placeholder="jonas@ognare.com"
+            placeholder="jonas@Magiscrita.com"
             type="email"
             onChange={(e) => setShareEmail(e.target.value)}
             value={shareEmail}
@@ -107,7 +111,11 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
           />
         </TextInputRoot>
 
-        <Text size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
+        <Text
+          weight="bold"
+          family="body"
+          css={{ color: isDarkMode ? '$white' : '' }}
+        >
           Esse usuário poderá{' '}
           {sharePermission === 'edit'
             ? 'editar '
@@ -125,7 +133,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
           ]}
           setState={setSharePermission}
           state={sharePermission}
-          withColorInBackground
+          withColorInBackground={isDarkMode}
         />
 
         <ButtonRoot

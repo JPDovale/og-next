@@ -27,6 +27,7 @@ import {
 } from '@components/usefull/InputText'
 import { Toast } from '@components/usefull/Toast'
 import { NewPersonModal } from '@components/PersonsComponents/NewPersonModal'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
 
 export default function PersonsPage() {
   const [successToastOpen, setSuccessToastOpen] = useState(false)
@@ -46,7 +47,7 @@ export default function PersonsPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Personagens | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Personagens | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -62,75 +63,87 @@ export default function PersonsPage() {
           title="Personagem criada"
           message="Parabéns! Você acabou de criar uma nova personagem! Acesse a aba de personagens para ver."
         />
+        <ContainerGrid padding={0}>
+          <NewPersonFormContainer>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <ButtonRoot
+                  size="xs"
+                  variant="noShadow"
+                  wid="hug"
+                  css={{ float: 'right' }}
+                >
+                  <ButtonIcon>
+                    <UserPlus weight="bold" />
+                  </ButtonIcon>
 
-        <NewPersonFormContainer>
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <ButtonRoot
-                size="xs"
-                variant="noShadow"
-                wid="hug"
-                css={{ float: 'right' }}
-              >
-                <ButtonIcon>
-                  <UserPlus weight="bold" />
-                </ButtonIcon>
+                  {!smallWindow && <ButtonLabel>Criar personagem</ButtonLabel>}
+                </ButtonRoot>
+              </Dialog.Trigger>
 
-                {!smallWindow && <ButtonLabel>Criar personagem</ButtonLabel>}
-              </ButtonRoot>
-            </Dialog.Trigger>
-
-            <NewPersonModal
-              onSuccess={() => setSuccessToastOpen(true)}
-              projectId={project?.id!}
-            />
-          </Dialog.Root>
-
-          <QueryInputContainer>
-            <TextInputRoot size="xs" variant="noShadow">
-              <TextInputIcon>
-                <MagnifyingGlass size={24} />
-              </TextInputIcon>
-
-              <TextInputInput
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Encontre um personagem"
+              <NewPersonModal
+                onSuccess={() => setSuccessToastOpen(true)}
+                projectId={project?.id!}
               />
-            </TextInputRoot>
-          </QueryInputContainer>
-        </NewPersonFormContainer>
+            </Dialog.Root>
 
-        <FastAccessPersons>
-          <Text size="xs">Acesso rápido:</Text>
-          <Avatares
-            size={smallWindow ? 'xsm' : 'sm'}
-            columns={12}
-            listEmptyMessage={
-              loadingProject
-                ? 'Carregando...'
-                : 'Nenhum personagem foi criado ainda'
-            }
-            persons={finalPersonsToShow ?? []}
-            isClickable
-          />
-        </FastAccessPersons>
+            <QueryInputContainer>
+              <TextInputRoot
+                css={{ padding: '$2', width: '100%' }}
+                variant="noShadow"
+              >
+                <TextInputIcon>
+                  <MagnifyingGlass size={24} />
+                </TextInputIcon>
 
-        <PersonsContainer>
-          {finalPersonsToShow && finalPersonsToShow[0] ? (
-            finalPersonsToShow.map((person) => {
-              return (
-                <CardPerson key={person.id} personId={person.id} isNotPreview />
-              )
-            })
-          ) : (
-            <ListEmpty
-              isLoading={loadingProject}
-              message="Você ainda não criou nenhum personagem para esse projeto."
-              icon={<UserFocus size={loadingProject ? 0 : 90} />}
-            />
-          )}
-        </PersonsContainer>
+                <TextInputInput
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Encontre um personagem"
+                />
+              </TextInputRoot>
+            </QueryInputContainer>
+          </NewPersonFormContainer>
+
+          <ContainerGrid padding={4}>
+            <Text weight="bold">Acesso rápido:</Text>
+            <FastAccessPersons>
+              <Avatares
+                size="xsm"
+                columns={18}
+                listEmptyMessage={
+                  loadingProject
+                    ? 'Carregando...'
+                    : 'Nenhum personagem foi criado ainda'
+                }
+                persons={finalPersonsToShow ?? []}
+                isClickable
+              />
+            </FastAccessPersons>
+          </ContainerGrid>
+
+          <PersonsContainer
+            isEmpty={!finalPersonsToShow || !finalPersonsToShow[0]}
+          >
+            {finalPersonsToShow && finalPersonsToShow[0] ? (
+              finalPersonsToShow.map((person) => {
+                return (
+                  <CardPerson
+                    key={person.id}
+                    personId={person.id}
+                    isNotPreview
+                  />
+                )
+              })
+            ) : (
+              <ListEmpty
+                isLoading={loadingProject}
+                message="Você ainda não criou nenhum personagem para esse projeto."
+                icon={<UserFocus size={loadingProject ? 0 : 90} />}
+              />
+            )}
+          </PersonsContainer>
+        </ContainerGrid>
       </ProjectPageLayout>
     </>
   )

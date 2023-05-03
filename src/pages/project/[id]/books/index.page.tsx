@@ -15,6 +15,7 @@ import { NewBookModal } from './components/NewBookModal'
 import { Toast } from '@components/usefull/Toast'
 
 export default function BooksPage() {
+  const [modalNewBookIsOpen, setModalNewBookIsOpen] = useState(false)
   const [successToastOpen, setSuccessToastOpen] = useState(false)
 
   const router = useRouter()
@@ -27,7 +28,7 @@ export default function BooksPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Livros | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Livros | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -44,7 +45,10 @@ export default function BooksPage() {
           message="Parabéns! Você acabou de criar um novo livro... Veja ele na aba de livos"
         />
 
-        <Dialog.Root>
+        <Dialog.Root
+          open={modalNewBookIsOpen}
+          onOpenChange={setModalNewBookIsOpen}
+        >
           <Dialog.Trigger asChild>
             <NewBookButtonContainer>
               <ButtonRoot align="center" size="sm">
@@ -57,7 +61,10 @@ export default function BooksPage() {
             </NewBookButtonContainer>
           </Dialog.Trigger>
 
-          <NewBookModal openToast={() => setSuccessToastOpen(true)} />
+          <NewBookModal
+            onSuccess={() => setModalNewBookIsOpen(false)}
+            openToast={() => setSuccessToastOpen(true)}
+          />
         </Dialog.Root>
 
         <BooksContainer>

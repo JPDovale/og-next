@@ -5,24 +5,22 @@ export const NavigationBarContainer = styled('nav', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  gap: '$8',
+  gap: '$3',
 
   height: '100vh',
-  width: '26%',
-  padding: '$8',
+  width: '18%',
+  padding: '$2',
 
   transition: 'ease-in-out 250ms',
   background: '$gray900',
   overflowY: 'scroll',
+  overflowX: 'hidden',
 
   img: {
     objectFit: 'fill',
-    height: 90,
+    height: 75,
     width: 'auto',
     cursor: 'pointer',
-    background: '#101012',
-    padding: '$2 $8',
-    borderRadius: '$full',
   },
 
   '@media screen and (max-width: 768px)': {
@@ -35,7 +33,7 @@ export const NavigationBarContainer = styled('nav', {
     navIsOpen: {
       true: {
         '@media screen and (max-width: 768px)': {
-          left: '0',
+          width: '100%',
 
           '.close': {
             display: 'flex',
@@ -43,15 +41,28 @@ export const NavigationBarContainer = styled('nav', {
         },
       },
       false: {
-        '@media screen and (max-width: 768px)': {
-          left: '-100%',
+        width: '5%',
+        padding: '$2',
 
+        '@media screen and (max-width: 768px)': {
           '.close': {
             display: 'none',
           },
         },
       },
     },
+    darkMode: {
+      false: {
+        img: {
+          // filter: 'invert(1)',
+        },
+      },
+      true: {},
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 
   '.close': {
@@ -87,11 +98,11 @@ export const NavigationBarContainer = styled('nav', {
 export const ButtonsContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  gap: '$8',
+  gap: '$4',
 
   width: '100%',
 
   '@media screen and (max-width: 768px)': {
-    gap: '$6',
+    gap: '$4',
   },
 })

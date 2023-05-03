@@ -1,18 +1,12 @@
 import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
-import { IDeleteCapituleRequest } from '@api/booksRequests/types/IDeleteCapituleRequest'
-import { IReorderCapitulesRequest } from '@api/booksRequests/types/IReorderCapitulesRequest'
 import { ICreateBoxRequest } from '@api/boxesRequests/types/ICreateBoxRequest'
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
-import { ICreateCapituleRequest } from '../../../api/booksRequests/types/ICreateCapituleRequest'
-import { ICreateSceneRequest } from '../../../api/booksRequests/types/ICreateSceneRequest'
 import { IDeleteSceneRequest } from '../../../api/booksRequests/types/IDeleteSceneRequest'
 import { IReorderScenesRequest } from '../../../api/booksRequests/types/IReorderScenesRequest'
 import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
-import { IUpdateCapituleRequest } from '../../../api/booksRequests/types/IUpdateCapituleRequest'
-import { IUpdateSceneRequest } from '../../../api/booksRequests/types/IUpdateSceneRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
@@ -21,7 +15,6 @@ import {
   IPersonsResponse,
 } from '../../../api/responsesTypes/IPersonsResponse'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
-import { IDeleteImagePerson } from './interfaceFunctions/IDeleteImagePerson'
 import { IDeleteObjective } from './interfaceFunctions/IDeleteObjective'
 import { ISaveImagesRequest } from '@api/boxesRequests/types/ISaveImagesRequest'
 import { IDeleteArchiveBox } from './interfaceFunctions/IDeleteArchiveBox'
@@ -49,7 +42,6 @@ export interface IProjectsContext {
   ) => Promise<boolean>
 
   createNewPerson: (person: ICreatePersonDTO) => Promise<boolean>
-  updateImageFromPerson: (personId: string, file: File) => Promise<boolean>
   updateObjective: (
     objective: IObjective,
     personId: string,
@@ -107,15 +99,11 @@ export interface IProjectsContext {
     to: IEditorTo,
   ) => Promise<boolean>
   updatePerson: (person: ICreatePersonDTO, personId: string) => Promise<boolean>
-  deleteImagePerson: ({ personId }: IDeleteImagePerson) => Promise<boolean>
   deleteObjective: ({
     objectiveId,
     personId,
   }: IDeleteObjective) => Promise<boolean>
-  createCapitule: (capitule: ICreateCapituleRequest) => Promise<boolean>
 
-  updateCapitule: (capitule: IUpdateCapituleRequest) => Promise<boolean>
-  createScene: (scene: ICreateSceneRequest) => Promise<boolean>
   setSceneToComplete: (
     sceneToComplete: ISetSceneToCompleteRequest,
   ) => Promise<boolean>
@@ -130,16 +118,6 @@ export interface IProjectsContext {
     sequenceFrom,
     sequenceTo,
   }: IReorderScenesRequest) => Promise<boolean>
-  updateScene: (sceneUpdate: IUpdateSceneRequest) => Promise<boolean>
-  deleteCapitule: ({
-    bookId,
-    capituleId,
-  }: IDeleteCapituleRequest) => Promise<boolean>
-  reorderCapitules: ({
-    bookId,
-    sequenceFrom,
-    sequenceTo,
-  }: IReorderCapitulesRequest) => Promise<boolean>
 
   createBox: (box: ICreateBoxRequest) => Promise<boolean>
   createArchiveInBox: (archive: ICreateArchiveInBoxRequest) => Promise<boolean>

@@ -49,7 +49,7 @@ export default function SummaryPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Resumo | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Resumo | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

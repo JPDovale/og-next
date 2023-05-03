@@ -4,7 +4,11 @@ import { CapituleCard } from '@components/BooksComponents/CapituleCard'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '@components/usefull/HeadingPart'
-import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
 import { ToastError } from '@components/usefull/ToastError'
@@ -61,13 +65,23 @@ export default function BookPage() {
 
     if (!genre) return setErrorIn('genre')
 
-    await callEvent.addGenre(genre)
-    setGenre('')
-    setAddingGenre(false)
+    const { resolved, error } = await callEvent.addGenre(genre)
+    if (resolved) {
+      setGenre('')
+      setAddingGenre(false)
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
-  async function handleRemoveGenre(genre: string) {
-    await callEvent.removeGenre(genre)
+  async function handleRemoveGenre(genreId: string) {
+    const { error } = await callEvent.removeGenre(genreId)
+
+    if (error) {
+      setError(error)
+    }
   }
 
   async function handleRemoveFrontCover(id: string) {
@@ -77,7 +91,7 @@ export default function BookPage() {
 
   return (
     <>
-      <NextSeo title={`${bookName} | Ognare`} noindex />
+      <NextSeo title={`${bookName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -114,7 +128,7 @@ export default function BookPage() {
           <Container>
             <HeadingPart
               icon={<Brain size={40} />}
-              label="Gêneros"
+              label="Subgêneros"
               customFunctionOnClickSideButton={() => {
                 setAddingGenre(!addingGenre)
               }}
@@ -124,34 +138,51 @@ export default function BookPage() {
 
             {addingGenre && (
               <AddGenreForm>
-                <Text>Adicionar gênero</Text>
+                <Text>Adicionar subgênero</Text>
                 <TextInputRoot
+                  size="sm"
                   variant={errorIn === 'genre' ? 'denied' : 'default'}
                 >
+                  <TextInputIcon>
+                    <Brain />
+                  </TextInputIcon>
                   <TextInputInput
                     onChange={(e) => setGenre(e.target.value)}
                     value={genre}
                   />
                 </TextInputRoot>
-                <ButtonRoot align="center" onClick={handleAddGenre}>
+                <ButtonRoot
+                  variant="noShadow"
+                  size="sm"
+                  align="center"
+                  onClick={handleAddGenre}
+                >
                   <ButtonLabel>Adicionar</ButtonLabel>{' '}
                 </ButtonRoot>
               </AddGenreForm>
             )}
 
             {!addingGenre && (
-              <SubContainer columns={smallWindow ? 2 : 6}>
-                {book?.genres && (
+              <SubContainer
+                columns={
+                  !book?.genres || !book.genres[0] ? 1 : smallWindow ? 2 : 6
+                }
+              >
+                {book?.genres && book.genres[0] ? (
                   <>
                     {book.genres.map((genere, i) => (
                       <BookGenere
-                        key={genere.name}
-                        genere={genere.name}
-                        isNotRemovable={book?.genres?.length === 1}
+                        key={genere.id}
+                        genere={genere}
                         onRemove={handleRemoveGenre}
                       />
                     ))}
                   </>
+                ) : (
+                  <ListEmpty
+                    message="Você ainda não adicionou nenhum subgênero"
+                    icon={<Brain size={40} />}
+                  />
                 )}
               </SubContainer>
             )}
@@ -201,7 +232,7 @@ export default function BookPage() {
               permission={permission}
             />
 
-            <UpdateBookForm book={book} />
+            <UpdateBookForm bookId={book?.id ?? ''} />
           </Container>
         </BookContainer>
       </ProjectPageLayout>

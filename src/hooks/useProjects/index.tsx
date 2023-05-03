@@ -5,7 +5,7 @@ import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
 import { orderElements } from '@services/orderElements'
 import { getDate } from '@utils/dates/getDate'
-import { useContext, useMemo, useState } from 'react'
+import { useContext, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { createProject } from './events/createProject'
 import { ICallEvent } from './types/ICallEvent'
@@ -35,8 +35,6 @@ export function useProjects(params?: IUseProjectsParams) {
     query: undefined,
   }
 
-  const [loading, setLoading] = useState(true)
-
   const { user, loadingUser, isRefreshingSession } = useUser()
   const { orderBy } = useContext(InterfaceContext)
 
@@ -64,8 +62,6 @@ export function useProjects(params?: IUseProjectsParams) {
     },
     {
       staleTime: 1000 * 60 * 60, // 1 hour
-      onError: () => setLoading(false),
-      onSuccess: () => setLoading(false),
     },
   )
 
@@ -81,18 +77,39 @@ export function useProjects(params?: IUseProjectsParams) {
     let projectsInOrd = orderElements(projects, orderBy) as IProjectResponse[]
 
     if (query) {
-      projectsInOrd = projectsInOrd?.filter((project) =>
-        project.name.toLowerCase().trim().includes(query.toLowerCase().trim()),
-      )
+      projectsInOrd = projectsInOrd?.filter((project) => {
+        const nameInQuery = project.name
+          .toLowerCase()
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(query.toLowerCase().trim())
+
+        const userCreatorInQuery = project.user.username
+          ?.toLowerCase()
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(query.toLowerCase().trim())
+
+        const createdAtInQuery = getDate(project.created_at)
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(query.toLowerCase().trim())
+
+        if (nameInQuery || userCreatorInQuery || createdAtInQuery) return true
+
+        return false
+      })
     }
 
-    const projectsThisUser = projects.filter(
+    const projectsThisUser = projectsInOrd.filter(
       (project) => project.user.id === user?.id,
     )
-    const projectsSharedWithUser = projects.filter(
+    const projectsSharedWithUser = projectsInOrd.filter(
       (project) => project.user.id !== user?.id,
     )
-    const projectsEditablePerUser = projects.filter((project) => {
+    const projectsEditablePerUser = projectsInOrd.filter((project) => {
       const userPermissionEdit = project.users_with_access_edit?.users.find(
         (u) => u.id === user?.id,
       )
@@ -113,12 +130,7 @@ export function useProjects(params?: IUseProjectsParams) {
     }
   }, [config.query, orderBy, data?.projects, user?.id])
 
-  const loadingProjects = !(
-    !isLoading &&
-    !loadingUser &&
-    !loading &&
-    !isFetching
-  )
+  const loadingProjects = !(!isLoading && !loadingUser && !isFetching)
 
   function findProject(id: string): IFindProjectResponse {
     const project = projects.find((project) => project.id === id)
@@ -163,7 +175,7 @@ export function useProjects(params?: IUseProjectsParams) {
 
   const callEvent: ICallEvent = {
     createProject: (newProject) =>
-      createProject(newProject, refetchProjects, setLoading),
+      createProject(newProject, refetchProjects, () => {}),
   }
 
   return {
@@ -172,7 +184,6 @@ export function useProjects(params?: IUseProjectsParams) {
     projectsSharedWithUser,
     projectsEditablePerUser,
     loadingProjects,
-    setLoadingProjects: setLoading,
 
     findProject,
     refetchProjects,

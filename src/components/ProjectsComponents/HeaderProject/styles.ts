@@ -33,8 +33,8 @@ export const HeaderProjectContainer = styled('header', {
   display: 'flex',
   position: 'fixed',
 
-  width: '92%',
-  padding: '$8',
+  width: '95%',
+  padding: '$4',
 
   borderBottom: '0.5px solid $base900',
   background: '$gray800',
@@ -111,9 +111,5 @@ export const Space = styled('div', {
   zIndex: 4,
 
   width: '100%',
-  height: 92,
-
-  '@media screen and (max-width: 768px)': {
-    height: 52,
-  },
+  height: 58,
 })

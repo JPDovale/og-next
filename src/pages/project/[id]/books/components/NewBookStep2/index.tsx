@@ -7,12 +7,17 @@ import { newBookFormData } from '../NewBookModal'
 interface INewBookStep2Props {
   register: UseFormRegister<newBookFormData>
   errors: Partial<FieldErrorsImpl<newBookFormData>>
+  isDarkMode: boolean
 }
 
-export function NewBookStep2({ register, errors }: INewBookStep2Props) {
+export function NewBookStep2({
+  register,
+  errors,
+  isDarkMode,
+}: INewBookStep2Props) {
   return (
     <ContainerGrid padding={0}>
-      <Text size="sm">
+      <Text size="sm" weight="bold">
         Agora vamos definir tudo relacionado a quantidade de palavras do seu
         livro
       </Text>
@@ -31,8 +36,12 @@ export function NewBookStep2({ register, errors }: INewBookStep2Props) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
-            <TextInputInput {...register('words')} />
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+            variant={!isDarkMode ? 'default' : 'noShadow'}
+            size="sm"
+          >
+            <TextInputInput placeholder="85000" {...register('words')} />
           </TextInputRoot>
         </Text>
 
@@ -49,8 +58,12 @@ export function NewBookStep2({ register, errors }: INewBookStep2Props) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
-            <TextInputInput {...register('writtenWords')} />
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+            variant={!isDarkMode ? 'default' : 'noShadow'}
+            size="sm"
+          >
+            <TextInputInput placeholder="269" {...register('writtenWords')} />
           </TextInputRoot>
         </Text>
       </ContainerGrid>

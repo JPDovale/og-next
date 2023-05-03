@@ -5,8 +5,8 @@ import { refreshSessionRequest } from '@api/userRequest'
 import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
 import { getDate } from '@utils/dates/getDate'
-import { useState } from 'react'
 import { useQuery } from 'react-query'
+import { createBook } from './events/createBook'
 import { deleteProject } from './events/delete'
 import { quitProject } from './events/quit'
 import { shareProject } from './events/share'
@@ -21,10 +21,8 @@ export interface IUserInProject {
 }
 
 export function useProject(id: string) {
-  const [loading, setLoading] = useState(true)
-
   const { loadingUser, user, isRefreshingSession } = useUser()
-  const { refetchProjects, setLoadingProjects } = useProjects()
+  const { refetchProjects } = useProjects()
 
   const { data, isLoading, refetch } = useQuery(
     `project-${id}`,
@@ -52,13 +50,11 @@ export function useProject(id: string) {
     },
     {
       staleTime: 1000 * 60 * 60, // 1 hour
-      onError: () => setLoading(false),
-      onSuccess: () => setLoading(false),
     },
   )
 
   const refetchProject = refetch
-  const loadingProject = !(!isLoading && !loading && !loadingUser)
+  const loadingProject = !(!isLoading && !loadingUser)
   const project = data?.project ?? null
   const createdAt = project?.created_at
     ? getDate(project.created_at)
@@ -71,16 +67,24 @@ export function useProject(id: string) {
   const projectImage = project?.image_url ?? undefined
   let permission: 'edit' | 'view' | 'comment' = 'view'
   const usersInProject: IUserInProject[] = []
+  const usersWithPermissionEdit: IUserInProject[] = []
 
-  project?.users_with_access_comment?.users.map((user) =>
+  project?.users_with_access_comment?.users.map((user) => {
     usersInProject.push({
       name: user.name ?? 'Carregando...',
       username: user.username ?? 'Carregando...',
       email: user.email ?? 'Carregando...',
       id: user.id,
       avatar_url: user.avatar_url ?? undefined,
-    }),
-  )
+    })
+    return usersWithPermissionEdit.push({
+      name: user.name ?? 'Carregando...',
+      username: user.username ?? 'Carregando...',
+      email: user.email ?? 'Carregando...',
+      id: user.id,
+      avatar_url: user.avatar_url ?? undefined,
+    })
+  })
   project?.users_with_access_view?.users.map((user) =>
     usersInProject.push({
       name: user.name ?? 'Carregando...',
@@ -219,14 +223,23 @@ export function useProject(id: string) {
   function queryPerson(query: string) {
     const filteredPersons = project?.persons?.filter(
       (person) =>
-        person.name.toLowerCase().trim().includes(query.toLowerCase().trim()) ||
+        person.name
+          .toLowerCase()
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .includes(query.toLowerCase().trim()) ||
         person.last_name
           .toLowerCase()
           .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
           .includes(query.toLowerCase().trim()) ||
         person.history
           .toLowerCase()
           .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
           .includes(query.toLowerCase().trim()),
     )
 
@@ -234,23 +247,17 @@ export function useProject(id: string) {
   }
 
   const callEvent: ICallEvent = {
-    delete: () =>
-      deleteProject(project!.id, refetchProjects, setLoadingProjects),
-    quit: () => quitProject(project!.id, refetchProjects, setLoadingProjects),
+    delete: () => deleteProject(project!.id, refetchProjects),
+    quit: () => quitProject(project!.id, refetchProjects),
     share: (shareInfos) =>
-      shareProject(
-        shareInfos,
-        project!.id,
-        refetchProjects,
-        setLoadingProjects,
-      ),
+      shareProject(project!.id, shareInfos, refetchProjects),
     updatePlot: (plot) => {},
     updateName: (newName) => {},
     updateImage: (file) => {},
     unshare: (email) => {},
     removeImage: () => {},
 
-    createBook: (newBook) => {},
+    createBook: (newBook) => createBook(project!.id, newBook, refetchProject),
   }
 
   return {
@@ -269,6 +276,7 @@ export function useProject(id: string) {
     permission,
     timelineOfProject: [],
     usersInProject: usersInProject ?? [],
+    usersWithPermissionEdit: usersWithPermissionEdit ?? [],
 
     findBook,
     findPerson,

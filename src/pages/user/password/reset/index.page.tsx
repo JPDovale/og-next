@@ -2,11 +2,9 @@ import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
 import Image from 'next/image'
 
-import Back from '../../../../assets/back.svg'
-import LogoToDown from '../../../../assets/logos/logoToDown.svg'
-import Logo from '../../../../assets/logos/logo.svg'
+import LogoToDown from '../../../../assets/logos/logoOG.png'
 import {
-  BackgroundResetPassword,
+  CardResetPassword,
   InputContainer,
   InputHeader,
   Links,
@@ -28,7 +26,6 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
-import { InterfaceContext } from '@contexts/interface'
 
 const resetPasswordFormSchema = z.object({
   password: z
@@ -46,7 +43,6 @@ export default function ResetPasswordPage() {
 
   const { error, setError, recoveryPassword, success, setSuccess } =
     useContext(UserContext)
-  const { theme } = useContext(InterfaceContext)
 
   const router = useRouter()
 
@@ -61,8 +57,8 @@ export default function ResetPasswordPage() {
   })
 
   async function handleResetPassword(data: ResetPasswordFormData) {
-    setSuccess(undefined)
-    setError(undefined)
+    setSuccess(null)
+    setError(null)
 
     if (data.password !== data.confirmPassword) {
       return setFormError('confirmPassword', {
@@ -86,23 +82,55 @@ export default function ResetPasswordPage() {
 
   return (
     <>
-      <NextSeo title="Recuperação de senha | Ognare" />
+      <NextSeo title="Recuperação de senha | Magiscrita" />
 
       <ResetPasswordPageContainer>
-        <Image className="logo" src={LogoToDown} alt="" />
-        <Image className="logo2" src={Logo} alt="" />
-        <BackgroundResetPassword
-          src={Back}
-          alt=""
-          priority
-          darkMode={theme === 'dark'}
-        />
+        <CardResetPassword>
+          <Image className="logo" src={LogoToDown} alt="" />
+          <Text size="3xl" family="headingText" className="logo">
+            MagiScrita
+          </Text>
+
+          <Text size="lg" height="shorter" family="body" weight="bold">
+            Ótimo, você está prestes a criar uma nova senha para sua conta no
+            MagiScrita! Para garantir a segurança da sua conta, recomendamos que
+            você escolha uma senha forte e segura.
+            <br />
+            <br />
+            Para criar sua nova senha, insira-a nos campos correspondentes na
+            página de redefinição de senha. Certifique-se de escolher uma senha
+            com pelo menos oito caracteres, incluindo letras, números e
+            símbolos.
+            <br />
+            <br /> Lembre-se de que sua nova senha deve ser diferente de
+            qualquer outra senha que você tenha usado anteriormente e que é
+            importante mantê-la em segurança. Não compartilhe sua senha com
+            ninguém e evite usá-la em outros sites ou serviços. <br />
+            <br />
+            Depois de criar sua nova senha, você poderá fazer login em sua conta
+            do MagiScrita e continuar a escrever e compartilhar suas histórias
+            com a comunidade. Lembre-se de que você sempre pode entrar em
+            contato com nosso suporte ao cliente se precisar de ajuda para
+            recuperar o acesso à sua conta.
+            <br />
+            <br />
+            Obrigado por usar o MagiScrita e esperamos que você aproveite todas
+            as oportunidades que oferecemos para melhorar suas habilidades de
+            escrita e se conectar com outros escritores apaixonados. Agora, crie
+            sua nova senha segura e comece a escrever!
+          </Text>
+        </CardResetPassword>
 
         <ResetPasswordFormContainer
           onSubmit={handleSubmit(handleResetPassword)}
         >
-          <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
-            Reset de senha
+          <Text
+            size="2xl"
+            css={{ textTransform: 'uppercase' }}
+            as="span"
+            family="headingText"
+          >
+            Criar nova senha
           </Text>
 
           {error && <ResponseInfoApi error={error} />}
@@ -117,6 +145,7 @@ export default function ResetPasswordPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
@@ -146,6 +175,7 @@ export default function ResetPasswordPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }

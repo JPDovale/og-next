@@ -1,4 +1,3 @@
-import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
 import { SceneCard } from '@components/BooksComponents/SceneCard'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
@@ -8,7 +7,6 @@ import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ProgressBar } from '@components/usefull/ProgressBar'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -25,7 +23,7 @@ import {
   Trash,
   X,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { AddScene } from './components/AddScene'
@@ -40,6 +38,7 @@ import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { useBook } from '@hooks/useBook'
 import { useCapitule } from '@hooks/useCapitule'
 import { IError } from '@@types/errors/IError'
+import { IUpdateCapitule } from '@hooks/useCapitule/types/IUpdateCapitule'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -74,17 +73,6 @@ export default function CapitulePage() {
   const [isSelectedDelete, setIsSelectedDelete] = useState(false)
   const [error, setError] = useState<IError | null>(null)
 
-  const { updateCapitule, deleteCapitule } = useContext(ProjectsContext)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting, isDirty },
-  } = useForm<updateCapituleBodyData>({
-    resolver: zodResolver(updateCapituleSchema),
-  })
-
   const router = useRouter()
   const { id, bookId, capituleId } = router.query
 
@@ -97,10 +85,31 @@ export default function CapitulePage() {
     bookId as string,
   )
 
-  const { capitule, capituleName, loadingCapitule, capituleWords, findScene } =
-    useCapitule(capituleId as string)
+  const {
+    capitule,
+    capituleName,
+    loadingCapitule,
+    capituleWords,
+    findScene,
+    callEvent,
+  } = useCapitule(capituleId as string)
 
   const { scene: sceneToUpdate } = findScene(onEditScene)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isDirty },
+  } = useForm<updateCapituleBodyData>({
+    resolver: zodResolver(updateCapituleSchema),
+    defaultValues: {
+      act1: capitule?.structure_act_1 ?? '',
+      act2: capitule?.structure_act_2 ?? '',
+      act3: capitule?.structure_act_3 ?? '',
+      name: capitule?.name ?? '',
+      objective: capitule?.objective ?? '',
+    },
+  })
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -110,9 +119,7 @@ export default function CapitulePage() {
     if (data.act2 === ' ') data.act2 = ''
     if (data.act3 === ' ') data.act3 = ''
 
-    const capitule: IUpdateCapituleRequest = {
-      bookId: bookId as string,
-      capituleId: capituleId as string,
+    const capitule: IUpdateCapitule = {
       name: data.name,
       objective: data.objective,
       structure: {
@@ -122,22 +129,18 @@ export default function CapitulePage() {
       },
     }
 
-    await updateCapitule(capitule)
-    reset()
+    await callEvent.update(capitule)
   }
 
   async function handleDeleteCapitule() {
     router.push(pathGoBack)
 
-    await deleteCapitule({
-      bookId: book?.id!,
-      capituleId: capitule?.id!,
-    })
+    await callEvent.delete()
   }
 
   return (
     <>
-      <NextSeo title={`${bookName}-${capituleName} | Ognare`} noindex />
+      <NextSeo title={`${bookName}-${capituleName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -149,7 +152,7 @@ export default function CapitulePage() {
       >
         {error && (
           <DefaultError
-            close={() => setError(undefined)}
+            close={() => setError(null)}
             title={error.title}
             message={error.message}
           />

@@ -50,7 +50,7 @@ export default function PremisePage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Premissa | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Premissa | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

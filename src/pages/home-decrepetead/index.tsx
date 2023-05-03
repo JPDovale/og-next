@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <>
       <NextSeo
-        title="Ognare | Dando origem as suas ideias"
+        title="Magiscrita | Dando origem as suas ideias"
         description="Um lugar organizado para você criar as suas histórias"
       />
 

@@ -1,6 +1,7 @@
 import { styled } from '@styles/index'
 export const ProjectsContainer = styled('div', {
   display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
 
   gap: '$8',
   padding: '0 0 $10 0',
@@ -13,15 +14,6 @@ export const ProjectsContainer = styled('div', {
       true: {},
       false: {
         marginTop: '0',
-      },
-    },
-
-    navIsOpen: {
-      true: {
-        gridTemplateColumns: '1fr 1fr ',
-      },
-      false: {
-        gridTemplateColumns: '1fr 1fr 1fr',
       },
     },
 
@@ -50,10 +42,6 @@ export const ProjectsContainer = styled('div', {
         },
       },
     },
-  },
-
-  defaultVariants: {
-    navIsOpen: true,
   },
 
   '@media screen and (max-width: 768px)': {

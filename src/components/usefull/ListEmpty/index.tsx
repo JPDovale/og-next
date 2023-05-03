@@ -46,9 +46,16 @@ export function ListEmpty({
   return (
     <ListEmptyContainer isInLine={isInLine}>
       {isLoading ? (
-        <Loading />
+        <Loading autoAdapt />
       ) : (
-        <Text as="label" size="xl" family="body">
+        <Text
+          css={{
+            maxWidth: '75%',
+            textAlign: 'center',
+          }}
+          size="xl"
+          family="body"
+        >
           {message}
         </Text>
       )}

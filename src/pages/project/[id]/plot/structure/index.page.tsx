@@ -103,7 +103,10 @@ export default function StructurePage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Estrutura de 3 atos | Ognare`} noindex />
+      <NextSeo
+        title={`${projectName}-Estrutura de 3 atos | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}

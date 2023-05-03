@@ -31,18 +31,20 @@ import { recoveryPasswordFunction } from './functions/recoveryPasswordFunction'
 import { visualizeNotificationsFunction } from './functions/visualizeNotificationsFunction'
 import { InterfaceContext } from '@contexts/interface'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
+import { useUser } from '@hooks/useUser'
+import { Loading } from '@components/usefull/Loading'
 
 export const UserContext = createContext<IUserContext>(userDefaultValues)
 
 export function UserProvider({ children }: IUserContextProps) {
   const [userInfos, dispatch] = useReducer(userReducer, {
     error: null,
-    user: null,
     success: null,
     loading: true,
   })
 
   const { resetInterface } = useContext(InterfaceContext)
+  const { loadingUser, userLogged, refetchUser } = useUser()
 
   const { error, success, loading } = userInfos
   const router = useRouter()
@@ -78,6 +80,7 @@ export function UserProvider({ children }: IUserContextProps) {
   async function logout() {
     await logoutFunction(dispatch)
     resetInterface()
+    refetchUser()
 
     // signOut({
     //   redirect: true,
@@ -132,7 +135,7 @@ export function UserProvider({ children }: IUserContextProps) {
     <UserContext.Provider
       value={{
         loading,
-        userLogged: true,
+        userLogged,
         error,
         success,
 
@@ -155,7 +158,7 @@ export function UserProvider({ children }: IUserContextProps) {
         visualizeNotifications,
       }}
     >
-      {children}
+      {loadingUser ? <Loading /> : children}
     </UserContext.Provider>
   )
 }

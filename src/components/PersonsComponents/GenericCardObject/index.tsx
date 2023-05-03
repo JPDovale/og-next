@@ -1,6 +1,6 @@
-import { ReactNode } from 'react'
+import { useContext } from 'react'
 import { Text } from '@components/usefull/Text'
-import { Eye, Pencil } from 'phosphor-react'
+import { Eye } from 'phosphor-react'
 import {
   EditButton,
   GenericCardObjectContainer,
@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'next/router'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { useProject } from '@hooks/useProject'
+import { InterfaceContext } from '@contexts/interface'
 
 interface IGenericObject {
   id?: string
@@ -28,26 +29,20 @@ interface IGenericObject {
 interface IGenericCardObjectProps {
   object: IGenericObject
   to: string
-  icon?: ReactNode
   withSubObjects?: 'consequências' | 'exceções' | undefined
   subObjects?: IGenericObject[]
   isUniqueRelational?: boolean
-  permission: 'view' | 'edit' | 'comment' | undefined
-
-  functionToButton?: (object: IGenericObject) => void
 }
 
 export function GenericCardObject({
   object,
   to,
-  icon,
   subObjects,
   withSubObjects,
   isUniqueRelational = false,
-  permission,
-
-  functionToButton,
 }: IGenericCardObjectProps) {
+  const { theme } = useContext(InterfaceContext)
+
   const router = useRouter()
   const { id, personId } = router.query
 
@@ -65,14 +60,18 @@ export function GenericCardObject({
           <Text as="label" size="sm" family="body" height="shorter">
             Titulo
           </Text>
-          <Text>{object.title}</Text>
+          <Text weight="bold" size="2xl" family="body" height="shorter">
+            {object.title}
+          </Text>
         </ItemInfo>
 
         <ItemInfo>
           <Text as="label" size="sm" family="body" height="shorter">
             Descrição
           </Text>
-          <Text size="sm">{object.description}</Text>
+          <Text size="xl" family="body" weight="bold" height="shorter">
+            {object.description}
+          </Text>
         </ItemInfo>
 
         {withSubObjects && (
@@ -95,13 +94,22 @@ export function GenericCardObject({
                     <Text as="label" size="sm" family="body" height="shorter">
                       Titulo
                     </Text>
-                    <Text size="sm">{subObject.title}</Text>
+                    <Text
+                      weight="bold"
+                      size="lg"
+                      family="body"
+                      height="shorter"
+                    >
+                      {subObject.title}
+                    </Text>
                   </ItemInfo>
                   <ItemInfo>
                     <Text as="label" size="sm" family="body" height="shorter">
                       Descrição
                     </Text>
-                    <Text size="sm">{subObject.description}</Text>
+                    <Text weight="bold" family="body" height="shorter">
+                      {subObject.description}
+                    </Text>
                   </ItemInfo>
                 </SubObjectCard>
               ))}
@@ -136,6 +144,7 @@ export function GenericCardObject({
                 Ficarão juntos no final?
               </Text>
               <Text
+                weight="bold"
                 css={{
                   color: object.until_end ? '$successDefault' : '$errorDefault',
                 }}
@@ -150,19 +159,10 @@ export function GenericCardObject({
       <EditButton
         type="button"
         onClick={() =>
-          functionToButton
-            ? functionToButton(object)
-            : router.push(
-                `/project/${id}/persons/${personId}/${to}/${object.id}`,
-              )
+          router.push(`/project/${id}/persons/${personId}/${to}/${object.id}`)
         }
       >
-        {icon ||
-          (permission === 'edit' ? (
-            <Pencil size={20} color="#fffddd" />
-          ) : (
-            <Eye size={20} color="#fffddd" />
-          ))}
+        <Eye size={20} color={theme === 'dark' ? '#fffddd' : '#121214'} />
       </EditButton>
     </GenericCardObjectContainer>
   )

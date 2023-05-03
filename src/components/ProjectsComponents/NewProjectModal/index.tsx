@@ -96,7 +96,7 @@ export function NewProjectModal({
         <Input as="label" size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
           Nome do projeto
           <TextInputRoot
-            css={{ background: !isDarkMode ? '$gray500' : '' }}
+            css={{ background: !isDarkMode ? '$base700' : '' }}
             variant={errorIn === 'name' ? 'denied' : 'default'}
           >
             <TextInputInput

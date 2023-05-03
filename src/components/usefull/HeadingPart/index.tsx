@@ -10,7 +10,8 @@ interface IHeadingPartProps {
   isToAdd?: boolean
   isToEdit?: boolean
   redirectPathToAdd?: string
-  permission: 'edit' | 'view' | 'comment' | undefined
+  permission?: 'edit' | 'view' | 'comment' | undefined
+  inTop?: boolean
   customFunctionOnClickSideButton?: () => void
 }
 
@@ -20,6 +21,7 @@ export function HeadingPart({
   redirectPath,
   isToAdd = false,
   isToEdit = false,
+  inTop = false,
   permission,
   redirectPathToAdd,
   customFunctionOnClickSideButton,
@@ -29,6 +31,7 @@ export function HeadingPart({
   return (
     <HeadingPartContainer
       onClick={() => redirectPath && router.push(redirectPath)}
+      css={{ marginTop: inTop ? '0' : '$8' }}
     >
       {icon}
       {label}

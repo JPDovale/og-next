@@ -1,4 +1,3 @@
-import { IUpdateSceneRequest } from '@api/booksRequests/types/IUpdateSceneRequest'
 import { ICapitule, IScene } from '@api/responsesTypes/IBooksResponse'
 import { Textarea } from '@components/usefull/Textarea'
 import { Avatares } from '@components/usefull/Avatares'
@@ -6,7 +5,6 @@ import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
 import {
@@ -15,12 +13,14 @@ import {
   UserCirclePlus,
   X,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { InputContainer } from '../../styles'
 import { EditSceneContainer, AvataresContainer, CloseButton } from './styles'
 import { Checkbox } from '@components/usefull/Checkbox'
+import { useCapitule } from '@hooks/useCapitule'
+import { IUpdateScene } from '@hooks/useCapitule/types/IUpdateScene'
 
 interface IEditSceneProps {
   capitule: ICapitule
@@ -76,8 +76,6 @@ export function EditScene({
 }: IEditSceneProps) {
   const [formUpdated, setFormUpdated] = useState(false)
 
-  const { updateScene } = useContext(ProjectsContext)
-
   const {
     register,
     handleSubmit,
@@ -100,6 +98,7 @@ export function EditScene({
   const complete = watch('complete')
 
   const { personsThisProject, findManyPersons } = useProject(projectId)
+  const { callEvent } = useCapitule(capitule.id)
 
   const selectedPersons = findManyPersons(selectedPersonsIds as string[])
   const unselectedPersons = findManyPersons(selectedPersonsIds as string[], {
@@ -107,12 +106,10 @@ export function EditScene({
   })
 
   async function handleUpdateScene(data: editSceneBodyData) {
-    const updatedScene: IUpdateSceneRequest = {
-      bookId,
-      capituleId: capitule.id,
-      complete: data.complete,
+    const updatedScene: IUpdateScene = {
+      complete: data.complete ?? scene.complete,
       persons: data.persons,
-      sceneId: scene.id,
+      id: scene.id,
       objective: data.objective,
       structure: {
         act1: data.act1,
@@ -122,9 +119,9 @@ export function EditScene({
       writtenWords: data.writtenWords,
     }
 
-    const isUpdated = await updateScene(updatedScene)
+    const { resolved } = await callEvent.updateScene(updatedScene)
 
-    if (isUpdated) {
+    if (resolved) {
       onClose()
     }
   }

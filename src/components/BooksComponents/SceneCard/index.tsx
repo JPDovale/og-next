@@ -8,7 +8,7 @@ import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
 import { ProjectsContext } from '@contexts/projects'
-import { useBook } from '@hooks/useBook'
+import { useCapitule } from '@hooks/useCapitule'
 import { List, PencilLine, Trash, X } from 'phosphor-react'
 import { ChangeEvent, useContext, useState } from 'react'
 import { z } from 'zod'
@@ -53,8 +53,7 @@ export function SceneCard({
   const { setSceneToComplete, deleteScene, reorderScenes } =
     useContext(ProjectsContext)
 
-  const { findCapitule } = useBook(bookId)
-  const { capitule } = findCapitule(capituleId)
+  const { capitule } = useCapitule(capituleId)
 
   async function handleSetCompleteScene() {
     setErrorIn('')

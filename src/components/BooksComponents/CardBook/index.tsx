@@ -1,10 +1,12 @@
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ProgressBar } from '@components/usefull/ProgressBar'
 import { Text } from '@components/usefull/Text'
+import { InterfaceContext } from '@contexts/interface'
 import { useProject } from '@hooks/useProject'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'
+import { useContext } from 'react'
 
 import {
   CardBookContainer,
@@ -26,6 +28,8 @@ export function CardBook({
   bookId,
   isPreview = false,
 }: ICardBookProps) {
+  const { theme } = useContext(InterfaceContext)
+
   const router = useRouter()
   const { id } = router.query
 
@@ -61,7 +65,7 @@ export function CardBook({
               weight="thin"
               size={64}
               alt=""
-              color="#e3e3e3"
+              color={theme === 'dark' ? '#e3e3e3' : '#000000'}
               data-testid="icon-image"
             />
           )}

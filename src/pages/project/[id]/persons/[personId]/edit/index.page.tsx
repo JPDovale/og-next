@@ -84,7 +84,7 @@ export default function EditPersonPage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-Editar | Ognare`} noindex />
+      <NextSeo title={`${personName}-Editar | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

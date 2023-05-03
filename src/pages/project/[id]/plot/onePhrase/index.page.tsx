@@ -49,7 +49,7 @@ export default function OnePhrasePage() {
 
   return (
     <>
-      <NextSeo title={`${projectName}-Ideia central | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Ideia central | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

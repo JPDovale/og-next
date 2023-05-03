@@ -4,11 +4,10 @@ import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon } from '@components/usefull/Button'
 
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { BookBookmark, Image as ImageIco, Share } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { ShareProjectButton } from './components/ShareProjectButton'
 import {
   CardProjectContainer,
@@ -32,8 +31,6 @@ export function CardProject({
   isList = false,
   isSharable = false,
 }: ICardProjectProps) {
-  const { setError, setLoading } = useContext(ProjectsContext)
-
   const [onShareProject, setOnShareProject] = useState('')
 
   const router = useRouter()
@@ -49,7 +46,6 @@ export function CardProject({
         title={projectName}
         as={isList !== 'example' ? 'button' : 'div'}
         onClick={() => {
-          setLoading(true)
           router.push(`/project/${project.id}`)
         }}
       >
@@ -174,7 +170,6 @@ export function CardProject({
               isList={isList}
               wid="hug"
               onClick={() => {
-                setError(undefined)
                 setOnShareProject(`${project.id}`)
               }}
             >

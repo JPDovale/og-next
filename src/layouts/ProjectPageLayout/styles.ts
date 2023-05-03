@@ -40,7 +40,7 @@ export const ProjectContainer = styled('div', {
 export const ProjectPageLayoutContainer = styled('main', {
   zIndex: 1,
   float: 'right',
-  width: '92%',
+  width: '95%',
   height: '100vh',
 
   backgroundColor: '$gray800',

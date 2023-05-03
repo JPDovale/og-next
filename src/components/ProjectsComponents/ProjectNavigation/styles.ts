@@ -6,7 +6,7 @@ export const ProjectNavigationContainer = styled('nav', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  width: '8%',
+  width: '5%',
   maxHeight: '100vh',
   height: '100vh',
   background: '$gray900',
@@ -62,14 +62,23 @@ export const ProjectNavigationContainer = styled('nav', {
 })
 
 export const Logo = styled('div', {
-  background: '#121210',
-  marginTop: '$2',
-  borderRadius: '$full',
-
   '.logo': {
     cursor: 'pointer',
     width: '100%',
     height: '100%',
+  },
+
+  variants: {
+    darkMode: {
+      false: {
+        // filter: 'invert(1)',
+      },
+      true: {},
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 })
 
@@ -79,11 +88,29 @@ export const Options = styled('div', {
   alignItems: 'center',
   width: '100%',
   height: 'auto',
-  gap: '$5',
+  gap: '$3',
   overflowY: 'scroll',
   overflowX: 'hidden',
   paddingBottom: '$8',
-  padding: '$6',
+  padding: '$4',
+
+  scrollbarWidth: 'thin',
+  scrollbarColor: '#00000000 #00000000',
+
+  '&::-webkit-scrollbar': {
+    width: 2,
+    height: 2,
+  },
+
+  '&::-webkit-scrollbar-track': {
+    background: '#00000000',
+  },
+
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: '$purple800',
+    border: '1px solid #ffffff20',
+    borderRadius: '$full',
+  },
 
   variants: {
     isOpen: {
@@ -113,12 +140,6 @@ export const Label = styled(Text, {
   height: 'auto',
   alignItems: 'center',
   gap: '$2',
-
-  '@media screen and (max-width: 768px)': {
-    button: {
-      padding: '$3',
-    },
-  },
 })
 
 export const DeletePopUp = styled('div', {

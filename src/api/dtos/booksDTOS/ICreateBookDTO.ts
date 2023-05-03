@@ -2,13 +2,10 @@ export interface ICreateBookDTO {
   title: string
   subtitle?: string
   authors: Array<{
-    username?: string
-    email?: string
-    id?: string
+    user_id: string
   }>
-  literaryGenere: string
-  generes: Array<{ name: string }>
+  literaryGenre: string
   isbn?: string
-  words?: string
-  writtenWords?: string
+  words?: number
+  writtenWords?: number
 }

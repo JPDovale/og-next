@@ -1,3 +1,4 @@
+import { shadows } from '@styles/tokens'
 import { createTheme } from '..'
 
 export const lightMode = createTheme({
@@ -75,5 +76,11 @@ export const lightMode = createTheme({
 
     errorDefault: '#ff6161',
     fullError: '#ff0000',
+  },
+  shadows: {
+    ...shadows,
+    default:
+      '4px 4px 8px rgba(0, 0, 0, 0.5), -2px -2px 3px rgba(255, 255, 255)',
+    inFocus: '0 0 6px 3px #2A0B53',
   },
 })

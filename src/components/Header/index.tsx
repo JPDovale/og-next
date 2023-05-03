@@ -1,11 +1,9 @@
 import { useUser } from '@hooks/useUser'
-import { useWindowSize } from '@hooks/useWindow'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { ButtonsContent, HeaderContainer, ImageContent } from './styles'
 
-import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
-import logoImg from '../../assets/logos/logo.svg'
+import aloneLogoImg from '../../assets/logos/ogLogo.png'
 
 import { ProjectorScreen, SignIn, UserCirclePlus } from 'phosphor-react'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
@@ -14,19 +12,12 @@ import { AvatarWeb } from '@components/usefull/Avatar'
 export function Header() {
   const router = useRouter()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
-
   const { user } = useUser()
 
   return (
     <HeaderContainer>
       <ImageContent>
-        {smallWindow ? (
-          <Image src={aloneLogoImg} alt="Ognare" quality={100} priority />
-        ) : (
-          <Image src={logoImg} alt="Ognare" quality={100} priority />
-        )}
+        <Image src={aloneLogoImg} alt="Magiscrita" quality={100} priority />
       </ImageContent>
 
       <ButtonsContent>

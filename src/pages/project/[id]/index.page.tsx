@@ -90,7 +90,7 @@ export default function ProjectPage() {
 
   return (
     <>
-      <NextSeo title={`${projectName} | Ognare`} noindex />
+      <NextSeo title={`${projectName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}

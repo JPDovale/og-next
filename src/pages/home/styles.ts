@@ -45,8 +45,8 @@ export const SideInfo = styled('div', {
 
   img: {
     zIndex: 0,
-    width: '80px',
-    scale: '250%',
+    width: '380px',
+    height: '380px',
   },
 
   '@media screen and (max-width: 768px)': {

@@ -1,18 +1,19 @@
+import { ICreateBookDTO } from '@api/dtos/booksDTOS/ICreateBookDTO'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { MultiStep } from '@components/usefull/MultiStep'
+import { InterfaceContext } from '@contexts/interface'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
 import { useRouter } from 'next/router'
 import { ArrowLeft, ArrowRight } from 'phosphor-react'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { NewBookStep1 } from '../NewBookStep1'
 import { NewBookStep2 } from '../NewBookStep2'
 import { NewBookStep3 } from '../NewBookStep3'
-import { NewBookStep4 } from '../NewBookStep4'
 import { NewBookContainer, NewBookForm } from './styles'
 
 const newBookSchema = z.object({
@@ -24,38 +25,20 @@ const newBookSchema = z.object({
     .string()
     .max(100, { message: 'O subtitulo não pode ter mais de 100 caracteres.' })
     .optional(),
-  literaryGenere: z
+  literaryGenre: z
     .string()
     .min(1, { message: 'O campo é obrigatório.' })
     .max(200, {
       message: 'O gênero literário não pode ter mais de 100 caracteres.',
     }),
-  words: z
-    .string()
-    .max(20, { message: 'Valor excede o limite aceito' })
-    .regex(/^\d+$/, { message: 'Insira apenas números' })
+  words: z.coerce
+    .number({ description: 'Insira apenas números' })
+    .max(10000000, { message: 'Valor excede o limite aceito' })
     .optional(),
-  writtenWords: z
-    .string()
-    .max(20, { message: 'Valor excede o limite aceito' })
-    .regex(/^\d+$/, { message: 'Insira apenas números' })
+  writtenWords: z.coerce
+    .number({ description: 'Insira apenas números' })
+    .max(10000000, { message: 'Valor excede o limite aceito' })
     .optional(),
-  generes: z
-    .array(
-      z.object({
-        name: z
-          .string()
-          .min(1, { message: 'O nome do gênero é obrigatório' })
-          .max(150, {
-            message: 'O gênero não pode ter mais de 150 caracteres',
-          }),
-      }),
-    )
-    .min(1, { message: 'O livro precisa ter pelo menos um subgênero' })
-    .max(6, {
-      message:
-        'Não é aconselhável que um livro tenha muitos subgêneros, por esse motivo, limitamos o número de subgêneros para 6',
-    }),
   isbn: z.string().max(200, { message: 'Seu isbn é inválido' }).optional(),
 })
 
@@ -63,13 +46,10 @@ export type newBookFormData = z.infer<typeof newBookSchema>
 type fieldNames =
   | 'title'
   | 'subtitle'
-  | 'literaryGenere'
+  | 'literaryGenre'
   | 'words'
   | 'writtenWords'
-  | 'generes'
   | 'isbn'
-  | `generes.${number}`
-  | `generes.${number}.name`
 
 interface IErrorsInFields {
   errorMessage?: string | undefined
@@ -78,16 +58,16 @@ interface IErrorsInFields {
 
 interface INewBookModalProps {
   openToast: () => void
+  onSuccess: () => void
 }
 
-export function NewBookModal({ openToast }: INewBookModalProps) {
+export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
+  const { theme } = useContext(InterfaceContext)
   const [step, setStep] = useState(1)
 
   const {
-    watch,
     clearErrors,
     handleSubmit,
-    setValue,
     setError,
     control,
     register,
@@ -97,12 +77,14 @@ export function NewBookModal({ openToast }: INewBookModalProps) {
     resolver: zodResolver(newBookSchema),
   })
 
-  const form = watch()
-
   const router = useRouter()
   const { id } = router.query
 
-  const { callEvent } = useProject(id as string)
+  const { callEvent, usersWithPermissionEdit, project } = useProject(
+    id as string,
+  )
+
+  const isDarkMode = theme === 'dark'
 
   async function validateFormToNextStep(
     fields: fieldNames[],
@@ -154,7 +136,7 @@ export function NewBookModal({ openToast }: INewBookModalProps) {
         break
       }
       case 3: {
-        isValid = await validateFormToNextStep(['literaryGenere', 'isbn'])
+        isValid = await validateFormToNextStep(['literaryGenre', 'isbn'])
         break
       }
       default:
@@ -167,35 +149,60 @@ export function NewBookModal({ openToast }: INewBookModalProps) {
   }
 
   async function handleCreateBook(data: newBookFormData) {
-    const { resolved } = await callEvent.createBook(data)
+    const newBook: ICreateBookDTO = {
+      literaryGenre: data.literaryGenre,
+      title: data.title,
+      subtitle: data.subtitle,
+      authors: [{ user_id: project!.user.id }],
+      isbn: data.isbn,
+      words: data.words,
+      writtenWords: data.writtenWords,
+    }
+
+    usersWithPermissionEdit.map((user) =>
+      newBook.authors.push({ user_id: user.id }),
+    )
+
+    const { resolved } = await callEvent.createBook(newBook)
 
     if (resolved) {
       reset()
       setStep(1)
       openToast()
+      onSuccess()
     }
   }
 
   return (
     <ModalContent>
-      <NewBookContainer>
-        <MultiStep size={4} currentStep={step} title="Novo livro" />
+      <NewBookContainer darkMode={isDarkMode}>
+        <MultiStep size={3} currentStep={step} title="Novo livro" />
 
         <NewBookForm onSubmit={handleSubmit(handleCreateBook)}>
-          {step === 1 && <NewBookStep1 register={register} errors={errors} />}
-          {step === 2 && <NewBookStep2 register={register} errors={errors} />}
-          {step === 3 && <NewBookStep3 register={register} errors={errors} />}
-          {step === 4 && (
-            <NewBookStep4
+          {step === 1 && (
+            <NewBookStep1
+              isDarkMode={isDarkMode}
+              register={register}
               errors={errors}
-              generes={form.generes}
-              setError={setError}
-              setValue={setValue}
+            />
+          )}
+          {step === 2 && (
+            <NewBookStep2
+              isDarkMode={isDarkMode}
+              register={register}
+              errors={errors}
+            />
+          )}
+          {step === 3 && (
+            <NewBookStep3
+              isDarkMode={isDarkMode}
+              register={register}
+              errors={errors}
             />
           )}
 
-          {step === 4 && (
-            <ContainerGrid padding={0} columns={2}>
+          {step === 3 && (
+            <ContainerGrid css={{ marginTop: '$4' }} padding={0} columns={2}>
               <ButtonRoot
                 type="button"
                 size="xs"
@@ -225,7 +232,7 @@ export function NewBookModal({ openToast }: INewBookModalProps) {
           )}
         </NewBookForm>
 
-        {step !== 4 && (
+        {step !== 3 && (
           <ContainerGrid padding={0} columns={2}>
             <ButtonRoot
               disabled={step === 1}

@@ -22,21 +22,18 @@ export async function deleteProject(
       unknown
     >
   >,
-  setLoading: (newState: boolean) => void,
 ): Promise<IResolveEvent> {
-  setLoading(true)
   const response = await deleteProjectRequest(projectId)
 
   const { handledAnswer, error } = await responseDealings<IResolveEvent>({
     response,
-    callback: () => deleteProject(projectId, refetchProjects, setLoading),
+    callback: () => deleteProject(projectId, refetchProjects),
   })
 
   if (handledAnswer) {
     refetchProjects()
   }
 
-  setLoading(false)
   return {
     resolved: handledAnswer,
     error,

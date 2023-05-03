@@ -1,7 +1,7 @@
 import { NextSeo } from 'next-seo'
 import { HomeContent, HomePageContainer, SideInfo } from './styles'
 
-import aloneLogoImg from '../../assets/logos/aloneLogo.svg'
+import aloneLogoImg from '../../assets/logos/logoOG.png'
 import Image from 'next/image'
 import { Header } from '@components/Header'
 import { Text } from '@components/usefull/Text'
@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <>
       <NextSeo
-        title="Ognare | Dando origem as suas ideias"
+        title="Magiscrita | Dando origem as suas ideias"
         description="Um lugar organizado para você criar as suas histórias"
       />
 
