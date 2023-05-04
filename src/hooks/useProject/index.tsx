@@ -10,6 +10,7 @@ import { createBook } from './events/createBook'
 import { deleteProject } from './events/delete'
 import { quitProject } from './events/quit'
 import { shareProject } from './events/share'
+import { updatePlot } from './events/updatePlot'
 import { ICallEvent } from './types/ICallEvent'
 
 export interface IUserInProject {
@@ -251,7 +252,7 @@ export function useProject(id: string) {
     quit: () => quitProject(project!.id, refetchProjects),
     share: (shareInfos) =>
       shareProject(project!.id, shareInfos, refetchProjects),
-    updatePlot: (plot) => {},
+    updatePlot: (plot) => updatePlot(project!.id, plot, refetchProject),
     updateName: (newName) => {},
     updateImage: (file) => {},
     unshare: (email) => {},

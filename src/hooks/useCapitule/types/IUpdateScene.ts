@@ -1,7 +1,7 @@
 export interface IUpdateScene {
   id: string
   objective?: string
-  writtenWords?: string
+  writtenWords?: number
   structure?: {
     act1?: string
     act2?: string

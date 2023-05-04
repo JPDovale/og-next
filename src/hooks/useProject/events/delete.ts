@@ -1,27 +1,11 @@
 import { deleteProjectRequest } from '@api/projectsRequests'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { IRefetchProjects } from '@hooks/useProjects/types/IRefetchProjects'
 import { IResolveEvent } from '@hooks/useProjects/types/IResolveEvent'
 import { responseDealings } from '@utils/data/responseDealings'
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
-} from 'react-query'
 
 export async function deleteProject(
   projectId: string,
-  refetchProjects: <TPageData>(
-    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
-  ) => Promise<
-    QueryObserverResult<
-      {
-        projects: IProjectResponse[]
-        errorMessage: string | null
-        errorTitle: string | null
-      },
-      unknown
-    >
-  >,
+  refetchProjects: IRefetchProjects,
 ): Promise<IResolveEvent> {
   const response = await deleteProjectRequest(projectId)
 

@@ -33,7 +33,7 @@ export default function DetailsPage() {
     if (details === project?.details) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      details,
+      details: details || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

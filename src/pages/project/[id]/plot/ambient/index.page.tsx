@@ -33,7 +33,7 @@ export default function AmbientPage() {
     if (ambient === project?.ambient) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      ambient,
+      ambient: ambient || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

@@ -82,20 +82,32 @@ export async function updateCapituleRequest({
   }
 }
 
-export async function setSceneToCompleteRequest(
-  body: ISetSceneToCompleteRequest,
-) {
+export async function setSceneToCompleteRequest({
+  bookId,
+  capituleId,
+  completeInfos,
+}: ISetSceneToCompleteRequest) {
   try {
-    const response = await api.put('/books/capitules/scenes/complete', body)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}/scenes/${completeInfos.sceneId}/complete`,
+      completeInfos,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function reorderScenesRequest(body: IReorderScenesRequest) {
+export async function reorderScenesRequest({
+  bookId,
+  capituleId,
+  sequences,
+}: IReorderScenesRequest) {
   try {
-    const response = await api.put('/books/capitules/scenes/reorder', body)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}/scenes/reorder`,
+      sequences,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -118,9 +130,16 @@ export async function reorderCapitulesRequest({
   }
 }
 
-export async function updateSceneRequest(body: IUpdateSceneRequest) {
+export async function updateSceneRequest({
+  bookId,
+  capituleId,
+  scene,
+}: IUpdateSceneRequest) {
   try {
-    const response = await api.put('/books/capitules/scenes', body)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}/scenes/${scene.id}`,
+      scene,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data

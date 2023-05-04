@@ -6,7 +6,11 @@ import { useUser } from '@hooks/useUser'
 import { useQuery } from 'react-query'
 import { createScene } from './events/createScene'
 import { deleteCapitule } from './events/deleteCapitule'
+import { deleteScene } from './events/deleteScene'
+import { reorderScenes } from './events/reorderScenes'
+import { setSceneToComplete } from './events/setSceneToComplete'
 import { updateCapitule } from './events/updateCapitule'
+import { updateScene } from './events/updateScene'
 import { ICallEvent } from './types/ICallEvent'
 
 export function useCapitule(id: string) {
@@ -73,8 +77,46 @@ export function useCapitule(id: string) {
       ),
     delete: () => deleteCapitule(capitule!.id, capitule!.book_id, refetchBook),
     createScene: (newScene) =>
-      createScene(capitule!.id, capitule!.book_id, newScene, refetchCapitule),
-    updateScene: (scene) => {},
+      createScene(
+        capitule!.id,
+        capitule!.book_id,
+        newScene,
+        refetchCapitule,
+        refetchBook,
+      ),
+    updateScene: (scene) =>
+      updateScene(
+        capitule!.id,
+        capitule!.book_id,
+        scene,
+        refetchCapitule,
+        refetchBook,
+      ),
+    setSceneToComplete: (completeInfos) =>
+      setSceneToComplete(
+        capitule!.id,
+        capitule!.book_id,
+        completeInfos,
+        refetchCapitule,
+        refetchBook,
+      ),
+
+    reorderScenes: (sequences) =>
+      reorderScenes(
+        capitule!.id,
+        capitule!.book_id,
+        sequences,
+        refetchCapitule,
+      ),
+
+    deleteScene: (sceneId) =>
+      deleteScene(
+        capitule!.id,
+        capitule!.book_id,
+        sceneId,
+        refetchCapitule,
+        refetchBook,
+      ),
   }
 
   return {

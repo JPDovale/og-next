@@ -25,7 +25,6 @@ import { IUpdateScene } from '@hooks/useCapitule/types/IUpdateScene'
 interface IEditSceneProps {
   capitule: ICapitule
   scene: IScene
-  bookId: string
   projectId: string
   onClose: () => void
 }
@@ -55,12 +54,13 @@ const editSceneSchema = z.object({
   persons: z
     .array(z.string().min(6).max(100))
     .min(1, { message: 'Você precisa selecionar pelo menos um personagem!' }),
-  writtenWords: z
-    .string()
-    .regex(/^([0-9]+)$/, {
-      message: 'Coloque apenas números na idade do personagem.',
+  writtenWords: z.coerce
+    .number({
+      invalid_type_error: 'Coloque apenas números na idade do personagem.',
     })
-    .max(10, { message: 'O valor é muito grande. Sugestão: Crie outras cenas' })
+    .max(50000, {
+      message: 'O valor é muito grande. Sugestão: Crie outras cenas',
+    })
     .optional(),
   complete: z.boolean(),
 })
@@ -69,7 +69,6 @@ type editSceneBodyData = z.infer<typeof editSceneSchema>
 
 export function EditScene({
   projectId,
-  bookId,
   capitule,
   scene,
   onClose,
@@ -90,7 +89,7 @@ export function EditScene({
       act3: scene.structure_act_3,
       objective: scene.objective,
       persons: [],
-      writtenWords: scene.written_words.toString() || '0',
+      writtenWords: scene.written_words || 0,
       complete: scene.complete,
     },
   })
@@ -147,9 +146,9 @@ export function EditScene({
     setFormUpdated(true)
 
     if (updatedComplete) {
-      setValue('writtenWords', scene.written_words.toString())
+      setValue('writtenWords', scene.written_words)
     } else {
-      setValue('writtenWords', '0')
+      setValue('writtenWords', 0)
     }
   }
 

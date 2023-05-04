@@ -4,9 +4,6 @@ import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { ReactNode } from 'react'
 import { IEditorTo } from '../../../@types/editores/IEditorTo'
 import { IGenericObject } from '../../../@types/editores/IGenericObject'
-import { IDeleteSceneRequest } from '../../../api/booksRequests/types/IDeleteSceneRequest'
-import { IReorderScenesRequest } from '../../../api/booksRequests/types/IReorderScenesRequest'
-import { ISetSceneToCompleteRequest } from '../../../api/booksRequests/types/ISetSceneToCompleteRequest'
 import { ICreateCommentDTO } from '../../../api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '../../../api/dtos/ICreatePersonDTO'
 import { IBooksResponse } from '../../../api/responsesTypes/IBooksResponse'
@@ -31,17 +28,6 @@ export interface IProjectsContext {
   boxes: IBoxResponse[]
   timelines: ITimelineResponse[]
 
-  commentInPlot: (
-    newComment: ICreateCommentDTO,
-    projectId: string,
-  ) => Promise<boolean>
-  responseCommentInPlot: (
-    newResponse: ICreateCommentDTO,
-    projectId: string,
-    commentId: string,
-  ) => Promise<boolean>
-
-  createNewPerson: (person: ICreatePersonDTO) => Promise<boolean>
   updateObjective: (
     objective: IObjective,
     personId: string,
@@ -103,21 +89,6 @@ export interface IProjectsContext {
     objectiveId,
     personId,
   }: IDeleteObjective) => Promise<boolean>
-
-  setSceneToComplete: (
-    sceneToComplete: ISetSceneToCompleteRequest,
-  ) => Promise<boolean>
-  deleteScene: ({
-    bookId,
-    capituleId,
-    sceneId,
-  }: IDeleteSceneRequest) => Promise<boolean>
-  reorderScenes: ({
-    bookId,
-    capituleId,
-    sequenceFrom,
-    sequenceTo,
-  }: IReorderScenesRequest) => Promise<boolean>
 
   createBox: (box: ICreateBoxRequest) => Promise<boolean>
   createArchiveInBox: (archive: ICreateArchiveInBoxRequest) => Promise<boolean>

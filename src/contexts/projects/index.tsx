@@ -1,17 +1,10 @@
 import { createContext, useReducer } from 'react'
 import { IEditorTo } from '@@types/editores/IEditorTo'
 import { IGenericObject } from '@@types/editores/IGenericObject'
-import { IDeleteSceneRequest } from '@api/booksRequests/types/IDeleteSceneRequest'
-import { IReorderScenesRequest } from '@api/booksRequests/types/IReorderScenesRequest'
-import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
 import { IObjective } from '@api/responsesTypes/IPersonsResponse'
-import { deleteSceneFunction } from './functions/booksFunctions/deleteSceneFunction'
-import { reorderScenesFunction } from './functions/booksFunctions/reorderScenesFunction'
-import { setSceneToCompleteFunction } from './functions/booksFunctions/setSceneToCompleteFunction'
 import { commentInPersonFunction } from './functions/personsFunctions/commentInPersonFunction'
-import { createNewPersonFunction } from './functions/personsFunctions/createNewPersonFunction'
 import { createObjectGenericFunction } from './functions/personsFunctions/createObjectGenericFunction'
 import { createObjetiveOfPersonFunction } from './functions/personsFunctions/createObjetiveOfPersonFunction'
 import { deleteObjectGenericFunction } from './functions/personsFunctions/deleteObjectGenericFunction'
@@ -22,8 +15,6 @@ import { saveRefObjectiveFunction } from './functions/personsFunctions/saveRefOb
 import { updateObjectGenericFunction } from './functions/personsFunctions/updateObjectGenericFunction'
 import { updateObjetiveOfPersonFunction } from './functions/personsFunctions/updateObjetiveOfPersonFunction'
 import { updatedPersonFunction } from './functions/personsFunctions/updatePersonFunction'
-import { commentInPlotFunction } from './functions/projectFunctions/commentInPlotFunction'
-import { responseCommentInPlotFunction } from './functions/projectFunctions/responseCommentInPlotFunction'
 import { projectsReducer } from './reducer/projectsReducer'
 import { IDeleteObjective } from './types/interfaceFunctions/IDeleteObjective'
 import {
@@ -78,29 +69,29 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
   //   return projectCreated
   // }
 
-  async function commentInPlot(
-    newComment: ICreateCommentDTO,
-    projectId: string,
-  ) {
-    return commentInPlotFunction({ comment: newComment, projectId, dispatch })
-  }
+  // async function commentInPlot(
+  //   newComment: ICreateCommentDTO,
+  //   projectId: string,
+  // ) {
+  //   return commentInPlotFunction({ comment: newComment, projectId, dispatch })
+  // }
 
-  async function responseCommentInPlot(
-    newResponse: ICreateCommentDTO,
-    projectId: string,
-    commentId: string,
-  ) {
-    return responseCommentInPlotFunction({
-      responseComment: newResponse,
-      projectId,
-      commentId,
-      dispatch,
-    })
-  }
+  // async function responseCommentInPlot(
+  //   newResponse: ICreateCommentDTO,
+  //   projectId: string,
+  //   commentId: string,
+  // ) {
+  //   return responseCommentInPlotFunction({
+  //     responseComment: newResponse,
+  //     projectId,
+  //     commentId,
+  //     dispatch,
+  //   })
+  // }
 
-  async function createNewPerson(person: ICreatePersonDTO) {
-    return createNewPersonFunction({ newPerson: person, dispatch })
-  }
+  // async function createNewPerson(person: ICreatePersonDTO) {
+  //   return createNewPersonFunction({ newPerson: person, dispatch })
+  // }
 
   async function updateObjective(
     objective: IObjective,
@@ -236,38 +227,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
     return deleteObjectiveFunction({ objectiveId, personId, dispatch })
   }
 
-  async function setSceneToComplete(
-    sceneToComplete: ISetSceneToCompleteRequest,
-  ) {
-    return setSceneToCompleteFunction({
-      sceneToComplete,
-      dispatch,
-    })
-  }
-
-  async function deleteScene({
-    bookId,
-    capituleId,
-    sceneId,
-  }: IDeleteSceneRequest) {
-    return deleteSceneFunction({ bookId, capituleId, sceneId, dispatch })
-  }
-
-  async function reorderScenes({
-    bookId,
-    capituleId,
-    sequenceFrom,
-    sequenceTo,
-  }: IReorderScenesRequest) {
-    return reorderScenesFunction({
-      bookId,
-      capituleId,
-      sequenceFrom,
-      sequenceTo,
-      dispatch,
-    })
-  }
-
   async function createBox(box: ICreateBoxRequest) {
     return createBoxFunction({ newBox: box, dispatch })
   }
@@ -335,10 +294,7 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         boxes,
         timelines,
 
-        commentInPlot,
-        responseCommentInPlot,
         commentInPerson,
-        createNewPerson,
         createObjectGeneric,
         createObjective,
         deleteObjectGeneric,
@@ -349,9 +305,6 @@ export function ProjectsProvider({ children }: IProjectsContextProps) {
         updateObjective,
         updatePerson,
         deleteObjective,
-        setSceneToComplete,
-        deleteScene,
-        reorderScenes,
         createBox,
         createArchiveInBox,
         saveArchiveImages,

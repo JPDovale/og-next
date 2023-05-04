@@ -33,7 +33,7 @@ export default function SubgenrePage() {
     if (subgenre === project?.subgenre) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      subgenre,
+      subgenre: subgenre || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

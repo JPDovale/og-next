@@ -1,7 +1,6 @@
 import { SceneCard } from '@components/BooksComponents/SceneCard'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
-import { DefaultError } from '@components/usefull/DefaultError'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
@@ -39,6 +38,7 @@ import { useBook } from '@hooks/useBook'
 import { useCapitule } from '@hooks/useCapitule'
 import { IError } from '@@types/errors/IError'
 import { IUpdateCapitule } from '@hooks/useCapitule/types/IUpdateCapitule'
+import { ToastError } from '@components/usefull/ToastError'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -150,13 +150,7 @@ export default function CapitulePage() {
         inError={!loadingCapitule && (!book || !capitule)}
         isScrolling
       >
-        {error && (
-          <DefaultError
-            close={() => setError(null)}
-            title={error.title}
-            message={error.message}
-          />
-        )}
+        <ToastError error={error} setError={setError} />
 
         <CapituleContainer>
           <GoBackButton />
@@ -362,7 +356,6 @@ export default function CapitulePage() {
           ) : onEditScene ? (
             <EditScene
               projectId={project!.id}
-              bookId={book!.id}
               capitule={capitule!}
               scene={sceneToUpdate!}
               onClose={() => setOnEditScene('')}

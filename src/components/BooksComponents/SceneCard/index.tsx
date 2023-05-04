@@ -1,4 +1,3 @@
-import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
 import { IScene } from '@api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { Avatares } from '@components/usefull/Avatares'
@@ -7,10 +6,10 @@ import { Checkbox } from '@components/usefull/Checkbox'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { useCapitule } from '@hooks/useCapitule'
+import { ISetSceneToComplete } from '@hooks/useCapitule/types/ISetSceneToComplete'
 import { List, PencilLine, Trash, X } from 'phosphor-react'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { z } from 'zod'
 
 import {
@@ -50,10 +49,7 @@ export function SceneCard({
   const [toSequenceSet, setToSequenceSet] = useState('')
   const [errorIn, setErrorIn] = useState('')
 
-  const { setSceneToComplete, deleteScene, reorderScenes } =
-    useContext(ProjectsContext)
-
-  const { capitule } = useCapitule(capituleId)
+  const { capitule, callEvent } = useCapitule(capituleId)
 
   async function handleSetCompleteScene() {
     setErrorIn('')
@@ -64,16 +60,14 @@ export function SceneCard({
       return setErrorIn('writtenWords')
     }
 
-    const setCompleteScene: ISetSceneToCompleteRequest = {
-      bookId,
-      capituleId,
+    const setCompleteScene: ISetSceneToComplete = {
       sceneId: scene.id,
-      writtenWords,
+      writtenWords: Number(writtenWords),
     }
 
-    const isSet = await setSceneToComplete(setCompleteScene)
+    const { resolved } = await callEvent.setSceneToComplete(setCompleteScene)
 
-    if (isSet) {
+    if (resolved) {
       setChecked(false)
     }
   }
@@ -81,7 +75,7 @@ export function SceneCard({
   async function handleDeleteScene() {
     setErrorIn('')
 
-    await deleteScene({ bookId, capituleId, sceneId: scene.id })
+    await callEvent.deleteScene(scene!.id)
   }
 
   async function handleReorderScenes() {
@@ -110,11 +104,9 @@ export function SceneCard({
     }
 
     setErrorIn('')
-    await reorderScenes({
-      bookId,
-      capituleId,
-      sequenceFrom: scene.sequence.toString(),
-      sequenceTo: toSequenceSet,
+    await callEvent.reorderScenes({
+      sequenceFrom: scene.sequence,
+      sequenceTo: Number(toSequenceSet),
     })
 
     setReOrderSelected(false)

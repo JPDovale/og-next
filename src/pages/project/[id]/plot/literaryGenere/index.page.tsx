@@ -33,7 +33,7 @@ export default function LiteraryGenerePage() {
     if (literaryGenre === project?.one_phrase) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      literaryGenre,
+      literaryGenre: literaryGenre || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

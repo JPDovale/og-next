@@ -33,7 +33,7 @@ export default function SummaryPage() {
     if (summary === project?.summary) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      summary,
+      summary: summary || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

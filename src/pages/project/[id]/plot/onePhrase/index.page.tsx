@@ -33,7 +33,7 @@ export default function OnePhrasePage() {
     if (onePhrase === project?.one_phrase) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      onePhrase,
+      onePhrase: onePhrase || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

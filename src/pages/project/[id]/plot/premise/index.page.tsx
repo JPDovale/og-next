@@ -34,7 +34,7 @@ export default function PremisePage() {
     if (premise === project?.premise) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      premise,
+      premise: premise || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

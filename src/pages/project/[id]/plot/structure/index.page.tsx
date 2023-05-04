@@ -36,7 +36,7 @@ export default function StructurePage() {
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1,
+        act1: act1 || null,
         act2: project?.structure_act_2,
         act3: project?.structure_act_3,
       },
@@ -61,7 +61,7 @@ export default function StructurePage() {
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
         act1: project?.structure_act_1,
-        act2,
+        act2: act2 || null,
         act3: project?.structure_act_3,
       },
     }
@@ -86,7 +86,7 @@ export default function StructurePage() {
       structure: {
         act1: project?.structure_act_1,
         act2: project?.structure_act_2,
-        act3,
+        act3: act3 || null,
       },
     }
 

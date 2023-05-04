@@ -1,31 +1,29 @@
-import { IRefetchBook } from '@hooks/useBook/types/IRefetchBook'
-import { createSceneRequest } from '@api/booksRequests'
+import { reorderScenesRequest } from '@api/booksRequests'
 import { responseDealings } from '@utils/data/responseDealings'
-import { ICreateScene } from '../types/ICreateScene'
 import { IRefetchCapitule } from '../types/IRefetchCapitule'
 import { IResolveEvent } from '../types/IResolveEvent'
+import { IReorderScenes } from '../types/IRorderScenes'
 
-export async function createScene(
+export async function reorderScenes(
   capituleId: string,
   bookId: string,
-  scene: ICreateScene,
+  sequences: IReorderScenes,
   refetchCapitule: IRefetchCapitule,
-  refetchBook: IRefetchBook,
 ): Promise<IResolveEvent> {
-  const response = await createSceneRequest({
-    capituleId,
+  const response = await reorderScenesRequest({
     bookId,
-    scene,
+    capituleId,
+    sequences,
   })
 
   const { handledAnswer, error } = await responseDealings<IResolveEvent>({
     response,
     callback: () =>
-      createScene(capituleId, bookId, scene, refetchCapitule, refetchBook),
+      reorderScenes(capituleId, bookId, sequences, refetchCapitule),
   })
 
   if (handledAnswer) {
-    await Promise.all([refetchCapitule(), refetchBook()])
+    await refetchCapitule()
   }
 
   return {

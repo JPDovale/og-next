@@ -33,7 +33,7 @@ export default function StorytellerPage() {
     if (storyteller === project?.storyteller) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      storyteller,
+      storyteller: storyteller || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

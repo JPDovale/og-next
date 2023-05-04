@@ -1,27 +1,33 @@
+import { setSceneToCompleteRequest } from '@api/booksRequests'
 import { IRefetchBook } from '@hooks/useBook/types/IRefetchBook'
-import { createSceneRequest } from '@api/booksRequests'
 import { responseDealings } from '@utils/data/responseDealings'
-import { ICreateScene } from '../types/ICreateScene'
 import { IRefetchCapitule } from '../types/IRefetchCapitule'
 import { IResolveEvent } from '../types/IResolveEvent'
+import { ISetSceneToComplete } from '../types/ISetSceneToComplete'
 
-export async function createScene(
+export async function setSceneToComplete(
   capituleId: string,
   bookId: string,
-  scene: ICreateScene,
+  completeInfos: ISetSceneToComplete,
   refetchCapitule: IRefetchCapitule,
   refetchBook: IRefetchBook,
 ): Promise<IResolveEvent> {
-  const response = await createSceneRequest({
+  const response = await setSceneToCompleteRequest({
     capituleId,
     bookId,
-    scene,
+    completeInfos,
   })
 
   const { handledAnswer, error } = await responseDealings<IResolveEvent>({
     response,
     callback: () =>
-      createScene(capituleId, bookId, scene, refetchCapitule, refetchBook),
+      setSceneToComplete(
+        capituleId,
+        bookId,
+        completeInfos,
+        refetchCapitule,
+        refetchBook,
+      ),
   })
 
   if (handledAnswer) {

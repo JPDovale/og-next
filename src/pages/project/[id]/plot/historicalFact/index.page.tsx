@@ -33,7 +33,7 @@ export default function HistoricalFactPage() {
     if (historicalFact === project?.historical_fact) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      historicalFact,
+      historicalFact: historicalFact || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)

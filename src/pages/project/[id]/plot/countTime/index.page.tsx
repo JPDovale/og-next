@@ -33,7 +33,7 @@ export default function CountTimePage() {
     if (countTime === project?.count_time) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
-      countTime,
+      countTime: countTime || null,
     }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)
