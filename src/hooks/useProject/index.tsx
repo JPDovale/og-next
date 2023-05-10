@@ -6,10 +6,17 @@ import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
 import { getDate } from '@utils/dates/getDate'
 import { useQuery } from 'react-query'
+import { commentInPlot } from './events/commentInPlot'
 import { createBook } from './events/createBook'
+import { createPerson } from './events/createPerson'
 import { deleteProject } from './events/delete'
+import { deleteImage } from './events/deleteImage'
 import { quitProject } from './events/quit'
+import { responseCommentInPlot } from './events/responseCommentInPlot'
 import { shareProject } from './events/share'
+import { unshare } from './events/unshare'
+import { updateImage } from './events/updateImage'
+import { updateName } from './events/updateName'
 import { updatePlot } from './events/updatePlot'
 import { ICallEvent } from './types/ICallEvent'
 
@@ -253,12 +260,26 @@ export function useProject(id: string) {
     share: (shareInfos) =>
       shareProject(project!.id, shareInfos, refetchProjects),
     updatePlot: (plot) => updatePlot(project!.id, plot, refetchProject),
-    updateName: (newName) => {},
-    updateImage: (file) => {},
-    unshare: (email) => {},
-    removeImage: () => {},
+    updateName: (newName) =>
+      updateName(project!.id, newName, refetchProject, refetchProjects),
+    updateImage: (file) =>
+      updateImage(project!.id, file, refetchProject, refetchProjects),
+    removeImage: () =>
+      deleteImage(project!.id, refetchProject, refetchProjects),
+    unshare: (email) =>
+      unshare(project!.id, email, refetchProject, refetchProjects),
 
-    createBook: (newBook) => createBook(project!.id, newBook, refetchProject),
+    createBook: (newBook) =>
+      createBook(project!.id, newBook, refetchProject, refetchProjects),
+
+    commentInPlot: (newComment) =>
+      commentInPlot(project!.id, newComment, refetchProject),
+
+    responseCommentInPlot: (newResponse) =>
+      responseCommentInPlot(project!.id, newResponse, refetchProject),
+
+    createPerson: (newPerson) =>
+      createPerson(project!.id, newPerson, refetchProject, refetchProjects),
   }
 
   return {

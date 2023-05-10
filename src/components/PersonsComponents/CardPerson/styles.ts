@@ -83,9 +83,6 @@ export const CardPersonContainer = styled(Box, {
 
         '@media screen and (max-width: 768px)': {
           display: 'flex',
-
-          background:
-            'linear-gradient(180deg, rgba(0,0,0,1) 30%, rgba(63,28,87,1) 100%)',
         },
       },
       false: {},

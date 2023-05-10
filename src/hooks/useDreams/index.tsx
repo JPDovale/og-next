@@ -28,9 +28,6 @@ export function useDreams(projectId: string) {
 
       return { dreams, errorMessage, errorTitle }
     },
-    {
-      staleTime: 1000 * 60 * 60 * 3, // 3 hours
-    },
   )
 
   const dreams = data?.dreams || []

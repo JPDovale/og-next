@@ -38,7 +38,7 @@ export function CardUserWithAccess({
     <CardUserWithAccessContainer>
       <AvatarWeb
         size={smallWindow ? '2xl' : '4xl'}
-        src={userWithAccess.avatarImage}
+        src={userWithAccess.avatar_url}
       />
       {project.user.id === user?.id && (
         <UnshareButton
@@ -58,10 +58,7 @@ export function CardUserWithAccess({
           </ButtonLabel>
         </UnshareButton>
       )}
-      <Text family="body" as="label">
-        Nome:
-        <Text size="xs">{userWithAccess.name}</Text>
-      </Text>
+
       <Text family="body" as="label">
         Nome de usuário:
         <Text size="xs">{userWithAccess.username}</Text>

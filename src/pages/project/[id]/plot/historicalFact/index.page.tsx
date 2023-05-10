@@ -1,4 +1,5 @@
 import { IError } from '@@types/errors/IError'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { Editor } from '@components/Editor'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
@@ -44,6 +45,18 @@ export default function HistoricalFactPage() {
 
     if (error) {
       setError(error)
+    }
+  }
+
+  async function handleNewComment(newComment: ICreateCommentDTO) {
+    const { error, resolved } = await callEvent.commentInPlot(newComment)
+
+    if (error) {
+      setError(error)
+    }
+
+    if (resolved) {
+      setSuccessMessage('Comentário criado com sucesso')
     }
   }
 
@@ -110,6 +123,8 @@ export default function HistoricalFactPage() {
           permission={permission}
           comments={commentsHistoricalFact}
           isNew={!project?.historical_fact}
+          onNewComment={handleNewComment}
+          onNewCommentTo="historicalFact"
         />
       </ProjectPageLayout>
     </>

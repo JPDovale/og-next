@@ -112,4 +112,8 @@ export const Space = styled('div', {
 
   width: '100%',
   height: 58,
+
+  '@media screen and (max-width: 768px)': {
+    height: 50,
+  },
 })

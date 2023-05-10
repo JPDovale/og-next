@@ -5,7 +5,6 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -14,19 +13,15 @@ import { getDate } from '@utils/dates/getDate'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Users } from 'phosphor-react'
-import { useContext } from 'react'
 
 export default function CouplePage() {
-  const { commentInPerson } = useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId, coupleId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission, findPerson } = useProject(id as string)
-  const { person, personName, findCouple, loadingPerson } = usePerson(
-    personId as string,
-  )
+  const { person, personName, findCouple, loadingPerson, callEvent } =
+    usePerson(personId as string)
   const { couple } = findCouple(coupleId as string)
 
   const { person: coupleWithPerson, personName: coupleName } = findPerson(
@@ -36,7 +31,23 @@ export default function CouplePage() {
   async function handleCommentInCouple(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
-    await commentInPerson(newComment, person?.id as string)
+    await callEvent.commentInPerson({
+      toObjectId: couple?.id ?? '',
+      comment: {
+        content: newComment.content,
+        commentIn: 'couple',
+      },
+    })
+  }
+
+  async function handleResponseComment(
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) {
+    await callEvent.responseCommentInPerson({
+      content: newResponse.content,
+      commentId,
+    })
   }
 
   return (
@@ -167,6 +178,7 @@ export default function CouplePage() {
           onNewComment={handleCommentInCouple}
           permission={permission}
           comments={couple?.comments}
+          onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics
           persons={persons}

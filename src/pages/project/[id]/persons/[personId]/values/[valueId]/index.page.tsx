@@ -5,7 +5,6 @@ import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -14,17 +13,14 @@ import { getDate } from '@utils/dates/getDate'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { TreeStructure } from 'phosphor-react'
-import { useContext } from 'react'
 
 export default function ValuePage() {
-  const { commentInPerson } = useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId, valueId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { permission, projectName } = useProject(id as string)
-  const { person, personName, findValue, loadingPerson } = usePerson(
+  const { person, personName, findValue, loadingPerson, callEvent } = usePerson(
     personId as string,
   )
   const { value } = findValue(valueId as string)
@@ -32,7 +28,23 @@ export default function ValuePage() {
   async function handleCommentInValue(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
-    await commentInPerson(newComment, person?.id as string)
+    await callEvent.commentInPerson({
+      toObjectId: value?.id ?? '',
+      comment: {
+        content: newComment.content,
+        commentIn: 'value',
+      },
+    })
+  }
+
+  async function handleResponseComment(
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) {
+    await callEvent.responseCommentInPerson({
+      content: newResponse.content,
+      commentId,
+    })
   }
 
   return (
@@ -139,6 +151,7 @@ export default function ValuePage() {
           onNewComment={handleCommentInValue}
           permission={permission}
           comments={value?.comments}
+          onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics
           persons={persons}

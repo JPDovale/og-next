@@ -3,7 +3,8 @@ import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
 import { IShareProjectDTO } from '@api/dtos/IShareProjectDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
-import { IResolveEvent } from '@hooks/useProjects/types/IResolveEvent'
+import { IResolveEvent } from './IResolveEvent'
+import { IResponseComment } from './IResponseComment'
 
 export interface ICallEvent {
   delete: () => Promise<IResolveEvent>
@@ -15,7 +16,9 @@ export interface ICallEvent {
   unshare: (email: string) => Promise<IResolveEvent>
   removeImage: () => Promise<IResolveEvent>
   commentInPlot: (newComment: ICreateCommentDTO) => Promise<IResolveEvent>
-  responseComment: (newResponse: ICreateCommentDTO) => Promise<IResolveEvent>
+  responseCommentInPlot: (
+    newResponse: IResponseComment,
+  ) => Promise<IResolveEvent>
   createPerson: (newPerson: ICreatePersonDTO) => Promise<IResolveEvent>
 
   createBook: (newBook: ICreateBookDTO) => Promise<IResolveEvent>

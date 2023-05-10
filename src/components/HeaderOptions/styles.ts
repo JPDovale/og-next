@@ -33,7 +33,8 @@ export const HeaderOptionsContainer = styled('header', {
   zIndex: '1',
   justifyContent: 'space-between',
 
-  padding: '$3 $4',
+  padding: '0 $4',
+  height: '60px',
 
   boxShadow: '0 4px 8px #00000050',
   transition: 'ease-in-out 250ms',
@@ -216,4 +217,8 @@ export const NewNotificationAlert = styled('div', {
   p: {
     lineHeight: 0,
   },
+})
+
+export const Space = styled('div', {
+  minHeight: '60px',
 })

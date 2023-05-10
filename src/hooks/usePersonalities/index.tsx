@@ -28,9 +28,6 @@ export function usePersonalities(projectId: string) {
 
       return { personalities, errorMessage, errorTitle }
     },
-    {
-      staleTime: 1000 * 60 * 60 * 3, // 3 hours
-    },
   )
 
   const personalities = data?.personalities || []

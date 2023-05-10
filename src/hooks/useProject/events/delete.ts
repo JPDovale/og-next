@@ -15,7 +15,7 @@ export async function deleteProject(
   })
 
   if (handledAnswer) {
-    refetchProjects()
+    await refetchProjects()
   }
 
   return {

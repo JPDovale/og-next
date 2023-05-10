@@ -28,9 +28,6 @@ export function useFears(projectId: string) {
 
       return { fears, errorMessage, errorTitle }
     },
-    {
-      staleTime: 1000 * 60 * 60 * 3, // 3 hours
-    },
   )
 
   const fears = data?.fears || []

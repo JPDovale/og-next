@@ -2,24 +2,20 @@ import { ModelsHeader } from '@components/ModelsHeader'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { ToastError } from '@components/usefull/ToastError'
-import { ProjectsContext } from '@contexts/projects'
 import { useBoxes } from '@hooks/useBoxes'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import { NextSeo } from 'next-seo'
 import { Package } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { CardBoxNotInternal } from '../../components/BoxesComponents/CardBoxNotInternal'
 import { Container } from './styles'
 
 export default function BoxesPage() {
   const [query, setQuery] = useState('')
 
-  const { loading, error, setError } = useContext(ProjectsContext)
-
-  const { boxes } = useBoxes()
+  const { boxes, loadingBoxes } = useBoxes()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -34,7 +30,7 @@ export default function BoxesPage() {
         window={`Boxes: ${boxes ? boxes.length : 0}`}
         query={query}
         setQuery={setQuery}
-        loading={loading}
+        loading={loadingBoxes}
         queryless={boxes && !!boxes[0]}
       >
         <Container>
@@ -60,8 +56,6 @@ export default function BoxesPage() {
             )}
           </ContainerGrid>
         </Container>
-
-        <ToastError error={error} setError={setError} />
       </DashboardPageLayout>
     </>
   )

@@ -1,3 +1,4 @@
+import { IError } from '@@types/errors/IError'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
@@ -14,6 +15,7 @@ import { LabelInput } from '@components/usefull/LabelInput'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
+import { ToastError } from '@components/usefull/ToastError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
@@ -22,6 +24,7 @@ import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Users, UserSquare, UserSwitch } from 'phosphor-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { NewCoupleForm } from './styles'
@@ -44,6 +47,8 @@ const newCoupleBodySchema = z.object({
 type newCoupleData = z.infer<typeof newCoupleBodySchema>
 
 export default function NewCouplePage() {
+  const [error, setError] = useState<IError | null>(null)
+
   const router = useRouter()
   const { id, personId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
@@ -51,7 +56,9 @@ export default function NewCouplePage() {
   const { projectName, permission, findManyPersons, findPerson } = useProject(
     id as string,
   )
-  const { person, personName, loadingPerson } = usePerson(personId as string)
+  const { person, personName, loadingPerson, callEvent } = usePerson(
+    personId as string,
+  )
 
   const { handleSubmit, register, watch, formState, setValue } =
     useForm<newCoupleData>({
@@ -83,8 +90,19 @@ export default function NewCouplePage() {
     setValue('untilEnd', newUntilEnd)
   }
 
-  function handleCreateCouple(data: newCoupleData) {
-    console.log(data)
+  async function handleCreateCouple(data: newCoupleData) {
+    const { resolved, error } = await callEvent.createObject<newCoupleData>({
+      path: 'couples',
+      object: data,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
   return (
@@ -100,6 +118,8 @@ export default function NewCouplePage() {
         inErrorNotAuthorized={permission !== 'edit'}
         isScrolling
       >
+        <ToastError error={error} setError={setError} />
+
         <ContainerGrid padding={4} isRelativePosition>
           <GoBackButton topDistance={4} />
 

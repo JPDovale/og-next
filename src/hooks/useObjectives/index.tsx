@@ -28,9 +28,6 @@ export function useObjectives(projectId: string) {
 
       return { objectives, errorMessage, errorTitle }
     },
-    {
-      staleTime: 1000 * 60 * 60 * 3, // 3 hours
-    },
   )
 
   const objectives = data?.objectives || []

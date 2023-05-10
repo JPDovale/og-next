@@ -17,7 +17,7 @@ export async function shareProject(
   })
 
   if (handledAnswer) {
-    refetchProjects()
+    await refetchProjects()
   }
 
   return {

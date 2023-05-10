@@ -25,6 +25,7 @@ export const NavigationBarContainer = styled('nav', {
 
   '@media screen and (max-width: 768px)': {
     zIndex: '3',
+    left: '-100%',
 
     width: '100%',
   },
@@ -34,6 +35,7 @@ export const NavigationBarContainer = styled('nav', {
       true: {
         '@media screen and (max-width: 768px)': {
           width: '100%',
+          left: 0,
 
           '.close': {
             display: 'flex',
@@ -45,6 +47,8 @@ export const NavigationBarContainer = styled('nav', {
         padding: '$2',
 
         '@media screen and (max-width: 768px)': {
+          width: '100%',
+
           '.close': {
             display: 'none',
           },

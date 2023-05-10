@@ -4,8 +4,6 @@ export const ProjectsContainer = styled('div', {
   gridTemplateColumns: '1fr 1fr 1fr',
 
   gap: '$8',
-  padding: '0 0 $10 0',
-  marginTop: '120px',
 
   transition: 'ease-in-out 250ms',
 
@@ -24,7 +22,6 @@ export const ProjectsContainer = styled('div', {
 
         '@media screen and (max-width: 768px)': {
           minHeight: '80%',
-          marginTop: '$16',
         },
       },
       false: {},
@@ -47,7 +44,5 @@ export const ProjectsContainer = styled('div', {
   '@media screen and (max-width: 768px)': {
     display: 'flex',
     flexDirection: 'column',
-    padding: '$4',
-    marginTop: '$16',
   },
 })

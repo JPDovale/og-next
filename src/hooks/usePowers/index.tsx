@@ -28,9 +28,6 @@ export function usePowers(projectId: string) {
 
       return { powers, errorMessage, errorTitle }
     },
-    {
-      staleTime: 1000 * 60 * 60 * 3, // 3 hours
-    },
   )
 
   const powers = data?.powers || []

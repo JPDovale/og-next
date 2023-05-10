@@ -46,7 +46,7 @@ export default function PersonPage() {
   usePreventBack(`/project/${id}/persons`)
 
   const { project, permission, projectName } = useProject(id as string)
-  const { person, personInfos, personName, loadingPerson, callEvent } =
+  const { person, couples, personInfos, personName, loadingPerson, callEvent } =
     usePerson(personId as string)
 
   async function handleUpdateImage(files: FileList | null): Promise<void> {
@@ -115,7 +115,6 @@ export default function PersonPage() {
               person?.objectives?.map((objective) => {
                 return (
                   <CardObjective
-                    permission={permission}
                     key={objective.id}
                     objective={objective}
                     avoiders={objective.avoiders?.persons ?? []}
@@ -207,7 +206,7 @@ export default function PersonPage() {
           icon={<Users size={40} />}
           title="Casais"
           keyIndex="couples"
-          objectOfCampu={person?.couples as ICouple[]}
+          objectOfCampu={couples as ICouple[]}
           isUniqueRelational
         />
 

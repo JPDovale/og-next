@@ -1,5 +1,6 @@
 import { createBookRequest } from '@api/booksRequests'
 import { ICreateBookDTO } from '@api/dtos/booksDTOS/ICreateBookDTO'
+import { IRefetchProjects } from '@hooks/useProjects/types/IRefetchProjects'
 import { IResolveEvent } from '@hooks/useProjects/types/IResolveEvent'
 import { responseDealings } from '@utils/data/responseDealings'
 import { IRefetchProject } from '../types/IRefetchProject'
@@ -7,17 +8,19 @@ import { IRefetchProject } from '../types/IRefetchProject'
 export async function createBook(
   projectId: string,
   newBook: ICreateBookDTO,
-  refetchProjects: IRefetchProject,
+  refetchProject: IRefetchProject,
+  refetchProjects: IRefetchProjects,
 ): Promise<IResolveEvent> {
   const response = await createBookRequest({ book: newBook, projectId })
 
   const { handledAnswer, error } = await responseDealings<IResolveEvent>({
     response,
-    callback: () => createBook(projectId, newBook, refetchProjects),
+    callback: () =>
+      createBook(projectId, newBook, refetchProject, refetchProjects),
   })
 
   if (handledAnswer) {
-    refetchProjects()
+    await Promise.all([refetchProject(), refetchProjects()])
   }
 
   return {

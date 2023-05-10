@@ -5,7 +5,6 @@ import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -14,26 +13,39 @@ import { getDate } from '@utils/dates/getDate'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { UserCircleGear } from 'phosphor-react'
-import { useContext } from 'react'
 
 export default function PersonalityPage() {
-  const { commentInPerson } = useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId, personalityId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { person, personName, findPersonality, loadingPerson } = usePerson(
-    personId as string,
-  )
+  const { person, personName, findPersonality, loadingPerson, callEvent } =
+    usePerson(personId as string)
   const { personality } = findPersonality(personalityId as string)
 
   async function handleCommentInPersonality(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
-    await commentInPerson(newComment, person?.id as string)
+    await callEvent.commentInPerson({
+      toObjectId: personality?.id ?? '',
+      comment: {
+        content: newComment.content,
+        commentIn: 'personality',
+      },
+    })
   }
+
+  async function handleResponseComment(
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) {
+    await callEvent.responseCommentInPerson({
+      content: newResponse.content,
+      commentId,
+    })
+  }
+
   return (
     <>
       <NextSeo
@@ -145,6 +157,7 @@ export default function PersonalityPage() {
           onNewComment={handleCommentInPersonality}
           permission={permission}
           comments={personality?.comments}
+          onResponseIntersect={handleResponseComment}
         />
 
         {/* <EditorAndCommentsToGenerics

@@ -34,6 +34,8 @@ import {
 } from './styles'
 import { NewConsequenceModal } from '../../components/NewConsequenceModal'
 import { Toast } from '@components/usefull/Toast'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 const newTraumaBodySchema = z.object({
   title: z
@@ -78,13 +80,16 @@ export default function NewTraumaPage() {
   const [newConsequenceModalIsOpen, setNewConsequenceModalIsOpen] =
     useState(false)
   const [traumaSelected, setTraumaSelected] = useState<string | null>(null)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, personId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { personName, loadingPerson, person } = usePerson(personId as string)
+  const { personName, loadingPerson, person, callEvent } = usePerson(
+    personId as string,
+  )
   const { loadingTraumas, findTraumaWherePersonNotExisteIn } = useTraumas(
     id as string,
   )
@@ -102,10 +107,6 @@ export default function NewTraumaPage() {
     if (id === traumaSelected) return setTraumaSelected(null)
 
     setTraumaSelected(id)
-  }
-
-  function handleCreateTrauma(data: newTraumaData) {
-    console.log(data)
   }
 
   function handleAddConsequence(consequence: newConsequenceData) {
@@ -130,6 +131,38 @@ export default function NewTraumaPage() {
     setValue('consequences', filteredConsequences)
   }
 
+  async function handleCreateTrauma(data: newTraumaData) {
+    const { resolved, error } = await callEvent.createObject<newTraumaData>({
+      path: 'traumas',
+      object: data,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleCreateReference() {
+    if (!traumaSelected) return
+
+    const { resolved, error } = await callEvent.createObjectReference({
+      path: 'traumas',
+      referenceId: traumaSelected,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
   return (
     <>
       <NextSeo title={`${personName}-Nova trauma | Magiscrita`} noindex />
@@ -143,6 +176,8 @@ export default function NewTraumaPage() {
         inErrorNotAuthorized={permission !== 'edit'}
         isScrolling
       >
+        <ToastError error={error} setError={setError} />
+
         <Toast
           message="Você já criou uma consequência com esse nome... Tente outro."
           title="Consequência já existe"
@@ -290,7 +325,11 @@ export default function NewTraumaPage() {
             </NewTraumaForm>
           ) : (
             <ContainerGrid>
-              <ButtonRoot align="center" type="button">
+              <ButtonRoot
+                onClick={handleCreateReference}
+                align="center"
+                type="button"
+              >
                 <ButtonIcon>
                   <Anchor />
                 </ButtonIcon>

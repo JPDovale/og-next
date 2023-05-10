@@ -34,6 +34,8 @@ import {
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Toast } from '@components/usefull/Toast'
 import { NewExceptionModal } from '../../components/NewExceptionModal'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 const newValueBodySchema = z.object({
   title: z
@@ -77,13 +79,16 @@ export default function NewValuePage() {
   ] = useState(false)
   const [newExceptionModalIsOpen, setNewExceptionModalIsOpen] = useState(false)
   const [valueSelected, setValueSelected] = useState<string | null>(null)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, personId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { personName, loadingPerson, person } = usePerson(personId as string)
+  const { personName, loadingPerson, person, callEvent } = usePerson(
+    personId as string,
+  )
   const { loadingValues, findValueWherePersonNotExisteIn } = useValues(
     id as string,
   )
@@ -101,10 +106,6 @@ export default function NewValuePage() {
     if (id === valueSelected) return setValueSelected(null)
 
     setValueSelected(id)
-  }
-
-  function handleCreateValue(data: newValueData) {
-    console.log(data)
   }
 
   function handleAddException(exception: newExceptionData) {
@@ -129,6 +130,38 @@ export default function NewValuePage() {
     setValue('exceptions', filteredExceptions)
   }
 
+  async function handleCreateValue(data: newValueData) {
+    const { resolved, error } = await callEvent.createObject<newValueData>({
+      path: 'values',
+      object: data,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleCreateReference() {
+    if (!valueSelected) return
+
+    const { resolved, error } = await callEvent.createObjectReference({
+      path: 'values',
+      referenceId: valueSelected,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
   return (
     <>
       <NextSeo title={`${personName}-Novo valor | Magiscrita`} noindex />
@@ -142,6 +175,8 @@ export default function NewValuePage() {
         inErrorNotAuthorized={permission !== 'edit'}
         isScrolling
       >
+        <ToastError error={error} setError={setError} />
+
         <Toast
           message="Você já criou uma exceção com esse nome... Tente outro."
           title="Exceção já existe"
@@ -287,7 +322,11 @@ export default function NewValuePage() {
             </NewValueForm>
           ) : (
             <ContainerGrid>
-              <ButtonRoot align="center" type="button">
+              <ButtonRoot
+                onClick={handleCreateReference}
+                align="center"
+                type="button"
+              >
                 <ButtonIcon>
                   <Anchor />
                 </ButtonIcon>

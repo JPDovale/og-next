@@ -17,11 +17,16 @@ export async function createBoxRequest(box: ICreateBoxRequest) {
   }
 }
 
-export async function createArchiveInBoxRequest(
-  archiveRequest: ICreateArchiveInBoxRequest,
-) {
+export async function createArchiveInBoxRequest({
+  boxId,
+  description,
+  title,
+}: ICreateArchiveInBoxRequest) {
   try {
-    const response = await api.post('/boxes/archives', archiveRequest)
+    const response = await api.post(`/boxes/${boxId}/archives`, {
+      title,
+      description,
+    })
 
     return response.data
   } catch (err: any) {
@@ -29,13 +34,13 @@ export async function createArchiveInBoxRequest(
   }
 }
 
-export async function saveImagesRequest({
+export async function saveImagesInArchiveRequest({
   archiveId,
   boxId,
   file,
 }: ISaveImagesRequest) {
   try {
-    const response = await api.patch(
+    const response = await api.post(
       `/boxes/${boxId}/archives/${archiveId}/images`,
       { file },
       {

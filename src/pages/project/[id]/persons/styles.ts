@@ -13,6 +13,10 @@ export const PersonsContainer = styled('div', {
       },
       false: {
         gridTemplateColumns: 'repeat(3, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: 'repeat(1, 1fr)',
+        },
       },
     },
   },
@@ -44,6 +48,6 @@ export const FastAccessPersons = styled('div', {
   borderRadius: '$sm',
 
   '@media screen and (max-width: 768px)': {
-    width: '90%',
+    width: '100%',
   },
 })

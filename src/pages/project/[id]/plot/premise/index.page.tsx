@@ -1,4 +1,5 @@
 import { IError } from '@@types/errors/IError'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { Editor } from '@components/Editor'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
@@ -45,6 +46,18 @@ export default function PremisePage() {
 
     if (error) {
       setError(error)
+    }
+  }
+
+  async function handleNewComment(newComment: ICreateCommentDTO) {
+    const { error, resolved } = await callEvent.commentInPlot(newComment)
+
+    if (error) {
+      setError(error)
+    }
+
+    if (resolved) {
+      setSuccessMessage('Comentário criado com sucesso')
     }
   }
 
@@ -104,7 +117,9 @@ export default function PremisePage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsPremise}
-          isNew={!project?.one_phrase}
+          isNew={!project?.premise}
+          onNewComment={handleNewComment}
+          onNewCommentTo="premise"
         />
       </ProjectPageLayout>
     </>

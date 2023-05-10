@@ -62,7 +62,7 @@ export const AvataresContainer = styled('div', {
         gridTemplateColumns: 'repeat(15, 1fr)',
 
         '@media screen and (max-width: 768px)': {
-          gridTemplateColumns: '1fr 1fr 1fr ',
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
         },
       },
     },

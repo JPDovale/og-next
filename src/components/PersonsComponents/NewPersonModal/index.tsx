@@ -9,8 +9,8 @@ import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
 import { InterfaceContext } from '@contexts/interface'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useProject } from '@hooks/useProject'
 import { useProjects } from '@hooks/useProjects'
 import {
   ArrowDown,
@@ -47,9 +47,11 @@ const newPersonFormSchema = z.object({
     .string()
     .min(2, { message: 'O sobrenome precisa ter pelo menos dois caracteres' })
     .max(100, { message: 'O sobrenome não pode ter mais de 100 caracteres' }),
-  age: z.string().regex(/^([0-9]+)$/, {
-    message: 'Coloque apenas números na idade do personagem.',
-  }),
+  age: z.coerce
+    .number({
+      invalid_type_error: 'Coloque apenas números na idade do personagem.',
+    })
+    .max(1000000000000),
   birthHour: z.coerce
     .number({ invalid_type_error: 'Coloque apenas números na hora.' })
     // .regex(/^([0-9]+)$/, {
@@ -91,7 +93,6 @@ interface INewPersonModalProps {
 
 export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
   const [projectSelected, setProjectSelected] = useState('')
-  const { createNewPerson } = useContext(ProjectsContext)
   const { theme } = useContext(InterfaceContext)
 
   const isDarkMode = theme === 'dark'
@@ -106,11 +107,8 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
       },
     })
 
-  const { projects, projectsEditablePerUser } = useProjects()
-
-  const infosProjectSelected = projects.find(
-    (project) => project.id === projectSelected,
-  )
+  const { projectsEditablePerUser } = useProjects()
+  const { project, callEvent } = useProject(projectId ?? projectSelected)
 
   async function handleNewPerson(data: NewPersonFormData) {
     if (!projectId && !projectSelected) {
@@ -140,9 +138,9 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
       birthHour: birthInHour,
     }
 
-    const success = await createNewPerson(newPerson)
+    const { resolved } = await callEvent.createPerson(newPerson)
 
-    if (!success) return
+    if (!resolved) return
 
     onSuccess && onSuccess()
     reset()
@@ -152,12 +150,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
     <ModalContent
       sizeWid="lg"
       title={`Novo personagem ${
-        !projectId &&
-        ` --> ${
-          infosProjectSelected
-            ? infosProjectSelected.name
-            : 'Selecione um projeto'
-        }`
+        !projectId && ` --> ${project ? project.name : 'Selecione um projeto'}`
       }`}
     >
       <NewPersonForm

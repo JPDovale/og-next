@@ -3,6 +3,7 @@ import {
   Label,
   Logo,
   Options,
+  OptionsContainer,
   ProjectNavigationContainer,
 } from './styles'
 
@@ -107,492 +108,496 @@ export function ProjectNavigation({
             priority
           />
         </Logo>
-        {navigatorProjectIsOpen && (
-          <button
-            type="button"
-            className="close"
-            onClick={() => setNavigatorProjectIsOpen(false)}
+
+        <OptionsContainer>
+          {navigatorProjectIsOpen && (
+            <button
+              type="button"
+              className="close"
+              onClick={() => setNavigatorProjectIsOpen(false)}
+            >
+              <XCircle size={24} />
+            </button>
+          )}
+
+          {navigatorProjectIsOpen && (
+            <>
+              <Text>Opções de visualização</Text>
+              <Text size="xs" css={{ color: '$base800' }}>
+                Ordenar por
+              </Text>
+
+              <Options isOpen={navigatorProjectIsOpen}>
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  A para Z
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={orderBy === 'a-z' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      setOrderBy(`a-z`)
+                      setNavigatorProjectIsOpen(false)
+                    }}
+                  >
+                    <ButtonIcon>
+                      <SortDescending />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Z para A
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={orderBy === 'z-a' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      setOrderBy(`z-a`)
+                      setNavigatorProjectIsOpen(false)
+                    }}
+                  >
+                    <ButtonIcon>
+                      <SortAscending />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Mais novos primeiro
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={orderBy === 'time-asc' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      setOrderBy(`time-asc`)
+                      setNavigatorProjectIsOpen(false)
+                    }}
+                  >
+                    <ButtonIcon>
+                      <ArrowFatLinesUp />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Mais velhos primeiro
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={orderBy === 'time-desc' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      setOrderBy(`time-desc`)
+                      setNavigatorProjectIsOpen(false)
+                    }}
+                  >
+                    <ButtonIcon>
+                      <ArrowFatLinesDown />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Atualização mais recente primeiro
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={orderBy === 'update-asc' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      setOrderBy(`update-asc`)
+                      setNavigatorProjectIsOpen(false)
+                    }}
+                  >
+                    <ButtonIcon>
+                      <ArrowLineUp />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Atualização mais antiga primeiro
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={orderBy === 'update-desc' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      setOrderBy(`update-desc`)
+                      setNavigatorProjectIsOpen(false)
+                    }}
+                  >
+                    <ButtonIcon>
+                      <ArrowLineDown />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+              </Options>
+
+              <Text size="xs" css={{ color: '$base800' }}>
+                Tema
+              </Text>
+              <Options isOpen={navigatorProjectIsOpen}>
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Dark mode
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={theme === 'dark' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      if (theme === 'dark') return
+                      setThemeFunction()
+                    }}
+                  >
+                    <ButtonIcon>
+                      <Moon />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+                <Label size="sm" height="shorter" family="body" weight="bold">
+                  Light mode
+                  <ButtonRoot
+                    type="button"
+                    size="xs"
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    variant={theme === 'light' ? 'active' : 'default'}
+                    disabled={isFullDisabled || !!loadingProject}
+                    onClick={() => {
+                      if (theme === 'light') return
+                      setThemeFunction()
+                    }}
+                  >
+                    <ButtonIcon>
+                      <Sun />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+              </Options>
+            </>
+          )}
+
+          {navigatorProjectIsOpen && <Text>Opções do projeto</Text>}
+          <Options
+            ref={scrollRef}
+            onScroll={handleScroll}
+            isOpen={navigatorProjectIsOpen}
           >
-            <XCircle size={24} />
-          </button>
-        )}
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Projeto'}
+              <ButtonRoot
+                disabled={isFullDisabled || !!loadingProject}
+                title="Projeto"
+                type="button"
+                size="xs"
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                onClick={() => {
+                  router.push(`/project/${id}`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <House />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
 
-        {navigatorProjectIsOpen && (
-          <>
-            <Text>Opções de visualização</Text>
-            <Text size="xs" css={{ color: '$base800' }}>
-              Ordenar por
-            </Text>
-            <Options isOpen={navigatorProjectIsOpen}>
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                A para Z
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={orderBy === 'a-z' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    setOrderBy(`a-z`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <SortDescending />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'livros'}
 
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Z para A
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={orderBy === 'z-a' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    setOrderBy(`z-a`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <SortAscending />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
+              <ButtonRoot
+                title="livros"
+                type="button"
+                size="xs"
+                disabled={isFullDisabled || !!loadingProject}
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'books' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/books`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Books />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
 
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Mais novos primeiro
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={orderBy === 'time-asc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    setOrderBy(`time-asc`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <ArrowFatLinesUp />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Plot'}
 
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Mais velhos primeiro
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={orderBy === 'time-desc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    setOrderBy(`time-desc`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <ArrowFatLinesDown />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
+              <ButtonRoot
+                title="Plot"
+                disabled={isFullDisabled || !!loadingProject}
+                type="button"
+                size="xs"
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'plot' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/plot`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <BookOpen />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
 
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Atualização mais recente primeiro
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={orderBy === 'update-asc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    setOrderBy(`update-asc`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <ArrowLineUp />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Planetas'}
 
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Atualização mais antiga primeiro
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={orderBy === 'update-desc' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    setOrderBy(`update-desc`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <ArrowLineDown />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
-            </Options>
-            <Text size="xs" css={{ color: '$base800' }}>
-              Tema
-            </Text>
-            <Options isOpen={navigatorProjectIsOpen}>
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Dark mode
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={theme === 'dark' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    if (theme === 'dark') return
-                    setThemeFunction()
-                  }}
-                >
-                  <ButtonIcon>
-                    <Moon />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                Light mode
-                <ButtonRoot
-                  type="button"
-                  size="xs"
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={theme === 'light' ? 'active' : 'default'}
-                  disabled={isFullDisabled || !!loadingProject}
-                  onClick={() => {
-                    if (theme === 'light') return
-                    setThemeFunction()
-                  }}
-                >
-                  <ButtonIcon>
-                    <Sun />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
-            </Options>
-          </>
-        )}
+              <ButtonRoot
+                title="Planetas"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'planets' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/planets`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Planet />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Nações'}
 
-        {navigatorProjectIsOpen && <Text>Opções do projeto</Text>}
-        <Options
-          ref={scrollRef}
-          onScroll={handleScroll}
-          isOpen={navigatorProjectIsOpen}
-        >
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Projeto'}
-            <ButtonRoot
-              disabled={isFullDisabled || !!loadingProject}
-              title="Projeto"
-              type="button"
-              size="xs"
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              onClick={() => {
-                router.push(`/project/${id}`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <House />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
+              <ButtonRoot
+                title="Nações"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'nations' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/nations`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <MapTrifold />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Personagens'}
 
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'livros'}
+              <ButtonRoot
+                title="Personagens"
+                disabled={isFullDisabled || !!loadingProject}
+                type="button"
+                size="xs"
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'persons' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/persons`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <UserFocus />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Cidades'}
 
-            <ButtonRoot
-              title="livros"
-              type="button"
-              size="xs"
-              disabled={isFullDisabled || !!loadingProject}
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'books' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/books`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Books />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
+              <ButtonRoot
+                title="Cidades"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'cities' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/cities`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Buildings />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Raças'}
 
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Plot'}
+              <ButtonRoot
+                title="Raças"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'races' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/races`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Alien />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Religiões'}
 
-            <ButtonRoot
-              title="Plot"
-              disabled={isFullDisabled || !!loadingProject}
-              type="button"
-              size="xs"
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'plot' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/plot`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <BookOpen />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
+              <ButtonRoot
+                title="Religiões"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'religions' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/religions`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Atom />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Poderes'}
 
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Planetas'}
+              <ButtonRoot
+                title="Poderes"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'powers' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/powers`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Lightning />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Famílias'}
 
-            <ButtonRoot
-              title="Planetas"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'planets' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/planets`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Planet />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Nações'}
+              <ButtonRoot
+                title="Famílias"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'familys' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/familys`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <UsersFour />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Linguagens'}
 
-            <ButtonRoot
-              title="Nações"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'nations' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/nations`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <MapTrifold />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Personagens'}
+              <ButtonRoot
+                title="Linguagens"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'languages' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/languages`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Translate />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Instituições'}
 
-            <ButtonRoot
-              title="Personagens"
-              disabled={isFullDisabled || !!loadingProject}
-              type="button"
-              size="xs"
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'persons' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/persons`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <UserFocus />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Cidades'}
+              <ButtonRoot
+                title="Instituições"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'institutions' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/institutions`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Bank />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
+            <Label size="sm" height="shorter" family="body" weight="bold">
+              {navigatorProjectIsOpen && 'Linhas de tempo'}
 
-            <ButtonRoot
-              title="Cidades"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'cities' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/cities`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Buildings />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Raças'}
+              <ButtonRoot
+                title="Linhas de tempo"
+                type="button"
+                size="xs"
+                disabled
+                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                align="center"
+                variant={onWindow === 'timelines' ? 'active' : 'default'}
+                onClick={() => {
+                  router.push(`/project/${id}/timelines`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+              >
+                <ButtonIcon>
+                  <Clock />
+                </ButtonIcon>
+              </ButtonRoot>
+            </Label>
 
-            <ButtonRoot
-              title="Raças"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'races' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/races`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Alien />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Religiões'}
-
-            <ButtonRoot
-              title="Religiões"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'religions' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/religions`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Atom />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Poderes'}
-
-            <ButtonRoot
-              title="Poderes"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'powers' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/powers`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Lightning />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Famílias'}
-
-            <ButtonRoot
-              title="Famílias"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'familys' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/familys`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <UsersFour />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Linguagens'}
-
-            <ButtonRoot
-              title="Linguagens"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'languages' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/languages`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Translate />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Instituições'}
-
-            <ButtonRoot
-              title="Instituições"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'institutions' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/institutions`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Bank />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Linhas de tempo'}
-
-            <ButtonRoot
-              title="Linhas de tempo"
-              type="button"
-              size="xs"
-              disabled
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              variant={onWindow === 'timelines' ? 'active' : 'default'}
-              onClick={() => {
-                router.push(`/project/${id}/timelines`)
-                setNavigatorProjectIsOpen(false)
-              }}
-            >
-              <ButtonIcon>
-                <Clock />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-
-          {/* <Label size=xxs" weight='bold'>
+            {/* <Label size=xxs" weight='bold'>
             Mind map
             <ButtonRoot
               type="button"
@@ -611,62 +616,33 @@ export function ProjectNavigation({
             </ButtonRoot>
           </Label> */}
 
-          <Label size="sm" height="shorter" family="body" weight="bold">
-            {navigatorProjectIsOpen && 'Configurações'}
-
-            <ButtonRoot
-              title="Configurações"
-              disabled={isFullDisabled || !!loadingProject}
-              type="button"
-              size="xs"
-              wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-              align="center"
-              onClick={() => {
-                router.push(`/project/${id}/settings`)
-                setNavigatorProjectIsOpen(false)
-              }}
-              variant={onWindow === 'settings' ? 'active' : 'default'}
-            >
-              <ButtonIcon>
-                <Gear />
-              </ButtonIcon>
-            </ButtonRoot>
-          </Label>
-          {project?.user.id !== user?.id && (
             <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Sair do projeto'}
+              {navigatorProjectIsOpen && 'Configurações'}
 
               <ButtonRoot
-                title="Sair do projeto"
+                title="Configurações"
                 disabled={isFullDisabled || !!loadingProject}
                 type="button"
                 size="xs"
-                css={{
-                  background: 'DarkRed',
-                }}
                 wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                 align="center"
-                onClick={() => setOnOpenQuit(true)}
+                onClick={() => {
+                  router.push(`/project/${id}/settings`)
+                  setNavigatorProjectIsOpen(false)
+                }}
+                variant={onWindow === 'settings' ? 'active' : 'default'}
               >
                 <ButtonIcon>
-                  <UserMinus />
+                  <Gear />
                 </ButtonIcon>
               </ButtonRoot>
             </Label>
-          )}
-          {project?.user.id === user?.id && (
-            <>
-              <Label
-                size="xxs"
-                css={{
-                  paddingTop: !navigatorProjectIsOpen ? '$8' : '',
-                  color: '$fullError',
-                }}
-              >
-                {navigatorProjectIsOpen && 'Apagar projeto'}
+            {project?.user.id !== user?.id && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Sair do projeto'}
 
                 <ButtonRoot
-                  title="Apagar projeto"
+                  title="Sair do projeto"
                   disabled={isFullDisabled || !!loadingProject}
                   type="button"
                   size="xs"
@@ -675,16 +651,46 @@ export function ProjectNavigation({
                   }}
                   wid={navigatorProjectIsOpen ? 'full' : 'hug'}
                   align="center"
-                  onClick={() => setOnOpenDelete(true)}
+                  onClick={() => setOnOpenQuit(true)}
                 >
                   <ButtonIcon>
-                    <Trash />
+                    <UserMinus />
                   </ButtonIcon>
                 </ButtonRoot>
               </Label>
-            </>
-          )}
-        </Options>
+            )}
+            {project?.user.id === user?.id && (
+              <>
+                <Label
+                  size="xxs"
+                  css={{
+                    paddingTop: !navigatorProjectIsOpen ? '$8' : '',
+                    color: '$fullError',
+                  }}
+                >
+                  {navigatorProjectIsOpen && 'Apagar projeto'}
+
+                  <ButtonRoot
+                    title="Apagar projeto"
+                    disabled={isFullDisabled || !!loadingProject}
+                    type="button"
+                    size="xs"
+                    css={{
+                      background: 'DarkRed',
+                    }}
+                    wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                    align="center"
+                    onClick={() => setOnOpenDelete(true)}
+                  >
+                    <ButtonIcon>
+                      <Trash />
+                    </ButtonIcon>
+                  </ButtonRoot>
+                </Label>
+              </>
+            )}
+          </Options>
+        </OptionsContainer>
       </ProjectNavigationContainer>
       {onOpenDelete && project?.user.id === user?.id && (
         <DeletePopUp>

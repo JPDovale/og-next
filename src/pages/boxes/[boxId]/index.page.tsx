@@ -4,10 +4,9 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
 import { ToastError } from '@components/usefull/ToastError'
-import { ProjectsContext } from '@contexts/projects'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import { useRouter } from 'next/router'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { NewArchiveInBoxModal } from '@components/BoxesComponents/NewArchiveInBoxModal'
 import { Toast } from '@components/usefull/Toast'
 import { NewArchive } from './components/NewArchive'
@@ -15,7 +14,7 @@ import { CardArchive } from './components/CardArchive'
 import { useWindowSize } from '@hooks/useWindow'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
-import { Pencil, Trash, X } from 'phosphor-react'
+import { Package, Pencil, Trash, X } from 'phosphor-react'
 import { z } from 'zod'
 import { CardTagBox, RemoveButton } from './styles'
 import { useForm } from 'react-hook-form'
@@ -23,6 +22,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { AlertModal } from '@components/usefull/AlertModal'
 import { useBoxes } from '@hooks/useBoxes'
+import { IError } from '@@types/errors/IError'
+import { ListEmpty } from '@components/usefull/ListEmpty'
 
 const editBoxFormSchema = z.object({
   name: z
@@ -50,18 +51,16 @@ type EditBoxFormData = z.infer<typeof editBoxFormSchema>
 
 export default function BoxPage() {
   const [tag, setTag] = useState('')
+  const [error, setError] = useState<IError | null>(null)
 
   const [isEditing, setIsEditing] = useState(false)
   const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [successUpdateToastOpen, setSuccessUpdateToastOpen] = useState(false)
 
-  const { loading, error, setError, updateBox, deleteBox } =
-    useContext(ProjectsContext)
-
   const router = useRouter()
   const { boxId } = router.query
 
-  const { findBox } = useBoxes()
+  const { findBox, loadingBoxes, callEvent } = useBoxes()
   const { box, boxName } = findBox(boxId as string)
 
   const windowSize = useWindowSize()
@@ -90,14 +89,14 @@ export default function BoxPage() {
   const tags = watch('tags')
 
   async function handleUpdateBox(data: EditBoxFormData) {
-    const isUpdated = await updateBox({
+    const { resolved } = await callEvent.updateBox({
       boxId: box!.id,
       description: data.description,
       name: data.name,
       tags: data.tags,
     })
 
-    if (isUpdated) {
+    if (resolved) {
       setSuccessUpdateToastOpen(true)
       setTag('')
       setIsEditing(false)
@@ -139,11 +138,11 @@ export default function BoxPage() {
 
   async function handleDeleteBox() {
     router.push('/boxes')
-    await deleteBox(box!.id)
+    await callEvent.deleteBox(box!.id)
   }
 
   return (
-    <DashboardPageLayout loading={loading} window={`Box: ${boxName}`}>
+    <DashboardPageLayout loading={loadingBoxes} window={`Box: ${boxName}`}>
       <ToastError error={error} setError={setError} />
       <Toast
         title="Arquivo criado com sucesso"
@@ -168,7 +167,7 @@ export default function BoxPage() {
         >
           <ButtonRoot
             size="xs"
-            disabled={loading}
+            disabled={loadingBoxes}
             variant="noShadow"
             wid="middle"
             align="center"
@@ -186,7 +185,7 @@ export default function BoxPage() {
               <AlertDialog.Trigger asChild>
                 <ButtonRoot
                   size="xs"
-                  disabled={loading}
+                  disabled={loadingBoxes}
                   variant="noShadow"
                   wid="middle"
                   align="center"
@@ -345,9 +344,20 @@ export default function BoxPage() {
           </Text>
 
           <ContainerGrid padding={0}>
-            {box?.archives?.map((archive) => (
-              <CardArchive key={archive.id} archive={archive} boxId={box.id} />
-            ))}
+            {box?.archives && box.archives[0] ? (
+              box?.archives?.map((archive) => (
+                <CardArchive
+                  key={archive.id}
+                  archive={archive}
+                  boxId={box.id}
+                />
+              ))
+            ) : (
+              <ListEmpty
+                message="Nenhum arquivo foi salvo para esse caixote ainda"
+                icon={<Package size={64} />}
+              />
+            )}
           </ContainerGrid>
         </ContainerGrid>
       </ContainerGrid>

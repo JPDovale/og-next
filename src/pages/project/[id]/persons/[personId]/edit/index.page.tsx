@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { useContext } from 'react'
+import { useState } from 'react'
 import { EditContainer, Info } from './styles'
 import {
   Crosshair,
@@ -12,17 +12,16 @@ import {
   Person,
   RainbowCloud,
   SketchLogo,
+  Trash,
   TreeStructure,
   UserCircleGear,
   Users,
   Warning,
 } from 'phosphor-react'
 import { NextSeo } from 'next-seo'
-import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
-import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
@@ -32,18 +31,21 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ToastError } from '@components/usefull/ToastError'
 import { usePerson } from '@hooks/usePerson'
 import { getDate } from '@utils/dates/getDate'
+import { IError } from '@@types/errors/IError'
+import { IUpdatePersonDTO } from '@api/dtos/IUpdatePersonDTO'
+import { InfoDefault } from '@components/usefull/InfoDefault'
 
 const personFormSchema = z.object({
-  name: z.string(),
-  lastName: z.string(),
-  age: z.string(),
-  history: z.string(),
+  name: z.string().optional().nullable(),
+  lastName: z.string().optional().nullable(),
+  age: z.coerce.number().optional().nullable(),
+  history: z.string().optional().nullable(),
 })
 
 type PersonFormData = z.infer<typeof personFormSchema>
 
 export default function EditPersonPage() {
-  const { loading, error, updatePerson, setError } = useContext(ProjectsContext)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, personId } = router.query
@@ -60,7 +62,9 @@ export default function EditPersonPage() {
   const history = watch('history')
 
   const { project, projectName, permission } = useProject(id as string)
-  const { person, personName } = usePerson(personId as string)
+  const { person, personName, loadingPerson, callEvent } = usePerson(
+    personId as string,
+  )
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -70,16 +74,31 @@ export default function EditPersonPage() {
   )
 
   async function handleUpdatePerson() {
-    const updatedPerson: ICreatePersonDTO = {
-      name: name || (person?.name as string),
-      lastName: lastName || (person?.last_name as string),
-      age: age || (person?.age.toString() as string),
-      history: history || (person?.history as string),
-      projectId: project!.id,
+    const updatedPerson: IUpdatePersonDTO = {
+      name: name || person?.name,
+      lastName: lastName || person?.last_name,
+      age: age || person?.age,
+      history: history || person?.history,
+      birthHour: '00',
     }
 
-    await updatePerson(updatedPerson, person?.id as string)
-    reset()
+    const { resolved, error } = await callEvent.update(updatedPerson)
+
+    console.log(error)
+
+    if (resolved) {
+      reset()
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleDeletePerson() {
+    router.push(`/project/${id}/persons`)
+
+    await callEvent.delete()
   }
 
   return (
@@ -90,8 +109,8 @@ export default function EditPersonPage() {
         projectName={projectName}
         projectId={`${id}`}
         paths={['Personagens', `${personName}`, 'Edição']}
-        loading={loading}
-        inError={!loading && (!person || !project)}
+        loading={loadingPerson}
+        inError={!loadingPerson && !person}
         isScrolling
       >
         <EditContainer onSubmit={handleSubmit(handleUpdatePerson)}>
@@ -104,7 +123,7 @@ export default function EditPersonPage() {
               Nome
               <TextInputRoot>
                 <TextInputInput
-                  placeholder={personName}
+                  placeholder={person?.name}
                   {...register('name')}
                 />
               </TextInputRoot>
@@ -271,6 +290,31 @@ export default function EditPersonPage() {
             </Text>
           </Info>
         </EditContainer>
+
+        <ContainerGrid padding={4}>
+          <InfoDefault title="Alerta">
+            <Text css={{ color: '$fullError' }} weight="bold">
+              Area de deleção do personagem...
+            </Text>
+          </InfoDefault>
+
+          <Text size="lg" family="body" weight="bold">
+            Ao clicar no botão você pagará o personagem... Isso não poderá ser
+            desfeito
+          </Text>
+
+          <ButtonRoot
+            align="center"
+            css={{ background: '$fullError' }}
+            onClick={handleDeletePerson}
+          >
+            <ButtonIcon>
+              <Trash />
+            </ButtonIcon>
+
+            <ButtonLabel>Apagar</ButtonLabel>
+          </ButtonRoot>
+        </ContainerGrid>
       </ProjectPageLayout>
     </>
   )

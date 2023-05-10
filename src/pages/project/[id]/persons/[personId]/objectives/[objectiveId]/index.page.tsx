@@ -5,7 +5,6 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { useObjectives } from '@hooks/useObjectives'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
@@ -15,19 +14,15 @@ import { getDate } from '@utils/dates/getDate'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Crosshair, Skull, UsersThree } from 'phosphor-react'
-import { useContext } from 'react'
 
 export default function ObjectivePage() {
-  const { commentInPerson } = useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId, objectiveId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { permission, projectName, findManyPersons } = useProject(id as string)
-  const { person, findObjective, personName, loadingPerson } = usePerson(
-    personId as string,
-  )
+  const { person, findObjective, personName, loadingPerson, callEvent } =
+    usePerson(personId as string)
   const { objective } = findObjective(objectiveId as string)
 
   const { findObjective: findFinalObjective } = useObjectives(id as string)
@@ -54,12 +49,31 @@ export default function ObjectivePage() {
   async function handleCommentInObjective(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
-    await commentInPerson(newComment, person?.id as string)
+    await callEvent.commentInPerson({
+      toObjectId: objective?.id ?? '',
+      comment: {
+        content: newComment.content,
+        commentIn: 'objective',
+      },
+    })
+  }
+
+  async function handleResponseComment(
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) {
+    await callEvent.responseCommentInPerson({
+      content: newResponse.content,
+      commentId,
+    })
   }
 
   return (
     <>
-      <NextSeo title={`${personName}-${objective?.title} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${objective?.title} | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -175,6 +189,7 @@ export default function ObjectivePage() {
           onNewComment={handleCommentInObjective}
           permission={permission}
           comments={objective?.comments}
+          onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToObjective
           isNew={objectiveId === 'new'}

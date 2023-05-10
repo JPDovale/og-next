@@ -15,7 +15,7 @@ export async function quitProject(
   })
 
   if (handledAnswer) {
-    refetchProjects()
+    await refetchProjects()
   }
 
   return {

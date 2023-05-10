@@ -107,10 +107,16 @@ export interface ICoupleWithPerson {
   id: number
   created_at: Date
   person_id: string
-  person: {
+  couple: {
     id: string
-    name: string
-    image_url: string | null
+    title: string
+    description: string
+    until_end: boolean
+    created_at: Date
+    person_id: string
+    coupleWithPerson: ICoupleWithPerson
+    couple_with_person_id: number
+    comments?: IComment[]
   }
 }
 

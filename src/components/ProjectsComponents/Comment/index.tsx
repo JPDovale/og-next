@@ -1,4 +1,4 @@
-import { useState, useContext, FormEvent } from 'react'
+import { useState, FormEvent } from 'react'
 import { Textarea } from '@components/usefull/Textarea'
 import { PaperPlaneTilt } from 'phosphor-react'
 import {
@@ -9,7 +9,6 @@ import {
   Response,
   ResponsesComment,
 } from './styles'
-import { ProjectsContext } from '@contexts/projects'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
@@ -19,22 +18,28 @@ import { getDate } from '@utils/dates/getDate'
 import { IUserInProject, useProject } from '@hooks/useProject'
 import { useRouter } from 'next/router'
 import { useUser } from '@hooks/useUser'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 
 interface ICommentProps {
   comment: IComment
   permission?: 'edit' | 'view' | 'comment'
+  onResponseIntersect?: (
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) => Promise<void>
 }
 
-export function Comment({ comment, permission }: ICommentProps) {
+export function Comment({
+  comment,
+  permission,
+  onResponseIntersect,
+}: ICommentProps) {
   const [newResponse, setNewResponse] = useState('')
 
   const router = useRouter()
   const { id } = router.query
 
-  const { responseCommentInPlot, responseCommentToPerson } =
-    useContext(ProjectsContext)
-
-  const { usersInProject, project } = useProject(id as string)
+  const { usersInProject, project, callEvent } = useProject(id as string)
   const { user } = useUser()
 
   const responses = comment.responses
@@ -44,21 +49,24 @@ export function Comment({ comment, permission }: ICommentProps) {
   ) || user) as IUserInProject
 
   async function handleNewResponse(e: FormEvent<HTMLFormElement>) {
-    // e.preventDefault()
-    // if (!newResponse) return
-    // const newResponseObj = {
-    //   content: newResponse,
-    // }
-    // if (asPerson) {
-    //   setNewResponse('')
-    //   return await responseCommentToPerson(
-    //     newResponseObj,
-    //     personId as string,
-    //     comment.id,
-    //   )
-    // }
-    // setNewResponse('')
-    // await responseCommentInPlot(newResponseObj, projectId, comment.id)
+    e.preventDefault()
+
+    if (!newResponse) return
+
+    const newResponseObj = {
+      content: newResponse,
+    }
+
+    if (onResponseIntersect) {
+      setNewResponse('')
+      return await onResponseIntersect(newResponseObj, comment.id)
+    }
+
+    setNewResponse('')
+    await callEvent.responseCommentInPlot({
+      response: newResponseObj,
+      commentId: comment.id,
+    })
   }
 
   return (

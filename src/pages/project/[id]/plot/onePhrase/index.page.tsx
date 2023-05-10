@@ -1,4 +1,5 @@
 import { IError } from '@@types/errors/IError'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { Editor } from '@components/Editor'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
@@ -47,6 +48,18 @@ export default function OnePhrasePage() {
     }
   }
 
+  async function handleNewComment(newComment: ICreateCommentDTO) {
+    const { error, resolved } = await callEvent.commentInPlot(newComment)
+
+    if (error) {
+      setError(error)
+    }
+
+    if (resolved) {
+      setSuccessMessage('Comentário criado com sucesso')
+    }
+  }
+
   return (
     <>
       <NextSeo title={`${projectName}-Ideia central | Magiscrita`} noindex />
@@ -72,7 +85,7 @@ export default function OnePhrasePage() {
           handleUpdate={handleUpdateOnePhrase}
           permission={permission}
           preValue={project?.one_phrase ?? ''}
-          projectId={project!.id}
+          projectId={project?.id}
           setValue={setOnePhrase}
           to="onePhrase"
           description={
@@ -109,6 +122,8 @@ export default function OnePhrasePage() {
           permission={permission}
           comments={commentsOnePhrase}
           isNew={!project?.one_phrase}
+          onNewComment={handleNewComment}
+          onNewCommentTo="onePhrase"
         />
       </ProjectPageLayout>
     </>

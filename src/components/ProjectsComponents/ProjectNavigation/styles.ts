@@ -7,7 +7,6 @@ export const ProjectNavigationContainer = styled('nav', {
   flexDirection: 'column',
   alignItems: 'center',
   width: '5%',
-  maxHeight: '100vh',
   height: '100vh',
   background: '$gray900',
   transition: 'ease-in-out 250ms',
@@ -40,7 +39,6 @@ export const ProjectNavigationContainer = styled('nav', {
 
   '@media screen and (max-width: 768px)': {
     width: '100%',
-    overflow: 'unset',
   },
 
   variants: {
@@ -82,17 +80,13 @@ export const Logo = styled('div', {
   },
 })
 
-export const Options = styled('div', {
+export const OptionsContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  width: '100%',
-  height: 'auto',
-  gap: '$3',
-  overflowY: 'scroll',
+  height: '100%',
+  overflowY: 'auto',
   overflowX: 'hidden',
-  paddingBottom: '$8',
-  padding: '$4',
 
   scrollbarWidth: 'thin',
   scrollbarColor: '#00000000 #00000000',
@@ -111,6 +105,16 @@ export const Options = styled('div', {
     border: '1px solid #ffffff20',
     borderRadius: '$full',
   },
+})
+
+export const Options = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
+  gap: '$3',
+  paddingBottom: '$8',
+  padding: '$4',
 
   variants: {
     isOpen: {
@@ -118,14 +122,11 @@ export const Options = styled('div', {
         display: 'grid',
         gridTemplateColumns: 'repeat(8, 1fr)',
         alignItems: 'flex-end',
-        overflowY: 'unset',
 
         '@media screen and (max-width: 768px)': {
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          height: '100%',
           gap: '$8',
-          overflowY: 'unset',
         },
       },
       false: {},

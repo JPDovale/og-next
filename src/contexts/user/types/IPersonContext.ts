@@ -2,7 +2,6 @@ import { ReactNode } from 'react'
 import { IError } from '../../../@types/errors/IError'
 import { ISuccess } from '../../../@types/success/ISuccess'
 import { ICreateUserDTO } from '../../../api/dtos/ICreateUserDTO'
-import { INewInitializeDTO } from '../../../api/dtos/INewInitializeDTO'
 import { INewSessionDTO } from '../../../api/dtos/INewSessionDTO'
 import { IUserResponse } from '../../../api/responsesTypes/IUserResponse'
 
@@ -19,7 +18,6 @@ export interface IUserContext {
   createUser: (user: ICreateUserDTO) => Promise<boolean>
   createSession: (user: INewSessionDTO) => Promise<boolean>
   logout: () => void
-  initializeUser: (newInitialize: INewInitializeDTO) => Promise<boolean>
   updateUser: (
     name?: string,
     username?: string,

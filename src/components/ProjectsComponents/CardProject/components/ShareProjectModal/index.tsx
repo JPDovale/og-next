@@ -4,7 +4,6 @@ import { useProject } from '@hooks/useProject'
 import { Text } from '@components/usefull/Text'
 import { FormEvent, useContext, useState } from 'react'
 import { Toast } from '@components/usefull/Toast'
-import { ProjectsContext } from '@contexts/projects'
 import {
   TextInputIcon,
   TextInputInput,
@@ -14,6 +13,8 @@ import { InputRadio } from '@components/usefull/InputRadio'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { InterfaceContext } from '@contexts/interface'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 interface IShareProjectModalProps {
   projectId: string
@@ -24,8 +25,8 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
   const [shareEmail, setShareEmail] = useState('')
   const [errorIn, setErrorIn] = useState('')
   const [sharePermission, setSharePermission] = useState('edit')
+  const [error, setError] = useState<IError | null>(null)
 
-  const { error, setError } = useContext(ProjectsContext)
   const { theme } = useContext(InterfaceContext)
 
   const isDarkMode = theme === 'dark'
@@ -35,7 +36,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
 
   async function handleShareProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (error) setError(undefined)
+    if (error) setError(null)
     if (!shareEmail) {
       return setErrorIn('email')
     }
@@ -78,12 +79,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
         message="Parece que você já adicionou esse usuário ao projeto..."
       />
 
-      <Toast
-        open={!!error}
-        setOpen={() => setError(undefined)}
-        title={error?.title!}
-        message={error?.message!}
-      />
+      <ToastError error={error} setError={setError} />
 
       <ShareForm onSubmit={handleShareProject} darkMode={isDarkMode}>
         <Text

@@ -4,7 +4,6 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -13,17 +12,14 @@ import { getDate } from '@utils/dates/getDate'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { SketchLogo } from 'phosphor-react'
-import { useContext } from 'react'
 
 export default function WishePage() {
-  const { commentInPerson } = useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId, wisheId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { person, personName, findWishe, loadingPerson } = usePerson(
+  const { person, personName, findWishe, loadingPerson, callEvent } = usePerson(
     personId as string,
   )
   const { wishe } = findWishe(wisheId as string)
@@ -31,7 +27,23 @@ export default function WishePage() {
   async function handleCommentInWishe(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
-    await commentInPerson(newComment, person?.id as string)
+    await callEvent.commentInPerson({
+      toObjectId: wishe?.id ?? '',
+      comment: {
+        content: newComment.content,
+        commentIn: 'wishe',
+      },
+    })
+  }
+
+  async function handleResponseComment(
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) {
+    await callEvent.responseCommentInPerson({
+      content: newResponse.content,
+      commentId,
+    })
   }
 
   return (
@@ -94,6 +106,7 @@ export default function WishePage() {
           onNewComment={handleCommentInWishe}
           permission={permission}
           comments={wishe?.comments}
+          onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics
           persons={persons}

@@ -10,7 +10,7 @@ import { EditorHeader } from './styles'
 
 interface IEditorProps {
   superFix?: string
-  projectId: string
+  projectId?: string
   to: string
   preValue: string
   setValue: (newState: string) => void

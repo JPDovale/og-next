@@ -34,6 +34,8 @@ import {
 } from './styles'
 import { NewConsequenceModal } from '../../components/NewConsequenceModal'
 import { Toast } from '@components/usefull/Toast'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 const newPersonalityBodySchema = z.object({
   title: z
@@ -80,13 +82,16 @@ export default function NewPersonalityPage() {
   const [personalitySelected, setPersonalitySelected] = useState<string | null>(
     null,
   )
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, personId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { personName, loadingPerson, person } = usePerson(personId as string)
+  const { personName, loadingPerson, person, callEvent } = usePerson(
+    personId as string,
+  )
   const { loadingPersonalities, findPersonalityWherePersonNotExisteIn } =
     usePersonalities(id as string)
   const personalities = findPersonalityWherePersonNotExisteIn(
@@ -107,10 +112,6 @@ export default function NewPersonalityPage() {
     if (id === personalitySelected) return setPersonalitySelected(null)
 
     setPersonalitySelected(id)
-  }
-
-  function handleCreatePersonality(data: newPersonalityData) {
-    console.log(data)
   }
 
   function handleAddConsequence(consequence: newConsequenceData) {
@@ -135,6 +136,39 @@ export default function NewPersonalityPage() {
     setValue('consequences', filteredConsequences)
   }
 
+  async function handleCreatePersonality(data: newPersonalityData) {
+    const { resolved, error } =
+      await callEvent.createObject<newPersonalityData>({
+        path: 'personalities',
+        object: data,
+      })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleCreateReference() {
+    if (!personalitySelected) return
+
+    const { resolved, error } = await callEvent.createObjectReference({
+      path: 'personalities',
+      referenceId: personalitySelected,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
   return (
     <>
       <NextSeo
@@ -151,6 +185,8 @@ export default function NewPersonalityPage() {
         inErrorNotAuthorized={permission !== 'edit'}
         isScrolling
       >
+        <ToastError error={error} setError={setError} />
+
         <Toast
           message="Você já criou uma consequência com esse nome... Tente outro."
           title="Consequência já existe"
@@ -300,7 +336,11 @@ export default function NewPersonalityPage() {
             </NewPersonalityForm>
           ) : (
             <ContainerGrid>
-              <ButtonRoot align="center" type="button">
+              <ButtonRoot
+                onClick={handleCreateReference}
+                align="center"
+                type="button"
+              >
                 <ButtonIcon>
                   <Anchor />
                 </ButtonIcon>

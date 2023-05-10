@@ -1,4 +1,5 @@
 import { IError } from '@@types/errors/IError'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { Editor } from '@components/Editor'
 import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
@@ -47,6 +48,18 @@ export default function DetailsPage() {
     }
   }
 
+  async function handleNewComment(newComment: ICreateCommentDTO) {
+    const { error, resolved } = await callEvent.commentInPlot(newComment)
+
+    if (error) {
+      setError(error)
+    }
+
+    if (resolved) {
+      setSuccessMessage('Comentário criado com sucesso')
+    }
+  }
+
   return (
     <>
       <NextSeo title={`${projectName}-Detalhes | Magiscrita`} noindex />
@@ -86,6 +99,8 @@ export default function DetailsPage() {
           permission={permission}
           comments={commentsDetails}
           isNew={!project?.details}
+          onNewComment={handleNewComment}
+          onNewCommentTo="details"
         />
       </ProjectPageLayout>
     </>

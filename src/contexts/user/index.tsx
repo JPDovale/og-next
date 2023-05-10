@@ -2,19 +2,15 @@ import { useRouter } from 'next/router'
 import { createContext, useReducer, useContext } from 'react'
 import { IError } from '../../@types/errors/IError'
 import { ICreateUserDTO } from '../../api/dtos/ICreateUserDTO'
-import { INewInitializeDTO } from '../../api/dtos/INewInitializeDTO'
 
 import { INewSessionDTO } from '../../api/dtos/INewSessionDTO'
 import { createSessionFunction } from './functions/createSessionFunction'
 import { createUserFunction } from './functions/createUserFunction'
-// import { getUserFunction } from './functions/getUserFunction'
-import { initializeUserFunction } from './functions/initializeUserFunction'
 import { loginWithGoogleFunction } from './functions/loginWithGoogleFunction'
 import { logoutFunction } from './functions/logoutFunction'
 import { updateAvatarFunction } from './functions/updateAvatarFunction'
 import { updatePasswordFunction } from './functions/updatePasswordFunction'
 import { updateUserFunction } from './functions/updateUserFunction'
-import { userDefaultValues } from './initialValues'
 import {
   setErrorAction,
   setLoadingAction,
@@ -34,7 +30,7 @@ import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { useUser } from '@hooks/useUser'
 import { Loading } from '@components/usefull/Loading'
 
-export const UserContext = createContext<IUserContext>(userDefaultValues)
+export const UserContext = createContext<IUserContext>({} as IUserContext)
 
 export function UserProvider({ children }: IUserContextProps) {
   const [userInfos, dispatch] = useReducer(userReducer, {
@@ -90,11 +86,6 @@ export function UserProvider({ children }: IUserContextProps) {
     router.push('/login')
   }
 
-  async function initializeUser(newInitialize: INewInitializeDTO) {
-    const initialized = await initializeUserFunction(newInitialize, dispatch)
-    return initialized
-  }
-
   async function updateUser(name?: string, username?: string, email?: string) {
     await updateUserFunction(dispatch, name, username, email)
   }
@@ -146,7 +137,6 @@ export function UserProvider({ children }: IUserContextProps) {
         createSession,
         createUser,
         logout,
-        initializeUser,
         updateUser,
         updateAvatar,
         updatePassword,

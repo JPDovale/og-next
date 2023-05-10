@@ -28,9 +28,6 @@ export function useTraumas(projectId: string) {
 
       return { traumas, errorMessage, errorTitle }
     },
-    {
-      staleTime: 1000 * 60 * 60 * 3, // 3 hours
-    },
   )
 
   const traumas = data?.traumas || []

@@ -4,6 +4,7 @@ export const DashboardPageLayoutContainer = styled('main', {
   display: 'flex',
   position: 'relative',
   flexDirection: 'column',
+  paddingBottom: '$40',
 
   height: '100vh',
 

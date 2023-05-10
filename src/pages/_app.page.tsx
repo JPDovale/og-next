@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app'
 
 import * as Toast from '@radix-ui/react-toast'
 import { InterfaceProvider } from '../contexts/interface'
-import { ProjectsProvider } from '../contexts/projects'
 import { UserProvider } from '../contexts/user'
 import { globalStyles } from '../styles/global'
 import { DefaultSeo } from 'next-seo'
@@ -38,25 +37,23 @@ export default function App({ Component, pageProps }: AppProps) {
           theme={theme === lightMode ? 'light' : 'dark'}
         >
           <UserProvider>
-            <ProjectsProvider>
-              <DefaultSeo
-                openGraph={{
-                  type: 'website',
-                  locale: 'pt-br',
-                  url: 'https://magiscrita.com',
-                  siteName: 'Magiscrita',
-                  title: 'Magiscrita',
-                  description: 'A origem das suas ideias...',
-                }}
-                defaultTitle="Magiscrita"
-                description="A origem das suas ideias..."
-                title="Magiscrita"
-              />
-              <div className={theme}>
-                <Component {...pageProps} />
-                <Analytics />
-              </div>
-            </ProjectsProvider>
+            <DefaultSeo
+              openGraph={{
+                type: 'website',
+                locale: 'pt-br',
+                url: 'https://magiscrita.com',
+                siteName: 'Magiscrita',
+                title: 'Magiscrita',
+                description: 'A origem das suas ideias...',
+              }}
+              defaultTitle="Magiscrita"
+              description="A origem das suas ideias..."
+              title="Magiscrita"
+            />
+            <div className={theme}>
+              <Component {...pageProps} />
+              <Analytics />
+            </div>
           </UserProvider>
         </InterfaceProvider>
 

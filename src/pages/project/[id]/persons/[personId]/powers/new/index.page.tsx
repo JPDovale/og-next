@@ -25,6 +25,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Power } from './components/Power'
 import { NewPowerForm } from './styles'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 const newPowerBodySchema = z.object({
   title: z
@@ -42,13 +44,16 @@ type newPowerData = z.infer<typeof newPowerBodySchema>
 
 export default function NewPowerPage() {
   const [powerSelected, setPowerSelected] = useState<string | null>(null)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, personId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { person, personName, loadingPerson } = usePerson(personId as string)
+  const { person, personName, loadingPerson, callEvent } = usePerson(
+    personId as string,
+  )
   const { loadingPowers, findPowerWherePersonNotExisteIn } = usePowers(
     id as string,
   )
@@ -65,8 +70,36 @@ export default function NewPowerPage() {
     setPowerSelected(id)
   }
 
-  function handleCreatePower(data: newPowerData) {
-    console.log(data)
+  async function handleCreatePower(data: newPowerData) {
+    const { resolved, error } = await callEvent.createObject<newPowerData>({
+      path: 'powers',
+      object: data,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleCreateReference() {
+    if (!powerSelected) return
+
+    const { resolved, error } = await callEvent.createObjectReference({
+      path: 'powers',
+      referenceId: powerSelected,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
   return (
@@ -82,6 +115,8 @@ export default function NewPowerPage() {
         inErrorNotAuthorized={permission !== 'edit'}
         isScrolling
       >
+        <ToastError error={error} setError={setError} />
+
         <ContainerGrid padding={4} isRelativePosition>
           <GoBackButton topDistance={4} />
 
@@ -165,7 +200,11 @@ export default function NewPowerPage() {
             </NewPowerForm>
           ) : (
             <ContainerGrid>
-              <ButtonRoot align="center" type="button">
+              <ButtonRoot
+                onClick={handleCreateReference}
+                align="center"
+                type="button"
+              >
                 <ButtonIcon>
                   <Anchor />
                 </ButtonIcon>

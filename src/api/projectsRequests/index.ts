@@ -38,10 +38,10 @@ export async function commentInPlotRequest(
   projectId: string,
 ) {
   try {
-    const response = await api.post('/projects/plot/comments', {
-      comment: newComment,
-      projectId,
-    })
+    const response = await api.post(
+      `/projects/${projectId}/plot/comments`,
+      newComment,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -54,11 +54,12 @@ export async function responseCommentInPlotRequest(
   commentId: string,
 ) {
   try {
-    const response = await api.post('/projects/plot/comments/response', {
-      response: newResponse,
-      projectId,
-      commentId,
-    })
+    const response = await api.post(
+      `/projects/${projectId}/plot/comments/${commentId}/responses`,
+      {
+        response: newResponse.content,
+      },
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -70,7 +71,7 @@ export async function updateNameProjectRequest(
   projectId: string,
 ) {
   try {
-    const response = await api.patch('/projects/name', { name, projectId })
+    const response = await api.patch(`/projects/${projectId}/name`, { name })
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -80,7 +81,7 @@ export async function updateNameProjectRequest(
 export async function updateImageProjectRequest(projectId: string, file: File) {
   try {
     const response = await api.patch(
-      `/projects/image-update/${projectId}`,
+      `/projects/${projectId}/image/`,
       { file },
       {
         headers: {
@@ -137,9 +138,8 @@ export async function unshareProjectRequest(
   projectId: string,
 ) {
   try {
-    const response = await api.patch(`/projects/unshare`, {
+    const response = await api.patch(`/projects/${projectId}/unshare`, {
       userEmail,
-      projectId,
     })
     return response.data
   } catch (err: any) {
@@ -155,7 +155,7 @@ export async function deleteImageProjectRequest({
   projectId,
 }: IDeleteImageProjectRequestProps) {
   try {
-    const response = await api.delete(`/projects/image/${projectId}`)
+    const response = await api.delete(`/projects/${projectId}/image`)
     return response.data
   } catch (err: any) {
     return err.response.data

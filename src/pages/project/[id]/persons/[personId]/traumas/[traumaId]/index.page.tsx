@@ -5,7 +5,6 @@ import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { usePerson } from '@hooks/usePerson'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -14,25 +13,37 @@ import { getDate } from '@utils/dates/getDate'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { HeartBreak } from 'phosphor-react'
-import { useContext } from 'react'
 
 export default function TraumaPage() {
-  const { commentInPerson } = useContext(ProjectsContext)
-
   const router = useRouter()
   const { id, personId, traumaId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission } = useProject(id as string)
-  const { person, loadingPerson, personName, findTrauma } = usePerson(
-    personId as string,
-  )
+  const { person, loadingPerson, personName, findTrauma, callEvent } =
+    usePerson(personId as string)
   const { trauma } = findTrauma(traumaId as string)
 
   async function handleCommentInTrauma(newComment: ICreateCommentDTO) {
     if (!newComment) return
 
-    await commentInPerson(newComment, person?.id as string)
+    await callEvent.commentInPerson({
+      toObjectId: trauma?.id ?? '',
+      comment: {
+        content: newComment.content,
+        commentIn: 'trauma',
+      },
+    })
+  }
+
+  async function handleResponseComment(
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) {
+    await callEvent.responseCommentInPerson({
+      content: newResponse.content,
+      commentId,
+    })
   }
 
   return (
@@ -141,6 +152,7 @@ export default function TraumaPage() {
           onNewComment={handleCommentInTrauma}
           permission={permission}
           comments={trauma?.comments}
+          onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics
           persons={persons}

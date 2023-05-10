@@ -17,9 +17,14 @@ import {
 interface ICommentsOnPageProps {
   comments?: IComment[]
   permission?: 'edit' | 'view' | 'comment'
-  onNewComment?: (newComment: ICreateCommentDTO) => void
+  onNewComment: (newComment: ICreateCommentDTO) => Promise<void>
+  onNewCommentTo?: string
   isNew?: boolean
   editorTo?: string
+  onResponseIntersect?: (
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) => Promise<void>
 }
 
 export function CommentsOnPage({
@@ -28,26 +33,23 @@ export function CommentsOnPage({
   isNew = false,
   editorTo = 'objeto',
   onNewComment,
+  onNewCommentTo,
+  onResponseIntersect,
 }: ICommentsOnPageProps) {
   const [newComment, setNewComment] = useState('')
 
   async function handleNewComment(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    // if (!newComment) return
+    if (!newComment) return
 
-    // const newCommentObj = {
-    //   to,
-    //   content: newComment,
-    // }
+    const newCommentObj = {
+      to: onNewCommentTo,
+      content: newComment,
+    }
 
-    // if (onNewComment) {
-    //   setNewComment('')
-    //   return onNewComment(newCommentObj)
-    // }
-
-    // await commentInPlot(newCommentObj, projectId)
-    // setNewComment('')
+    setNewComment('')
+    return await onNewComment(newCommentObj)
   }
 
   return (
@@ -88,6 +90,7 @@ export function CommentsOnPage({
               permission={permission}
               key={comment.id}
               comment={comment}
+              onResponseIntersect={onResponseIntersect}
             />
           ))}
       </Comments>

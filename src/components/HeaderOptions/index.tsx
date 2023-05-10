@@ -26,6 +26,7 @@ import {
   NewNotificationAlert,
   Options,
   QueryContainer,
+  Space,
   Title,
 } from './styles'
 import { PreferenciesPopover } from './components/PreferenciesPopover'
@@ -71,143 +72,158 @@ export function HeaderOptions({
   const newNotificationsNumber = user?.new_notifications
 
   return (
-    <HeaderOptionsContainer NavIsOpen={navIsOpen}>
-      {isLoading && <Loading />}
+    <>
+      <HeaderOptionsContainer NavIsOpen={navIsOpen}>
+        {isLoading && <Loading />}
 
-      <Title NavIsOpen={navIsOpen}>
-        <ArrowFatLinesRight
-          size={smallWindow ? 20 : 24}
-          onClick={() => setNavIsOpen(!navIsOpen)}
-        />
-        <Text family="headingText" as="span" size={smallWindow ? 'xs' : 'md'}>
-          {windowName.toUpperCase()}
-        </Text>
-      </Title>
-
-      <Options>
-        <Dialog.Root>
-          <Dialog.Trigger asChild>
-            <button type="button" className="icon-button" disabled={isLoading}>
-              <Package size={24} />
-            </button>
-          </Dialog.Trigger>
-
-          <NewBoxModal />
-        </Dialog.Root>
-
-        <Dialog.Root
-          open={modalCreateProjectIsOpen}
-          onOpenChange={setModalCreateProjectIsOpen}
-        >
-          <Dialog.Trigger asChild>
-            <button type="button" className="icon-button" disabled={isLoading}>
-              <FilePlus size={24} />
-            </button>
-          </Dialog.Trigger>
-
-          <NewProjectModal
-            onSuccessCreateProject={() => setModalCreateProjectIsOpen(false)}
+        <Title NavIsOpen={navIsOpen}>
+          <ArrowFatLinesRight
+            size={smallWindow ? 20 : 24}
+            onClick={() => setNavIsOpen(!navIsOpen)}
           />
-        </Dialog.Root>
+          <Text family="headingText" as="span" size={smallWindow ? 'xs' : 'md'}>
+            {windowName.toUpperCase()}
+          </Text>
+        </Title>
 
-        <Popover.Root>
-          <Popover.Trigger asChild>
-            <button type="button" className="icon-button" disabled={isLoading}>
-              <DotsNine size={'24'} />
-            </button>
-          </Popover.Trigger>
-
-          <PreferenciesPopover />
-        </Popover.Root>
-
-        {!smallWindow && queryless && (
-          <QueryContainer onQuery={queryIsOpen}>
-            {queryIsOpen && (
-              <TextInputRoot
-                css={{
-                  padding: '$1',
-                  boxShadow: 'none',
-                  background: '$gray500',
-                  width: '100%',
-                }}
+        <Options>
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <button
+                type="button"
+                className="icon-button"
                 disabled={isLoading}
               >
-                <TextInputIcon>
-                  <MagnifyingGlass size={24} />
-                </TextInputIcon>
+                <Package size={24} />
+              </button>
+            </Dialog.Trigger>
 
-                <TextInputInput
-                  placeholder={'Procure por um projeto'}
-                  value={query}
-                  css={{ minWidth: '100%' }}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setQuery && setQuery(e.target.value)
+            <NewBoxModal />
+          </Dialog.Root>
+
+          <Dialog.Root
+            open={modalCreateProjectIsOpen}
+            onOpenChange={setModalCreateProjectIsOpen}
+          >
+            <Dialog.Trigger asChild>
+              <button
+                type="button"
+                className="icon-button"
+                disabled={isLoading}
+              >
+                <FilePlus size={24} />
+              </button>
+            </Dialog.Trigger>
+
+            <NewProjectModal
+              onSuccessCreateProject={() => setModalCreateProjectIsOpen(false)}
+            />
+          </Dialog.Root>
+
+          <Popover.Root>
+            <Popover.Trigger asChild>
+              <button
+                type="button"
+                className="icon-button"
+                disabled={isLoading}
+              >
+                <DotsNine size={'24'} />
+              </button>
+            </Popover.Trigger>
+
+            <PreferenciesPopover />
+          </Popover.Root>
+
+          {!smallWindow && queryless && (
+            <QueryContainer onQuery={queryIsOpen}>
+              {queryIsOpen && (
+                <TextInputRoot
+                  css={{
+                    padding: '$1',
+                    boxShadow: 'none',
+                    background: '$gray500',
+                    width: '100%',
                   }}
+                  disabled={isLoading}
+                >
+                  <TextInputIcon>
+                    <MagnifyingGlass size={24} />
+                  </TextInputIcon>
+
+                  <TextInputInput
+                    placeholder={'Procure por um projeto'}
+                    value={query}
+                    css={{ minWidth: '100%' }}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      setQuery && setQuery(e.target.value)
+                    }}
+                  />
+                </TextInputRoot>
+              )}
+              <button
+                type="button"
+                className="icon-button"
+                disabled={isLoading}
+                onClick={() => {
+                  setNavIsOpen(false)
+                  setQueryIsOpen(!queryIsOpen)
+                  setQuery && setQuery('')
+                }}
+              >
+                {queryIsOpen ? (
+                  <XCircle size={24} />
+                ) : (
+                  <MagnifyingGlass size={'24'} />
+                )}
+              </button>
+            </QueryContainer>
+          )}
+
+          <Popover.Root>
+            <Popover.Trigger asChild>
+              <button
+                type="button"
+                className="icon-button"
+                disabled={isLoading}
+                onClick={() => {
+                  setTimeout(() => {
+                    newNotifications && visualizeNotifications()
+                  }, 10000)
+                }}
+              >
+                <BellSimple size={'24'} />
+                {newNotifications && (
+                  <NewNotificationAlert>
+                    <Text size="sm" family="body" colorInvert>
+                      {newNotificationsNumber}
+                    </Text>
+                  </NewNotificationAlert>
+                )}
+              </button>
+            </Popover.Trigger>
+
+            <NotificationsPopover />
+          </Popover.Root>
+
+          <Popover.Root>
+            <Popover.Trigger asChild>
+              <button
+                type="button"
+                className="icon-button avatar"
+                disabled={isLoading}
+              >
+                <AvatarWeb
+                  size={smallWindow ? '2xs' : 'xsm'}
+                  src={user?.avatar_url ?? ''}
                 />
-              </TextInputRoot>
-            )}
-            <button
-              type="button"
-              className="icon-button"
-              disabled={isLoading}
-              onClick={() => {
-                setNavIsOpen(false)
-                setQueryIsOpen(!queryIsOpen)
-                setQuery && setQuery('')
-              }}
-            >
-              {queryIsOpen ? (
-                <XCircle size={24} />
-              ) : (
-                <MagnifyingGlass size={'24'} />
-              )}
-            </button>
-          </QueryContainer>
-        )}
+              </button>
+            </Popover.Trigger>
 
-        <Popover.Root>
-          <Popover.Trigger asChild>
-            <button
-              type="button"
-              className="icon-button"
-              disabled={isLoading}
-              onClick={() => {
-                setTimeout(() => {
-                  newNotifications && visualizeNotifications()
-                }, 10000)
-              }}
-            >
-              <BellSimple size={'24'} />
-              {newNotifications && (
-                <NewNotificationAlert>
-                  <Text size="sm" family="body" colorInvert>
-                    {newNotificationsNumber}
-                  </Text>
-                </NewNotificationAlert>
-              )}
-            </button>
-          </Popover.Trigger>
-
-          <NotificationsPopover />
-        </Popover.Root>
-
-        <Popover.Root>
-          <Popover.Trigger asChild>
-            <button
-              type="button"
-              className="icon-button avatar"
-              disabled={isLoading}
-            >
-              <AvatarWeb
-                size={smallWindow ? '2xs' : 'xsm'}
-                src={user?.avatar_url ?? ''}
-              />
-            </button>
-          </Popover.Trigger>
-
-          <UserOptionsPopover />
-        </Popover.Root>
-      </Options>
-    </HeaderOptionsContainer>
+            <UserOptionsPopover />
+          </Popover.Root>
+        </Options>
+      </HeaderOptionsContainer>
+      <Space />
+    </>
   )
 }

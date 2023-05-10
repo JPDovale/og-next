@@ -1,5 +1,3 @@
-import { setErrorAction as setErrorProjectsAction } from '@contexts/projects/reducer/actions/projects/setErrorAction'
-import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
 import { setErrorAction as setErrorUserAction } from '@contexts/user/reducer/actionsUserReducer'
 import { Dispatch } from 'react'
@@ -28,7 +26,6 @@ export async function responseDealings({
     } else {
       switch (into) {
         case 'projects': {
-          dispatch(setLoadingAction(false))
           return false
         }
 
@@ -42,16 +39,8 @@ export async function responseDealings({
   }
 
   if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
     switch (into) {
       case 'projects': {
-        dispatch(
-          setErrorProjectsAction({
-            title: response.errorTitle as string,
-            message: response.errorMessage,
-          }),
-        )
         return false
       }
 

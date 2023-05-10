@@ -58,7 +58,7 @@ export const CommentContent = styled('div', {
       false: {
         padding: '$4',
 
-        background: '$base900',
+        background: '$gray500',
         borderRadius: '$md',
 
         span: {
@@ -73,7 +73,6 @@ export const CommentContent = styled('div', {
           borderRadius: '$xs',
           color: '$text800',
           lineHeight: '$short',
-          boxShadow: '$default',
         },
       },
       true: {},

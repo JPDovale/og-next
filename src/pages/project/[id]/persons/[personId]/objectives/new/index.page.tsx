@@ -1,8 +1,10 @@
+import { IError } from '@@types/errors/IError'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
+import { InputRadio } from '@components/usefull/InputRadio'
 import {
   TextInputIcon,
   TextInputInput,
@@ -13,6 +15,7 @@ import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Loading } from '@components/usefull/Loading'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
+import { ToastError } from '@components/usefull/ToastError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useObjectives } from '@hooks/useObjectives'
 import { usePerson } from '@hooks/usePerson'
@@ -46,6 +49,8 @@ const newObjectiveBodySchema = z.object({
     .min(2, { message: 'A descrição precisa ter pelo menos 2 caracteres' })
     .max(1000, { message: 'A descrição não pode ter mais de 1000 caracteres' }),
 
+  itBeRealized: z.boolean({ description: 'Esse campo é obrigatório!' }),
+
   supporters: z.array(z.object({ id: z.string().uuid() })).optional(),
 
   avoiders: z.array(z.object({ id: z.string().uuid() })).optional(),
@@ -57,13 +62,16 @@ export default function NewObjectivePage() {
   const [objectiveSelected, setObjectiveSelected] = useState<string | null>(
     null,
   )
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, personId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
   const { projectName, permission, findManyPersons } = useProject(id as string)
-  const { personName, loadingPerson, person } = usePerson(personId as string)
+  const { personName, loadingPerson, person, callEvent } = usePerson(
+    personId as string,
+  )
   const { loadingObjectives, findObjectiveWherePersonNotExisteIn } =
     useObjectives(id as string)
   const objectives = findObjectiveWherePersonNotExisteIn(personId as string)
@@ -78,6 +86,7 @@ export default function NewObjectivePage() {
 
   const avoiders = watch('avoiders')
   const supporters = watch('supporters')
+  const itBeRealized = watch('itBeRealized')
 
   const {
     personsToPossibleAddInObjective,
@@ -117,7 +126,13 @@ export default function NewObjectivePage() {
     }
   }, [avoiders, supporters, personId, findManyPersons])
 
-  console.log(objectives)
+  function handleUpdateItBeRealized(newState: any) {
+    const newItBeRealized = newState as boolean
+
+    if (newItBeRealized === itBeRealized) return
+
+    setValue('itBeRealized', newItBeRealized)
+  }
 
   function handleSelectObjective(id: string) {
     if (id === objectiveSelected) return setObjectiveSelected(null)
@@ -155,8 +170,36 @@ export default function NewObjectivePage() {
     }
   }
 
-  function handleCreateObjective(data: newObjectiveData) {
-    console.log(data)
+  async function handleCreateObjective(data: newObjectiveData) {
+    const { resolved, error } = await callEvent.createObject<newObjectiveData>({
+      path: 'objectives',
+      object: data,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleCreateReference() {
+    if (!objectiveSelected) return
+
+    const { resolved, error } = await callEvent.createObjectReference({
+      path: 'objectives',
+      referenceId: objectiveSelected,
+    })
+
+    if (resolved) {
+      router.push(`/project/${id}/persons/${personId}`)
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
   return (
@@ -172,6 +215,8 @@ export default function NewObjectivePage() {
         inErrorNotAuthorized={permission !== 'edit'}
         isScrolling
       >
+        <ToastError error={error} setError={setError} />
+
         <ContainerGrid padding={4} isRelativePosition>
           <GoBackButton topDistance={4} />
 
@@ -246,6 +291,26 @@ export default function NewObjectivePage() {
                       {...register('description')}
                     />
                   </LabelInput>
+
+                  <LabelInput
+                    error={formState.errors.itBeRealized?.message}
+                    label="O objetivo será realizado ao fim da história?"
+                  >
+                    <InputRadio
+                      state={itBeRealized}
+                      setState={handleUpdateItBeRealized}
+                      values={[
+                        {
+                          label: 'Sim',
+                          value: true,
+                        },
+                        {
+                          label: 'Não',
+                          value: false,
+                        },
+                      ]}
+                    />
+                  </LabelInput>
                 </ContainerGrid>
 
                 <ContainerGrid padding={0} columns={2}>
@@ -302,7 +367,7 @@ export default function NewObjectivePage() {
                   title={`Personagens com possibilidade de atribuição: ${personsToPossibleAddInObjective.length}`}
                   size="sm"
                 >
-                  <ContainerGrid padding={0} darkBackground>
+                  <ContainerGrid darkBackground>
                     {personsToPossibleAddInObjective &&
                     personsToPossibleAddInObjective[0] ? (
                       <Avatares
@@ -336,7 +401,11 @@ export default function NewObjectivePage() {
             </NewObjectiveForm>
           ) : (
             <ContainerGrid>
-              <ButtonRoot align="center" type="button">
+              <ButtonRoot
+                onClick={handleCreateReference}
+                align="center"
+                type="button"
+              >
                 <ButtonIcon>
                   <Anchor />
                 </ButtonIcon>
