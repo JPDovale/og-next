@@ -137,7 +137,7 @@ export const ButtonColapse = styled('button', {
   lineHeight: 0,
 
   cursor: 'pointer',
-  transition: 'ease-in-out',
+  transition: 'ease-in-out 250ms',
 
   variants: {
     isColapse: {

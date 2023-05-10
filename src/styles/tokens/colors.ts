@@ -1,6 +1,30 @@
 export const colors = {
   transparent: '#00000000',
 
+  primary500: '',
+
+  secondary500: '',
+  secondary700: '',
+  secondary900: '',
+
+  tertiary500: '',
+  tertiary700: '',
+
+  quadra500: '',
+
+  text800: '',
+  text100: '',
+
+  t0: '#d8f3dc',
+  t1: '#b7e4c7',
+  t2: '#95d5b2',
+  t3: '#74c69d',
+  t4: '#52b788',
+  t5: '#40916c',
+  t6: '#2d6a4f',
+  t7: '#1b4332',
+  t8: '#081c15',
+
   white: '#fff',
   black: '#000',
 

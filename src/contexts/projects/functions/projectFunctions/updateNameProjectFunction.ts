@@ -1,12 +1,9 @@
 import { Dispatch } from 'react'
-import { updateNameProjectRequest } from '../../../../api/projectsRequests'
-import { IProjectResponse } from '../../../../api/responsesTypes/IProjcetResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateProjectAction,
-} from '../../reducer/actionsProjectsReducer'
+import { updateNameProjectRequest } from '@api/projectsRequests'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updateProjectAction } from '@contexts/projects/reducer/actions/projects/updateProjectAction'
 
 interface IUpdateNameProjectFunction {
   name: string
@@ -18,36 +15,28 @@ export async function updateNameProjectFunction({
   dispatch,
   name,
   projectId,
-}: IUpdateNameProjectFunction): Promise<void> {
+}: IUpdateNameProjectFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await updateNameProjectRequest(name, projectId)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updateNameProjectFunction({ name, projectId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateNameProjectFunction({
+        dispatch,
+        name,
+        projectId,
       }),
-    )
-    return
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const project = response as IProjectResponse
-  dispatch(updateProjectAction(project))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateProjectAction({ project }))
+
+  return true
 }

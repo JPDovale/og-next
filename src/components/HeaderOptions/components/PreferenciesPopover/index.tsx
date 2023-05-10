@@ -7,8 +7,10 @@ import {
   ArrowLineUp,
   GridFour,
   List,
+  Moon,
   SortAscending,
   SortDescending,
+  Sun,
   X,
 } from 'phosphor-react'
 import {
@@ -25,7 +27,7 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { useWindowSize } from '@hooks/useWindow'
 
 export function PreferenciesPopover() {
-  const { isList, setIsList, orderBy, setOrderBy } =
+  const { isList, setIsList, orderBy, setOrderBy, theme, setThemeFunction } =
     useContext(InterfaceContext)
 
   const windowSize = useWindowSize()
@@ -33,7 +35,7 @@ export function PreferenciesPopover() {
 
   return (
     <Popover.Portal>
-      <PreferenciesPopoverContainer>
+      <PreferenciesPopoverContainer darkMode={theme === 'dark'}>
         <PopoverArrow />
 
         <PopoverClose>
@@ -41,7 +43,11 @@ export function PreferenciesPopover() {
         </PopoverClose>
 
         <HeaderPreferencies>
-          <Text as={'h3'} size={'lg'}>
+          <Text
+            as={'h3'}
+            size={'lg'}
+            css={{ color: theme === 'dark' ? '$base100' : '' }}
+          >
             Preferencias
           </Text>
         </HeaderPreferencies>
@@ -77,7 +83,9 @@ export function PreferenciesPopover() {
             </ButtonRoot>
           </ContainerGrid>
 
-          <Text size="sm">Ordenar por:</Text>
+          <Text size="sm" css={{ color: theme === 'dark' ? '$base100' : '' }}>
+            Ordenar por:
+          </Text>
 
           <ContainerGrid padding={0} columns={smallWindow ? 1 : 2}>
             <ButtonRoot
@@ -150,6 +158,42 @@ export function PreferenciesPopover() {
                 <ArrowLineDown weight="bold" />
               </ButtonIcon>
               <ButtonLabel>Atualização mais antiga primeiro</ButtonLabel>
+            </ButtonRoot>
+          </ContainerGrid>
+
+          <Text size="sm" css={{ color: theme === 'dark' ? '$base100' : '' }}>
+            Tema:
+          </Text>
+
+          <ContainerGrid padding={0} columns={smallWindow ? 1 : 2}>
+            <ButtonRoot
+              size="xs"
+              type="button"
+              variant={theme === 'dark' ? 'active' : 'noShadow'}
+              onClick={() => {
+                if (theme === 'dark') return
+                setThemeFunction()
+              }}
+            >
+              <ButtonIcon>
+                <Moon weight="bold" />
+              </ButtonIcon>
+              <ButtonLabel>Dark mode</ButtonLabel>
+            </ButtonRoot>
+
+            <ButtonRoot
+              size="xs"
+              type="button"
+              variant={theme === 'light' ? 'active' : 'noShadow'}
+              onClick={() => {
+                if (theme === 'light') return
+                setThemeFunction()
+              }}
+            >
+              <ButtonIcon>
+                <Sun weight="bold" />
+              </ButtonIcon>
+              <ButtonLabel>Light mode</ButtonLabel>
             </ButtonRoot>
           </ContainerGrid>
         </Options>

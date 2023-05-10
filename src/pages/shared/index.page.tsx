@@ -1,67 +1,50 @@
-import { CardModelNewBox } from '@components/BoxesComponents/CardModelNewBox'
-import { CardModelNewPerson } from '@components/PersonsComponents/CardModelNewPerson'
-import { CardModelNewProject } from '@components/ProjectsComponents/CardModelNewProject'
+import { ModelsHeader } from '@components/ModelsHeader'
 import { Projects } from '@components/ProjectsComponents/Projects'
-import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
-import { ToastError } from '@components/usefull/ToastError'
-import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
+import { useProjects } from '@hooks/useProjects'
 import { useWindowSize } from '@hooks/useWindow'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import { NextSeo } from 'next-seo'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Container } from './styles'
 
 export default function SharedPage() {
+  usePreventBack()
   const [query, setQuery] = useState('')
 
-  const { projects, loading, error, setError } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-
-  usePreventBack()
-
-  const projectsSharedWhitUser =
-    projects?.filter((project) => project.createdPerUser !== user?.id) || []
+  const { projectsSharedWithUser, loadingProjects } = useProjects()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
   return (
     <>
-      <NextSeo title="Projetos compartilhados comigo | Ognare" noindex />
+      <NextSeo title="Projetos compartilhados comigo | Magiscrita" noindex />
 
       <DashboardPageLayout
         window={`Compartilhados: ${
-          projectsSharedWhitUser ? projectsSharedWhitUser.length : 0
+          projectsSharedWithUser ? projectsSharedWithUser.length : 0
         }`}
         query={query}
         setQuery={setQuery}
-        queryless={!!projectsSharedWhitUser[0]}
+        queryless
       >
         <Container>
           {!smallWindow && (
             <>
-              <Heading size="sm">Modelos:</Heading>
-              <ContainerGrid padding={0} columns={3} css={{ gap: '$8' }}>
-                <CardModelNewProject />
-                <CardModelNewPerson />
-                <CardModelNewBox />
-              </ContainerGrid>
+              <ModelsHeader />
               <Heading size="sm">Projetos:</Heading>
             </>
           )}
 
           <Projects
-            projects={projectsSharedWhitUser}
+            projects={projectsSharedWithUser}
             listEmptyMessage="Nenhum projeto foi compartilhado com você ainda"
             query={query}
-            isLoading={loading}
+            isLoading={loadingProjects}
           />
         </Container>
-
-        <ToastError error={error} setError={setError} />
       </DashboardPageLayout>
     </>
   )

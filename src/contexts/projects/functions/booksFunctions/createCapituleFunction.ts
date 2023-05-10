@@ -1,13 +1,10 @@
+import { updateBookAction } from '@contexts/projects/reducer/actions/books/updateBookAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { createCapituleRequest } from '../../../../api/booksRequests'
-import { ICreateCapituleRequest } from '../../../../api/booksRequests/types/ICreateCapituleRequest'
-import { IBooksResponse } from '../../../../api/responsesTypes/IBooksResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateBookAction,
-} from '../../reducer/actionsProjectsReducer'
+import { createCapituleRequest } from '@api/booksRequests'
+import { ICreateCapituleRequest } from '@api/booksRequests/types/ICreateCapituleRequest'
+import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
 interface ICreateCapituleFunction {
   newCapitule: ICreateCapituleRequest
@@ -22,33 +19,18 @@ export async function createCapituleFunction({
 
   const response = await createCapituleRequest(newCapitule)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => createCapituleFunction({ dispatch, newCapitule }),
+  })
 
-    if (isRefreshed) {
-      return createCapituleFunction({ newCapitule, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
-      }),
-    )
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const book = response as IBooksResponse
-  dispatch(updateBookAction(book))
-  dispatch(setLoadingAction(false))
+
+  dispatch(updateBookAction({ book }))
 
   return true
 }

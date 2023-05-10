@@ -59,6 +59,20 @@ export const ToastRoot = styled(Toast.Root, {
   "&[data-state='end']": {
     animation: `${swipeOut} 150ms ease-in-out`,
   },
+
+  variants: {
+    darkMode: {
+      true: {},
+      false: {
+        background: '$gray100',
+        color: '$text800',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const ToastTitle = styled(Toast.Title, {})
@@ -69,6 +83,7 @@ export const ToastClose = styled(Toast.Close, {
   all: 'unset',
   position: 'absolute',
   right: '$4',
+  cursor: 'pointer',
 })
 
 export const ToastViewport = styled(Toast.Viewport, {

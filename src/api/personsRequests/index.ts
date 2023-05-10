@@ -1,8 +1,12 @@
+import { IUpdatePersonDTO } from '@api/dtos/IUpdatePersonDTO'
 import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { ICreateObjectiveDTO } from '../dtos/ICreateObjectiveDTO'
-import { ICreatePersonDTO } from '../dtos/ICreatePersonDTO'
 import { IUpdateObjetiveDTO } from '../dtos/IUpdateObjetiveDTO'
+import { ICreateCommentInPersonRequest } from './types/ICreateCommentInPersonRequest'
+import { ICreateObjectInPersonRequest } from './types/ICreateObjectInPersonRequest'
+import { ICreateObjectReferenceInPersonRequest } from './types/ICreateObjectReferenceInPersonRequest'
+import { ICreatePersonRequest } from './types/ICreatePersonRequest'
 
 interface IGenericObject {
   request: any
@@ -19,10 +23,50 @@ export async function getAllPersonsThisUserRequest(projectId: string) {
   }
 }
 
-// POST
-export async function createPersonRequest(person: ICreatePersonDTO) {
+export async function getPersonRequest(personId: string) {
   try {
-    const response = await api.post('/persons', person)
+    const response = await api.get(`/persons/${personId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+// POST
+export async function createObjectInPersonRequest({
+  object,
+  path,
+  personId,
+}: ICreateObjectInPersonRequest) {
+  try {
+    const response = await api.post(`/persons/${personId}/${path}`, object)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function createObjectReferenceInPersonRequest({
+  path,
+  personId,
+  referenceId,
+}: ICreateObjectReferenceInPersonRequest) {
+  try {
+    const response = await api.post(
+      `/persons/${personId}/${path}/references/${referenceId}`,
+    )
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function createPersonRequest({
+  newPerson,
+  projectId,
+}: ICreatePersonRequest) {
+  try {
+    const response = await api.post(`/persons/${projectId}`, newPerson)
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -40,15 +84,15 @@ export async function createObjetiveOfPersonRequest(
   }
 }
 
-export async function commentInPersonRequest(
-  newComment: ICreateCommentDTO,
-  personId: string,
-) {
+export async function commentInPersonRequest({
+  personId,
+  objectComment,
+}: ICreateCommentInPersonRequest) {
   try {
-    const response = await api.post('/persons/comments', {
-      comment: newComment,
-      personId,
-    })
+    const response = await api.post(
+      `/persons/${personId}/comments/objects/${objectComment.toObjectId}`,
+      objectComment.comment,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -56,16 +100,17 @@ export async function commentInPersonRequest(
 }
 
 export async function responseCommentInPersonRequest(
-  newResponse: ICreateCommentDTO,
   personId: string,
   commentId: string,
+  newResponse: ICreateCommentDTO,
 ) {
   try {
-    const response = await api.post('/persons/comments/response', {
-      response: newResponse,
-      personId,
-      commentId,
-    })
+    const response = await api.post(
+      `/persons/${personId}/comments/${commentId}/responses`,
+      {
+        content: newResponse.content,
+      },
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -87,10 +132,10 @@ export async function createObjectGenericRequest(
 }
 
 // PATCH
-export async function updateImagePersonRequest(person: string, file: File) {
+export async function updateImagePersonRequest(personId: string, file: File) {
   try {
     const response = await api.patch(
-      `/persons/update-image/${person}`,
+      `/persons/${personId}/image`,
       { file },
       {
         headers: {
@@ -182,11 +227,11 @@ export async function deleteObjectiveRequest({
 }
 
 export async function updatePersonRequest(
-  person: ICreatePersonDTO,
+  person: IUpdatePersonDTO,
   personId: string,
 ) {
   try {
-    const response = await api.patch(`/persons`, { person, personId })
+    const response = await api.put(`/persons/${personId}`, person)
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -203,7 +248,16 @@ export async function deleteImagePersonRequest({
   personId,
 }: IDeleteImagePersonRequest) {
   try {
-    const response = await api.delete(`/persons/image/${personId}`)
+    const response = await api.delete(`/persons/${personId}/image`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function deletePersonRequest(personId: string) {
+  try {
+    const response = await api.delete(`/persons/${personId}`)
     return response.data
   } catch (err: any) {
     return err.response.data

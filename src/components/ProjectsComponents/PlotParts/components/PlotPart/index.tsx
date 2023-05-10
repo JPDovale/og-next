@@ -8,7 +8,7 @@ import { Content, ElementContent, PlotPartContainer } from './styles'
 interface IPlotPartProps {
   idObject: string
   to: string
-  element: string | undefined
+  element: string | undefined | null
   disabled?: boolean
   permission: 'view' | 'edit' | 'comment' | undefined
   isPreview: boolean

@@ -1,4 +1,3 @@
-import { ISetSceneToCompleteRequest } from '@api/booksRequests/types/ISetSceneToCompleteRequest'
 import { IScene } from '@api/responsesTypes/IBooksResponse'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { Avatares } from '@components/usefull/Avatares'
@@ -7,11 +6,10 @@ import { Checkbox } from '@components/usefull/Checkbox'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
-import { useProject } from '@hooks/useProject'
-import { useRouter } from 'next/router'
+import { useCapitule } from '@hooks/useCapitule'
+import { ISetSceneToComplete } from '@hooks/useCapitule/types/ISetSceneToComplete'
 import { List, PencilLine, Trash, X } from 'phosphor-react'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { z } from 'zod'
 
 import {
@@ -51,15 +49,7 @@ export function SceneCard({
   const [toSequenceSet, setToSequenceSet] = useState('')
   const [errorIn, setErrorIn] = useState('')
 
-  const router = useRouter()
-  const { id } = router.query
-
-  const { setSceneToComplete, deleteScene, reorderScenes } =
-    useContext(ProjectsContext)
-
-  const { useBook } = useProject(id as string)
-  const { findCapitule } = useBook(bookId)
-  const { capitule } = findCapitule(capituleId)
+  const { capitule, callEvent } = useCapitule(capituleId)
 
   async function handleSetCompleteScene() {
     setErrorIn('')
@@ -70,16 +60,14 @@ export function SceneCard({
       return setErrorIn('writtenWords')
     }
 
-    const setCompleteScene: ISetSceneToCompleteRequest = {
-      bookId,
-      capituleId,
+    const setCompleteScene: ISetSceneToComplete = {
       sceneId: scene.id,
-      writtenWords,
+      writtenWords: Number(writtenWords),
     }
 
-    const isSet = await setSceneToComplete(setCompleteScene)
+    const { resolved } = await callEvent.setSceneToComplete(setCompleteScene)
 
-    if (isSet) {
+    if (resolved) {
       setChecked(false)
     }
   }
@@ -87,7 +75,7 @@ export function SceneCard({
   async function handleDeleteScene() {
     setErrorIn('')
 
-    await deleteScene({ bookId, capituleId, sceneId: scene.id })
+    await callEvent.deleteScene(scene!.id)
   }
 
   async function handleReorderScenes() {
@@ -109,18 +97,16 @@ export function SceneCard({
       return setErrorIn('reorder-min')
     }
 
-    if (toSequenceSet === scene.sequence) {
+    if (toSequenceSet === scene.sequence.toString()) {
       setToSequenceSet('')
       setErrorIn('')
       return setReOrderSelected(false)
     }
 
     setErrorIn('')
-    await reorderScenes({
-      bookId,
-      capituleId,
+    await callEvent.reorderScenes({
       sequenceFrom: scene.sequence,
-      sequenceTo: toSequenceSet,
+      sequenceTo: Number(toSequenceSet),
     })
 
     setReOrderSelected(false)
@@ -128,22 +114,23 @@ export function SceneCard({
   }
 
   return (
-    <SceneCardContainer>
+    <SceneCardContainer data-testid="scene-card">
       <SceneHeading as="header">
         Cena: {scene.sequence}
         <div className="buttons">
           {!checked && (
-            <HeaderButton title="Editar cena">
-              <PencilLine
-                size={16}
-                weight="duotone"
-                onClick={() => setOnEditScene(scene.id)}
-              />
+            <HeaderButton
+              title="Editar cena"
+              onClick={() => setOnEditScene(scene.id)}
+              data-testid="edit-scene-button"
+            >
+              <PencilLine size={16} weight="duotone" />
             </HeaderButton>
           )}
 
           {!scene.complete && (
             <Checkbox
+              data-testid="check-complete"
               onCheckedChange={() => {
                 setChecked(!checked)
                 setDeleteSelected(false)
@@ -156,6 +143,7 @@ export function SceneCard({
           {!checked && (
             <>
               <HeaderButton
+                data-testid="reorder-scenes-button"
                 title="Reordenar cenas"
                 onClick={() => {
                   setReOrderSelected(!reOrderSelected)
@@ -170,6 +158,7 @@ export function SceneCard({
               </HeaderButton>
 
               <HeaderButton
+                data-testid="delete-scene-button"
                 toDelete={!deleteSelected}
                 title={deleteSelected ? 'Cancelar' : 'Remover cena'}
                 onClick={() => {
@@ -189,7 +178,7 @@ export function SceneCard({
       </SceneHeading>
 
       {checked && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="alternative-form">
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">
@@ -223,7 +212,7 @@ export function SceneCard({
       )}
 
       {deleteSelected && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="alternative-delete-form">
           <div className="form">
             <InputContainer>
               <Text family="body" size="sm">
@@ -247,7 +236,7 @@ export function SceneCard({
       )}
 
       {reOrderSelected && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="alternative-reorder-form">
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">
@@ -293,7 +282,7 @@ export function SceneCard({
           <SceneContent>
             {scene.complete && (
               <InfoDefault title="Palavras escritas:">
-                {scene.writtenWords}
+                {scene.written_words}
               </InfoDefault>
             )}
 
@@ -319,15 +308,15 @@ export function SceneCard({
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 1:">
-              {scene.structure.act1}
+              {scene.structure_act_1}
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 2:">
-              {scene.structure.act2}
+              {scene.structure_act_2}
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 3:">
-              {scene.structure.act3}
+              {scene.structure_act_3}
             </InfoDefault>
           </SceneContent>
         </>

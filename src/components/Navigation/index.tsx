@@ -1,6 +1,6 @@
 import { ButtonsContainer, NavigationBarContainer } from './styles'
 
-import LogoToLeft from '../../assets/logos/logo.svg'
+import LogoToLeft from '../../assets/logos/logoOG.png'
 import {
   Bookmark,
   ListChecks,
@@ -17,9 +17,10 @@ import { InterfaceContext } from '@contexts/interface'
 import { useWindowSize } from '@hooks/useWindow'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
+import { useProjects } from '@hooks/useProjects'
 
 export function NavigationBar() {
-  const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
+  const { navIsOpen, setNavIsOpen, theme } = useContext(InterfaceContext)
 
   const router = useRouter()
   const location = router.pathname.split('/')[1]
@@ -27,17 +28,20 @@ export function NavigationBar() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
+  const { projectsThisUser, projectsSharedWithUser } = useProjects()
+
   return (
-    <NavigationBarContainer navIsOpen={navIsOpen}>
+    <NavigationBarContainer navIsOpen={navIsOpen} darkMode={theme === 'dark'}>
       <Image
         src={LogoToLeft}
-        alt="Ognare"
+        alt="Magiscrita"
         onClick={() => {
           router.push('/projects')
           setNavIsOpen(false)
         }}
         priority
       />
+
       <button
         className="close"
         type="button"
@@ -45,6 +49,7 @@ export function NavigationBar() {
       >
         <XCircle size={32} />
       </button>
+
       <ButtonsContainer>
         {smallWindow && (
           <Text
@@ -60,7 +65,10 @@ export function NavigationBar() {
 
         <ButtonRoot
           type="button"
+          title="Todos os projetos"
+          align={navIsOpen ? 'left' : 'center'}
           variant={location === 'projects' ? 'active' : 'default'}
+          size="sm"
           onClick={() => {
             router.push('/projects')
             smallWindow && setNavIsOpen(false)
@@ -70,23 +78,29 @@ export function NavigationBar() {
             <ProjectorScreenChart />
           </ButtonIcon>
 
-          <ButtonLabel>Projetos</ButtonLabel>
+          {navIsOpen && <ButtonLabel>Projetos</ButtonLabel>}
         </ButtonRoot>
 
-        <ButtonRoot
-          type="button"
-          variant={location === 'myProjects' ? 'active' : 'default'}
-          onClick={() => {
-            router.push('/myProjects')
-            smallWindow && setNavIsOpen(false)
-          }}
-        >
-          <ButtonIcon>
-            <Bookmark />
-          </ButtonIcon>
+        {projectsThisUser?.length > 0 &&
+          projectsSharedWithUser?.length !== 0 && (
+            <ButtonRoot
+              type="button"
+              size="sm"
+              title="Meus projetos"
+              align={navIsOpen ? 'left' : 'center'}
+              variant={location === 'myProjects' ? 'active' : 'default'}
+              onClick={() => {
+                router.push('/myProjects')
+                smallWindow && setNavIsOpen(false)
+              }}
+            >
+              <ButtonIcon>
+                <Bookmark />
+              </ButtonIcon>
 
-          <ButtonLabel>Meus projetos</ButtonLabel>
-        </ButtonRoot>
+              {navIsOpen && <ButtonLabel>Meus projetos</ButtonLabel>}
+            </ButtonRoot>
+          )}
 
         {/* <ButtonRoot
         type='button'
@@ -99,23 +113,31 @@ export function NavigationBar() {
           }}
         /> */}
 
+        {projectsSharedWithUser?.length > 0 && (
+          <ButtonRoot
+            type="button"
+            size="sm"
+            align={navIsOpen ? 'left' : 'center'}
+            title="Projetos compartilhados comigo"
+            variant={location === 'shared' ? 'active' : 'default'}
+            onClick={() => {
+              router.push('/shared')
+              smallWindow && setNavIsOpen(false)
+            }}
+          >
+            <ButtonIcon>
+              <UsersThree />
+            </ButtonIcon>
+
+            {navIsOpen && <ButtonLabel>Compartilhados comigo</ButtonLabel>}
+          </ButtonRoot>
+        )}
+
         <ButtonRoot
           type="button"
-          variant={location === 'shared' ? 'active' : 'default'}
-          onClick={() => {
-            router.push('/shared')
-            smallWindow && setNavIsOpen(false)
-          }}
-        >
-          <ButtonIcon>
-            <UsersThree />
-          </ButtonIcon>
-
-          <ButtonLabel>Compartilhados comigo</ButtonLabel>
-        </ButtonRoot>
-
-        <ButtonRoot
-          type="button"
+          size="sm"
+          align={navIsOpen ? 'left' : 'center'}
+          title="Caixotes de ideias"
           variant={location === 'boxes' ? 'active' : 'default'}
           onClick={() => {
             router.push('/boxes')
@@ -126,11 +148,14 @@ export function NavigationBar() {
             <Package />
           </ButtonIcon>
 
-          <ButtonLabel>Boxes</ButtonLabel>
+          {navIsOpen && <ButtonLabel>Boxes</ButtonLabel>}
         </ButtonRoot>
 
         <ButtonRoot
           type="button"
+          size="sm"
+          title="To-Do"
+          align={navIsOpen ? 'left' : 'center'}
           variant={location === 'todo' ? 'active' : 'default'}
           onClick={() => {
             router.push('/todo')
@@ -142,7 +167,7 @@ export function NavigationBar() {
             <ListChecks />
           </ButtonIcon>
 
-          <ButtonLabel>To-Do</ButtonLabel>
+          {navIsOpen && <ButtonLabel>To-Do</ButtonLabel>}
         </ButtonRoot>
         {/* <ButtonRoot
         type='button'
@@ -164,6 +189,7 @@ export function NavigationBar() {
             </Text>
             <ButtonRoot
               type="button"
+              size="sm"
               onClick={() => {
                 router.push('/user/settings')
               }}

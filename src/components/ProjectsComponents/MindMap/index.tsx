@@ -1,42 +1,40 @@
 // import { Text } from '@components/usefull/Text'
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { Avatares } from '@components/usefull/Avatares'
-import { useProject } from '@hooks/useProject'
-import { Text } from '@components/usefull/Text'
-import { useRouter } from 'next/router'
-import { ArrowCircleUp } from 'phosphor-react'
-import { useState } from 'react'
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
-import { CardProject } from '../CardProject'
+// import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+// import { Avatares } from '@components/usefull/Avatares'
+// import { useProject } from '@hooks/useProject'
+// import { Text } from '@components/usefull/Text'
+// import { useRouter } from 'next/router'
+// import { ArrowCircleUp } from 'phosphor-react'
+// import { useState } from 'react'
+// import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+// import { CardProject } from '../CardProject'
 
 import {
-  ButtonColapse,
+  // ButtonColapse,
   MindMapContainer,
-  MindMapContent,
-  Persons,
-  PersonsContent,
-  PersonsHeader,
-  ProjectContent,
-  Reference,
-  References,
-  Tag,
-  TagsOfProject,
+  // MindMapContent,
+  // Persons,
+  // PersonsContent,
+  // PersonsHeader,
+  // ProjectContent,
+  // Reference,
+  // References,
+  // Tag,
+  // TagsOfProject,
 } from './styles'
 
 export function MindMap() {
-  const [tagsIsColapse, setTagsIsColapse] = useState(false)
-  const [personsIsColapse, setPersonsIsColapse] = useState(false)
+  // const [tagsIsColapse, setTagsIsColapse] = useState(false)
+  // const [personsIsColapse, setPersonsIsColapse] = useState(false)
 
-  const router = useRouter()
-  const { id } = router.query
+  // const router = useRouter()
+  // const { id } = router.query
 
-  const { project, personsThisProject, boxesThisProject } = useProject(
-    id as string,
-  )
+  // const { project, personsThisProject } = useProject(id as string)
 
   return (
     <MindMapContainer>
-      <TransformWrapper
+      {/* <TransformWrapper
         maxScale={2}
         minScale={0.05}
         initialScale={0.4}
@@ -55,7 +53,7 @@ export function MindMap() {
         >
           <MindMapContent>
             <ProjectContent>
-              <CardProject project={project} />
+              <CardProject project={project!} />
             </ProjectContent>
             <PersonsContent>
               <Persons>
@@ -179,7 +177,7 @@ export function MindMap() {
             </PersonsContent>
           </MindMapContent>
         </TransformComponent>
-      </TransformWrapper>
+      </TransformWrapper> */}
     </MindMapContainer>
   )
 }

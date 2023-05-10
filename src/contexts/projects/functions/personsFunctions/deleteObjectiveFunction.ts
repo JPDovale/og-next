@@ -1,13 +1,10 @@
 import { IBoxResponse } from '@api/responsesTypes/IBoxResponse'
 import { Dispatch } from 'react'
-import { deleteObjectiveRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { deleteObjectiveRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { updatePersonAndBoxAction } from '@contexts/projects/reducer/actions/persons/updatePersonAndBoxAction'
 
 interface IDeleteObjectiveFunction {
   personId: string
@@ -19,38 +16,29 @@ export async function deleteObjectiveFunction({
   personId,
   dispatch,
   objectiveId,
-}: IDeleteObjectiveFunction): Promise<void> {
+}: IDeleteObjectiveFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await deleteObjectiveRequest({ personId, objectiveId })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return deleteObjectiveFunction({ dispatch, objectiveId, personId })
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      deleteObjectiveFunction({
+        personId,
+        objectiveId,
+        dispatch,
       }),
-    )
-    return
-  }
+  })
+
+  if (handledAnswer === false) return false
 
   const person = response.person as IPersonsResponse
   const box = response.box as IBoxResponse
 
-  dispatch(setLoadingAction(false))
-  dispatch(updatePersonAction(person, box))
+  dispatch(updatePersonAndBoxAction({ person, box }))
+
+  return true
 }

@@ -1,29 +1,21 @@
 import { useRouter } from 'next/router'
-import {
-  createContext,
-  useReducer,
-  useState,
-  useEffect,
-  useContext,
-} from 'react'
+import { createContext, useReducer, useContext } from 'react'
 import { IError } from '../../@types/errors/IError'
-import { api } from '../../api'
 import { ICreateUserDTO } from '../../api/dtos/ICreateUserDTO'
-import { INewInitializeDTO } from '../../api/dtos/INewInitializeDTO'
-import { ICreateSessionResponse } from '../../api/responsesTypes/ICreateResponse'
 
 import { INewSessionDTO } from '../../api/dtos/INewSessionDTO'
 import { createSessionFunction } from './functions/createSessionFunction'
 import { createUserFunction } from './functions/createUserFunction'
-import { getUserFunction } from './functions/getUserFunction'
-import { initializeUserFunction } from './functions/initializeUserFunction'
 import { loginWithGoogleFunction } from './functions/loginWithGoogleFunction'
 import { logoutFunction } from './functions/logoutFunction'
 import { updateAvatarFunction } from './functions/updateAvatarFunction'
 import { updatePasswordFunction } from './functions/updatePasswordFunction'
 import { updateUserFunction } from './functions/updateUserFunction'
-import { userDefaultValues } from './initialValues'
-import { setErrorAction, setSuccessAction } from './reducer/actionsUserReducer'
+import {
+  setErrorAction,
+  setLoadingAction,
+  setSuccessAction,
+} from './reducer/actionsUserReducer'
 import { userReducer } from './reducer/userReducer'
 import { IUserContext, IUserContextProps } from './types/IPersonContext'
 import { setUserFunction } from './functions/setUserFunction'
@@ -34,97 +26,76 @@ import { sendMailForgotPasswordFunction } from './functions/sendMailForgotPasswo
 import { recoveryPasswordFunction } from './functions/recoveryPasswordFunction'
 import { visualizeNotificationsFunction } from './functions/visualizeNotificationsFunction'
 import { InterfaceContext } from '@contexts/interface'
+import { IUserResponse } from '@api/responsesTypes/IUserResponse'
+import { useUser } from '@hooks/useUser'
+import { Loading } from '@components/usefull/Loading'
 
-export const UserContext = createContext<IUserContext>(userDefaultValues)
+export const UserContext = createContext<IUserContext>({} as IUserContext)
 
 export function UserProvider({ children }: IUserContextProps) {
-  const [loading, setLoading] = useState(userDefaultValues.loading)
-
   const [userInfos, dispatch] = useReducer(userReducer, {
-    error: undefined,
-    user: undefined,
-    success: undefined,
+    error: null,
+    success: null,
+    loading: true,
   })
 
   const { resetInterface } = useContext(InterfaceContext)
+  const { loadingUser, userLogged, refetchUser } = useUser()
 
-  const { error, user, success } = userInfos
+  const { error, success, loading } = userInfos
   const router = useRouter()
 
-  useEffect(() => {
-    const tokenString = localStorage.getItem('@og-user-token')?.toString()
-
-    if (tokenString && tokenString !== 'undefined') {
-      const token = JSON.parse(tokenString || '')
-
-      api.defaults.headers.Authorization = `Bearer ${token}`
-    }
-  }, [])
-
-  function setError(error: IError | undefined) {
+  function setError(error: IError | null) {
     dispatch(setErrorAction(error))
   }
 
-  function setSuccess(success: ISuccess | undefined) {
+  function setSuccess(success: ISuccess | null) {
     dispatch(setSuccessAction(success))
   }
 
-  async function getUser(): Promise<any> {
-    await getUserFunction(dispatch)
-    setLoading(false)
+  function setLoading(newState: boolean) {
+    dispatch(setLoadingAction(newState))
   }
 
-  function setUser(loggedUser: ICreateSessionResponse) {
-    setLoading(true)
-    setUserFunction(loggedUser, dispatch)
-    setLoading(false)
+  // async function getUser(): Promise<any> {
+  //   await getUserFunction(dispatch)
+  // }
+
+  function setUser(loggedUser: IUserResponse | null) {
+    return setUserFunction(loggedUser, dispatch)
   }
 
   async function createUser(newUserData: ICreateUserDTO) {
-    const isCreated = await createUserFunction(newUserData, dispatch)
-    return isCreated
+    return await createUserFunction(newUserData, dispatch)
   }
 
   async function createSession(newSession: INewSessionDTO) {
-    const logged = await createSessionFunction(newSession, dispatch)
-    return logged
+    return await createSessionFunction(newSession, dispatch)
   }
 
   async function logout() {
-    setLoading(true)
-
     await logoutFunction(dispatch)
     resetInterface()
+    refetchUser()
 
     // signOut({
     //   redirect: true,
     //   callbackUrl: 'http://localhost:3000/login',
     // })
-    setLoading(false)
+
     router.push('/login')
   }
 
-  async function initializeUser(newInitialize: INewInitializeDTO) {
-    const initialized = await initializeUserFunction(newInitialize, dispatch)
-    return initialized
-  }
-
   async function updateUser(name?: string, username?: string, email?: string) {
-    setLoading(true)
     await updateUserFunction(dispatch, name, username, email)
-    setLoading(false)
   }
 
   async function updateAvatar(file: File) {
-    setLoading(true)
     await updateAvatarFunction(file, dispatch)
-    setLoading(false)
   }
 
   async function updatePassword(oldPassword: string, password: string) {
-    setLoading(true)
     await updatePasswordFunction(oldPassword, password, dispatch)
-    setLoading(false)
   }
 
   async function loginWithGoogle(user: any) {
@@ -132,9 +103,7 @@ export function UserProvider({ children }: IUserContextProps) {
   }
 
   async function deleteAvatar() {
-    setLoading(true)
     await deleteAvatarFunction(dispatch)
-    setLoading(false)
   }
 
   async function sendMailForgotPassword(email: string) {
@@ -149,26 +118,25 @@ export function UserProvider({ children }: IUserContextProps) {
     return await visualizeNotificationsFunction({ dispatch })
   }
 
-  useEffect(() => {
-    getUser()
-  }, [])
+  // useEffect(() => {
+  //   getUser()
+  // }, [])
 
   return (
     <UserContext.Provider
       value={{
         loading,
-        user,
-        userLogged: !!user,
+        userLogged,
         error,
         success,
 
         setError,
         setSuccess,
+        setLoading,
 
         createSession,
         createUser,
         logout,
-        initializeUser,
         updateUser,
         updateAvatar,
         updatePassword,
@@ -180,7 +148,7 @@ export function UserProvider({ children }: IUserContextProps) {
         visualizeNotifications,
       }}
     >
-      {children}
+      {loadingUser ? <Loading /> : children}
     </UserContext.Provider>
   )
 }

@@ -1,7 +1,7 @@
 import { HeaderOptions } from '@components/HeaderOptions'
 import { NavigationBar } from '@components/Navigation'
 import { InterfaceContext } from '@contexts/interface'
-import { UserContext } from '@contexts/user'
+import { useUser } from '@hooks/useUser'
 import { useRouter } from 'next/router'
 import { ReactNode, useContext, useEffect } from 'react'
 
@@ -26,14 +26,13 @@ export function DashboardPageLayout({
   loading = false,
 }: IDashboardPageLayoutProps) {
   const { navIsOpen } = useContext(InterfaceContext)
-  const { userLogged, loading: loadingUser } = useContext(UserContext)
+  const { userLogged } = useUser()
 
   const router = useRouter()
 
   useEffect(() => {
-    if (loadingUser) return
     if (!userLogged) router.push('/login')
-  }, [userLogged, loadingUser, router])
+  }, [userLogged, router])
 
   return (
     <>

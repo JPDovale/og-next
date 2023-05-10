@@ -1,31 +1,30 @@
-import { useMemo, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import {
   At,
-  Crosshair,
+  // Crosshair,
   Envelope,
   Eye,
   EyeClosed,
-  HeartBreak,
+  // HeartBreak,
   Key,
-  Lightning,
+  // Lightning,
   LockKey,
   LockLaminated,
   PencilLine,
-  Person,
-  ProjectorScreenChart,
-  RainbowCloud,
-  SketchLogo,
-  TreeStructure,
+  // Person,
+  // ProjectorScreenChart,
+  // RainbowCloud,
+  // SketchLogo,
+  // TreeStructure,
   UserCircle,
-  UserCircleGear,
-  UserFocus,
-  UsersThree,
-  Warning,
+  // UserCircleGear,
+  // UserFocus,
+  // UsersThree,
+  // Warning,
   X,
 } from 'phosphor-react'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
-import { ProjectsContext } from '@contexts/projects'
 import { UserContext } from '@contexts/user'
 import { NextSeo } from 'next-seo'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
@@ -46,19 +45,19 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
-import { IArchive } from '@api/responsesTypes/IBoxResponse'
+import { useUser } from '@hooks/useUser'
 
-interface IObjects {
-  objectives: IArchive[]
-  dreams: IArchive[]
-  fears: IArchive[]
-  appearance: IArchive[]
-  personality: IArchive[]
-  powers: IArchive[]
-  traumas: IArchive[]
-  values: IArchive[]
-  wishes: IArchive[]
-}
+// interface IObjects {
+//   objectives: IArchive[]
+//   dreams: IArchive[]
+//   fears: IArchive[]
+//   appearance: IArchive[]
+//   personality: IArchive[]
+//   powers: IArchive[]
+//   traumas: IArchive[]
+//   values: IArchive[]
+//   wishes: IArchive[]
+// }
 
 export default function UserSettingsPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
@@ -70,8 +69,6 @@ export default function UserSettingsPage() {
   const [password, setPassword] = useState('')
 
   const {
-    user,
-    loading,
     updateUser,
     error,
     setError,
@@ -79,103 +76,104 @@ export default function UserSettingsPage() {
     updatePassword,
     deleteAvatar,
   } = useContext(UserContext)
-  const { users, projects, persons, boxes } = useContext(ProjectsContext)
+
+  const { user, loadingUser } = useUser()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
   usePreventBack('/projects')
 
-  const objects = useMemo(() => {
-    const findeObjectives: IObjects = {
-      objectives: [],
-      dreams: [],
-      fears: [],
-      appearance: [],
-      personality: [],
-      powers: [],
-      traumas: [],
-      values: [],
-      wishes: [],
-    }
+  // const objects = useMemo(() => {
+  //   const findeObjectives: IObjects = {
+  //     objectives: [],
+  //     dreams: [],
+  //     fears: [],
+  //     appearance: [],
+  //     personality: [],
+  //     powers: [],
+  //     traumas: [],
+  //     values: [],
+  //     wishes: [],
+  //   }
 
-    boxes.map((box) => {
-      switch (box.name) {
-        case 'persons/objectives': {
-          box.archives.map((file) => {
-            return findeObjectives.objectives.push(file)
-          })
-          break
-        }
+  //   boxes.map((box) => {
+  //     switch (box.name) {
+  //       case 'persons/objectives': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.objectives.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/dreams': {
-          box.archives.map((file) => {
-            return findeObjectives.dreams.push(file)
-          })
-          break
-        }
+  //       case 'persons/dreams': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.dreams.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/fears': {
-          box.archives.map((file) => {
-            return findeObjectives.fears.push(file)
-          })
-          break
-        }
+  //       case 'persons/fears': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.fears.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/appearance': {
-          box.archives.map((file) => {
-            return findeObjectives.appearance.push(file)
-          })
-          break
-        }
+  //       case 'persons/appearance': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.appearance.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/personality': {
-          box.archives.map((file) => {
-            return findeObjectives.personality.push(file)
-          })
-          break
-        }
+  //       case 'persons/personality': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.personality.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/powers': {
-          box.archives.map((file) => {
-            return findeObjectives.powers.push(file)
-          })
-          break
-        }
+  //       case 'persons/powers': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.powers.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/traumas': {
-          box.archives.map((file) => {
-            return findeObjectives.traumas.push(file)
-          })
-          break
-        }
+  //       case 'persons/traumas': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.traumas.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/values': {
-          box.archives.map((file) => {
-            return findeObjectives.values.push(file)
-          })
-          break
-        }
+  //       case 'persons/values': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.values.push(file)
+  //         })
+  //         break
+  //       }
 
-        case 'persons/wishes': {
-          box.archives.map((file) => {
-            return findeObjectives.wishes.push(file)
-          })
-          break
-        }
+  //       case 'persons/wishes': {
+  //         box.archives.map((file) => {
+  //           return findeObjectives.wishes.push(file)
+  //         })
+  //         break
+  //       }
 
-        default:
-          break
-      }
+  //       default:
+  //         break
+  //     }
 
-      return ''
-    })
+  //     return ''
+  //   })
 
-    return findeObjectives
-  }, [boxes])
+  //   return findeObjectives
+  // }, [boxes])
 
   function handleSaveUser() {
-    setError(undefined)
+    setError(null)
     updateUser(
       name || user?.name,
       username || user?.username,
@@ -194,7 +192,7 @@ export default function UserSettingsPage() {
   }
 
   async function handleUpdatePassword() {
-    setError(undefined)
+    setError(null)
 
     if (password.length < 6 || oldPassword.length < 6) {
       return setError({
@@ -213,14 +211,17 @@ export default function UserSettingsPage() {
     }
 
     await updatePassword(oldPassword, password)
-    setTimeout(() => setError(undefined), 10000)
+    setTimeout(() => setError(null), 10000)
   }
 
   return (
     <>
-      <NextSeo title={`Configurações-${user?.username} | Ognare`} noindex />
+      <NextSeo title={`Configurações-${user?.username} | Magiscrita`} noindex />
 
-      <DashboardPageLayout window="Configurações do usuário" loading={loading}>
+      <DashboardPageLayout
+        window="Configurações do usuário"
+        loading={loadingUser}
+      >
         <UserSettingsPageContainer>
           <UserSettings>
             {error && <ResponseInfoApi error={error} />}
@@ -368,37 +369,28 @@ export default function UserSettingsPage() {
               </Text>
             </Info>
 
-            <Info isCard columns={2}>
+            {/* <Info isCard columns={2}>
               <Text family="body" as="label">
                 <header>Data de criação</header>
-                <Text size="sm">{user?.createAt}</Text>
+                <Text size="sm">
+                  {user?.created_at
+                    ? getDate(user.created_at)
+                    : 'Carregando...'}
+                </Text>
               </Text>
+            </Info> */}
 
-              <Text family="body" as="label">
-                <header>Ultima alteração</header>
-                <Text size="sm">{user?.updateAt}</Text>
-              </Text>
-            </Info>
-
-            <Info css={{ marginTop: '$6' }}>
+            {/* <Info css={{ marginTop: '$6' }}>
               <Text family="body" as="label">
                 Ás referencias criadas não são contadas na listagem
               </Text>
-            </Info>
-            <Info columns={smallWindow ? 2 : 3} isCard>
+            </Info> */}
+            {/* <Info columns={smallWindow ? 2 : 3} isCard>
               <Text family="body" as="label">
                 <header>
                   <ProjectorScreenChart /> Projetos
                 </header>
                 <Text>{projects.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <UsersThree />
-                  Usuários acessíveis
-                </header>
-                <Text>{users.length}</Text>
               </Text>
 
               <Text family="body" as="label">
@@ -480,24 +472,24 @@ export default function UserSettingsPage() {
                 </header>
                 <Text>{objects.wishes.length}</Text>
               </Text>
-            </Info>
+            </Info> */}
           </UserSettings>
 
           <UserInfos>
             <Info>
               <Avatar>
-                <AvatarWeb src={user?.avatar?.url} size="full" />
+                <AvatarWeb src={user?.avatar_url ?? undefined} size="full" />
               </Avatar>
               <Text size="lg" weight="bold">
                 {user?.username?.toUpperCase()}
               </Text>
 
               <div className="buttons">
-                <Input htmlFor="file" disabled={loading}>
+                <Input htmlFor="file" disabled={loadingUser}>
                   <PencilLine />
                   Alterar avatar
                   <input
-                    disabled={loading}
+                    disabled={loadingUser}
                     type="file"
                     id="file"
                     accept="image/png, image/jpeg"
@@ -508,7 +500,7 @@ export default function UserSettingsPage() {
                 </Input>
 
                 <ButtonRoot
-                  disabled={!user?.avatar?.url || loading}
+                  disabled={!user?.avatar_url || loadingUser}
                   onClick={deleteAvatar}
                   type="button"
                   wid="full"

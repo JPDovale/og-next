@@ -32,7 +32,8 @@ export async function createSessionRequest(
   password: string,
 ): Promise<ICreateSessionResponse> {
   try {
-    const response = await api.post('/sessions/create', { email, password })
+    const response = await api.post('/sessions/', { email, password })
+
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -70,10 +71,10 @@ export async function initializeUserRequest(
   }
 }
 
-export async function refreshSessionRequest(token: string) {
+export async function refreshSessionRequest() {
   try {
-    const response = await api.post('/sessions/refresh', { token: `${token}` })
-    return response.data
+    const response = await api.post('/sessions/refresh')
+    return response
   } catch (err: any) {
     return err.response.data
   }

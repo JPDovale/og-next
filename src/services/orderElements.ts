@@ -1,5 +1,5 @@
 import lodash from 'lodash'
-import dayjs from 'dayjs'
+import { IDateResponse } from '@api/responsesTypes/ITimelinesResponse'
 
 export function orderElements(
   elements: any[],
@@ -27,51 +27,38 @@ export function orderElements(
     }
 
     case 'time-asc': {
-      const elementsOrd = lodash.sortBy(elements, (object) => {
-        const dateSepare = object.createAt.split(' ')[0].split('/')
-        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
-        const date = dayjs(dateInFormat).valueOf()
-
-        return date
-      })
+      const elementsOrd = lodash.sortBy(elements, (object) => object.created_at)
 
       return elementsOrd.reverse() === undefined ? [] : elementsOrd
     }
 
     case 'time-desc': {
-      const elementsOrd = lodash.sortBy(elements, (object) => {
-        const dateSepare = object.createAt.split(' ')[0].split('/')
-        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
-        const date = dayjs(dateInFormat).valueOf()
-
-        return date
-      })
+      const elementsOrd = lodash.sortBy(elements, (object) => object.created_at)
       return elementsOrd === undefined ? [] : elementsOrd
     }
 
     case 'update-asc': {
-      const elementsOrd = lodash.sortBy(elements, (object) => {
-        const dateSepare = object.updateAt.split(' ')[0].split('/')
-        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
-        const date = dayjs(dateInFormat).valueOf()
-
-        return date
-      })
-      return elementsOrd.reverse() === undefined ? [] : elementsOrd
+      const elementsOrd = lodash.sortBy(elements, (object) => object.updated_at)
+      return elementsOrd === undefined ? [] : elementsOrd.reverse()
     }
 
     case 'update-desc': {
-      const elementsOrd = lodash.sortBy(elements, (object) => {
-        const dateSepare = object.updateAt.split(' ')[0].split('/')
-        const dateInFormat = `${dateSepare[1]}/${dateSepare[0]}/${dateSepare[2]}`
-        const date = dayjs(dateInFormat).valueOf()
+      const elementsOrd = lodash.sortBy(elements, (object) => object.updated_at)
 
-        return date
-      })
       return elementsOrd === undefined ? [] : elementsOrd
     }
 
     default:
       return []
   }
+}
+
+export function orderDatesOfTimelines(
+  elements: IDateResponse[],
+): IDateResponse[] {
+  const elementsOrd = lodash.sortBy(elements, (object) => {
+    return object.dateDif
+  })
+
+  return elementsOrd === undefined ? [] : elementsOrd
 }

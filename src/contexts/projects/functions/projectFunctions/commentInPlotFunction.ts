@@ -1,46 +1,38 @@
 import { Dispatch } from 'react'
-import { ICreateCommentDTO } from '../../../../api/dtos/ICreateNewCommentDTO'
-import { commentInPlotRequest } from '../../../../api/projectsRequests'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateProjectAction,
-} from '../../reducer/actionsProjectsReducer'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
+import { commentInPlotRequest } from '@api/projectsRequests'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { updateProjectAction } from '@contexts/projects/reducer/actions/projects/updateProjectAction'
 
-export async function commentInPlotFunction(
-  comment: ICreateCommentDTO,
-  projectId: string,
-  dispatch: Dispatch<any>,
-): Promise<void> {
+interface ICommentInPlotFunction {
+  comment: ICreateCommentDTO
+  projectId: string
+  dispatch: Dispatch<any>
+}
+
+export async function commentInPlotFunction({
+  comment,
+  projectId,
+  dispatch,
+}: ICommentInPlotFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await commentInPlotRequest(comment, projectId)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => commentInPlotFunction({ comment, projectId, dispatch }),
+  })
 
-    if (isRefreshed) {
-      return commentInPlotFunction(comment, projectId, dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
+  if (handledAnswer === false) return false
 
-      return
-    }
-  }
+  const project = response as IProjectResponse
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
+  dispatch(updateProjectAction({ project }))
 
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
-
-  dispatch(setLoadingAction(false))
-  dispatch(updateProjectAction(response))
+  return true
 }

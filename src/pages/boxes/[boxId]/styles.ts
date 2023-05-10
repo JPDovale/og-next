@@ -8,6 +8,7 @@ export const CardTagBox = styled('div', {
   alignItems: 'center',
   padding: '$2',
   width: '100%',
+  color: '$text100',
 
   borderRadius: '$sm',
   background: '$purple400',

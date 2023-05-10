@@ -1,73 +1,90 @@
-import { IAvatar } from './ICreateResponse'
+import { IPersonsResponse } from './IPersonsResponse'
+import { IComment } from './IProjectResponse'
 
 export interface IScene {
   id: string
-  sequence: string
-  objective: string
+  sequence: number
   complete: boolean
-  writtenWords?: string
-  structure: {
-    act1: string
-    act2: string
-    act3: string
-  }
-  persons: string[]
+  objective: string
+  written_words: number
+  structure_act_1: string
+  structure_act_2: string
+  structure_act_3: string
+  capitule_id: string
+
+  persons: IPersonsResponse[]
+  comments: IComment[]
 }
 
 export interface ICapitule {
   id: string
   name: string
-  sequence: string
+  sequence: number
   objective: string
   complete: boolean
-  words?: string
-  structure?: {
-    act1?: string
-    act2?: string
-    act3?: string
+  words: number
+  structure_act_1: string | null
+  structure_act_2: string | null
+  structure_act_3: string | null
+  created_at: Date
+  book_id: string
+  scenes: IScene[]
+  comments: IComment[]
+  _count: {
+    scenes: number
+    comments: number
   }
-  scenes?: IScene[]
-  createdAt: string
-  updatedAt: string
+}
+
+export interface IAuthor {
+  id: number
+  user: {
+    id: string
+    avatar_url: string | null
+    username: string
+    email: string
+  }
+}
+
+export interface IGenre {
+  id: string
+  name: string
+  created_at: Date
 }
 
 export interface IBooksResponse {
   id: string
   title: string
-  subtitle?: string
-  defaultProject: string
-  literaryGenere: string
-  isbn: string
-  frontCover: IAvatar
-  generes: Array<{
-    name: string
-  }>
-  authors: Array<{
-    username: string
-    email: string
-    id: string
-  }>
-  plot: {
-    onePhrase: string
-    premise: string
-    storyteller: string
-    ambient: string
-    countTime: string
-    historicalFact: string
-    details: string
-    summary: string
-    persons: string[]
-    structure?: {
-      act1?: string
-      act2?: string
-      act3?: string
-    }
-    urlOfText: string
+  subtitle: string | null
+  literary_genre: string
+  isbn: string | null
+  front_cover_filename?: string | null
+  front_cover_url: string | null
+  words: number
+  written_words: number
+  one_phrase?: string | null
+  premise?: string | null
+  storyteller?: string | null
+  ambient?: string | null
+  count_time?: string | null
+  historical_fact?: string | null
+  details?: string | null
+  summary?: string | null
+  url_text?: string | null
+  structure_act_1?: string | null
+  structure_act_2?: string | null
+  structure_act_3?: string | null
+  created_at: Date
+  updated_at: Date
+  user_id?: string
+  project_id?: string
+  _count: {
+    genres: number
+    authors: number
+    capitules: number
   }
-  capitules: ICapitule[]
-  words?: string
-  writtenWords?: string
-  comments: any[]
-  createAt: string
-  updateAt: string
+  genres?: IGenre[]
+  authors?: IAuthor[]
+  capitules?: ICapitule[]
+  comments?: IComment[]
 }

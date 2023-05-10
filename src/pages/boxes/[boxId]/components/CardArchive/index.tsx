@@ -6,9 +6,8 @@ import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
 import { Toast } from '@components/usefull/Toast'
 import { UploadZone } from '@components/usefull/UploadZone'
-import { ProjectsContext } from '@contexts/projects'
 import Image from 'next/image'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import {
   CardArchiveContainer,
   ContentCardArchive,
@@ -24,6 +23,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { Textarea } from '@components/usefull/Textarea'
+import { getDate } from '@utils/dates/getDate'
+import { useBoxes } from '@hooks/useBoxes'
 
 interface ICardArchiveProps {
   archive: IArchive
@@ -62,19 +63,14 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
   const [successDeleteImageToastOpen, setSuccessDeleteImageToastOpen] =
     useState(false)
 
-  const {
-    saveArchiveImages,
-    deleteArchiveBox,
-    deleteImageInArchive,
-    updateArchive,
-  } = useContext(ProjectsContext)
+  const { callEvent } = useBoxes()
 
   const { register, formState, handleSubmit, reset } = useForm<EditArchiveBody>(
     {
       resolver: zodResolver(editArchiveFormSchema),
       defaultValues: {
-        title: archive.archive.title,
-        description: archive.archive.description,
+        title: archive.title,
+        description: archive.description,
       },
     },
   )
@@ -84,49 +80,49 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
 
     const file = files[0]
 
-    const isUploaded = await saveArchiveImages({
+    const { resolved } = await callEvent.saveImageInArchive({
       file,
-      archiveId: archive.archive.id,
+      archiveId: archive.id,
       boxId,
     })
 
-    if (isUploaded) {
+    if (resolved) {
       setSuccessToastOpen(true)
     }
   }
 
   async function handleDeleteArchive() {
-    const isDeleted = await deleteArchiveBox({
+    const { resolved } = await callEvent.deleteArchive({
       boxId,
-      archiveId: archive.archive.id,
+      archiveId: archive.id,
     })
 
-    if (isDeleted) {
+    if (resolved) {
       setSuccessDeleteToastOpen(true)
     }
   }
 
   async function handleDeleteImageInArchive(imageId: string) {
-    const isDeleted = await deleteImageInArchive({
+    const { resolved } = await callEvent.removeImage({
       boxId,
-      archiveId: archive.archive.id,
+      archiveId: archive.id,
       imageId,
     })
 
-    if (isDeleted) {
+    if (resolved) {
       setSuccessDeleteImageToastOpen(true)
     }
   }
 
   async function handleUpdateArchive(data: EditArchiveBody) {
-    const isUpdated = await updateArchive({
-      archiveId: archive.archive.id,
+    const { resolved } = await callEvent.updateArchive({
+      archiveId: archive.id,
       boxId,
       title: data.title,
       description: data.description,
     })
 
-    if (isUpdated) {
+    if (resolved) {
       setIsEditing(false)
       setSuccessEditToastOpen(true)
       reset()
@@ -134,7 +130,7 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
   }
 
   return (
-    <CardArchiveContainer title={archive.archive.title}>
+    <CardArchiveContainer title={archive.title}>
       <Toast
         title="Faça upload de apenas 1 arquivos por vez."
         message="Faça upload de apenas 1 arquivos por vez."
@@ -190,18 +186,18 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
                 />
               </TextInputRoot>
             ) : (
-              archive.archive.title
+              archive.title
             )}
           </InfoDefault>
           <InfoDefault title="Imagens:" size="sm">
-            {archive.images?.length}
+            {archive.gallery?.length}
           </InfoDefault>
           <InfoDefault title="Criado em:" size="sm">
-            {archive.archive.createdAt}
+            {getDate(archive.created_at)}
           </InfoDefault>
-          <InfoDefault title="Atualizado em:" size="sm">
-            {archive.archive.updatedAt}
-          </InfoDefault>
+          {/* <InfoDefault title="Atualizado em:" size="sm">
+            {archive.updatedAt}
+          </InfoDefault> */}
 
           <AlertDialog.Root>
             <AlertDialog.Trigger asChild>
@@ -211,7 +207,7 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
             </AlertDialog.Trigger>
 
             <AlertModal
-              description={`Deletar o arquivo "${archive.archive.title}" ocasionará a exclusão permanente de todas as imagens e
+              description={`Deletar o arquivo "${archive.title}" ocasionará a exclusão permanente de todas as imagens e
               também todas as informações contidas no arquivo. Isso também não poderá
               ser desfeito depois.`}
               onAccept={handleDeleteArchive}
@@ -238,7 +234,7 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
                   {...register('description')}
                 />
               ) : (
-                archive.archive.description
+                archive.description
               )}
             </Text>
           </InfoDefault>
@@ -271,7 +267,7 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
         <ContainerGrid padding={0} columns={3} css={{ marginTop: '$5' }}>
           <UploadZone onUpload={handleUploadImage} />
 
-          {archive.images?.map((image) => (
+          {archive.gallery?.map((image) => (
             <ImageContainer key={image.id}>
               <AlertDialog.Root>
                 <AlertDialog.Trigger asChild>
@@ -286,7 +282,12 @@ export function CardArchive({ archive, boxId }: ICardArchiveProps) {
                 />
               </AlertDialog.Root>
 
-              <Image src={image.url} alt="" width={900} height={900} />
+              <Image
+                src={image.image_url ?? undefined}
+                alt=""
+                width={900}
+                height={900}
+              />
             </ImageContainer>
           ))}
         </ContainerGrid>

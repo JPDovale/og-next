@@ -1,5 +1,7 @@
+import { InterfaceContext } from '@contexts/interface'
 import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import { styled } from '@styles/index'
+import { useContext } from 'react'
 import { Text } from '../Text'
 
 interface IAlertModalProps {
@@ -8,24 +10,30 @@ interface IAlertModalProps {
 }
 
 export function AlertModal({ description, onAccept }: IAlertModalProps) {
+  const { theme } = useContext(InterfaceContext)
+
   return (
     <AlertDialog.Portal>
       <ModalOverlay />
 
-      <ModalContentContainer>
+      <ModalContentContainer darkMode={theme === 'dark'}>
         <AlertTitle>
-          <Text size="lg" css={{ color: '$alertDefault' }}>
+          <Text size="lg" weight="bold" css={{ color: '$alertDefault' }}>
             Você tem certeza que quer fazer isso?
           </Text>
         </AlertTitle>
 
         <AlertDescription>
-          <Text size="sm">{description}</Text>
+          <Text family="body" height="shorter" size="lg">
+            {description}
+          </Text>
         </AlertDescription>
 
         <Buttons>
           <AlertDialog.Cancel asChild>
-            <Cancel>Cancelar</Cancel>
+            <Cancel css={{ color: theme === 'dark' ? '' : '$white' }}>
+              Cancelar
+            </Cancel>
           </AlertDialog.Cancel>
 
           <AlertDialog.Action asChild>
@@ -81,6 +89,16 @@ const ModalContentContainer = styled(AlertDialog.Content, {
         },
       },
     },
+    darkMode: {
+      true: {},
+      false: {
+        background: '$base300',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 
   '@media screen and (max-width: 768px)': {

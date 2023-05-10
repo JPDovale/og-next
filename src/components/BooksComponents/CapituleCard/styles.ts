@@ -25,7 +25,7 @@ export const CapituleInfos = styled('button', {
   flexDirection: 'column',
   gap: '$4',
 
-  padding: '$4',
+  padding: '$2',
   height: '100%',
 
   cursor: 'pointer',
@@ -35,10 +35,14 @@ export const CapituleComplete = styled(Text, {
   variants: {
     complete: {
       true: {
-        color: '$successDefault',
+        p: {
+          color: '$successDefault',
+        },
       },
       false: {
-        color: '$errorDefault',
+        p: {
+          color: '$errorDefault',
+        },
       },
     },
   },

@@ -46,8 +46,6 @@ export const Info = styled('div', {
           flexDirection: 'column',
 
           width: '100%',
-
-          color: '$base900',
         },
 
         header: {

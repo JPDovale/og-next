@@ -32,6 +32,10 @@ export const HeaderComment = styled('div', {
       true: {},
     },
   },
+
+  defaultVariants: {
+    isPreview: false,
+  },
 })
 
 export const CommentContent = styled('div', {
@@ -46,19 +50,19 @@ export const CommentContent = styled('div', {
     textAlign: 'start',
     padding: '0 $4',
     paddingBottom: '$5',
-    color: '$base700',
+    color: '$text800',
   },
+
   variants: {
     isPreview: {
       false: {
         padding: '$4',
 
-        background: '$base900',
+        background: '$gray500',
         borderRadius: '$md',
 
         span: {
           padding: 0,
-          color: '$base500',
           borderBottom: '0.5px solid $gray100',
         },
 
@@ -67,13 +71,15 @@ export const CommentContent = styled('div', {
           textAlign: 'justify',
           padding: '$2',
           borderRadius: '$xs',
-          color: '$base300',
+          color: '$text800',
           lineHeight: '$short',
-          boxShadow: '$default',
         },
       },
       true: {},
     },
+  },
+  defaultVariants: {
+    isPreview: false,
   },
 })
 

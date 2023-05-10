@@ -1,4 +1,3 @@
-import { IUpdateSceneRequest } from '@api/booksRequests/types/IUpdateSceneRequest'
 import { ICapitule, IScene } from '@api/responsesTypes/IBooksResponse'
 import { Textarea } from '@components/usefull/Textarea'
 import { Avatares } from '@components/usefull/Avatares'
@@ -6,7 +5,6 @@ import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
 import {
@@ -15,17 +13,18 @@ import {
   UserCirclePlus,
   X,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { InputContainer } from '../../styles'
 import { EditSceneContainer, AvataresContainer, CloseButton } from './styles'
 import { Checkbox } from '@components/usefull/Checkbox'
+import { useCapitule } from '@hooks/useCapitule'
+import { IUpdateScene } from '@hooks/useCapitule/types/IUpdateScene'
 
 interface IEditSceneProps {
   capitule: ICapitule
   scene: IScene
-  bookId: string
   projectId: string
   onClose: () => void
 }
@@ -55,12 +54,13 @@ const editSceneSchema = z.object({
   persons: z
     .array(z.string().min(6).max(100))
     .min(1, { message: 'Você precisa selecionar pelo menos um personagem!' }),
-  writtenWords: z
-    .string()
-    .regex(/^([0-9]+)$/, {
-      message: 'Coloque apenas números na idade do personagem.',
+  writtenWords: z.coerce
+    .number({
+      invalid_type_error: 'Coloque apenas números na idade do personagem.',
     })
-    .max(10, { message: 'O valor é muito grande. Sugestão: Crie outras cenas' })
+    .max(50000, {
+      message: 'O valor é muito grande. Sugestão: Crie outras cenas',
+    })
     .optional(),
   complete: z.boolean(),
 })
@@ -69,14 +69,11 @@ type editSceneBodyData = z.infer<typeof editSceneSchema>
 
 export function EditScene({
   projectId,
-  bookId,
   capitule,
   scene,
   onClose,
 }: IEditSceneProps) {
   const [formUpdated, setFormUpdated] = useState(false)
-
-  const { updateScene } = useContext(ProjectsContext)
 
   const {
     register,
@@ -87,12 +84,12 @@ export function EditScene({
   } = useForm<editSceneBodyData>({
     resolver: zodResolver(editSceneSchema),
     defaultValues: {
-      act1: scene.structure.act1,
-      act2: scene.structure.act2,
-      act3: scene.structure.act3,
+      act1: scene.structure_act_1,
+      act2: scene.structure_act_2,
+      act3: scene.structure_act_3,
       objective: scene.objective,
-      persons: scene.persons || [],
-      writtenWords: scene.writtenWords || '0',
+      persons: [],
+      writtenWords: scene.written_words || 0,
       complete: scene.complete,
     },
   })
@@ -100,6 +97,7 @@ export function EditScene({
   const complete = watch('complete')
 
   const { personsThisProject, findManyPersons } = useProject(projectId)
+  const { callEvent } = useCapitule(capitule.id)
 
   const selectedPersons = findManyPersons(selectedPersonsIds as string[])
   const unselectedPersons = findManyPersons(selectedPersonsIds as string[], {
@@ -107,12 +105,10 @@ export function EditScene({
   })
 
   async function handleUpdateScene(data: editSceneBodyData) {
-    const updatedScene: IUpdateSceneRequest = {
-      bookId,
-      capituleId: capitule.id,
-      complete: data.complete,
+    const updatedScene: IUpdateScene = {
+      complete: data.complete ?? scene.complete,
       persons: data.persons,
-      sceneId: scene.id,
+      id: scene.id,
       objective: data.objective,
       structure: {
         act1: data.act1,
@@ -122,9 +118,9 @@ export function EditScene({
       writtenWords: data.writtenWords,
     }
 
-    const isUpdated = await updateScene(updatedScene)
+    const { resolved } = await callEvent.updateScene(updatedScene)
 
-    if (isUpdated) {
+    if (resolved) {
       onClose()
     }
   }
@@ -150,9 +146,9 @@ export function EditScene({
     setFormUpdated(true)
 
     if (updatedComplete) {
-      setValue('writtenWords', scene.writtenWords)
+      setValue('writtenWords', scene.written_words)
     } else {
-      setValue('writtenWords', '0')
+      setValue('writtenWords', 0)
     }
   }
 

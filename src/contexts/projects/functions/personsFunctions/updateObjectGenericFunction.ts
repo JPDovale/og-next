@@ -1,23 +1,29 @@
 import { Dispatch } from 'react'
-import { IEditorTo } from '../../../../@types/editores/IEditorTo'
-import { IGenericObject } from '../../../../@types/editores/IGenericObject'
-import { updateObjectGenericRequest } from '../../../../api/personsRequests'
-import { IPersonsResponse } from '../../../../api/responsesTypes/IPersonsResponse'
-import { recognizeObject } from '../../../../services/recognizeObject'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updatePersonAction,
-} from '../../reducer/actionsProjectsReducer'
+import { IEditorTo } from '@@types/editores/IEditorTo'
+import { IGenericObject } from '@@types/editores/IGenericObject'
+import { updateObjectGenericRequest } from '@api/personsRequests'
+import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { recognizeObject } from '@services/recognizeObject'
+import { responseDealings } from '@services/responseDealings'
+import { updatePersonAction } from '@contexts/projects/reducer/actions/persons/updatePersonAction'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { setErrorAction } from '@contexts/projects/reducer/actions/projects/setErrorAction'
 
-export async function updateObjectGenericFunction(
-  generic: IGenericObject,
-  personId: string,
-  genericId: string,
-  to: IEditorTo,
-  dispatch: Dispatch<any>,
-): Promise<boolean> {
+interface IUpdateObjectGenericFunction {
+  generic: IGenericObject
+  personId: string
+  genericId: string
+  to: IEditorTo
+  dispatch: Dispatch<any>
+}
+
+export async function updateObjectGenericFunction({
+  generic,
+  personId,
+  genericId,
+  to,
+  dispatch,
+}: IUpdateObjectGenericFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const objectToSend = recognizeObject(to, personId, '', generic, '', genericId)
@@ -37,39 +43,24 @@ export async function updateObjectGenericFunction(
 
   const response = await updateObjectGenericRequest(objectToSend)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updateObjectGenericFunction(
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updateObjectGenericFunction({
         generic,
         personId,
         genericId,
         to,
         dispatch,
-      )
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return false
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
       }),
-    )
-    dispatch(setLoadingAction(false))
+  })
 
-    return false
-  }
+  if (handledAnswer === false) return false
 
   const person = response as IPersonsResponse
-  dispatch(updatePersonAction(person))
-  dispatch(setLoadingAction(false))
+  dispatch(updatePersonAction({ person }))
 
   return true
 }

@@ -40,7 +40,7 @@ export const Header = styled(Text, {
     color: '$base800',
     cursor: 'pointer',
     animation: `${animation} ease-in-out 1.5s infinite`,
-    transition: 'all ease-in-out 250ms',
+    transition: 'ease-in-out 250ms',
 
     '&:focus': {
       color: '$purple200',

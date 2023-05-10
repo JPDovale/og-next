@@ -1,25 +1,30 @@
 import { styled } from '@styles/index'
+
 export const HeaderContainer = styled('header', {
   position: 'fixed',
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'end',
   alignItems: 'center',
   zIndex: 1,
 
+  width: '100%',
   top: 0,
   left: 0,
   right: 0,
-  padding: '$1 $6',
+  padding: '$4',
 
-  background: '$gray800',
-  boxShadow: '0 2px 10px black',
+  backgroundColor: '$gray700',
+  boxShadow: '0 2px 8px black',
 })
 
 export const ImageContent = styled('div', {
+  position: 'absolute',
+  left: 0,
+
   img: {
     width: '100%',
     height: '100%',
-    maxHeight: 70,
+    maxHeight: '70px',
   },
 })
 

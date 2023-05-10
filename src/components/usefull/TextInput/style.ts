@@ -9,7 +9,7 @@ export const TextInputContainer = styled('div', {
   background: '$gray700',
   borderRadius: '$sm',
   boxSizing: 'border-box',
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
 
   svg: {
     width: '$4',

@@ -3,7 +3,7 @@ import { styled } from '@styles/index'
 export const NewBoxForm = styled('form', {
   display: 'flex',
   flexDirection: 'column',
-  gap: '$8',
+  gap: '$4',
 
   padding: '$4',
   height: 'auto',
@@ -12,6 +12,22 @@ export const NewBoxForm = styled('form', {
   borderRadius: '0 0 $sm $sm',
   background: '$gray900',
   transition: 'ease-in-out 250ms',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+        color: '$white',
+      },
+      false: {
+        background: '$base400',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 
   '@media screen and (max-width: 768px)': {
     maxHeight: '2090px',
@@ -40,5 +56,22 @@ export const TagCard = styled('div', {
     lineHeight: 0,
 
     cursor: 'pointer',
+  },
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+        color: '$white',
+      },
+      false: {
+        fontWeight: '$bold',
+        background: '$base600',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 })

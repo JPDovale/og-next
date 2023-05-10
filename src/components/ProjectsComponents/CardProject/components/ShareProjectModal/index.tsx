@@ -4,7 +4,6 @@ import { useProject } from '@hooks/useProject'
 import { Text } from '@components/usefull/Text'
 import { FormEvent, useContext, useState } from 'react'
 import { Toast } from '@components/usefull/Toast'
-import { ProjectsContext } from '@contexts/projects'
 import {
   TextInputIcon,
   TextInputInput,
@@ -13,6 +12,9 @@ import {
 import { InputRadio } from '@components/usefull/InputRadio'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ModalContent } from '@components/usefull/ModalContent'
+import { InterfaceContext } from '@contexts/interface'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 interface IShareProjectModalProps {
   projectId: string
@@ -23,19 +25,23 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
   const [shareEmail, setShareEmail] = useState('')
   const [errorIn, setErrorIn] = useState('')
   const [sharePermission, setSharePermission] = useState('edit')
+  const [error, setError] = useState<IError | null>(null)
 
-  const { error, setError, shareProject, loading } = useContext(ProjectsContext)
+  const { theme } = useContext(InterfaceContext)
 
-  const { projectName, project } = useProject(projectId)
+  const isDarkMode = theme === 'dark'
+
+  const { projectName, usersInProject, loadingProject, callEvent } =
+    useProject(projectId)
 
   async function handleShareProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (error) setError(undefined)
+    if (error) setError(null)
     if (!shareEmail) {
       return setErrorIn('email')
     }
 
-    const userInExisteProject = project.users.find(
+    const userInExisteProject = usersInProject.find(
       (user) => user.email === shareEmail,
     )
 
@@ -46,12 +52,11 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
     const shareProjectWithUserInfos = {
       email: shareEmail,
       permission: sharePermission,
-      projectId: project.id as string,
     }
 
-    const shared = await shareProject(shareProjectWithUserInfos)
+    const { resolved } = await callEvent.share(shareProjectWithUserInfos)
 
-    if (shared) {
+    if (resolved) {
       setSuccessToastOpen(true)
       setShareEmail('')
     }
@@ -74,32 +79,39 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
         message="Parece que você já adicionou esse usuário ao projeto..."
       />
 
-      <Toast
-        open={!!error}
-        setOpen={() => setError(undefined)}
-        title={error?.title!}
-        message={error?.message!}
-      />
+      <ToastError error={error} setError={setError} />
 
-      <ShareForm onSubmit={handleShareProject}>
-        <Text size="xs">
+      <ShareForm onSubmit={handleShareProject} darkMode={isDarkMode}>
+        <Text
+          weight="bold"
+          family="body"
+          css={{ color: isDarkMode ? '$white' : '' }}
+        >
           Informe o email do usuário que quer compartilhar o projeto
         </Text>
 
-        <TextInputRoot variant={errorIn === 'email' ? 'denied' : 'default'}>
+        <TextInputRoot
+          variant={errorIn === 'email' ? 'denied' : 'default'}
+          css={{ background: !isDarkMode ? '$base600' : '' }}
+        >
           <TextInputIcon>
             <Envelope />
           </TextInputIcon>
 
           <TextInputInput
-            placeholder="jonas@ognare.com"
+            placeholder="jonas@Magiscrita.com"
             type="email"
             onChange={(e) => setShareEmail(e.target.value)}
             value={shareEmail}
+            disabled={loadingProject}
           />
         </TextInputRoot>
 
-        <Text size="xs">
+        <Text
+          weight="bold"
+          family="body"
+          css={{ color: isDarkMode ? '$white' : '' }}
+        >
           Esse usuário poderá{' '}
           {sharePermission === 'edit'
             ? 'editar '
@@ -117,7 +129,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
           ]}
           setState={setSharePermission}
           state={sharePermission}
-          withColorInBackground
+          withColorInBackground={isDarkMode}
         />
 
         <ButtonRoot
@@ -126,7 +138,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
           align="center"
           size="xs"
           variant="noShadow"
-          disabled={loading}
+          disabled={loadingProject}
         >
           <ButtonIcon>
             <Share />

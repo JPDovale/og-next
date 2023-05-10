@@ -1,11 +1,8 @@
+import { deleteProjectAction } from '@contexts/projects/reducer/actions/projects/deleteProjectAction'
 import { Dispatch } from 'react'
-import { quitProjectRequest } from '../../../../api/projectsRequests'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  removeProjectAction,
-  setErrorAction,
-  setLoadingAction,
-} from '../../reducer/actionsProjectsReducer'
+import { quitProjectRequest } from '@api/projectsRequests'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
+import { responseDealings } from '@services/responseDealings'
 
 interface IQuitProjectFunction {
   projectId: string
@@ -15,35 +12,21 @@ interface IQuitProjectFunction {
 export async function quitProjectFunction({
   projectId,
   dispatch,
-}: IQuitProjectFunction): Promise<void> {
+}: IQuitProjectFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await quitProjectRequest({ projectId })
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () => quitProjectFunction({ dispatch, projectId }),
+  })
 
-    if (isRefreshed) {
-      return quitProjectFunction({ projectId, dispatch })
-    } else {
-      dispatch(setLoadingAction(false))
+  if (handledAnswer === false) return false
 
-      return
-    }
-  }
+  dispatch(deleteProjectAction({ projectId }))
 
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle,
-        message: response.errorMessage,
-      }),
-    )
-    return
-  }
-
-  dispatch(removeProjectAction(projectId))
-  dispatch(setLoadingAction(false))
+  return true
 }

@@ -15,7 +15,7 @@ export const CheckboxContainer = styled(Checkbox.Root, {
   background: '$gray700',
   cursor: 'pointer',
   borderRadius: '$xs',
-  transition: 'all, 500ms',
+  transition: 'ease-in-out 250ms',
   boxSizing: 'border-box',
   overflow: 'hidden',
 

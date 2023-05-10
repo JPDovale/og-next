@@ -1,46 +1,43 @@
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { updateProjectAction } from '@contexts/projects/reducer/actions/projects/updateProjectAction'
+import { responseDealings } from '@services/responseDealings'
 import { Dispatch } from 'react'
-import { IUpdatePlotDTO } from '../../../../api/dtos/IUpdatePlotDTO'
-import { updatePlotRequest } from '../../../../api/projectsRequests'
-import { refreshSessionFunction } from '../../../user/functions/refreshSessionFunction'
-import {
-  setErrorAction,
-  setLoadingAction,
-  updateProjectAction,
-} from '../../reducer/actionsProjectsReducer'
+import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
+import { updatePlotRequest } from '@api/projectsRequests'
+import { setLoadingAction } from '@contexts/projects/reducer/actions/projects/setLoadingAction'
 
-export async function updatePlotFunction(
-  plot: IUpdatePlotDTO,
-  projectId: string,
-  dispatch: Dispatch<any>,
-): Promise<void> {
+interface IUpdatePlotFunction {
+  plot: IUpdatePlotDTO
+  projectId: string
+  dispatch: Dispatch<any>
+}
+
+export async function updatePlotFunction({
+  dispatch,
+  projectId,
+  plot,
+}: IUpdatePlotFunction): Promise<boolean> {
   dispatch(setLoadingAction(true))
 
   const response = await updatePlotRequest(projectId, plot)
 
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
-
-    if (isRefreshed) {
-      return updatePlotFunction(plot, projectId, dispatch)
-    } else {
-      dispatch(setLoadingAction(false))
-
-      return
-    }
-  }
-
-  if (response.errorMessage) {
-    dispatch(setLoadingAction(false))
-
-    dispatch(
-      setErrorAction({
-        title: response.errorTitle as string,
-        message: response.errorMessage,
+  const handledAnswer = await responseDealings({
+    response,
+    dispatch,
+    into: 'projects',
+    callback: () =>
+      updatePlotFunction({
+        dispatch,
+        projectId,
+        plot,
       }),
-    )
-    return
-  }
+  })
 
-  dispatch(setLoadingAction(false))
-  dispatch(updateProjectAction(response))
+  if (handledAnswer === false) return false
+
+  const project = response as IProjectResponse
+
+  dispatch(updateProjectAction({ project }))
+
+  return true
 }

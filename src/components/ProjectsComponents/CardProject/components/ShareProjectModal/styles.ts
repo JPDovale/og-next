@@ -3,8 +3,8 @@ import { styled } from '@styles/index'
 export const ShareForm = styled('form', {
   display: 'flex',
   flexDirection: 'column',
-  padding: '$8',
-  gap: '$5',
+  padding: '$4',
+  gap: '$4',
 
   background: '$gray900',
   borderRadius: '0 0 $md $md',
@@ -13,5 +13,20 @@ export const ShareForm = styled('form', {
 
   button: {
     alignSelf: 'center',
+  },
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+      },
+      false: {
+        background: '$base400',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 })

@@ -5,6 +5,19 @@ export const NewBookContainer = styled('div', {
 
   background: '$gray900',
   borderRadius: '$md',
+
+  variants: {
+    darkMode: {
+      true: {},
+      false: {
+        background: '$base400',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const NewBookForm = styled('form', {

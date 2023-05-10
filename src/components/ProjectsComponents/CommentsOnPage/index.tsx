@@ -1,12 +1,11 @@
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
-import { IComment } from '@api/responsesTypes/IProjcetResponse'
+import { IComment } from '@api/responsesTypes/IProjectResponse'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { Textarea } from '@components/usefull/Textarea'
 import { Chats, PaperPlaneTilt } from 'phosphor-react'
 
-import { FormEvent, useState, useContext } from 'react'
+import { FormEvent, useState } from 'react'
 import { Comment } from '../Comment'
 import {
   Comments,
@@ -17,30 +16,26 @@ import {
 
 interface ICommentsOnPageProps {
   comments?: IComment[]
-  permission?: 'edit' | 'view' | 'comment' | undefined
-  projectCreatedPerUser: string
-  to: string
-  projectId: string
-  onNewComment?: (newComment: ICreateCommentDTO) => void
-  personId: string
+  permission?: 'edit' | 'view' | 'comment'
+  onNewComment: (newComment: ICreateCommentDTO) => Promise<void>
+  onNewCommentTo?: string
   isNew?: boolean
   editorTo?: string
+  onResponseIntersect?: (
+    newResponse: ICreateCommentDTO,
+    commentId: string,
+  ) => Promise<void>
 }
 
 export function CommentsOnPage({
   comments,
   permission,
-  projectCreatedPerUser,
-  to,
-  projectId,
-  personId,
   isNew = false,
   editorTo = 'objeto',
-
   onNewComment,
+  onNewCommentTo,
+  onResponseIntersect,
 }: ICommentsOnPageProps) {
-  const { commentInPlot } = useContext(ProjectsContext)
-
   const [newComment, setNewComment] = useState('')
 
   async function handleNewComment(e: FormEvent<HTMLFormElement>) {
@@ -49,30 +44,25 @@ export function CommentsOnPage({
     if (!newComment) return
 
     const newCommentObj = {
-      to,
+      to: onNewCommentTo,
       content: newComment,
     }
 
-    if (onNewComment) {
-      setNewComment('')
-      return onNewComment(newCommentObj)
-    }
-
-    await commentInPlot(newCommentObj, projectId)
     setNewComment('')
+    return await onNewComment(newCommentObj)
   }
 
   return (
     <CommentsOnPageContainer>
       <CommentsHeader>
-        <Text as="p">
+        <Text as="p" weight="bold">
           <Chats size={24} />
           Comentários
         </Text>
       </CommentsHeader>
       {permission !== 'view' && (
         <NewCommentForm onSubmit={handleNewComment}>
-          <Text size="xxs">
+          <Text size="xxs" weight="bold">
             {isNew
               ? `Você precisa criar o ${editorTo} antes de comentar algo`
               : 'Faça um novo comentário:'}
@@ -97,13 +87,10 @@ export function CommentsOnPage({
         {comments &&
           comments.map((comment) => (
             <Comment
-              projectId={projectId}
-              projectCreatedPerUser={projectCreatedPerUser}
               permission={permission}
               key={comment.id}
               comment={comment}
-              asPerson={!!onNewComment}
-              personId={personId}
+              onResponseIntersect={onResponseIntersect}
             />
           ))}
       </Comments>

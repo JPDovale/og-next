@@ -7,6 +7,7 @@ export const TextareaContainer = styled('textarea', {
   gap: '$3',
 
   padding: '$4',
+  width: '100%',
   height: '10rem',
 
   fontFamily: '$bodyText',
@@ -16,11 +17,10 @@ export const TextareaContainer = styled('textarea', {
   background: '$gray700',
   borderRadius: '$sm',
   boxSizing: 'border-box',
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
   border: 'none',
   outline: 'none',
-  color: '$base100',
-  resize: 'vertical',
+  color: '$text800',
 
   '&:focus': {
     boxShadow: '$inFocus',
@@ -50,10 +50,19 @@ export const TextareaContainer = styled('textarea', {
         boxShadow: 'unset',
       },
     },
+    resizable: {
+      true: {
+        resize: 'vertical',
+      },
+      false: {
+        resize: 'none',
+      },
+    },
   },
 
   defaultVariants: {
     variant: 'default',
+    resizable: 'false',
   },
 })
 
@@ -61,11 +70,12 @@ export interface ITextAreaProps
   extends ComponentProps<typeof TextareaContainer>,
     TextareaHTMLAttributes<HTMLTextAreaElement> {
   variant?: 'default' | 'accepted' | 'denied' | 'attention' | 'noShadow'
+  resizable?: boolean
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, ITextAreaProps>(
-  (props, ref) => {
-    return <TextareaContainer {...props} ref={ref} />
+  ({ resizable = false, ...props }, ref) => {
+    return <TextareaContainer {...props} resizable={resizable} ref={ref} />
   },
 )
 

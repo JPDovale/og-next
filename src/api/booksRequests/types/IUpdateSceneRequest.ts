@@ -1,14 +1,16 @@
 export interface IUpdateSceneRequest {
   bookId: string
   capituleId: string
-  sceneId: string
-  objective?: string
-  writtenWords?: string
-  structure?: {
-    act1?: string
-    act2?: string
-    act3?: string
+  scene: {
+    id: string
+    objective?: string
+    writtenWords?: number
+    structure?: {
+      act1?: string
+      act2?: string
+      act3?: string
+    }
+    complete: boolean
+    persons: string[]
   }
-  complete: boolean
-  persons: string[]
 }

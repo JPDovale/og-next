@@ -1,73 +1,106 @@
+import { IError } from '@@types/errors/IError'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
-import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Editor } from '@components/Editor'
+import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 import { Toast } from '@components/usefull/Toast'
 import { ToastError } from '@components/usefull/ToastError'
-import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
 export default function DetailsPage() {
-  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [details, setDetails] = useState('')
-  const [message, setMessage] = useState('')
-
-  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id } = router.query
   usePreventBack(`/project/${id}/plot`)
 
-  const { project, projectName, permission } = useProject(id as string)
-  const commentsDetails = project?.plot.comments?.filter(
-    (comment) => comment.to === 'details',
+  const { project, projectName, permission, loadingProject, callEvent } =
+    useProject(id as string)
+
+  const commentsDetails = project?.comments?.filter(
+    (comment) => comment.to_unknown === 'details',
   )
 
   async function handleUpdateDetails() {
-    setMessage('')
-    if (details === project?.plot.details) return
-    const updatedPlotDetails: IUpdatePlotDTO = {
-      details,
+    setSuccessMessage('')
+
+    if (details === project?.details) return
+
+    const updatedPlotOnePhrase: IUpdatePlotDTO = {
+      details: details || null,
     }
 
-    await updatePlot(updatedPlotDetails, project.id as string)
-    setMessage('Detalhes atualizado com sucesso.')
-    setSuccessToastOpen(true)
+    const { resolved, error } = await callEvent.updatePlot(updatedPlotOnePhrase)
+
+    if (resolved) {
+      setSuccessMessage('Detalhes atualizados com sucesso.')
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleNewComment(newComment: ICreateCommentDTO) {
+    const { error, resolved } = await callEvent.commentInPlot(newComment)
+
+    if (error) {
+      setError(error)
+    }
+
+    if (resolved) {
+      setSuccessMessage('Comentário criado com sucesso')
+    }
   }
 
   return (
     <>
-      <NextSeo title={`${projectName}-Detalhes | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Detalhes | Magiscrita`} noindex />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
         paths={['Plot', 'Detalhes']}
-        loading={loading}
-        inError={!loading && !project}
+        loading={loadingProject}
+        inError={!loadingProject && !project}
         isScrolling
       >
         <Toast
           title="Detalhes atualizados"
-          message={message}
-          open={successToastOpen}
-          setOpen={setSuccessToastOpen}
-          type="success"
+          message={successMessage}
+          open={!!successMessage}
+          setOpen={() => setSuccessMessage('')}
         />
 
         <ToastError error={error} setError={setError} />
 
-        <EditorAndComments
-          updateValue={handleUpdateDetails}
-          preValue={project?.plot.details}
+        <Editor
+          handleUpdate={handleUpdateDetails}
           permission={permission}
-          comments={commentsDetails}
-          projectCreatedPerUser={project?.createdPerUser}
-          projectId={project?.id as string}
+          preValue={project?.details ?? ''}
+          projectId={project!.id}
           setValue={setDetails}
           to="details"
+          description={
+            <>
+              Inclua detalhes importantes da narrativa que não couberam nas
+              outras opções até então.
+            </>
+          }
+        />
+
+        <CommentsOnPage
+          permission={permission}
+          comments={commentsDetails}
+          isNew={!project?.details}
+          onNewComment={handleNewComment}
+          onNewCommentTo="details"
         />
       </ProjectPageLayout>
     </>
