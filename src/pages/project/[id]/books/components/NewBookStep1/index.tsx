@@ -7,12 +7,19 @@ import { newBookFormData } from '../NewBookModal'
 interface INewBookStep1Props {
   register: UseFormRegister<newBookFormData>
   errors: Partial<FieldErrorsImpl<newBookFormData>>
+  isDarkMode: boolean
 }
 
-export function NewBookStep1({ register, errors }: INewBookStep1Props) {
+export function NewBookStep1({
+  register,
+  errors,
+  isDarkMode,
+}: INewBookStep1Props) {
   return (
     <ContainerGrid padding={0}>
-      <Text size="sm">Vamos começar definindo o nome do seu livro...</Text>
+      <Text size="sm" weight="bold">
+        Vamos começar definindo o nome do seu livro...
+      </Text>
 
       <ContainerGrid padding={0}>
         <Text as="label">
@@ -28,8 +35,15 @@ export function NewBookStep1({ register, errors }: INewBookStep1Props) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
-            <TextInputInput {...register('title')} />
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+            variant={!isDarkMode ? 'default' : 'noShadow'}
+            size="sm"
+          >
+            <TextInputInput
+              placeholder="Titulo exemplo"
+              {...register('title')}
+            />
           </TextInputRoot>
         </Text>
 
@@ -46,8 +60,15 @@ export function NewBookStep1({ register, errors }: INewBookStep1Props) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
-            <TextInputInput {...register('subtitle')} />
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+            variant={!isDarkMode ? 'default' : 'noShadow'}
+            size="sm"
+          >
+            <TextInputInput
+              placeholder="Subtitulo exemplo"
+              {...register('subtitle')}
+            />
           </TextInputRoot>
         </Text>
       </ContainerGrid>

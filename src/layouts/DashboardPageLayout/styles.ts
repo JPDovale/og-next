@@ -4,25 +4,28 @@ export const DashboardPageLayoutContainer = styled('main', {
   display: 'flex',
   position: 'relative',
   flexDirection: 'column',
+  paddingBottom: '$40',
 
   height: '100vh',
 
   background: '$gray800',
-  borderTopLeftRadius: '48px',
   boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.5)',
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
   overflowY: 'auto',
 
   variants: {
     NavIsOpen: {
       true: {
-        width: '74%',
+        width: '82%',
         '@media screen and (max-width: 768px)': {
           width: '100%',
         },
       },
       false: {
-        width: '100%',
+        width: '95%',
+        '@media screen and (max-width: 768px)': {
+          width: '100%',
+        },
       },
     },
   },

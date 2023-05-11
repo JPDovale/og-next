@@ -2,19 +2,17 @@ import { NextSeo } from 'next-seo'
 import { useContext } from 'react'
 import Image from 'next/image'
 
-import Back from '../../../../assets/back.svg'
-import LogoToDown from '../../../../assets/logos/logoToDown.svg'
-import Logo from '../../../../assets/logos/logo.svg'
+import LogoToDown from '../../../../assets/logos/logoOG.png'
 import {
-  BackgroundForgotPassword,
   InputContainer,
   InputHeader,
   ForgotPasswordFormContainer,
   ForgotPasswordPageContainer,
   Links,
+  CardForgotPassword,
 } from './styles'
 import { Text } from '@components/usefull/Text'
-import { LockKey } from 'phosphor-react'
+import { Envelope } from 'phosphor-react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -44,8 +42,8 @@ export default function ForgotPasswordPage() {
     })
 
   async function handleForgotPassword(data: ForgotPasswordFormData) {
-    setSuccess(undefined)
-    setError(undefined)
+    setSuccess(null)
+    setError(null)
 
     await sendMailForgotPassword(data.email)
 
@@ -54,17 +52,55 @@ export default function ForgotPasswordPage() {
 
   return (
     <>
-      <NextSeo title="Recuperação de senha | Ognare" />
+      <NextSeo title="Recuperação de senha | Magiscrita" />
 
       <ForgotPasswordPageContainer>
-        <Image className="logo" src={LogoToDown} alt="" />
-        <Image className="logo2" src={Logo} alt="" />
-        <BackgroundForgotPassword src={Back} alt="" priority />
+        <CardForgotPassword>
+          <Image className="logo" src={LogoToDown} alt="" />
+
+          <Text size="3xl" family="headingText" className="logo">
+            MagiScrita
+          </Text>
+
+          <Text size="lg" height="shorter" family="body" weight="bold">
+            Esqueceu sua senha do MagiScrita? Não se preocupe, nós podemos
+            ajudar! A recuperação de senha é rápida e fácil.
+            <br />
+            <br /> Basta fornecer o endereço de e-mail que você usou para criar
+            sua conta. Em seguida, enviaremos um e-mail com um link para
+            redefinir sua senha.
+            <br />
+            <br /> Certifique-se de verificar sua pasta de spam ou lixo
+            eletrônico caso não encontre o e-mail de recuperação de senha em sua
+            caixa de entrada. <br />
+            <br />
+            Ao clicar no link, você será redirecionado para uma página em que
+            poderá criar uma nova senha segura. Lembre-se de criar uma senha
+            forte, com pelo menos oito caracteres, incluindo letras, números e
+            símbolos, para garantir a segurança de sua conta. <br />
+            <br />
+            Se tiver dificuldades para recuperar sua senha, entre em contato com
+            nosso suporte ao cliente. Teremos prazer em ajudá-lo a recuperar o
+            acesso à sua conta e voltar a escrever suas histórias no MagiScrita
+            o mais rápido possível.
+            <br />
+            <br />
+            Esperamos ter ajudado a recuperar sua senha e que você volte a usar
+            nossa plataforma em breve. Aproveite todos os recursos e
+            oportunidades que oferecemos para aprimorar suas habilidades de
+            escrita e compartilhar suas histórias com a comunidade.
+          </Text>
+        </CardForgotPassword>
 
         <ForgotPasswordFormContainer
           onSubmit={handleSubmit(handleForgotPassword)}
         >
-          <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
+          <Text
+            size="2xl"
+            css={{ textTransform: 'uppercase' }}
+            as="span"
+            family="headingText"
+          >
             Recuperação de senha
           </Text>
 
@@ -72,7 +108,7 @@ export default function ForgotPasswordPage() {
           {success && <ResponseInfoApi success={success} />}
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               Email
               <Text size="sm" as="span" family="body">
                 {formState.errors?.email?.message}
@@ -80,10 +116,11 @@ export default function ForgotPasswordPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={formState.errors.email?.message ? 'denied' : 'default'}
             >
               <TextInputIcon>
-                <LockKey />
+                <Envelope />
               </TextInputIcon>
 
               <TextInputInput
@@ -100,29 +137,15 @@ export default function ForgotPasswordPage() {
           >
             <ButtonLabel>Enviar email de recuperação</ButtonLabel>
           </ButtonRoot>
-          <Text
-            family="body"
-            spacing="minimus"
-            size="sm"
-            weight="regular"
-            css={{ color: '$base700' }}
-          >
-            Um e-mail de recuperação de senha será enviada para você com as
-            instruções para alterar a sua senha.
-            <br />
-            <br />
-            Caso você não tenha fornecido um e-mail valido durante a criação da
-            sua conta, infelizmente não poderemos verificar sua conta.
-          </Text>
 
           <Links>
             <Link href="/login">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Voltar para o login
               </Text>
             </Link>
             <Link href="/register">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Ainda não teno uma conta
               </Text>
             </Link>

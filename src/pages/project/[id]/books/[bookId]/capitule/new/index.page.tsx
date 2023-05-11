@@ -1,8 +1,6 @@
 import { ButtonLabel } from '@components/usefull/Button'
-import { DefaultError } from '@components/usefull/DefaultError'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -11,7 +9,7 @@ import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Textarea } from '@components/usefull/Textarea'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { useContext } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import {
@@ -22,6 +20,9 @@ import {
   AddButton,
 } from './styles'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { useBook } from '@hooks/useBook'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 
 const newCapituleSchema = z.object({
   name: z
@@ -51,8 +52,7 @@ const newCapituleSchema = z.object({
 type newCapituleFormData = z.infer<typeof newCapituleSchema>
 
 export default function NewCapitule() {
-  const { loading, error, setError, createCapitule } =
-    useContext(ProjectsContext)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id, bookId } = router.query
@@ -74,12 +74,11 @@ export default function NewCapitule() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const { project, useBook } = useProject(id as string)
-  const { book, bookName } = useBook(bookId as string)
+  const { projectName } = useProject(id as string)
+  const { book, bookName, loadingBook, callEvent } = useBook(bookId as string)
 
   async function handleCreateCapitule(data: newCapituleFormData) {
     const newCapitule = {
-      bookId: bookId as string,
       name: data.name,
       objective: data.objective,
       structure: {
@@ -89,35 +88,30 @@ export default function NewCapitule() {
       },
     }
 
-    const isCreated = await createCapitule(newCapitule)
+    const { resolved, error } = await callEvent.createCapitule(newCapitule)
 
-    if (isCreated) {
+    if (resolved) {
       router.push(`/project/${id}/books/${bookId}`)
+    }
+
+    if (error) {
+      setError(error)
     }
   }
 
   return (
     <>
-      <NextSeo
-        title={`${bookName + ' Novo capítulo' || 'Carregando...'} | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${bookName + ' Novo capítulo'} | Magiscrita`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros', bookName, 'Capítulos', 'Novo']}
-        loading={loading}
-        inError={!loading && !book}
+        loading={loadingBook}
+        inError={!loadingBook && !book}
         isFullScreen
       >
-        {error && (
-          <DefaultError
-            close={() => setError(undefined)}
-            title={error.title}
-            message={error.message}
-          />
-        )}
+        <ToastError error={error} setError={setError} />
 
         <NewCapituleContainer>
           <NewCapituleForm onSubmit={handleSubmit(handleCreateCapitule)}>

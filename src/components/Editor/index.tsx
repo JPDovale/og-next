@@ -5,16 +5,18 @@ import { Text } from '@components/usefull/Text'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { reverbKeys } from '@services/reverbKeys'
 import { FileArrowUp, FileX, Textbox } from 'phosphor-react'
+import { ReactNode } from 'react'
 import { EditorHeader } from './styles'
 
 interface IEditorProps {
   superFix?: string
-  projectId: string
+  projectId?: string
   to: string
   preValue: string
   setValue: (newState: string) => void
   permission: 'edit' | 'comment' | 'view' | undefined
   handleUpdate: () => void
+  description?: ReactNode
 }
 
 export function Editor({
@@ -25,6 +27,7 @@ export function Editor({
   permission,
   handleUpdate,
   superFix,
+  description,
 }: IEditorProps) {
   const { GoBackButton } = usePreventBack(`/project/${projectId}/plot`)
 
@@ -36,6 +39,12 @@ export function Editor({
         <Text as="span" size="xl">
           <Textbox size={24} /> Editar {reverbKeys[to]} {superFix}.
         </Text>
+
+        {description && (
+          <Text family="body" size="lg">
+            {description}
+          </Text>
+        )}
       </EditorHeader>
 
       <TextEditor

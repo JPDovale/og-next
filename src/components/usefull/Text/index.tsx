@@ -4,7 +4,6 @@ import React, { ComponentProps, ElementType, ReactNode } from 'react'
 const TextContainer = styled('p', {
   lineHeight: '$base',
   margin: 0,
-  color: '$base100',
 
   variants: {
     size: {
@@ -45,6 +44,14 @@ const TextContainer = styled('p', {
       medium: { fontWeight: '$medium' },
       bold: { fontWeight: '$bold' },
     },
+    colorInvert: {
+      true: {
+        color: '$text100',
+      },
+      false: {
+        color: '$text800',
+      },
+    },
   },
 
   defaultVariants: {
@@ -53,6 +60,7 @@ const TextContainer = styled('p', {
     spacing: 'default',
     height: 'base',
     weight: 'regular',
+    colorInvert: false,
   },
 })
 
@@ -77,6 +85,7 @@ export interface ITextProps extends ComponentProps<typeof TextContainer> {
   height?: 'shorter' | 'short' | 'base' | 'tall'
   weight?: 'regular' | 'medium' | 'bold'
   children?: ReactNode
+  colorInvert?: boolean
 }
 
 export function Text(props: ITextProps) {

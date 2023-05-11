@@ -1,16 +1,13 @@
-import { ICreateSceneRequest } from '@api/booksRequests/types/ICreateSceneRequest'
 import { ICapitule } from '@api/responsesTypes/IBooksResponse'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
 import { Textarea } from '@components/usefull/Textarea'
 import { FilePlus, UserCircleMinus, UserCirclePlus, X } from 'phosphor-react'
-import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -21,6 +18,8 @@ import {
   AvataresContainerHeader,
   CloseButton,
 } from './styles'
+import { useCapitule } from '@hooks/useCapitule'
+import { ICreateScene } from '@hooks/useCapitule/types/ICreateScene'
 
 interface IAddSceneProps {
   capitule: ICapitule
@@ -61,8 +60,6 @@ export function AddScene({
   capitule,
   onClose,
 }: IAddSceneProps) {
-  const { createScene } = useContext(ProjectsContext)
-
   const {
     register,
     handleSubmit,
@@ -75,6 +72,7 @@ export function AddScene({
   const selectedPersonsIds = watch('persons')
 
   const { personsThisProject, findManyPersons } = useProject(projectId)
+  const { callEvent } = useCapitule(capitule.id)
 
   const selectedPersons = findManyPersons(selectedPersonsIds)
   const unselectedPersons = findManyPersons(selectedPersonsIds, {
@@ -82,11 +80,9 @@ export function AddScene({
   })
 
   async function handleCreateScene(data: createSceneBodyData) {
-    const newScene: ICreateSceneRequest = {
-      bookId,
-      capituleId: capitule.id!,
+    const newScene: ICreateScene = {
       objective: data.objective,
-      persons: data.persons,
+      persons: data.persons.map((person) => ({ id: person })),
       structure: {
         act1: data.act1,
         act2: data.act2,
@@ -94,8 +90,8 @@ export function AddScene({
       },
     }
 
-    const isCreated = await createScene(newScene)
-    if (isCreated) {
+    const { resolved } = await callEvent.createScene(newScene)
+    if (resolved) {
       onClose()
     }
   }

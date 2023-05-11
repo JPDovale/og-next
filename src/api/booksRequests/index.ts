@@ -15,36 +15,49 @@ import { IUpdateFrontCoverRequest } from './types/IUpdateFrontCoverRequest'
 import { IUpdateSceneRequest } from './types/IUpdateSceneRequest'
 
 // POST
-export async function createBookRequest(bookDataRequest: ICreateBookRequest) {
+export async function createBookRequest({
+  book,
+  projectId,
+}: ICreateBookRequest) {
   try {
-    const response = await api.post('/books', bookDataRequest)
+    const response = await api.post(`/books/${projectId}`, book)
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function createCapituleRequest(capitule: ICreateCapituleRequest) {
+export async function createCapituleRequest({
+  bookId,
+  capitule,
+}: ICreateCapituleRequest) {
   try {
-    const response = await api.post('/books/capitules', capitule)
+    const response = await api.post(`/books/${bookId}/capitules`, capitule)
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function createSceneRequest(scene: ICreateSceneRequest) {
+export async function createSceneRequest({
+  scene,
+  bookId,
+  capituleId,
+}: ICreateSceneRequest) {
   try {
-    const response = await api.post('/books/capitules/scenes', scene)
+    const response = await api.post(
+      `/books/${bookId}/capitules/${capituleId}/scenes`,
+      scene,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function addGenreRequest(genreRequest: IAddGenreRequest) {
+export async function addGenreRequest({ bookId, genre }: IAddGenreRequest) {
   try {
-    const response = await api.post('/books/genres', genreRequest)
+    const response = await api.post(`/books/${bookId}/genres`, { genre })
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -53,65 +66,104 @@ export async function addGenreRequest(genreRequest: IAddGenreRequest) {
 
 // PUT
 
-export async function updateCapituleRequest(capitule: IUpdateCapituleRequest) {
+export async function updateCapituleRequest({
+  bookId,
+  capitule,
+  capituleId,
+}: IUpdateCapituleRequest) {
   try {
-    const response = await api.put('/books/capitules', capitule)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}`,
+      capitule,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function setSceneToCompleteRequest(
-  body: ISetSceneToCompleteRequest,
-) {
+export async function setSceneToCompleteRequest({
+  bookId,
+  capituleId,
+  completeInfos,
+}: ISetSceneToCompleteRequest) {
   try {
-    const response = await api.put('/books/capitules/scenes/complete', body)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}/scenes/${completeInfos.sceneId}/complete`,
+      completeInfos,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function reorderScenesRequest(body: IReorderScenesRequest) {
+export async function reorderScenesRequest({
+  bookId,
+  capituleId,
+  sequences,
+}: IReorderScenesRequest) {
   try {
-    const response = await api.put('/books/capitules/scenes/reorder', body)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}/scenes/reorder`,
+      sequences,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function reorderCapitulesRequest(body: IReorderCapitulesRequest) {
+export async function reorderCapitulesRequest({
+  bookId,
+  sequenceFrom,
+  sequenceTo,
+}: IReorderCapitulesRequest) {
   try {
-    const response = await api.put('/books/capitules/reorder', body)
+    const response = await api.put(`/books/${bookId}/capitules/reorder`, {
+      sequenceFrom,
+      sequenceTo,
+    })
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function updateSceneRequest(body: IUpdateSceneRequest) {
+export async function updateSceneRequest({
+  bookId,
+  capituleId,
+  scene,
+}: IUpdateSceneRequest) {
   try {
-    const response = await api.put('/books/capitules/scenes', body)
+    const response = await api.put(
+      `/books/${bookId}/capitules/${capituleId}/scenes/${scene.id}`,
+      scene,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function removeGenreRequest(genreRequest: IRemoveGenreRequest) {
+export async function removeGenreRequest({
+  bookId,
+  genreId,
+}: IRemoveGenreRequest) {
   try {
-    const response = await api.put('/books/genres', genreRequest)
+    const response = await api.delete(`/books/${bookId}/genres/${genreId}`)
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function updateBookRequest(bookToUpdate: IUpdateBookRequest) {
+export async function updateBookRequest({
+  bookId,
+  updatedBook,
+}: IUpdateBookRequest) {
   try {
-    const response = await api.put('/books', bookToUpdate)
+    const response = await api.put(`/books/${bookId}`, updatedBook)
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -125,7 +177,7 @@ export async function updateFrontCoverRequest({
 }: IUpdateFrontCoverRequest) {
   try {
     const response = await api.patch(
-      `/books/update-frontCover/${bookId}`,
+      `/books/${bookId}/image`,
       { file },
       {
         headers: {
@@ -143,7 +195,7 @@ export async function updateFrontCoverRequest({
 // DELETE
 export async function removeFrontCoverRequest(bookId: string) {
   try {
-    const response = await api.delete(`/books/front-cover/${bookId}`)
+    const response = await api.delete(`/books/${bookId}/image`)
     return response.data
   } catch (err: any) {
     return err.response.data
@@ -182,6 +234,26 @@ export async function deleteCapituleRequest({
 export async function deleteBookRequest(bookId: string) {
   try {
     const response = await api.delete(`/books/${bookId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+// GET
+
+export async function getBookRequest(bookId: string) {
+  try {
+    const response = await api.get(`/books/${bookId}`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getCapituleRequest(capituleId: string) {
+  try {
+    const response = await api.get(`/books/capitules/${capituleId}`)
     return response.data
   } catch (err: any) {
     return err.response.data

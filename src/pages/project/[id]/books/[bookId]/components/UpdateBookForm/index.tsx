@@ -1,23 +1,20 @@
-import { IUpdateBookRequest } from '@api/booksRequests/types/IUpdateBookRequest'
-import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
-import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
-import { ProjectsContext } from '@contexts/projects'
+import { Toast } from '@components/usefull/Toast'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useBook } from '@hooks/useBook'
 import { useRouter } from 'next/router'
 import { Trash, X } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 // import { CardAuthor } from '../CardAuthor'
 import { UpdateBookFormContainer } from './styles'
 
 interface IUpdateBookFormProps {
-  book: IBooksResponse | undefined
-  usersInProject: IUserResponse[]
+  bookId: string
 }
 
 const updateBookFormSchema = z.object({
@@ -35,18 +32,18 @@ const updateBookFormSchema = z.object({
     .max(200, { message: 'O titulo não pode ter mais de 100 caracteres.' })
     .nullable(),
   words: z
-    .string()
-    .max(20, { message: 'Valor excede o limite aceito' })
-    .regex(/^\d+$/, { message: 'Insira apenas números' })
+    .number()
+    .max(1000000, { message: 'Valor excede o limite aceito' })
     .nullable(),
 })
 
 type UpdateBookData = z.infer<typeof updateBookFormSchema>
 
-export function UpdateBookForm({ book, usersInProject }: IUpdateBookFormProps) {
+export function UpdateBookForm({ bookId }: IUpdateBookFormProps) {
   const [deleteSelected, setDeleteSelected] = useState(false)
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
 
-  const { updateBook, deleteBook } = useContext(ProjectsContext)
+  const { book, callEvent } = useBook(bookId)
 
   const router = useRouter()
   const { id } = router.query
@@ -61,56 +58,66 @@ export function UpdateBookForm({ book, usersInProject }: IUpdateBookFormProps) {
       title: book?.title,
       subtitle: book?.subtitle,
       isbn: book?.isbn,
-      literaryGenere: book?.literaryGenere,
+      literaryGenere: book?.literary_genre,
       words: book?.words,
     },
   })
 
   async function handleUpdateBook(data: UpdateBookData) {
-    const bookInfosUpdated: IUpdateBookRequest = {
+    const bookInfosUpdated = {
       ...data,
-      bookId: book?.id!,
     }
 
-    await updateBook(bookInfosUpdated)
+    const { resolved } = await callEvent.update(bookInfosUpdated)
+
+    if (resolved) {
+      setSuccessToastOpen(true)
+    }
   }
 
   async function handleDeleteBook() {
     router.push(`/project/${id}/books`)
 
-    await deleteBook(book?.id!)
+    await callEvent.delete()
   }
 
   return (
     <ContainerGrid darkBackground>
+      <Toast
+        title="Sucesso"
+        message="Livro atualizado com sucesso"
+        open={successToastOpen}
+        setOpen={setSuccessToastOpen}
+      />
+
       <UpdateBookFormContainer onSubmit={handleSubmit(handleUpdateBook)}>
         <ContainerGrid columns={2}>
           <InfoDefault title="Titulo" as="label">
-            <TextInputRoot>
+            <TextInputRoot size="sm">
               <TextInputInput {...register('title')} />
             </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Subtitulo" as="label">
-            <TextInputRoot>
+            <TextInputRoot size="sm">
               <TextInputInput {...register('subtitle')} />
             </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="ISBN" as="label">
-            <TextInputRoot>
+            <TextInputRoot size="sm">
               <TextInputInput {...register('isbn')} />
             </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Gênero literário" as="label">
-            <TextInputRoot>
+            <TextInputRoot size="sm">
               <TextInputInput {...register('literaryGenere')} />
             </TextInputRoot>
           </InfoDefault>
 
           <InfoDefault title="Estimativa de palavras" as="label">
-            <TextInputRoot>
+            <TextInputRoot size="sm">
               <TextInputInput {...register('words')} />
             </TextInputRoot>
           </InfoDefault>
@@ -166,6 +173,7 @@ export function UpdateBookForm({ book, usersInProject }: IUpdateBookFormProps) {
           </>
         ) : (
           <ButtonRoot
+            align="center"
             type="button"
             css={{ background: '$fullError' }}
             onClick={() => setDeleteSelected(true)}

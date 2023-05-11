@@ -1,4 +1,4 @@
-import { ComponentProps, ElementType } from 'react'
+import { ComponentProps, ElementType, forwardRef } from 'react'
 import { IButtonRootProps } from '@components/usefull/Button'
 import { ShareButton } from './styles'
 
@@ -8,6 +8,11 @@ interface IShareProjectButton
   as?: ElementType
 }
 
-export function ShareProjectButton(props: IShareProjectButton) {
-  return <ShareButton {...props} />
-}
+export const ShareProjectButton = forwardRef<
+  HTMLButtonElement,
+  IShareProjectButton
+>((props, ref) => {
+  return <ShareButton {...props} ref={ref} />
+})
+
+ShareProjectButton.displayName = 'ShareProjectButton'

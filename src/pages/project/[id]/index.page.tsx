@@ -1,13 +1,10 @@
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { CardBook } from '@components/BooksComponents/CardBook'
 import { CardPerson } from '@components/PersonsComponents/CardPerson'
 import { PlotParts } from '@components/ProjectsComponents/PlotParts'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Loading } from '@components/usefull/Loading'
-import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
-import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { Text } from '@components/usefull/Text'
@@ -37,24 +34,38 @@ import {
   PersonsContainer,
   PlotProjectContainer,
 } from './styles'
+// import { TimelineView } from '@components/TimelinesComponents/TimelineView'
+import { InterfaceContext } from '@contexts/interface'
+import { useProject } from '@hooks/useProject'
 
 export default function ProjectPage() {
+  usePreventBack('/projects')
+
   const [onEditImg, setOnEditImg] = useState(false)
 
-  const { updateImageProject, loading, deleteImageProject } =
-    useContext(ProjectsContext)
+  const { timelineIsOpen } = useContext(InterfaceContext)
 
   const router = useRouter()
   const { id } = router.query
 
-  const { project, booksThisProject, personsThisProject, permission } =
-    useProject(id as string)
+  const {
+    project,
+    booksThisProject,
+    personsThisProject,
+    permission,
+    loadingProject,
+    projectName,
+    projectType,
+    createdAt,
+    updatedAt,
+    projectImage,
+    usersInProject,
+    callEvent,
+  } = useProject(id as string)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
   const largeWindow = windowSize.width! > 1700
-
-  usePreventBack('/projects')
 
   async function handleUpdateImage(files: FileList | null) {
     setOnEditImg(false)
@@ -65,25 +76,35 @@ export default function ProjectPage() {
 
     if (file.type !== 'image/jpeg' && file.type !== 'image/png') return
 
-    await updateImageProject(id as string, file)
+    await callEvent.updateImage(file)
   }
+
+  async function handleRemoveImage() {
+    callEvent.removeImage()
+    setOnEditImg(false)
+  }
+
+  // useEffect(() => {
+  //   setLoading(false)
+  // }, [setLoading])
 
   return (
     <>
-      <NextSeo title={`${project?.name || 'Carregando...'} | Ognare`} noindex />
+      <NextSeo title={`${projectName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
-        loading={loading}
-        inError={!loading && !project?.name}
+        loading={loadingProject}
+        inError={!loadingProject && !project}
+        isTimelineInWindow={timelineIsOpen && !smallWindow}
         isScrolling
       >
         <HeaderProjectInfos>
           <ImageContainer>
-            {loading ? (
+            {loadingProject ? (
               <Loading />
-            ) : !project?.image?.url ? (
+            ) : !projectImage ? (
               <ImageIco
                 className="image"
                 weight="thin"
@@ -97,7 +118,7 @@ export default function ProjectPage() {
                 width={400}
                 height={400}
                 className="image"
-                src={project?.image?.url}
+                src={projectImage}
                 alt=""
                 onClick={() => setOnEditImg(!onEditImg)}
               />
@@ -116,15 +137,12 @@ export default function ProjectPage() {
                 }}
               />
             </Input>
-            {project?.image?.url && (
+            {projectImage && (
               <ButtonRoot
                 type="button"
                 wid="middle"
                 align="center"
-                onClick={() => {
-                  deleteImageProject({ projectId: project.id! })
-                  setOnEditImg(false)
-                }}
+                onClick={handleRemoveImage}
               >
                 <ButtonIcon>
                   <Trash />
@@ -140,8 +158,8 @@ export default function ProjectPage() {
                 <Text as="span" size="sm" family="body" height="shorter">
                   Nome:
                 </Text>
-                <Text as="p" size="sm">
-                  {project?.name || 'Carregando...'}
+                <Text as="p" size="sm" weight="bold">
+                  {projectName}
                 </Text>
               </Info>
 
@@ -149,8 +167,8 @@ export default function ProjectPage() {
                 <Text as="span" size="sm" family="body" height="shorter">
                   Tipo:
                 </Text>
-                <Text as="p" size="sm">
-                  {project?.type || 'Carregando...'}
+                <Text as="p" size="sm" weight="bold">
+                  {projectType}
                 </Text>
               </Info>
             </Infos>
@@ -160,8 +178,8 @@ export default function ProjectPage() {
                 <Text as="span" size="sm" family="body" height="shorter">
                   Criado:
                 </Text>
-                <Text as="p" size="sm">
-                  {project?.createAt || 'Carregando...'}
+                <Text as="p" size="sm" weight="bold">
+                  {createdAt}
                 </Text>
               </Info>
 
@@ -169,8 +187,8 @@ export default function ProjectPage() {
                 <Text as="span" size="sm" family="body">
                   Última atualização:
                 </Text>
-                <Text as="p" size="sm">
-                  {project?.updateAt || 'Carregando...'}
+                <Text as="p" size="sm" weight="bold">
+                  {updatedAt}
                 </Text>
               </Info>
             </Infos>
@@ -180,23 +198,23 @@ export default function ProjectPage() {
                 <Text as="span" size="sm" family="body" height="shorter">
                   Usuários:
                 </Text>
-                <Text as="p" size="sm">
-                  {project?.users?.length || 0}
+                <Text as="p" size="sm" weight="bold">
+                  {usersInProject.length}
                 </Text>
               </Info>
               <Info>
                 <Text as="span" size="sm" family="body" height="shorter">
                   Livros:
                 </Text>
-                <Text as="p" size="sm">
-                  {booksThisProject?.length || 0}
+                <Text as="p" size="sm" weight="bold">
+                  {project?._count.books || 0}
                 </Text>
               </Info>
               <Info>
                 <Text as="span" size="sm" family="body" height="shorter">
                   Poderes:
                 </Text>
-                <Text as="p" size="sm">
+                <Text as="p" size="sm" weight="bold">
                   Em breve
                 </Text>
               </Info>
@@ -204,8 +222,8 @@ export default function ProjectPage() {
                 <Text as="span" size="sm" family="body" height="shorter">
                   Personagens:
                 </Text>
-                <Text as="p" size="sm">
-                  {personsThisProject?.length || 0}
+                <Text as="p" size="sm" weight="bold">
+                  {project?._count.persons || 0}
                 </Text>
               </Info>
             </Infos>
@@ -214,7 +232,7 @@ export default function ProjectPage() {
 
         <PlotProjectContainer>
           <HeadingPart
-            onClick={() => router.push(`/project/${project.id}/books`)}
+            onClick={() => router.push(`/project/${project?.id}/books`)}
           >
             <Books size={40} />
             Livros
@@ -222,7 +240,12 @@ export default function ProjectPage() {
           <BooksContainer isEmpty={!booksThisProject[0]}>
             {booksThisProject[0] ? (
               booksThisProject.map((book) => (
-                <CardBook key={book.id} book={book} isPreview />
+                <CardBook
+                  key={book.id}
+                  bookId={book?.id}
+                  projectId={project?.id!}
+                  isPreview
+                />
               ))
             ) : (
               <ListEmpty
@@ -233,22 +256,26 @@ export default function ProjectPage() {
           </BooksContainer>
 
           <HeadingPart
-            onClick={() => router.push(`/project/${project.id}/plot`)}
+            onClick={() => router.push(`/project/${project?.id}/plot`)}
           >
             <BookOpen size={40} />
             PLOT
           </HeadingPart>
-          {loading ? <Loading /> : <PlotParts project={project} isPreview />}
+          {loadingProject ? (
+            <Loading />
+          ) : (
+            <PlotParts projectId={project?.id!} isPreview />
+          )}
 
           <HeadingPart
-            onClick={() => router.push(`/project/${project.id}/persons`)}
+            onClick={() => router.push(`/project/${project?.id}/persons`)}
           >
             <UserFocus size={40} />
             Personagens
           </HeadingPart>
           <PersonsContainer>
             {permission === 'edit' && (
-              <CardPerson person={{} as IPersonsResponse} key="--" isAdd />
+              <CardPerson personId={''} key="--" isAdd />
             )}
 
             {personsThisProject.map((person, i) => {
@@ -257,10 +284,14 @@ export default function ProjectPage() {
               if (largeWindow && index >= 14) return null
               if (!largeWindow && index >= 11) return null
               if (smallWindow && index >= 5) return null
-              return <CardPerson key={person.id} person={person} />
+              return <CardPerson key={person.id} personId={person.id} />
             })}
           </PersonsContainer>
         </PlotProjectContainer>
+
+        {/* {timelineOfProject && !smallWindow && (
+          <TimelineView timeline={timelineOfProject} />
+        )} */}
       </ProjectPageLayout>
     </>
   )

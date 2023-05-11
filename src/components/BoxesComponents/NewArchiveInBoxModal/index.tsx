@@ -1,3 +1,4 @@
+import { IError } from '@@types/errors/IError'
 import { ICreateArchiveInBoxRequest } from '@api/boxesRequests/types/ICreateArchiveInBoxRequest'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
@@ -8,10 +9,12 @@ import {
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
-import { ProjectsContext } from '@contexts/projects'
+import { ToastError } from '@components/usefull/ToastError'
+import { InterfaceContext } from '@contexts/interface'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useBoxes } from '@hooks/useBoxes'
 import { FileImage, PlusCircle } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { NewArchiveForm } from './styles'
@@ -46,11 +49,16 @@ export function NewArchiveInBoxModal({
   boxId,
   onSuccess,
 }: INewArchiveInBoxModalProps) {
-  const { createArchiveInBox } = useContext(ProjectsContext)
+  const [error, setError] = useState<IError | null>(null)
+
+  const { theme } = useContext(InterfaceContext)
+  const isDarkMode = theme === 'dark'
 
   const { handleSubmit, register, formState, reset } = useForm<NewArchiveBody>({
     resolver: zodResolver(newArchiveFormSchema),
   })
+
+  const { callEvent } = useBoxes()
 
   async function handleCreateArchive(archive: NewArchiveBody) {
     const newArchive: ICreateArchiveInBoxRequest = {
@@ -59,17 +67,25 @@ export function NewArchiveInBoxModal({
       title: archive.title,
     }
 
-    const archiveCreated = await createArchiveInBox(newArchive)
+    const { resolved, error } = await callEvent.createArchive(newArchive)
 
-    if (archiveCreated) {
+    if (resolved) {
       reset()
       onSuccess()
+    }
+
+    if (error) {
+      setError(error)
     }
   }
 
   return (
     <ModalContent title="Novo arquivo">
-      <NewArchiveForm onSubmit={handleSubmit(handleCreateArchive)}>
+      <NewArchiveForm
+        onSubmit={handleSubmit(handleCreateArchive)}
+        darkMode={isDarkMode}
+      >
+        <ToastError error={error} setError={setError} />
         <Text as="label">
           <Text
             family="body"
@@ -89,6 +105,7 @@ export function NewArchiveInBoxModal({
 
           <TextInputRoot
             variant={formState.errors.title?.message ? 'denied' : 'default'}
+            css={{ background: !isDarkMode ? '$base600' : '' }}
           >
             <TextInputIcon>
               <FileImage weight="bold" />
@@ -119,7 +136,12 @@ export function NewArchiveInBoxModal({
           </Text>
 
           <Textarea
-            css={{ width: '100%', height: 160, resize: 'none' }}
+            css={{
+              width: '100%',
+              height: 160,
+              resize: 'none',
+              background: !isDarkMode ? '$base600' : '',
+            }}
             variant={
               formState.errors.description?.message ? 'denied' : 'default'
             }

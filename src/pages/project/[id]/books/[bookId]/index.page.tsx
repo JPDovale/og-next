@@ -1,13 +1,18 @@
+import { IError } from '@@types/errors/IError'
 import { BookGenere } from '@components/BooksComponents/BookGenere'
 import { CapituleCard } from '@components/BooksComponents/CapituleCard'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
-import { DefaultError } from '@components/usefull/DefaultError'
 import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '@components/usefull/HeadingPart'
-import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import {
+  TextInputIcon,
+  TextInputInput,
+  TextInputRoot,
+} from '@components/usefull/InputText'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
+import { ToastError } from '@components/usefull/ToastError'
+import { useBook } from '@hooks/useBook'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useWindowSize } from '@hooks/useWindow'
@@ -15,25 +20,16 @@ import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Bookmarks, Brain, Gear } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { UpdateBookForm } from './components/UpdateBookForm'
 
 import { AddGenreForm, BookContainer, Container, SubContainer } from './styles'
 
 export default function BookPage() {
   const [genre, setGenre] = useState('')
+  const [error, setError] = useState<IError | null>(null)
   const [errorIn, setErrorIn] = useState('')
   const [addingGenre, setAddingGenre] = useState(false)
-
-  const {
-    loading,
-    error,
-    setError,
-    updateFrontCover,
-    removeFrontCover,
-    addGenre,
-    removeGenre,
-  } = useContext(ProjectsContext)
 
   const router = useRouter()
   const { id, bookId } = router.query
@@ -42,10 +38,17 @@ export default function BookPage() {
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
-  const { project, useBook, permission, usersWithAccess } = useProject(
-    id as string,
-  )
-  const { book, bookName, bookInfos, bookAuthors } = useBook(bookId as string)
+  const { permission, projectName } = useProject(id as string)
+  const {
+    book,
+    bookName,
+    bookInfos,
+    bookAuthors,
+    bookWords,
+    bookWrittenWords,
+    loadingBook,
+    callEvent,
+  } = useBook(bookId as string)
 
   async function handleUpdateFrontCover(files: FileList | null) {
     if (!files) return
@@ -54,7 +57,7 @@ export default function BookPage() {
 
     if (file.type !== 'image/jpeg' && file.type !== 'image/png') return
 
-    await updateFrontCover({ bookId: bookId as string, file })
+    await callEvent.updateFrontCover(file)
   }
 
   async function handleAddGenre() {
@@ -62,52 +65,56 @@ export default function BookPage() {
 
     if (!genre) return setErrorIn('genre')
 
-    await addGenre({ bookId: book?.id!, genre })
-    setGenre('')
-    setAddingGenre(false)
+    const { resolved, error } = await callEvent.addGenre(genre)
+    if (resolved) {
+      setGenre('')
+      setAddingGenre(false)
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
-  async function handleRemoveGenre(genre: string) {
-    await removeGenre({ bookId: book?.id!, genre })
+  async function handleRemoveGenre(genreId: string) {
+    const { error } = await callEvent.removeGenre(genreId)
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleRemoveFrontCover(id: string) {
+    callEvent.removeFrontCover()
+    return true
   }
 
   return (
     <>
-      <NextSeo
-        title={`${project?.name || 'Carregando...'}-${
-          bookName || 'Carregando...'
-        } | Ognare`}
-        noindex
-      />
+      <NextSeo title={`${bookName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros', bookName]}
-        loading={loading}
-        inError={!loading && !book}
+        loading={loadingBook}
+        inError={!loadingBook && !book}
         isScrolling
       >
-        {error && (
-          <DefaultError
-            close={() => setError(undefined)}
-            title={error.title}
-            message={error.message}
-          />
-        )}
+        <ToastError error={error} setError={setError} />
 
         <BookContainer>
           <HeaderImageAndInfos
             idObject={book?.id!}
-            onRemoveCalled={removeFrontCover}
+            onRemoveCalled={handleRemoveFrontCover}
             onUpdateCalled={handleUpdateFrontCover}
-            url={book?.frontCover?.url}
+            url={book?.front_cover_url ?? undefined}
             permission={permission}
             pathGoBack={`/project/${id}/books`}
             typeImage="vertical"
             allInfos={bookInfos}
-            initialValeu={Number(book?.writtenWords)}
-            finalValue={Number(book?.words)}
+            initialValeu={bookWrittenWords}
+            finalValue={bookWords}
             avatares={bookAuthors}
             withAvatares
             withProgressBar
@@ -121,7 +128,7 @@ export default function BookPage() {
           <Container>
             <HeadingPart
               icon={<Brain size={40} />}
-              label="Gêneros"
+              label="Subgêneros"
               customFunctionOnClickSideButton={() => {
                 setAddingGenre(!addingGenre)
               }}
@@ -131,34 +138,51 @@ export default function BookPage() {
 
             {addingGenre && (
               <AddGenreForm>
-                <Text>Adicionar gênero</Text>
+                <Text>Adicionar subgênero</Text>
                 <TextInputRoot
+                  size="sm"
                   variant={errorIn === 'genre' ? 'denied' : 'default'}
                 >
+                  <TextInputIcon>
+                    <Brain />
+                  </TextInputIcon>
                   <TextInputInput
                     onChange={(e) => setGenre(e.target.value)}
                     value={genre}
                   />
                 </TextInputRoot>
-                <ButtonRoot align="center" onClick={handleAddGenre}>
+                <ButtonRoot
+                  variant="noShadow"
+                  size="sm"
+                  align="center"
+                  onClick={handleAddGenre}
+                >
                   <ButtonLabel>Adicionar</ButtonLabel>{' '}
                 </ButtonRoot>
               </AddGenreForm>
             )}
 
             {!addingGenre && (
-              <SubContainer columns={smallWindow ? 2 : 6}>
-                {book?.generes && (
+              <SubContainer
+                columns={
+                  !book?.genres || !book.genres[0] ? 1 : smallWindow ? 2 : 6
+                }
+              >
+                {book?.genres && book.genres[0] ? (
                   <>
-                    {book.generes.map((genere, i) => (
+                    {book.genres.map((genere, i) => (
                       <BookGenere
-                        key={genere.name}
-                        genere={genere.name}
-                        isNotRemovable={book.generes.length === 1}
+                        key={genere.id}
+                        genere={genere}
                         onRemove={handleRemoveGenre}
                       />
                     ))}
                   </>
+                ) : (
+                  <ListEmpty
+                    message="Você ainda não adicionou nenhum subgênero"
+                    icon={<Brain size={40} />}
+                  />
                 )}
               </SubContainer>
             )}
@@ -180,7 +204,7 @@ export default function BookPage() {
                 <>
                   {book.capitules.map((capitule) => (
                     <CapituleCard
-                      maxLengthToReorder={book.capitules.length}
+                      maxLengthToReorder={book?.capitules?.length || 0}
                       bookId={book.id!}
                       key={capitule.id}
                       capitule={capitule}
@@ -208,7 +232,7 @@ export default function BookPage() {
               permission={permission}
             />
 
-            <UpdateBookForm book={book} usersInProject={usersWithAccess} />
+            <UpdateBookForm bookId={book?.id ?? ''} />
           </Container>
         </BookContainer>
       </ProjectPageLayout>

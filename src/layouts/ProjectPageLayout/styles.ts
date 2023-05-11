@@ -23,6 +23,11 @@ export const ProjectContainer = styled('div', {
         },
       },
     },
+    isTimelineInWindow: {
+      true: {
+        paddingBottom: '280px',
+      },
+    },
     isFullScreen: {
       true: {
         padding: 0,
@@ -35,9 +40,8 @@ export const ProjectContainer = styled('div', {
 export const ProjectPageLayoutContainer = styled('main', {
   zIndex: 1,
   float: 'right',
-  width: '92%',
+  width: '95%',
   height: '100vh',
-  paddingBottom: '$8',
 
   backgroundColor: '$gray800',
   overflow: 'hidden',

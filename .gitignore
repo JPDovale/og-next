@@ -44,3 +44,7 @@ next.config.original.js
 
 #VsCode
 /.vscode/*
+
+# DEV
+Dockerfile
+.dockerignore

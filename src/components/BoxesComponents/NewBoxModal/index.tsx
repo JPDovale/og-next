@@ -9,8 +9,9 @@ import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
-import { ProjectsContext } from '@contexts/projects'
+import { InterfaceContext } from '@contexts/interface'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useBoxes } from '@hooks/useBoxes'
 import { Package, PlusCircle, X } from 'phosphor-react'
 import { useContext, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -47,23 +48,10 @@ interface INewBoxModalProps {
 export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   const [tag, setTag] = useState('')
 
-  const { createBox, boxes } = useContext(ProjectsContext)
+  const { callEvent, tags: tagsExistes } = useBoxes()
+  const { theme } = useContext(InterfaceContext)
 
-  const boxesNotInternal = boxes?.filter((box) => !box.internal)
-
-  const tagsAlreadyExistesInBoxes: Array<{ name: string }> = []
-
-  boxesNotInternal?.filter((box) => {
-    box.tags?.map((tag) => {
-      return tagsAlreadyExistesInBoxes.push(tag)
-    })
-
-    return ''
-  })
-
-  const tagsAlreadyExistesInBoxesFiltered = tagsAlreadyExistesInBoxes.filter(
-    (tag, i, self) => i === self.findIndex((t) => t.name === tag.name),
-  )
+  const isDarkMode = theme === 'dark'
 
   const {
     handleSubmit,
@@ -114,9 +102,9 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   }
 
   async function handleNewBox(box: NewBoxFormData) {
-    const isCreated = await createBox(box)
+    const { resolved } = await callEvent.create(box)
 
-    if (isCreated) {
+    if (resolved) {
       reset()
       setTag('')
       onSuccess && onSuccess()
@@ -125,7 +113,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
   return (
     <ModalContent title="Nova box">
-      <NewBoxForm onSubmit={handleSubmit(handleNewBox)}>
+      <NewBoxForm onSubmit={handleSubmit(handleNewBox)} darkMode={isDarkMode}>
         <Text as="label">
           <Text
             family="body"
@@ -145,6 +133,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
           <TextInputRoot
             variant={formState.errors.name?.message ? 'denied' : 'default'}
+            css={{ background: !isDarkMode ? '$base600' : '' }}
           >
             <TextInputIcon>
               <Package weight="bold" />
@@ -172,7 +161,12 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
           </Text>
 
           <Textarea
-            css={{ width: '100%', height: 160, resize: 'none' }}
+            css={{
+              width: '100%',
+              height: 160,
+              resize: 'none',
+              background: !isDarkMode ? '$base600' : '',
+            }}
             variant={
               formState.errors.description?.message ? 'denied' : 'default'
             }
@@ -198,7 +192,11 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
             </Text>
           </Text>
 
-          <TextInputRoot variant="noShadow" size="sm">
+          <TextInputRoot
+            variant="noShadow"
+            size="sm"
+            css={{ background: !isDarkMode ? '$base600' : '' }}
+          >
             <TextInputInput
               name="tag"
               value={tag}
@@ -227,17 +225,11 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
           <ContainerGrid
             padding={0}
-            columns={
-              tagsAlreadyExistesInBoxesFiltered &&
-              tagsAlreadyExistesInBoxesFiltered[0]
-                ? 5
-                : 1
-            }
+            columns={tagsExistes && tagsExistes[0] ? 5 : 1}
           >
-            {tagsAlreadyExistesInBoxesFiltered &&
-            tagsAlreadyExistesInBoxesFiltered[0] ? (
+            {tagsExistes && tagsExistes[0] ? (
               <>
-                {tagsAlreadyExistesInBoxesFiltered.map((t) => {
+                {tagsExistes.map((t) => {
                   const tagAlreadySelected = tags?.find(
                     (tag) =>
                       tag.name.toLowerCase().trim() ===
@@ -248,9 +240,14 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
                   return (
                     <TagCard
+                      darkMode={isDarkMode}
                       onClick={() => handleAddTag(t.name)}
                       key={t.name}
-                      css={{ cursor: 'pointer', background: '$purple800' }}
+                      css={{
+                        cursor: 'pointer',
+                        background: '$purple800',
+                        color: '$white',
+                      }}
                     >
                       <Text>{t.name}</Text>
                     </TagCard>
@@ -272,7 +269,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
             {tags && tags[0] ? (
               <>
                 {tags.map((t) => (
-                  <TagCard key={t.name}>
+                  <TagCard darkMode={isDarkMode} key={t.name}>
                     <Text>{t.name}</Text>
 
                     <button

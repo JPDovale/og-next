@@ -26,8 +26,10 @@ export function Error({
 
   return (
     <ErrorContainer>
-      <ErrorNumber size="lg">{statusCode}</ErrorNumber>
-      <ErrorMessage size="xxs">{errorMessage}</ErrorMessage>
+      <ErrorNumber size="2xl">{statusCode}</ErrorNumber>
+      <ErrorMessage size="lg" family="body" weight="bold">
+        {errorMessage}
+      </ErrorMessage>
     </ErrorContainer>
   )
 }
@@ -44,7 +46,9 @@ const ErrorContainer = styled('div', {
   background: '$gray900',
 })
 
-const ErrorNumber = styled(Heading, {})
+const ErrorNumber = styled(Heading, {
+  marginTop: '-$8',
+})
 
 const ErrorMessage = styled(Text, {
   width: '80%',

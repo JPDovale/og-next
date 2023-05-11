@@ -1,12 +1,15 @@
 import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
-import { ProjectsContext } from '@contexts/projects'
-import { useRouter } from 'next/router'
 import { FilePlus } from 'phosphor-react'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 // import { InputRadio } from '../../../InputRadio'
 import { Input, NewProjectForm, Submit } from './styles'
 import { ModalContent } from '@components/usefull/ModalContent'
+import { Toast } from '@components/usefull/Toast'
+import { useProjects } from '@hooks/useProjects'
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
+import { InterfaceContext } from '@contexts/interface'
 
 // const typesOfProjects = [
 //   { label: 'Book', value: 'book' },
@@ -15,8 +18,20 @@ import { ModalContent } from '@components/usefull/ModalContent'
 //   { label: 'RoadMap', value: 'roadMap' },
 // ]
 
-export function NewProjectModal() {
-  const { createProject, loading } = useContext(ProjectsContext)
+interface INewProjectModalProps {
+  onSuccessCreateProject: () => void
+}
+
+export function NewProjectModal({
+  onSuccessCreateProject,
+}: INewProjectModalProps) {
+  const [successToastOpen, setSuccessToastOpen] = useState(false)
+  const [error, setError] = useState<IError | null>(null)
+
+  const { loadingProjects, refetchProjects, callEvent } = useProjects()
+  const { theme } = useContext(InterfaceContext)
+
+  const isDarkMode = theme === 'dark'
 
   const [
     isPrivate,
@@ -32,8 +47,6 @@ export function NewProjectModal() {
     // setPassword
   ] = useState('')
   const [errorIn, setErrorIn] = useState('')
-
-  const router = useRouter()
 
   async function handleNewProject(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -53,17 +66,39 @@ export function NewProjectModal() {
       password,
     }
 
-    const idNewProject = await createProject(newProject)
+    const { resolved, error } = await callEvent.createProject(newProject)
 
-    router.push(`/project/${idNewProject}`)
+    if (resolved) {
+      setSuccessToastOpen(true)
+      setName('')
+      setErrorIn('')
+      onSuccessCreateProject()
+      await refetchProjects()
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
   return (
     <ModalContent title="Novo projeto">
-      <NewProjectForm onSubmit={handleNewProject}>
-        <Input as="label" size="xs">
+      <Toast
+        setOpen={setSuccessToastOpen}
+        open={successToastOpen}
+        title="Projeto criado"
+        message="Você acabou de criar um novo projeto... Acesse seus projetos para ver"
+      />
+
+      <ToastError error={error} setError={setError} />
+
+      <NewProjectForm onSubmit={handleNewProject} darkMode={isDarkMode}>
+        <Input as="label" size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
           Nome do projeto
-          <TextInputRoot variant={errorIn === 'name' ? 'denied' : 'default'}>
+          <TextInputRoot
+            css={{ background: !isDarkMode ? '$base700' : '' }}
+            variant={errorIn === 'name' ? 'denied' : 'default'}
+          >
             <TextInputInput
               placeholder="Insira o nome do projeto"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -109,7 +144,7 @@ export function NewProjectModal() {
             </Input>
           )} */}
         <Submit
-          disabled={loading}
+          disabled={loadingProjects}
           align="center"
           wid="full"
           variant="noShadow"

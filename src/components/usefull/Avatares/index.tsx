@@ -1,6 +1,6 @@
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
 import { Text } from '@components/usefull/Text'
-import { useRouter } from 'next/dist/client/router'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import { AvatarWeb } from '../Avatar'
 import { ButtonIcon, ButtonRoot } from '../Button'
@@ -22,20 +22,14 @@ interface IAvataresProps {
   isClickable?: boolean
   additionalKey?: string
 
-  firstButtonKey?: 'supporting' | 'avoider'
-  secondButtonKey?: 'supporting' | 'avoider'
-
   listEmptyMessage: string
   listEmptyIcon?: ReactNode
 
   personSelected?: string
   error?: boolean
 
-  firstButtonFunction?: (to: 'supporting' | 'avoider', personId: string) => void
-  secondaryButtonFunction?: (
-    to: 'supporting' | 'avoider',
-    personId: string,
-  ) => void
+  firstButtonFunction?: (personId: string) => void
+  secondaryButtonFunction?: (personId: string) => void
   functionInternalButton?: (id: string) => void
 }
 
@@ -47,9 +41,6 @@ export function Avatares({
   size = 'sm',
   isClickable = false,
   additionalKey,
-
-  firstButtonKey,
-  secondButtonKey,
 
   listEmptyMessage,
   listEmptyIcon,
@@ -72,13 +63,11 @@ export function Avatares({
   }
 
   function handleFirstButton(id: string) {
-    firstButtonFunction &&
-      firstButtonFunction(firstButtonKey || 'supporting', id)
+    firstButtonFunction && firstButtonFunction(id)
   }
 
   function handleSecondaryButton(id: string) {
-    secondaryButtonFunction &&
-      secondaryButtonFunction(secondButtonKey || 'avoider', id)
+    secondaryButtonFunction && secondaryButtonFunction(id)
   }
 
   return (
@@ -139,7 +128,7 @@ export function Avatares({
             >
               <AvatarWeb
                 size={size}
-                src={person?.image?.url}
+                src={person?.image_url ?? undefined}
                 selected={personSelected === person?.id && true}
                 error={!personSelected && error && true}
                 isClickable={isClickable}

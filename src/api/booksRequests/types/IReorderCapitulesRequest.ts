@@ -1,5 +1,5 @@
 export interface IReorderCapitulesRequest {
   bookId: string
-  sequenceFrom: string
-  sequenceTo: string
+  sequenceFrom: number
+  sequenceTo: number
 }

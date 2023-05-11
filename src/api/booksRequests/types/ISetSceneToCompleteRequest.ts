@@ -1,6 +1,8 @@
 export interface ISetSceneToCompleteRequest {
   bookId: string
   capituleId: string
-  sceneId: string
-  writtenWords: string
+  completeInfos: {
+    sceneId: string
+    writtenWords: number
+  }
 }

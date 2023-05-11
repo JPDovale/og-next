@@ -8,9 +8,10 @@ export enum UserActionsType {
 
   SetError = 'setError',
   SetSuccess = 'setSuccess',
+  SetLoading = 'setLoading',
 }
 
-export function setUserAction(user: IUserResponse | undefined) {
+export function setUserAction(user: IUserResponse | null) {
   return {
     type: UserActionsType.SetUser,
     payload: {
@@ -19,7 +20,7 @@ export function setUserAction(user: IUserResponse | undefined) {
   }
 }
 
-export function setErrorAction(error: IError | undefined) {
+export function setErrorAction(error: IError | null) {
   return {
     type: UserActionsType.SetError,
     payload: {
@@ -28,11 +29,20 @@ export function setErrorAction(error: IError | undefined) {
   }
 }
 
-export function setSuccessAction(success: ISuccess | undefined) {
+export function setSuccessAction(success: ISuccess | null) {
   return {
     type: UserActionsType.SetSuccess,
     payload: {
       success,
+    },
+  }
+}
+
+export function setLoadingAction(newState: boolean) {
+  return {
+    type: UserActionsType.SetLoading,
+    payload: {
+      loading: newState,
     },
   }
 }

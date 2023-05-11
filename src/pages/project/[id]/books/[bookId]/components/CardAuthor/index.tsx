@@ -1,17 +1,17 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Text } from '@components/usefull/Text'
 import { UserCircleMinus, X } from 'phosphor-react'
 
 import { CardAuthorContainer, UnshareButton, UnshareConfirm } from './styles'
-// import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+// import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
-import { UserContext } from '@contexts/user'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { useWindowSize } from '@hooks/useWindow'
 import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { useUser } from '@hooks/useUser'
 
 interface ICardAuthorProps {
   userAuthor: IUserResponse | undefined
@@ -19,8 +19,9 @@ interface ICardAuthorProps {
 }
 
 export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
-  const { user } = useContext(UserContext)
   const [unshare, setUnshare] = useState(false)
+
+  const { user } = useUser()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -32,7 +33,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
       <ContainerGrid alignCenter>
         <AvatarWeb
           size={smallWindow ? '2xl' : '4xl'}
-          src={userAuthor?.avatar?.url}
+          src={userAuthor?.avatar_url ?? undefined}
           selfCenter
         />
         {userAuthor?.id !== user?.id && (

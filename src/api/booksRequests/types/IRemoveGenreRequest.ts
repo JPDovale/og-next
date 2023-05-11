@@ -1,4 +1,4 @@
 export interface IRemoveGenreRequest {
-  genre: string
+  genreId: string
   bookId: string
 }

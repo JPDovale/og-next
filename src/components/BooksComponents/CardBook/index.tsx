@@ -1,10 +1,12 @@
-import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ProgressBar } from '@components/usefull/ProgressBar'
 import { Text } from '@components/usefull/Text'
+import { InterfaceContext } from '@contexts/interface'
+import { useProject } from '@hooks/useProject'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Image as ImageIco } from 'phosphor-react'
+import { useContext } from 'react'
 
 import {
   CardBookContainer,
@@ -16,81 +18,106 @@ import {
 } from './styles'
 
 interface ICardBookProps {
-  book: IBooksResponse
+  projectId: string
+  bookId: string
   isPreview?: boolean
 }
 
-export function CardBook({ book, isPreview = false }: ICardBookProps) {
+export function CardBook({
+  projectId,
+  bookId,
+  isPreview = false,
+}: ICardBookProps) {
+  const { theme } = useContext(InterfaceContext)
+
   const router = useRouter()
   const { id } = router.query
+
+  const { findBook } = useProject(projectId)
+  const {
+    book,
+    bookTitle,
+    createdAt,
+    literaryGenre,
+    updatedAt,
+    isbn,
+    bookFrontCover,
+  } = findBook(bookId)
 
   return (
     <CardBookContainer
       as="button"
-      onClick={() => router.push(`/project/${id}/books/${book.id}`)}
+      data-testid="card-book"
+      onClick={() => router.push(`/project/${id}/books/${book?.id}`)}
     >
       <PreviewContainer isPreview={isPreview}>
         <ImageContainer>
-          {book.frontCover?.url ? (
+          {bookFrontCover ? (
             <Image
-              src={book?.frontCover?.url}
-              alt={book.title}
+              src={bookFrontCover}
+              alt={bookTitle}
               width={400}
               height={400}
+              data-testid="image-cover"
             />
           ) : (
-            <ImageIco weight="thin" size={64} alt="" color="#e3e3e3" />
+            <ImageIco
+              weight="thin"
+              size={64}
+              alt=""
+              color={theme === 'dark' ? '#e3e3e3' : '#000000'}
+              data-testid="icon-image"
+            />
           )}
         </ImageContainer>
 
         <InfosContainer>
           <InfoDefault size={isPreview ? 'sm' : 'md'} title="Nome:">
-            {book.title} {book?.subtitle}
+            {bookTitle}
           </InfoDefault>
 
           <InfoDefault size={isPreview ? 'sm' : 'md'} title="Gênero literário:">
-            {book.literaryGenere}
+            {literaryGenre}
           </InfoDefault>
 
           <InfoContainer>
             <InfoDefault
               size={isPreview ? 'sm' : 'md'}
-              title={`Progresso: ${book?.writtenWords} de ${book?.words} palavras escritas`}
+              title={`Progresso: ${book?.written_words} de ${book?.words} palavras escritas`}
             >
               <ProgressBar
-                final={Number(book?.words)}
-                actual={Number(book?.writtenWords)}
+                final={book?.words ?? 0}
+                actual={book?.written_words ?? 0}
               />
             </InfoDefault>
           </InfoContainer>
 
-          <InfoContainer columns={4}>
+          <InfoContainer columns={3}>
             <Info>
               <Text as="span" family="body" size="sm" height="shorter">
                 Gêneros:
               </Text>
-              <Text size="xs">{book.generes.length}</Text>
+              <Text size="xs" weight="bold">
+                {book?._count.genres}
+              </Text>
             </Info>
 
             <Info>
               <Text as="span" family="body" size="sm" height="shorter">
                 Autores:
               </Text>
-              <Text size="xs">{book.authors.length}</Text>
+              <Text size="xs" weight="bold">
+                {book?._count.authors}
+              </Text>
             </Info>
 
             <Info>
               <Text as="span" family="body" size="sm" height="shorter">
                 Capítulos:
               </Text>
-              <Text size="xs">{book.capitules.length}</Text>
-            </Info>
-
-            <Info>
-              <Text as="span" family="body" size="sm" height="shorter">
-                Personagens:
+              <Text size="xs" weight="bold">
+                {book?._count.capitules}
               </Text>
-              <Text size="xs">{book.plot.persons.length}</Text>
             </Info>
           </InfoContainer>
 
@@ -99,8 +126,8 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
               <Text as="span" family="body" size="sm" height="shorter">
                 ISBN:
               </Text>
-              <Text size="xs">
-                {book.isbn || 'Você ainda não definiu seu ISBN'}
+              <Text size="xs" weight="bold">
+                {isbn}
               </Text>
             </Info>
           </InfoContainer>
@@ -110,14 +137,18 @@ export function CardBook({ book, isPreview = false }: ICardBookProps) {
               <Text as="span" family="body" size="sm" height="shorter">
                 Criado em:
               </Text>
-              <Text size="xs">{book.createAt}</Text>
+              <Text size="xs" weight="bold">
+                {createdAt}
+              </Text>
             </Info>
 
             <Info>
               <Text as="span" family="body" size="sm" height="shorter">
                 Atualizado em:
               </Text>
-              <Text size="xs">{book.updateAt}</Text>
+              <Text size="xs" weight="bold">
+                {updatedAt}
+              </Text>
             </Info>
           </InfoContainer>
         </InfosContainer>

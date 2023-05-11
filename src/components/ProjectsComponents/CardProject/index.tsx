@@ -1,15 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { IProjectResponse } from '@api/responsesTypes/IProjcetResponse'
+import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon } from '@components/usefull/Button'
 
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
-import { UserContext } from '@contexts/user'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { BookBookmark, Image as ImageIco, Share } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { ShareProjectButton } from './components/ShareProjectButton'
 import {
   CardProjectContainer,
@@ -20,7 +18,7 @@ import {
   UsersWhitAccess,
 } from './styles'
 import { ShareProjectModal } from './components/ShareProjectModal'
-import { useProject } from '@hooks/useProject'
+import { useProjects } from '@hooks/useProjects'
 
 interface ICardProjectProps {
   project: IProjectResponse
@@ -33,35 +31,19 @@ export function CardProject({
   isList = false,
   isSharable = false,
 }: ICardProjectProps) {
-  const { users, setError } = useContext(ProjectsContext)
-  const { user } = useContext(UserContext)
-
   const [onShareProject, setOnShareProject] = useState('')
 
   const router = useRouter()
 
-  const creatorOfProject = users.find(
-    (user) => user.id === project.createdPerUser,
+  const { findProject } = useProjects()
+  const { usersInProject, projectName, projectImage, createdAt } = findProject(
+    project.id,
   )
-
-  const usersWhitAccessIncludeUser = users.filter((user) => {
-    const userAccess = !!project?.users?.find((u) => u.id === user.id)
-    return userAccess
-  })
-
-  const usersWhitAccess = usersWhitAccessIncludeUser.filter(
-    (u) => u.id !== user?.id,
-  )
-
-  const { boxesThisProject } = useProject(project.id)
-
-  const persons = boxesThisProject?.find((box) => box.name === 'persons')
-  const books = boxesThisProject?.find((box) => box.name === 'books')
 
   return (
     <CardProjectContainer isList={isList}>
       <Preview
-        title={project?.name}
+        title={projectName}
         as={isList !== 'example' ? 'button' : 'div'}
         onClick={() => {
           router.push(`/project/${project.id}`)
@@ -69,16 +51,16 @@ export function CardProject({
       >
         {isList === false && (
           <div className="project-image">
-            {project?.image?.url ? (
+            {projectImage ? (
               <Image
-                src={project?.image.url}
-                alt={project?.name}
+                src={projectImage}
+                alt={projectName}
                 width={300}
                 height={300}
                 priority
               />
             ) : (
-              <ImageIco weight="thin" size={64} alt={project?.name} />
+              <ImageIco weight="thin" size={64} alt={projectName} />
             )}
           </div>
         )}
@@ -92,7 +74,7 @@ export function CardProject({
                   Nome do projeto
                 </Text>
               )}
-              {isList === 'example' ? 'NOME DO PROJETO' : project?.name}
+              {isList === 'example' ? 'NOME DO PROJETO' : projectName}
             </Text>
             <Text as="p" height={'shorter'} size={'sm'}>
               {isList === false && (
@@ -100,7 +82,7 @@ export function CardProject({
                   Data de criação
                 </Text>
               )}
-              {isList === 'example' ? 'DATA DE CRIAÇÃO' : project.createAt}
+              {isList === 'example' ? 'DATA DE CRIAÇÃO' : createdAt}
             </Text>
           </InfosContainer>
 
@@ -121,8 +103,8 @@ export function CardProject({
               )}
               {isList === 'example'
                 ? 'CRIADO POR'
-                : creatorOfProject?.username
-                ? (creatorOfProject?.username as string)
+                : project.user.username
+                ? (project.user.username as string)
                 : 'Você'}
             </Text>
             <Text as="p" height={'shorter'} size={'sm'}>
@@ -131,7 +113,7 @@ export function CardProject({
                   Usuários com acesso
                 </Text>
               )}
-              {isList === 'example' ? 'Usuários' : project.users.length}
+              {isList === 'example' ? 'Usuários' : usersInProject.length}
             </Text>
           </InfosContainer>
 
@@ -141,14 +123,14 @@ export function CardProject({
                 <Text as="span" family="body" size="sm" height="shorter">
                   Livros
                 </Text>
-                {books?.archives[0]?.links?.length || 0}
+                {project._count.books || 0}
               </Text>
 
               <Text as="p" height={'shorter'} size={'sm'}>
                 <Text as="span" family="body" size="sm" height="shorter">
                   Personagens
                 </Text>
-                {persons?.archives[0]?.links?.length || 0}
+                {project._count.persons || 0}
               </Text>
             </InfosContainer>
           )}
@@ -163,18 +145,14 @@ export function CardProject({
                 <UserImage first>
                   <AvatarWeb
                     whitShadow
-                    src={user?.avatar?.url as string}
+                    src={project.user?.avatar_url ?? undefined}
                     size="xsm"
                   />
                 </UserImage>
-                {usersWhitAccess.map((u) => {
+                {usersInProject.map((u) => {
                   return (
                     <UserImage key={u.id}>
-                      <AvatarWeb
-                        whitShadow
-                        src={u.avatar?.url as string}
-                        size="xsm"
-                      />
+                      <AvatarWeb whitShadow src={u.avatarImage} size="xsm" />
                     </UserImage>
                   )
                 })}
@@ -188,11 +166,10 @@ export function CardProject({
           <Dialog.Trigger asChild>
             <ShareProjectButton
               title="Compartilhar projeto"
-              disabled={project.users.length >= 5}
+              disabled={usersInProject.length >= 5}
               isList={isList}
               wid="hug"
               onClick={() => {
-                setError(undefined)
                 setOnShareProject(`${project.id}`)
               }}
             >

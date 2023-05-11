@@ -78,7 +78,7 @@ export const EditImgForm = styled('form', {
   width: '30%',
   marginLeft: '-40%',
   marginTop: '-20%',
-  transition: 'all ease-in 250ms',
+  transition: 'ease-in-out 250ms',
 
   '@media screen and (max-width: 768px)': {
     marginTop: '-60px',

@@ -1,9 +1,10 @@
+import { IError } from '@@types/errors/IError'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
 import { PlotParts } from '@components/ProjectsComponents/PlotParts'
 import { ButtonIcon, ButtonRoot } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
+import { ToastError } from '@components/usefull/ToastError'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { useScroll } from '@hooks/useScroll'
@@ -11,7 +12,7 @@ import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { Pencil } from 'phosphor-react'
-import { ChangeEvent, FocusEvent, useContext, useState } from 'react'
+import { ChangeEvent, FocusEvent, useState } from 'react'
 
 import {
   BoxInput,
@@ -24,8 +25,7 @@ import {
 
 export default function PlotPage() {
   const [urlOfText, setUrlOfText] = useState('')
-
-  const { loading, updatePlot, error } = useContext(ProjectsContext)
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id } = router.query
@@ -33,31 +33,34 @@ export default function PlotPage() {
 
   const { scrollRef, handleScroll } = useScroll<HTMLDivElement>()
 
-  const { project, projectName, permission } = useProject(id as string)
+  const { project, projectName, permission, callEvent, loadingProject } =
+    useProject(id as string)
 
   async function handleEditUrlOfText(e: FocusEvent<HTMLFormElement>) {
     e.preventDefault()
 
     const updatedPlot: IUpdatePlotDTO = { urlOfText }
 
-    await updatePlot(updatedPlot, project?.id as string)
+    await callEvent.updatePlot(updatedPlot)
 
     if (!error) setUrlOfText('')
   }
 
   return (
     <>
-      <NextSeo title={`${projectName}-Plot | Ognare`} noindex />
+      <NextSeo title={`${projectName}-Plot | Magiscrita`} noindex />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
         paths={['Plot']}
-        loading={loading}
-        inError={!loading && !project}
+        loading={loadingProject}
+        inError={!loadingProject && !project}
         isFullScreen
       >
+        <ToastError error={error} setError={setError} />
+
         <Container ref={scrollRef} onScroll={handleScroll}>
-          {permission === 'edit' && !loading && (
+          {permission === 'edit' && !loadingProject && (
             <BoxInputUrlOfTextContainer>
               <BoxInputUrlOfText as="label">
                 <BoxInputUrlOfTextHeader>
@@ -79,9 +82,7 @@ export default function PlotPage() {
                   <TextInputRoot id="linkOfText">
                     <TextInputInput
                       type="url"
-                      placeholder={
-                        project?.plot?.urlOfText || 'https://exemplo.com'
-                      }
+                      placeholder={project?.url_text || 'https://exemplo.com'}
                       value={urlOfText}
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setUrlOfText(e.target.value)
@@ -96,23 +97,25 @@ export default function PlotPage() {
                   </ButtonRoot>
                 </BoxInput>
 
-                {project?.plot?.urlOfText && (
+                {project?.url_text && (
                   <LinkOfText
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={project.plot.urlOfText}
+                    href={project.url_text}
                   >
                     <Text css={{ color: '$black' }} weight="bold" size="sm">
                       Link do texto:
                     </Text>
-                    {project.plot.urlOfText}
+                    {project.url_text}
                   </LinkOfText>
                 )}
               </BoxInputUrlOfText>
             </BoxInputUrlOfTextContainer>
           )}
 
-          {!loading && <PlotParts project={project} columns={1} />}
+          {!loadingProject && (
+            <PlotParts projectId={project?.id!} columns={1} />
+          )}
         </Container>
       </ProjectPageLayout>
     </>

@@ -1,14 +1,11 @@
-import { IUpdateCapituleRequest } from '@api/booksRequests/types/IUpdateCapituleRequest'
 import { SceneCard } from '@components/BooksComponents/SceneCard'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
-import { DefaultError } from '@components/usefull/DefaultError'
 import { HeadingPart } from '@components/usefull/HeadingPart'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ProgressBar } from '@components/usefull/ProgressBar'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
@@ -25,7 +22,7 @@ import {
   Trash,
   X,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { AddScene } from './components/AddScene'
@@ -37,6 +34,11 @@ import {
   InputContainer,
 } from './styles'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
+import { useBook } from '@hooks/useBook'
+import { useCapitule } from '@hooks/useCapitule'
+import { IError } from '@@types/errors/IError'
+import { IUpdateCapitule } from '@hooks/useCapitule/types/IUpdateCapitule'
+import { ToastError } from '@components/usefull/ToastError'
 
 const updateCapituleSchema = z.object({
   name: z
@@ -69,34 +71,45 @@ export default function CapitulePage() {
   const [isAddingScene, setIsAddingScene] = useState(false)
   const [onEditScene, setOnEditScene] = useState('')
   const [isSelectedDelete, setIsSelectedDelete] = useState(false)
+  const [error, setError] = useState<IError | null>(null)
 
-  const { loading, error, setError, updateCapitule, deleteCapitule } =
-    useContext(ProjectsContext)
+  const router = useRouter()
+  const { id, bookId, capituleId } = router.query
+
+  const pathGoBack = `/project/${id}/books/${bookId}`
+  const { GoBackButton } = usePreventBack(pathGoBack)
+
+  const { project, projectName, permission } = useProject(id as string)
+
+  const { bookName, book, bookWrittenWords, bookWords } = useBook(
+    bookId as string,
+  )
+
+  const {
+    capitule,
+    capituleName,
+    loadingCapitule,
+    capituleWords,
+    findScene,
+    callEvent,
+  } = useCapitule(capituleId as string)
+
+  const { scene: sceneToUpdate } = findScene(onEditScene)
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<updateCapituleBodyData>({
     resolver: zodResolver(updateCapituleSchema),
+    defaultValues: {
+      act1: capitule?.structure_act_1 ?? '',
+      act2: capitule?.structure_act_2 ?? '',
+      act3: capitule?.structure_act_3 ?? '',
+      name: capitule?.name ?? '',
+      objective: capitule?.objective ?? '',
+    },
   })
-
-  const router = useRouter()
-  const { id, bookId, capituleId } = router.query
-  const pathGoBack = `/project/${id}/books/${bookId}`
-  const { GoBackButton } = usePreventBack(pathGoBack)
-
-  const { project, useBook, findManyPersons, permission } = useProject(
-    id as string,
-  )
-  const { book, bookName, findCapitule, bookWords, bookWrittenWords } = useBook(
-    bookId as string,
-  )
-  const { capitule, capituleName, findScene, capituleWords } = findCapitule(
-    capituleId as string,
-  )
-  const sceneToUpdate = findScene(onEditScene)
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -106,9 +119,7 @@ export default function CapitulePage() {
     if (data.act2 === ' ') data.act2 = ''
     if (data.act3 === ' ') data.act3 = ''
 
-    const capitule: IUpdateCapituleRequest = {
-      bookId: bookId as string,
-      capituleId: capituleId as string,
+    const capitule: IUpdateCapitule = {
       name: data.name,
       objective: data.objective,
       structure: {
@@ -118,38 +129,28 @@ export default function CapitulePage() {
       },
     }
 
-    await updateCapitule(capitule)
-    reset()
+    await callEvent.update(capitule)
   }
 
   async function handleDeleteCapitule() {
     router.push(pathGoBack)
 
-    await deleteCapitule({
-      bookId: book?.id!,
-      capituleId: capitule?.id!,
-    })
+    await callEvent.delete()
   }
 
   return (
     <>
-      <NextSeo title={`${bookName}-${capituleName} | Ognare`} noindex />
+      <NextSeo title={`${bookName}-${capituleName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
-        projectName={project?.name}
+        projectName={projectName}
         projectId={`${id}`}
         paths={['Livros', bookName, 'Capítulo', capituleName]}
-        loading={loading}
-        inError={!loading && (!book || !capitule)}
+        loading={loadingCapitule}
+        inError={!loadingCapitule && (!book || !capitule)}
         isScrolling
       >
-        {error && (
-          <DefaultError
-            close={() => setError(undefined)}
-            title={error.title}
-            message={error.message}
-          />
-        )}
+        <ToastError error={error} setError={setError} />
 
         <CapituleContainer>
           <GoBackButton />
@@ -176,7 +177,7 @@ export default function CapitulePage() {
 
                   <TextInputRoot>
                     <TextInputInput
-                      placeholder={capitule?.name || 'Carregando...'}
+                      placeholder={capituleName}
                       {...register('name')}
                     />
                   </TextInputRoot>
@@ -206,7 +207,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure?.act1 || 'Não definido'}
+                      placeholder={capitule?.structure_act_1 || 'Não definido'}
                       {...register('act1')}
                     />
                   </InputContainer>
@@ -221,7 +222,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure?.act2 || 'Não definido'}
+                      placeholder={capitule?.structure_act_2 || 'Não definido'}
                       {...register('act2')}
                     />
                   </InputContainer>
@@ -236,7 +237,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure?.act3 || 'Não definido'}
+                      placeholder={capitule?.structure_act_3 || 'Não definido'}
                       {...register('act3')}
                     />
                   </InputContainer>
@@ -348,14 +349,13 @@ export default function CapitulePage() {
           {isAddingScene ? (
             <AddScene
               onClose={() => setIsAddingScene(false)}
-              projectId={project.id}
-              bookId={book?.id!}
+              projectId={project!.id}
+              bookId={book!.id}
               capitule={capitule!}
             />
           ) : onEditScene ? (
             <EditScene
-              projectId={project.id}
-              bookId={book?.id!}
+              projectId={project!.id}
               capitule={capitule!}
               scene={sceneToUpdate!}
               onClose={() => setOnEditScene('')}
@@ -372,8 +372,6 @@ export default function CapitulePage() {
             >
               {capitule?.scenes && capitule.scenes[0] ? (
                 capitule?.scenes?.map((scene) => {
-                  const personsInThisScene = findManyPersons(scene.persons)
-
                   return (
                     <SceneCard
                       setOnEditScene={setOnEditScene}
@@ -381,7 +379,7 @@ export default function CapitulePage() {
                       bookId={book?.id!}
                       capituleId={capitule.id!}
                       scene={scene}
-                      persons={personsInThisScene}
+                      persons={scene.persons}
                     />
                   )
                 })

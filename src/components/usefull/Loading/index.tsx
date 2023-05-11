@@ -1,10 +1,17 @@
+import { InterfaceContext } from '@contexts/interface'
 import { keyframes, styled } from '@styles/index'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Heading } from '../Heading'
 
-export function Loading() {
+interface ILoadingProps {
+  autoAdapt?: boolean
+}
+
+export function Loading({ autoAdapt = false }: ILoadingProps) {
+  const { theme } = useContext(InterfaceContext)
+
   return (
-    <LoadingContainer>
+    <LoadingContainer darkMode={theme === 'dark'} autoAdapt={autoAdapt}>
       <Ring />
       <Heading weight="bold" spacing="minus" as="span">
         Carregando...
@@ -39,11 +46,7 @@ const LoadingContainer = styled('div', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  background: '$gray900',
   position: 'relative',
-
-  width: '100%',
-  height: '100vh',
 
   span: {
     color: '$base800',
@@ -51,6 +54,33 @@ const LoadingContainer = styled('div', {
     fontSize: 12,
 
     animation: `${textAnimation} 3s ease-in-out infinite`,
+  },
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+      },
+      false: {
+        background: '$base200',
+      },
+    },
+
+    autoAdapt: {
+      true: {
+        height: '100%',
+        width: '100%',
+      },
+      false: {
+        width: '100%',
+        height: '100vh',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+    autoAdapt: false,
   },
 })
 

@@ -12,11 +12,25 @@ export const NotificationPopoverContainer = styled(Popover.Content, {
   maxWidth: '100vw',
   maxHeight: '450px',
 
-  background: '$gray900',
   borderRadius: '$sm',
   boxShadow:
     'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
   border: '2px solid $purple400',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+      },
+      false: {
+        background: '$gray200',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const PopoverArrow = styled(Popover.Arrow, {
@@ -88,7 +102,6 @@ export const Notification = styled(Box, {
   gap: '$2',
   padding: '$3',
 
-  background: '$gray600',
   boxShadow: '$none',
   transition: 'ease-in-out 250ms',
 
@@ -108,5 +121,19 @@ export const Notification = styled(Box, {
         background: '$blue800',
       },
     },
+    darkMode: {
+      true: {
+        background: '$gray600',
+        color: '$white',
+      },
+      false: {
+        background: '$gray400',
+        color: '$white',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
   },
 })

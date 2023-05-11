@@ -36,7 +36,7 @@ export const EditButton = styled('button', {
   border: 'none',
   outline: 'none',
   cursor: 'pointer',
-  transition: 'all ease-in-out 250ms',
+  transition: 'ease-in-out 250ms',
 
   '&:hover': {
     rotate: '360deg',

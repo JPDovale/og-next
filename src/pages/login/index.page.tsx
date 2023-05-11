@@ -3,7 +3,7 @@ import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
 import { Envelope, Eye, EyeClosed, LockKey } from 'phosphor-react'
 import {
-  BackgroundLogin,
+  CardLogin,
   InputContainer,
   InputHeader,
   Links,
@@ -11,9 +11,7 @@ import {
   LoginPageContainer,
 } from './styles'
 
-import Back from '../../assets/back.svg'
-import LogoToDown from '../../assets/logos/logoToDown.svg'
-import Logo from '../../assets/logos/logo.svg'
+import LogoToDown from '../../assets/logos/logoOG.png'
 
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
@@ -23,14 +21,14 @@ import { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../contexts/user'
 
 import { NextSeo } from 'next-seo'
-import { Loading } from '@components/usefull/Loading'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { ToastError } from '@components/usefull/ToastError'
+import { useUser } from '@hooks/useUser'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -44,7 +42,8 @@ type LoginFormData = z.infer<typeof loginFormSchema>
 export default function LoginPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
 
-  const { createSession, userLogged, loading, error } = useContext(UserContext)
+  const { createSession, error, setError } = useContext(UserContext)
+  const { userLogged, refetchUser } = useUser()
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
@@ -58,6 +57,7 @@ export default function LoginPage() {
     const isLogged = await createSession(newSession)
 
     if (isLogged) {
+      await refetchUser()
       router.push('/projects')
     }
   }
@@ -68,28 +68,59 @@ export default function LoginPage() {
     }
   }, [userLogged, router])
 
-  if (loading) {
-    return <Loading />
-  }
-
   return (
     <>
-      <NextSeo title="Faça o login | Ognare" />
+      <NextSeo title="Faça o login | Magiscrita" />
 
       <LoginPageContainer>
-        <Image className="logo" src={LogoToDown} alt="" />
-        <Image className="logo2" src={Logo} alt="" />
-        <BackgroundLogin src={Back} alt="" />
+        <CardLogin>
+          <Image className="logo" src={LogoToDown} alt="" />
+          <Text size="3xl" family="headingText" className="logo">
+            MagiScrita
+          </Text>
+
+          <Text size="lg" height="shorter" family="body" weight="bold">
+            Bem-vindo de volta ao MagiScrita, a plataforma de escrita criativa
+            que permite que sua imaginação voe livremente! Estamos muito felizes
+            em tê-lo de volta conosco. Sabemos que o tempo pode ser escasso e
+            que a vida é agitada, mas estamos sempre aqui para lhe oferecer um
+            espaço tranquilo e inspirador para você deixar fluir sua
+            criatividade.
+            <br />
+            <br /> MagiScrita é um lugar onde suas ideias são bem-vindas e onde
+            você pode compartilhar seus escritos com uma comunidade apaixonada
+            por literatura. Nosso objetivo é fornecer as ferramentas e recursos
+            necessários para ajudá-lo a aprimorar suas habilidades de escrita e
+            tornar suas histórias ainda mais envolventes.
+            <br />
+            <br /> Não importa se você é um escritor experiente ou se está
+            apenas começando sua jornada literária, o MagiScrita é o lugar
+            perfeito para expandir seus horizontes e explorar novas ideias. Aqui
+            você encontrará tudo o que precisa para transformar suas histórias
+            em obras-primas, desde dicas de escrita até desafios criativos, além
+            de uma comunidade de escritores dedicados que estarão sempre prontos
+            para ajudar e apoiar uns aos outros. <br />
+            <br />
+            Então, seja bem-vindo de volta ao MagiScrita. Estamos ansiosos para
+            ver o que você irá criar aqui e mal podemos esperar para ler suas
+            próximas histórias incríveis!
+          </Text>
+        </CardLogin>
 
         <LoginFormContainer onSubmit={handleSubmit(handleLogin)}>
-          <Text size={'xl'} as="span" spacing={'maximum'} weight="bold">
+          <Text
+            size="2xl"
+            css={{ textTransform: 'uppercase' }}
+            as="span"
+            family="headingText"
+          >
             Efetue o login
           </Text>
 
-          {error && <ResponseInfoApi error={error} />}
+          {error && <ToastError error={error} setError={setError} />}
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               E-MAIL
               <Text size="sm" as="span" family="body">
                 {formState.errors?.email?.message}
@@ -97,6 +128,7 @@ export default function LoginPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={formState.errors.email?.message ? 'denied' : 'default'}
             >
               <TextInputIcon>
@@ -111,7 +143,7 @@ export default function LoginPage() {
           </InputContainer>
 
           <InputContainer>
-            <InputHeader size={'xs'}>
+            <InputHeader size={'xs'} weight="bold">
               SUA SENHA
               <Text size="sm" as="span" family="body">
                 {formState.errors?.password?.message}
@@ -119,6 +151,7 @@ export default function LoginPage() {
             </InputHeader>
 
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.password?.message ? 'denied' : 'default'
               }
@@ -149,12 +182,12 @@ export default function LoginPage() {
 
           <Links>
             <Link href="/register">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Ainda não tenho cadastro
               </Text>
             </Link>
             <Link href="/user/password/forgot">
-              <Text as="span" size="xs">
+              <Text as="span" size="xs" weight="bold">
                 Esqueci minha senha
               </Text>
             </Link>

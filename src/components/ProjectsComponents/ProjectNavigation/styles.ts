@@ -6,8 +6,7 @@ export const ProjectNavigationContainer = styled('nav', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  width: '8%',
-  maxHeight: '100vh',
+  width: '5%',
   height: '100vh',
   background: '$gray900',
   transition: 'ease-in-out 250ms',
@@ -26,7 +25,7 @@ export const ProjectNavigationContainer = styled('nav', {
     borderRadius: '$full',
     background: 'transparent',
     cursor: 'pointer',
-    color: '$base100',
+    color: '$text800',
 
     scale: '80%',
 
@@ -40,7 +39,6 @@ export const ProjectNavigationContainer = styled('nav', {
 
   '@media screen and (max-width: 768px)': {
     width: '100%',
-    overflow: 'unset',
   },
 
   variants: {
@@ -66,7 +64,46 @@ export const Logo = styled('div', {
     cursor: 'pointer',
     width: '100%',
     height: '100%',
-    paddingBottom: '$2',
+  },
+
+  variants: {
+    darkMode: {
+      false: {
+        // filter: 'invert(1)',
+      },
+      true: {},
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
+})
+
+export const OptionsContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  height: '100%',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+
+  scrollbarWidth: 'thin',
+  scrollbarColor: '#00000000 #00000000',
+
+  '&::-webkit-scrollbar': {
+    width: 2,
+    height: 2,
+  },
+
+  '&::-webkit-scrollbar-track': {
+    background: '#00000000',
+  },
+
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: '$purple800',
+    border: '1px solid #ffffff20',
+    borderRadius: '$full',
   },
 })
 
@@ -75,12 +112,9 @@ export const Options = styled('div', {
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
-  height: 'auto',
-  gap: '$5',
-  overflowY: 'scroll',
-  overflowX: 'hidden',
+  gap: '$3',
   paddingBottom: '$8',
-  padding: '$6',
+  padding: '$4',
 
   variants: {
     isOpen: {
@@ -88,14 +122,11 @@ export const Options = styled('div', {
         display: 'grid',
         gridTemplateColumns: 'repeat(8, 1fr)',
         alignItems: 'flex-end',
-        overflowY: 'unset',
 
         '@media screen and (max-width: 768px)': {
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          height: '100%',
           gap: '$8',
-          overflowY: 'unset',
         },
       },
       false: {},
@@ -110,12 +141,6 @@ export const Label = styled(Text, {
   height: 'auto',
   alignItems: 'center',
   gap: '$2',
-
-  '@media screen and (max-width: 768px)': {
-    button: {
-      padding: '$3',
-    },
-  },
 })
 
 export const DeletePopUp = styled('div', {

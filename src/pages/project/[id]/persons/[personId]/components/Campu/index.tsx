@@ -77,7 +77,6 @@ export function Campu({
 
                 return (
                   <GenericCardObject
-                    permission={permission}
                     to={keyIndex}
                     key={personality.id}
                     object={personality}

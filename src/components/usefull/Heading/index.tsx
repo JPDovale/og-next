@@ -36,6 +36,14 @@ const HeadingContainer = styled('h2', {
       medium: { fontWeight: '$medium' },
       bold: { fontWeight: '$bold' },
     },
+    colorInvert: {
+      true: {
+        color: '$text100',
+      },
+      false: {
+        color: '$text800',
+      },
+    },
   },
 
   defaultVariants: {
@@ -43,6 +51,7 @@ const HeadingContainer = styled('h2', {
     spacing: 'default',
     height: 'base',
     weight: 'regular',
+    colorInvert: false,
   },
 })
 
@@ -53,10 +62,11 @@ export interface IHeadingProps extends ComponentProps<typeof HeadingContainer> {
   weight?: 'regular' | 'medium' | 'bold'
   as?: ElementType
   children?: ReactNode
+  colorInvert?: boolean
 }
 
-export function Heading(props: IHeadingProps) {
-  return <HeadingContainer {...props} />
+export function Heading({ colorInvert = false, ...props }: IHeadingProps) {
+  return <HeadingContainer colorInvert={colorInvert} {...props} />
 }
 
 Heading.displayName = 'Heading'

@@ -33,23 +33,27 @@ export const HeaderOptionsContainer = styled('header', {
   zIndex: '1',
   justifyContent: 'space-between',
 
-  padding: '$4 $8',
+  padding: '0 $4',
+  height: '60px',
 
-  boxShadow: '0 4px 8px #000000aa',
-  borderTopLeftRadius: '48px',
-  transition: 'all 500ms',
-  background: '$gray800',
+  boxShadow: '0 4px 8px #00000050',
+  transition: 'ease-in-out 250ms',
+  background: '$gray700',
 
   variants: {
     NavIsOpen: {
       true: {
-        width: '74%',
+        width: '82%',
         '@media screen and (max-width: 768px)': {
           width: '100%',
         },
       },
       false: {
-        width: '100%',
+        width: '95%',
+
+        '@media screen and (max-width: 768px)': {
+          width: '100%',
+        },
       },
     },
   },
@@ -69,6 +73,7 @@ export const Title = styled('div', {
   display: 'flex',
   alignItems: 'center',
   gap: '$5',
+  color: '$text800',
 
   svg: {
     cursor: 'pointer',
@@ -109,6 +114,7 @@ export const Options = styled('div', {
   width: '60%',
 
   'svg, .avatar': {
+    color: '$text800',
     cursor: 'pointer',
   },
 
@@ -127,6 +133,10 @@ export const Options = styled('div', {
     },
     '&:last-child': {
       borderRadius: '$full',
+    },
+    '&:disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.4,
     },
   },
 
@@ -207,4 +217,8 @@ export const NewNotificationAlert = styled('div', {
   p: {
     lineHeight: 0,
   },
+})
+
+export const Space = styled('div', {
+  minHeight: '60px',
 })

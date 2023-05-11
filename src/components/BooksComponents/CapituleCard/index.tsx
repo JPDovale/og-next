@@ -4,9 +4,9 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { TextInputInput } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { ProjectsContext } from '@contexts/projects'
+import { useBook } from '@hooks/useBook'
 import { List, X } from 'phosphor-react'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { z } from 'zod'
 import { HeaderButton } from '../SceneCard/styles'
 
@@ -28,8 +28,8 @@ interface ICapituleCardProps {
   redirectFunction?: () => void
 }
 
-const writtenWordsInput = z.string().regex(/^([0-9]+)$/, {
-  message: 'Coloque apenas números na idade do personagem.',
+const writtenWordsInput = z.coerce.number({
+  invalid_type_error: 'Coloque apenas números na idade do personagem.',
 })
 
 export function CapituleCard({
@@ -42,7 +42,7 @@ export function CapituleCard({
   const [toSequenceSet, setToSequenceSet] = useState('')
   const [errorIn, setErrorIn] = useState('')
 
-  const { reorderCapitules } = useContext(ProjectsContext)
+  const { callEvent } = useBook(bookId)
 
   async function handleReorderCapitules() {
     setErrorIn('')
@@ -63,17 +63,16 @@ export function CapituleCard({
       return setErrorIn('reorder-min')
     }
 
-    if (toSequenceSet === capitule.sequence) {
+    if (toSequenceSet === capitule.sequence.toString()) {
       setToSequenceSet('')
       setErrorIn('')
       return setReOrderSelected(false)
     }
 
     setErrorIn('')
-    await reorderCapitules({
-      bookId,
+    await callEvent.reorderCapitules({
       sequenceFrom: capitule.sequence,
-      sequenceTo: toSequenceSet,
+      sequenceTo: Number(toSequenceSet),
     })
 
     setReOrderSelected(false)
@@ -81,10 +80,12 @@ export function CapituleCard({
   }
 
   return (
-    <CapituleCardContainer>
+    <CapituleCardContainer data-testid="capitule">
       <CapituleName as="div">
         <div>
-          {capitule.name}
+          <Text as="span" weight="bold">
+            {capitule.name}
+          </Text>
           <Text size="sm" family="body" css={{ color: '$base800' }}>
             Clique para abrir a grade de cenas
           </Text>
@@ -97,28 +98,47 @@ export function CapituleCard({
           }}
         >
           {reOrderSelected ? (
-            <X size={16} weight="duotone" />
+            <X size={16} weight="duotone" data-testid="cancel-reorder" />
           ) : (
-            <List size={16} weight="duotone" />
+            <List size={16} weight="duotone" data-testid="select-reorder" />
           )}
         </HeaderButton>
       </CapituleName>
 
       {!reOrderSelected && (
         <CapituleInfos
+          data-testid="capitule-infos"
           type="button"
           onClick={redirectFunction && redirectFunction}
         >
           <ContainerGrid columns={4}>
             <InfoDefault title="Completo">
-              <CapituleComplete size="sm" complete={capitule.complete}>
-                {capitule.complete ? 'Completo' : 'Incompleto'}
+              <CapituleComplete as="div" size="sm" complete={capitule.complete}>
+                {capitule.complete ? (
+                  <Text
+                    data-testid="complete"
+                    family="body"
+                    size="lg"
+                    weight="bold"
+                  >
+                    Completo
+                  </Text>
+                ) : (
+                  <Text
+                    data-testid="incomplete"
+                    family="body"
+                    size="lg"
+                    weight="bold"
+                  >
+                    Incompleto
+                  </Text>
+                )}
               </CapituleComplete>
             </InfoDefault>
 
             <InfoDefault title="Capítulo">{capitule.sequence}</InfoDefault>
 
-            <InfoDefault title="Cenas">{capitule.scenes?.length}</InfoDefault>
+            <InfoDefault title="Cenas">{capitule?._count.scenes}</InfoDefault>
 
             <InfoDefault title="Palavras">{capitule.words || 0}</InfoDefault>
           </ContainerGrid>
@@ -136,19 +156,19 @@ export function CapituleCard({
 
             <InfoDefault title="Ato 1">
               <CapituleObjective family="body">
-                {capitule.structure?.act1 || 'Não definido'}
+                {capitule?.structure_act_1 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
 
             <InfoDefault title="Ato 2">
               <CapituleObjective family="body">
-                {capitule.structure?.act2 || 'Não definido'}
+                {capitule?.structure_act_2 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
 
             <InfoDefault title="Ato 3">
               <CapituleObjective family="body">
-                {capitule.structure?.act3 || 'Não definido'}
+                {capitule?.structure_act_3 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
           </ContainerGrid>
@@ -156,7 +176,7 @@ export function CapituleCard({
       )}
 
       {reOrderSelected && (
-        <AlternativeFormContainer>
+        <AlternativeFormContainer data-testid="reorder-form">
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">

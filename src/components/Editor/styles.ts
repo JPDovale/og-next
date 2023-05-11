@@ -3,8 +3,9 @@ import { styled } from '@styles/index'
 export const EditorHeader = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center',
+  flexDirection: 'column',
   padding: '$4',
+  gap: '$4',
 
   span: {
     display: 'flex',

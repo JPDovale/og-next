@@ -1,145 +1,215 @@
+import { IError } from '@@types/errors/IError'
+import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '@api/dtos/IUpdatePlotDTO'
-import { EditorAndComments } from '@components/ProjectsComponents/EditorAndComments'
+import { Editor } from '@components/Editor'
+import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 import { Toast } from '@components/usefull/Toast'
 import { ToastError } from '@components/usefull/ToastError'
-import { ProjectsContext } from '@contexts/projects'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useProject } from '@hooks/useProject'
 import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
 export default function StructurePage() {
-  const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [act1, setAct1] = useState('')
   const [act2, setAct2] = useState('')
   const [act3, setAct3] = useState('')
-  const [message, setMessage] = useState('')
-
-  const { loading, updatePlot, error, setError } = useContext(ProjectsContext)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [error, setError] = useState<IError | null>(null)
 
   const router = useRouter()
   const { id } = router.query
   usePreventBack(`/project/${id}/plot`)
 
-  const { project, projectName, permission } = useProject(id as string)
-  const commentsStructure = project?.plot.comments?.filter(
-    (comment) => comment.to === 'structure',
+  const { project, projectName, permission, loadingProject, callEvent } =
+    useProject(id as string)
+
+  const commentsStructure = project?.comments?.filter(
+    (comment) => comment.to_unknown === 'structure',
   )
 
   async function handleUpdateAct1() {
-    setSuccessToastOpen(false)
-    setMessage('')
-    if (act1 === project.plot.structure?.act1) return
+    setSuccessMessage('')
+    setError(null)
+    if (act1 === project?.structure_act_1) return
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1,
-        act2: project.plot.structure?.act2,
-        act3: project.plot.structure?.act3,
+        act1: act1 || null,
+        act2: project?.structure_act_2,
+        act3: project?.structure_act_3,
       },
     }
 
-    await updatePlot(updatedPlotStructure, project.id as string)
-    setMessage('Estrutura -> Ato 1 atualizada com sucesso.')
-    setSuccessToastOpen(true)
+    const { resolved, error } = await callEvent.updatePlot(updatedPlotStructure)
+
+    if (resolved) {
+      setSuccessMessage('Ato 1 atualizado com sucesso.')
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
   async function handleUpdateAct2() {
-    setSuccessToastOpen(false)
-    setMessage('')
-    if (act2 === project.plot.structure?.act2) return
+    setSuccessMessage('')
+    setError(null)
+    if (act2 === project?.structure_act_2) return
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1: project.plot.structure?.act1,
-        act2,
-        act3: project.plot.structure?.act3,
+        act1: project?.structure_act_1,
+        act2: act2 || null,
+        act3: project?.structure_act_3,
       },
     }
 
-    await updatePlot(updatedPlotStructure, project.id as string)
-    setMessage('Estrutura -> Ato 2 atualizada com sucesso.')
-    setSuccessToastOpen(true)
+    const { resolved, error } = await callEvent.updatePlot(updatedPlotStructure)
+
+    if (resolved) {
+      setSuccessMessage('Ato 2 atualizado com sucesso.')
+    }
+
+    if (error) {
+      setError(error)
+    }
   }
 
   async function handleUpdateAct3() {
-    setSuccessToastOpen(false)
-    setMessage('')
-    if (act3 === project.plot.structure?.act3) return
+    setSuccessMessage('')
+    setError(null)
+    if (act3 === project?.structure_act_3) return
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1: project.plot.structure?.act1,
-        act2: project.plot.structure?.act2,
-        act3,
+        act1: project?.structure_act_1,
+        act2: project?.structure_act_2,
+        act3: act3 || null,
       },
     }
 
-    await updatePlot(updatedPlotStructure, project.id as string)
-    setMessage('Estrutura -> Ato 3 atualizada com sucesso.')
-    setSuccessToastOpen(true)
+    const { resolved, error } = await callEvent.updatePlot(updatedPlotStructure)
+
+    if (resolved) {
+      setSuccessMessage('Ato 3 atualizado com sucesso.')
+    }
+
+    if (error) {
+      setError(error)
+    }
+  }
+
+  async function handleNewComment(newComment: ICreateCommentDTO) {
+    const { error, resolved } = await callEvent.commentInPlot(newComment)
+
+    if (error) {
+      setError(error)
+    }
+
+    if (resolved) {
+      setSuccessMessage('Comentário criado com sucesso')
+    }
   }
 
   return (
     <>
-      <NextSeo title={`${projectName}-Estrutura de 3 atos | Ognare`} noindex />
+      <NextSeo
+        title={`${projectName}-Estrutura de 3 atos | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
         paths={['Plot', 'Estrutura']}
-        loading={loading}
-        inError={!loading && !project}
+        loading={loadingProject}
+        inError={!loadingProject && !project}
         isScrolling
       >
         <Toast
           title="Estrutura de três atos atualizada"
-          message={message}
-          open={successToastOpen}
-          setOpen={setSuccessToastOpen}
-          type="success"
+          message={successMessage}
+          open={!!successMessage}
+          setOpen={() => setSuccessMessage('')}
         />
 
         <ToastError error={error} setError={setError} />
 
-        <EditorAndComments
-          updateValue={handleUpdateAct1}
-          preValue={project?.plot.structure?.act1}
+        <Editor
+          handleUpdate={handleUpdateAct1}
           permission={permission}
-          comments={commentsStructure}
-          projectCreatedPerUser={project?.createdPerUser}
-          projectId={project?.id as string}
+          preValue={project?.structure_act_1 ?? ''}
+          projectId={project!.id}
           setValue={setAct1}
           to="structure"
           superFix="Ato 1"
-          withoutComments
+          description={
+            <>
+              Estrutura de Três Atos é um esquema comum usado na escrita de
+              roteiros e narrativas. Cada ato tem sua própria função na história
+              geral e trabalha em conjunto para desenvolver a trama e manter o
+              público engajado. Aqui está uma breve descrição de cada ato:
+              <br />
+              <br />
+              Primeiro Ato: O primeiro ato estabelece o cenário da história,
+              apresenta os personagens principais e estabelece o conflito
+              principal. É neste momento que o público se envolve na história e
+              aprende o suficiente sobre os personagens e a trama para ficar
+              interessado. O primeiro ato termina com um evento que coloca a
+              história em movimento.
+            </>
+          }
         />
 
-        <EditorAndComments
-          updateValue={handleUpdateAct2}
-          preValue={project?.plot.structure?.act2}
+        <Editor
+          handleUpdate={handleUpdateAct2}
           permission={permission}
-          comments={commentsStructure}
-          projectCreatedPerUser={project?.createdPerUser}
-          projectId={project?.id as string}
+          preValue={project?.structure_act_2 ?? ''}
+          projectId={project!.id}
           setValue={setAct2}
           to="structure"
           superFix="Ato 2"
-          withoutComments
+          description={
+            <>
+              Segundo Ato: O segundo ato é a parte mais longa e complexa da
+              estrutura de três atos. É nesta parte que a história se
+              desenvolve, os personagens enfrentam obstáculos e se esforçam para
+              superá-los. O protagonista geralmente enfrenta um ponto baixo, uma
+              derrota ou um desafio aparentemente impossível de superar. O
+              segundo ato termina com um evento dramático que prepara o palco
+              para o clímax.
+            </>
+          }
         />
 
-        <EditorAndComments
-          updateValue={handleUpdateAct3}
-          preValue={project?.plot.structure?.act3}
+        <Editor
+          handleUpdate={handleUpdateAct3}
           permission={permission}
-          comments={commentsStructure}
-          projectCreatedPerUser={project?.createdPerUser}
-          projectId={project?.id as string}
+          preValue={project?.structure_act_3 ?? ''}
+          projectId={project!.id}
           setValue={setAct3}
           to="structure"
           superFix="Ato 3"
+          description={
+            <>
+              Terceiro Ato: O terceiro ato é a conclusão da história. É nesta
+              parte que a tensão aumenta e os personagens enfrentam o clímax. O
+              protagonista supera o último obstáculo e resolve o conflito
+              principal. O terceiro ato termina com uma resolução que fornece um
+              senso de encerramento para a história.
+            </>
+          }
+        />
+
+        <CommentsOnPage
+          permission={permission}
+          comments={commentsStructure}
+          isNew={false}
+          onNewComment={handleNewComment}
+          onNewCommentTo="structure"
         />
       </ProjectPageLayout>
     </>

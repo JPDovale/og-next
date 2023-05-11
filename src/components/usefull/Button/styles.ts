@@ -12,7 +12,7 @@ export const ButtonContainer = styled('button', {
   border: 'none',
   outline: 'none',
   borderRadius: '$sm',
-  transition: 'all 500ms',
+  transition: 'ease-in-out 250ms',
 
   '&:disabled': {
     cursor: 'not-allowed',

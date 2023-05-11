@@ -8,11 +8,25 @@ export const NewProjectForm = styled('form', {
   gap: '$2',
   height: '100%',
   alignItems: 'center',
-  padding: '$8',
+  padding: '$4',
 
-  background: '$gray900',
   overflowY: 'auto',
   borderRadius: '0 0 $md $md',
+
+  variants: {
+    darkMode: {
+      true: {
+        background: '$gray900',
+      },
+      false: {
+        background: '$base400',
+      },
+    },
+  },
+
+  defaultVariants: {
+    darkMode: false,
+  },
 })
 
 export const Input = styled(Text, {

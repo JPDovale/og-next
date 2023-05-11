@@ -17,6 +17,7 @@ export const HeadingCampu = styled(Heading, {
     padding: '$2',
     boxShadow: '$default',
     borderRadius: '$xs',
+    color: '$white',
   },
 })
 

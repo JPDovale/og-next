@@ -1,4 +1,4 @@
-import { INotification } from './IUserResponse'
+import { IUserResponse } from './IUserResponse'
 
 export interface IAvatar {
   fileName: string
@@ -8,44 +8,13 @@ export interface IAvatar {
 }
 
 export interface ICreateResponse {
-  user: {
-    age: string
-    avatar?: IAvatar
-    email: string
-    id: string
-    sex: string
-    username: string
-    notifications: INotification[]
-    createAt: string
-    updateAt: string
-    isInitialized: boolean
-    isSocialLogin: boolean
-    name: string
-  }
-  refreshToken: string
-  token: string
+  user: IUserResponse
   errorMessage?: string
   errorTitle?: string
 }
 
 export interface ICreateSessionResponse {
-  user: {
-    age: string
-    avatar?: IAvatar
-    email: string
-    id: string
-    sex: string
-    username: string
-    notifications: INotification[]
-    createAt: string
-    updateAt: string
-    isInitialized: boolean
-    isSocialLogin: boolean
-    name: string
-  }
-  refreshToken: string
-  token: string
-
+  user: IUserResponse
   errorMessage?: string
   errorTitle?: string
 }
