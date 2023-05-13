@@ -6,7 +6,7 @@ import {
   ListChecks,
   Package,
   ProjectorScreenChart,
-  Star,
+  // Star,
   UserCircle,
   UsersThree,
   XCircle,
@@ -19,7 +19,7 @@ import { useWindowSize } from '@hooks/useWindow'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 import { useProjects } from '@hooks/useProjects'
-import { useUser } from '@hooks/useUser'
+// import { useUser } from '@hooks/useUser'
 
 export function NavigationBar() {
   const { navIsOpen, setNavIsOpen, theme } = useContext(InterfaceContext)
@@ -31,7 +31,7 @@ export function NavigationBar() {
   const smallWindow = windowSize.width! < 786
 
   const { projectsThisUser, projectsSharedWithUser } = useProjects()
-  const { userIsPro } = useUser()
+  // const { userIsPro } = useUser()
 
   return (
     <NavigationBarContainer navIsOpen={navIsOpen} darkMode={theme === 'dark'}>
@@ -172,7 +172,7 @@ export function NavigationBar() {
 
           {navIsOpen && <ButtonLabel>To-Do</ButtonLabel>}
         </ButtonRoot>
-        {!userIsPro && (
+        {/* {!userIsPro && (
           <ButtonRoot
             type="button"
             title="Pro"
@@ -186,7 +186,7 @@ export function NavigationBar() {
 
             {navIsOpen && <ButtonLabel>Pro</ButtonLabel>}
           </ButtonRoot>
-        )}
+        )} */}
         {smallWindow && (
           <>
             <Text

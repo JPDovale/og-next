@@ -1,6 +1,6 @@
 {
   "name": "og-next",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,9 +10,12 @@
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:watch": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "changeset": "changeset",
+    "version": "changeset version"
   },
   "dependencies": {
+    "@changesets/cli": "^2.26.1",
     "@hookform/resolvers": "^2.9.10",
     "@next/font": "13.1.1",
     "@radix-ui/react-alert-dialog": "^1.0.3",
@@ -44,6 +47,7 @@
     "next-auth": "^4.18.8",
     "next-seo": "^5.15.0",
     "nookies": "^2.5.2",
+    "openai": "^3.2.1",
     "phosphor-react": "^1.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
