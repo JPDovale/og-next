@@ -51,6 +51,8 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
     })
   }
 
+  router.push('/projects')
+
   return (
     <>
       <NextSeo title="Preços dos planos do MagiScrita" />
