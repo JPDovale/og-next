@@ -36,6 +36,7 @@ import { UserOptionsPopover } from './components/UserOptionsPopover'
 import { NewProjectModal } from '@components/ProjectsComponents/NewProjectModal'
 import { NewBoxModal } from '@components/BoxesComponents/NewBoxModal'
 import { useUser } from '@hooks/useUser'
+import pk from '../../../package.json'
 
 interface IHeaderOptionsProps {
   windowName: string
@@ -98,6 +99,13 @@ export function HeaderOptions({
         </Title>
 
         <Options>
+          <Text
+            css={{ width: '100%', lineHeight: 0, opacity: 0.6 }}
+            family="body"
+          >
+            Versão: {pk.version} Beta
+          </Text>
+
           <Dialog.Root>
             <Dialog.Trigger asChild>
               <button
