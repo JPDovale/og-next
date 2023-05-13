@@ -1,8 +1,10 @@
+import { IError } from '@@types/errors/IError'
 import { ICreateBookDTO } from '@api/dtos/booksDTOS/ICreateBookDTO'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { MultiStep } from '@components/usefull/MultiStep'
+import { ToastError } from '@components/usefull/ToastError'
 import { InterfaceContext } from '@contexts/interface'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
@@ -63,12 +65,13 @@ interface INewBookModalProps {
 
 export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
   const { theme } = useContext(InterfaceContext)
+  const [error, setError] = useState<IError | null>(null)
   const [step, setStep] = useState(1)
 
   const {
     clearErrors,
     handleSubmit,
-    setError,
+    setError: setErrorForm,
     control,
     register,
     reset,
@@ -106,7 +109,7 @@ export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
     errorsInFields.forEach((error) => {
       if (!error?.errorMessage || !error?.errorField) return
 
-      setError(error.errorField, { message: error.errorMessage })
+      setErrorForm(error.errorField, { message: error.errorMessage })
     })
 
     const isValid = !errorsInFields.find(
@@ -163,7 +166,11 @@ export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
       newBook.authors.push({ user_id: user.id }),
     )
 
-    const { resolved } = await callEvent.createBook(newBook)
+    const { resolved, error } = await callEvent.createBook(newBook)
+
+    if (error) {
+      setError(error)
+    }
 
     if (resolved) {
       reset()
@@ -175,6 +182,8 @@ export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
 
   return (
     <ModalContent>
+      <ToastError error={error} setError={setError} />
+
       <NewBookContainer darkMode={isDarkMode}>
         <MultiStep size={3} currentStep={step} title="Novo livro" />
 

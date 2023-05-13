@@ -17,6 +17,7 @@ import {
   FilePlus,
   MagnifyingGlass,
   Package,
+  Star,
   XCircle,
 } from 'phosphor-react'
 import { ChangeEvent, useContext, useState } from 'react'
@@ -62,7 +63,7 @@ export function HeaderOptions({
   const { visualizeNotifications } = useContext(UserContext)
   const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
 
-  const { user } = useUser()
+  const { user, userIsPro } = useUser()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -78,10 +79,20 @@ export function HeaderOptions({
 
         <Title NavIsOpen={navIsOpen}>
           <ArrowFatLinesRight
+            className="arrow"
             size={smallWindow ? 20 : 24}
             onClick={() => setNavIsOpen(!navIsOpen)}
           />
-          <Text family="headingText" as="span" size={smallWindow ? 'xs' : 'md'}>
+
+          <Text
+            family="headingText"
+            as="span"
+            css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
+            size={smallWindow ? 'xs' : 'md'}
+          >
+            {userIsPro && (
+              <Star weight="fill" alt="Usuário pro" size={20} color="#f97700" />
+            )}
             {windowName.toUpperCase()}
           </Text>
         </Title>

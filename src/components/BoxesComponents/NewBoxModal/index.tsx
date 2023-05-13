@@ -1,3 +1,4 @@
+import { IError } from '@@types/errors/IError'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import {
@@ -9,6 +10,7 @@ import { ListEmpty } from '@components/usefull/ListEmpty'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
+import { ToastError } from '@components/usefull/ToastError'
 import { InterfaceContext } from '@contexts/interface'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useBoxes } from '@hooks/useBoxes'
@@ -47,6 +49,7 @@ interface INewBoxModalProps {
 
 export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   const [tag, setTag] = useState('')
+  const [error, setError] = useState<IError | null>(null)
 
   const { callEvent, tags: tagsExistes } = useBoxes()
   const { theme } = useContext(InterfaceContext)
@@ -59,7 +62,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
     formState,
     watch,
     setValue,
-    setError,
+    setError: setErrorForm,
     clearErrors,
     reset,
   } = useForm<NewBoxFormData>({
@@ -77,7 +80,7 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
     )
 
     if (tagExistes) {
-      setError('tags', { message: 'Já existe uma tag com esse nome' })
+      setErrorForm('tags', { message: 'Já existe uma tag com esse nome' })
 
       return
     }
@@ -102,7 +105,11 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
   }
 
   async function handleNewBox(box: NewBoxFormData) {
-    const { resolved } = await callEvent.create(box)
+    const { resolved, error } = await callEvent.create(box)
+
+    if (error) {
+      setError(error)
+    }
 
     if (resolved) {
       reset()
@@ -113,6 +120,8 @@ export function NewBoxModal({ onSuccess }: INewBoxModalProps) {
 
   return (
     <ModalContent title="Nova box">
+      <ToastError error={error} setError={setError} />
+
       <NewBoxForm onSubmit={handleSubmit(handleNewBox)} darkMode={isDarkMode}>
         <Text as="label">
           <Text
