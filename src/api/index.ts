@@ -9,10 +9,10 @@ export const api = axios.create({
   // baseURL: 'https://ogapi-teste.onrender.com',
 
   // deployEnvironment
-  baseURL: 'https://ognare.com/api',
+  // baseURL: 'https://ognare.com/api',
 
   // fullDevEnvironment
-  // baseURL: 'http://localhost:3030/api',
+  baseURL: process.env.NEXT_PUBLIC_OG_API_CONNECTION,
 })
 
 wrapper(api)

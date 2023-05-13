@@ -35,7 +35,7 @@ export function Toast({
                 ? theme === 'dark'
                   ? '$errorDefault'
                   : '$fullError'
-                : '$successDefault',
+                : 'DarkGreen',
           }}
         >
           {title}
