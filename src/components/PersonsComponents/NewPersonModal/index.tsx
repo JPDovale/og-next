@@ -1,3 +1,4 @@
+import { IError } from '@@types/errors/IError'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import {
@@ -8,6 +9,7 @@ import {
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
+import { ToastError } from '@components/usefull/ToastError'
 import { InterfaceContext } from '@contexts/interface'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useProject } from '@hooks/useProject'
@@ -93,32 +95,39 @@ interface INewPersonModalProps {
 
 export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
   const [projectSelected, setProjectSelected] = useState('')
+  const [error, setError] = useState<IError | null>(null)
+
   const { theme } = useContext(InterfaceContext)
 
   const isDarkMode = theme === 'dark'
 
-  const { register, handleSubmit, formState, reset, setError } =
-    useForm<NewPersonFormData>({
-      resolver: zodResolver(newPersonFormSchema),
-      defaultValues: {
-        birthHour: 0,
-        birthMinute: 0,
-        birthSecond: 0,
-      },
-    })
+  const {
+    register,
+    handleSubmit,
+    formState,
+    reset,
+    setError: setErrorForm,
+  } = useForm<NewPersonFormData>({
+    resolver: zodResolver(newPersonFormSchema),
+    defaultValues: {
+      birthHour: 0,
+      birthMinute: 0,
+      birthSecond: 0,
+    },
+  })
 
   const { projectsEditablePerUser } = useProjects()
   const { project, callEvent } = useProject(projectId ?? projectSelected)
 
   async function handleNewPerson(data: NewPersonFormData) {
     if (!projectId && !projectSelected) {
-      setError('name', { message: 'Selecione um projeto' })
-      setError('lastName', { message: 'Selecione um projeto' })
-      setError('age', { message: 'Selecione um projeto' })
-      setError('history', { message: 'Selecione um projeto' })
-      setError('birthHour', { message: 'Selecione um projeto' })
-      setError('birthMinute', { message: 'Selecione um projeto' })
-      setError('birthSecond', { message: 'Selecione um projeto' })
+      setErrorForm('name', { message: 'Selecione um projeto' })
+      setErrorForm('lastName', { message: 'Selecione um projeto' })
+      setErrorForm('age', { message: 'Selecione um projeto' })
+      setErrorForm('history', { message: 'Selecione um projeto' })
+      setErrorForm('birthHour', { message: 'Selecione um projeto' })
+      setErrorForm('birthMinute', { message: 'Selecione um projeto' })
+      setErrorForm('birthSecond', { message: 'Selecione um projeto' })
 
       return
     }
@@ -138,7 +147,11 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
       birthHour: birthInHour,
     }
 
-    const { resolved } = await callEvent.createPerson(newPerson)
+    const { resolved, error } = await callEvent.createPerson(newPerson)
+
+    if (error) {
+      setError(error)
+    }
 
     if (!resolved) return
 
@@ -153,6 +166,7 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
         !projectId && ` --> ${project ? project.name : 'Selecione um projeto'}`
       }`}
     >
+      <ToastError error={error} setError={setError} />
       <NewPersonForm
         onSubmit={handleSubmit(handleNewPerson)}
         darkMode={isDarkMode}

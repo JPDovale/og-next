@@ -64,7 +64,7 @@ export const ToastRoot = styled(Toast.Root, {
     darkMode: {
       true: {},
       false: {
-        background: '$gray100',
+        background: '$base300',
         color: '$text800',
       },
     },

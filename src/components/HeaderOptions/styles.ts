@@ -75,7 +75,7 @@ export const Title = styled('div', {
   gap: '$5',
   color: '$text800',
 
-  svg: {
+  '.arrow': {
     cursor: 'pointer',
     transition: 'ease-in-out 250ms',
   },
@@ -83,12 +83,12 @@ export const Title = styled('div', {
   variants: {
     NavIsOpen: {
       true: {
-        svg: {
+        '.arrow': {
           transform: 'rotate(180deg)',
         },
       },
       false: {
-        svg: {
+        '.arrow': {
           transform: 'rotate(0deg)',
         },
       },
