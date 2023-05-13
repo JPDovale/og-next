@@ -11,15 +11,23 @@ import {
 
 import aloneLogoImg from '../../assets/logos/ogLogo.png'
 
-import { ProjectorScreen, SignIn, Star, UserCirclePlus } from 'phosphor-react'
+import {
+  ProjectorScreen,
+  SignIn,
+  // Star,
+  UserCirclePlus,
+} from 'phosphor-react'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { AvatarWeb } from '@components/usefull/Avatar'
 
 export function Header() {
   const router = useRouter()
-  const location = router.pathname.split('/')[1]
+  // const location = router.pathname.split('/')[1]
 
-  const { user, userIsPro } = useUser()
+  const {
+    user,
+    // userIsPro
+  } = useUser()
 
   return (
     <>
@@ -27,7 +35,7 @@ export function Header() {
         <p>.</p>
 
         <ExplorerHeader>
-          {!userIsPro && (
+          {/* {!userIsPro && (
             <ButtonRoot
               variant="noShadow"
               size="xs"
@@ -40,7 +48,7 @@ export function Header() {
               </ButtonIcon>
               <ButtonLabel>Preços</ButtonLabel>
             </ButtonRoot>
-          )}
+          )} */}
         </ExplorerHeader>
 
         <ImageContent>
