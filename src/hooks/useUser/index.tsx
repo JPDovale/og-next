@@ -2,6 +2,8 @@ import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { getUserRequest, refreshSessionRequest } from '@api/userRequest'
 import LogRocket from 'logrocket'
 import { useQuery } from 'react-query'
+import { createCheckoutSession } from './events/createCheckoutSession'
+import { ICallEvent } from './types/ICallEvent'
 
 export function useUser() {
   const { data, isLoading, refetch } = useQuery(
@@ -36,6 +38,10 @@ export function useUser() {
 
   const refetchUser = refetch
   const user = data?.user ?? null
+  const userIsPro =
+    user?.subscription &&
+    (user.subscription.payment_status === 'active' ||
+      user.subscription.expires_at === null)
   const userLogged = !!user
   const loadingUser = isLoading
   const isRefreshingSession = data?.isRefreshingSession
@@ -46,15 +52,21 @@ export function useUser() {
       email: user.email,
 
       // Add your own custom user variables here, ie:
-      subscriptionType: 'trail',
+      subscriptionType: userIsPro ? 'pro' : 'trail',
     })
+  }
+
+  const callEvent: ICallEvent = {
+    createCheckoutSession: (priceId) => createCheckoutSession(priceId),
   }
 
   return {
     user,
+    userIsPro,
     userLogged,
     loadingUser,
     isRefreshingSession,
     refetchUser,
+    callEvent,
   }
 }
