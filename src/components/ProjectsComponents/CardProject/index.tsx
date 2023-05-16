@@ -119,19 +119,23 @@ export function CardProject({
 
           {isList === false && (
             <InfosContainer columns={3}>
-              <Text as="p" height={'shorter'} size={'sm'}>
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Livros
+              {project.features.books && (
+                <Text as="p" height={'shorter'} size={'sm'}>
+                  <Text as="span" family="body" size="sm" height="shorter">
+                    Livros
+                  </Text>
+                  {project._count.books || 0}
                 </Text>
-                {project._count.books || 0}
-              </Text>
+              )}
 
-              <Text as="p" height={'shorter'} size={'sm'}>
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Personagens
+              {project.features.persons && (
+                <Text as="p" height={'shorter'} size={'sm'}>
+                  <Text as="span" family="body" size="sm" height="shorter">
+                    Personagens
+                  </Text>
+                  {project._count.persons || 0}
                 </Text>
-                {project._count.persons || 0}
-              </Text>
+              )}
             </InfosContainer>
           )}
 

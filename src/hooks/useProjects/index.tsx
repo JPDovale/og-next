@@ -174,8 +174,7 @@ export function useProjects(params?: IUseProjectsParams) {
   const refetchProjects = refetch
 
   const callEvent: ICallEvent = {
-    createProject: (newProject) =>
-      createProject(newProject, refetchProjects, () => {}),
+    createProject: (newProject) => createProject(newProject, refetchProjects),
   }
 
   return {

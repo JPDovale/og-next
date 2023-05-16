@@ -9,7 +9,7 @@ interface IToastErrorProps {
 export function ToastError({ error, setError }: IToastErrorProps) {
   return (
     <>
-      {error?.title !== 'Invalid token' && (
+      {error?.title !== 'Invalid token!' && (
         <Toast
           title={error?.title!}
           message={error?.message!}

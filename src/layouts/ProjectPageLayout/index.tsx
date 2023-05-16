@@ -1,9 +1,12 @@
+import * as Dialog from '@radix-ui/react-dialog'
 import { HeaderProject } from '@components/ProjectsComponents/HeaderProject'
 import { ProjectNavigation } from '@components/ProjectsComponents/ProjectNavigation'
 import { Error } from '@components/usefull/Error'
+import { useProject } from '@hooks/useProject'
 import { ReactNode } from 'react'
 
 import { ProjectContainer, ProjectPageLayoutContainer } from './styles'
+import { AlertProjectNeedsUpdateModal } from '@components/ProjectsComponents/AlertProjectNeedsUpdateModal'
 
 interface IProjectPageLayout {
   children?: ReactNode
@@ -31,6 +34,16 @@ export function ProjectPageLayout({
   inError,
   inErrorNotAuthorized = false,
 }: IProjectPageLayout) {
+  const { project } = useProject(projectId)
+
+  const inConfigPage = !!paths?.find(
+    (path) => path.toLowerCase().trim() === 'configurações',
+  )
+  const isToShowAlert =
+    project?.initial_date === 'non-set' &&
+    project.features.timeLines &&
+    !inConfigPage
+
   return (
     <>
       <ProjectNavigation isFullDisabled={inError} />
@@ -60,6 +73,9 @@ export function ProjectPageLayout({
             isTimelineInWindow={isTimelineInWindow}
           >
             {children}
+            <Dialog.Root open={isToShowAlert}>
+              <AlertProjectNeedsUpdateModal projectId={projectId} />
+            </Dialog.Root>
           </ProjectContainer>
         )}
       </ProjectPageLayoutContainer>

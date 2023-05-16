@@ -321,281 +321,317 @@ export function ProjectNavigation({
               </ButtonRoot>
             </Label>
 
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'livros'}
+            {project?.features.books && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'livros'}
 
-              <ButtonRoot
-                title="livros"
-                type="button"
-                size="xs"
-                disabled={isFullDisabled || !!loadingProject}
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'books' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/books`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Books />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
+                <ButtonRoot
+                  title="livros"
+                  type="button"
+                  size="xs"
+                  disabled={isFullDisabled || !!loadingProject}
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'books' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/books`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Books />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Plot'}
+            {project?.features.plot && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Plot'}
 
-              <ButtonRoot
-                title="Plot"
-                disabled={isFullDisabled || !!loadingProject}
-                type="button"
-                size="xs"
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'plot' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/plot`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <BookOpen />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
+                <ButtonRoot
+                  title="Plot"
+                  disabled={isFullDisabled || !!loadingProject}
+                  type="button"
+                  size="xs"
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'plot' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/plot`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <BookOpen />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Planetas'}
+            {project?.features.planets && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Planetas'}
 
-              <ButtonRoot
-                title="Planetas"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'planets' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/planets`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Planet />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Nações'}
+                <ButtonRoot
+                  title="Planetas"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'planets' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/planets`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Planet />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-              <ButtonRoot
-                title="Nações"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'nations' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/nations`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <MapTrifold />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Personagens'}
+            {project?.features.nations && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Nações'}
 
-              <ButtonRoot
-                title="Personagens"
-                disabled={isFullDisabled || !!loadingProject}
-                type="button"
-                size="xs"
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'persons' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/persons`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <UserFocus />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Cidades'}
+                <ButtonRoot
+                  title="Nações"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'nations' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/nations`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <MapTrifold />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-              <ButtonRoot
-                title="Cidades"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'cities' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/cities`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Buildings />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Raças'}
+            {project?.features.persons && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Personagens'}
 
-              <ButtonRoot
-                title="Raças"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'races' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/races`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Alien />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Religiões'}
+                <ButtonRoot
+                  title="Personagens"
+                  disabled={isFullDisabled || !!loadingProject}
+                  type="button"
+                  size="xs"
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'persons' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/persons`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <UserFocus />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-              <ButtonRoot
-                title="Religiões"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'religions' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/religions`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Atom />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Poderes'}
+            {project?.features.citys && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Cidades'}
 
-              <ButtonRoot
-                title="Poderes"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'powers' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/powers`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Lightning />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Famílias'}
+                <ButtonRoot
+                  title="Cidades"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'cities' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/cities`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Buildings />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-              <ButtonRoot
-                title="Famílias"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'familys' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/familys`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <UsersFour />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Linguagens'}
+            {project?.features.races && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Raças'}
 
-              <ButtonRoot
-                title="Linguagens"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'languages' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/languages`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Translate />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Instituições'}
+                <ButtonRoot
+                  title="Raças"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'races' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/races`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Alien />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
-              <ButtonRoot
-                title="Instituições"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'institutions' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/institutions`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Bank />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
-            <Label size="sm" height="shorter" family="body" weight="bold">
-              {navigatorProjectIsOpen && 'Linhas de tempo'}
+            {project?.features.religions && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Religiões'}
 
-              <ButtonRoot
-                title="Linhas de tempo"
-                type="button"
-                size="xs"
-                disabled
-                wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                align="center"
-                variant={onWindow === 'timelines' ? 'active' : 'default'}
-                onClick={() => {
-                  router.push(`/project/${id}/timelines`)
-                  setNavigatorProjectIsOpen(false)
-                }}
-              >
-                <ButtonIcon>
-                  <Clock />
-                </ButtonIcon>
-              </ButtonRoot>
-            </Label>
+                <ButtonRoot
+                  title="Religiões"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'religions' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/religions`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Atom />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
+
+            {project?.features.powers && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Poderes'}
+
+                <ButtonRoot
+                  title="Poderes"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'powers' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/powers`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Lightning />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
+
+            {project?.features.familys && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Famílias'}
+
+                <ButtonRoot
+                  title="Famílias"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'familys' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/familys`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <UsersFour />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
+
+            {project?.features.languages && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Linguagens'}
+
+                <ButtonRoot
+                  title="Linguagens"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'languages' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/languages`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Translate />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
+
+            {project?.features.institutions && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Instituições'}
+
+                <ButtonRoot
+                  title="Instituições"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'institutions' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/institutions`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Bank />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
+
+            {project?.features.timeLines && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Linhas de tempo'}
+
+                <ButtonRoot
+                  title="Linhas de tempo"
+                  type="button"
+                  size="xs"
+                  disabled
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'timelines' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/timelines`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Clock />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
 
             {/* <Label size=xxs" weight='bold'>
             Mind map

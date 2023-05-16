@@ -49,6 +49,35 @@ export interface IProjectUsers {
   users: IUserInProject[]
 }
 
+export type IKeysOfFeatures =
+  | 'books'
+  | 'plot'
+  | 'planets'
+  | 'nations'
+  | 'persons'
+  | 'citys'
+  | 'races'
+  | 'religions'
+  | 'powers'
+  | 'familys'
+  | 'languages'
+  | 'institutions'
+  | 'timeLines'
+export interface IFeatures {
+  books: boolean
+  plot: boolean
+  planets: boolean
+  nations: boolean
+  persons: boolean
+  citys: boolean
+  races: boolean
+  religions: boolean
+  powers: boolean
+  familys: boolean
+  languages: boolean
+  institutions: boolean
+  timeLines: boolean
+}
 export interface IProjectResponse {
   id: string
   name: string
@@ -57,6 +86,9 @@ export interface IProjectResponse {
   type: string
   created_at: Date
   updated_at?: Date
+  initial_date_timestamp: number
+  initial_date: string
+  initial_date_time_christ: 'A.C.' | 'D.C.'
   image_url: string | null
   image_filename?: string | null
   one_phrase?: string | null
@@ -80,6 +112,7 @@ export interface IProjectResponse {
   user: IUserInProject
   books?: IBooksResponse[]
   persons?: IPersonsResponse[]
+  features: IFeatures
   _count: {
     persons?: number
     books?: number

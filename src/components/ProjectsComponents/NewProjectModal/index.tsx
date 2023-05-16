@@ -1,15 +1,25 @@
 import { ButtonIcon, ButtonLabel } from '@components/usefull/Button'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { FilePlus } from 'phosphor-react'
-import { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 // import { InputRadio } from '../../../InputRadio'
-import { Input, NewProjectForm, Submit } from './styles'
+import { NewProjectForm, Submit } from './styles'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Toast } from '@components/usefull/Toast'
 import { useProjects } from '@hooks/useProjects'
 import { IError } from '@@types/errors/IError'
 import { ToastError } from '@components/usefull/ToastError'
 import { InterfaceContext } from '@contexts/interface'
+import { LabelInput } from '@components/usefull/LabelInput'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { SelectFeatures } from '../SelectFeatures'
+import { IKeysOfFeatures } from '@api/responsesTypes/IProjectResponse'
+import { z } from 'zod'
+import { ICreateProjectDTO } from '@api/dtos/ICreateProjectDTO'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { TimeChristSelect } from '@components/usefull/TimeChristSelelct'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 // const typesOfProjects = [
 //   { label: 'Book', value: 'book' },
@@ -22,62 +32,129 @@ interface INewProjectModalProps {
   onSuccessCreateProject: () => void
 }
 
+const newProjectFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'O nome do projeto precisa ter pelo menos 2 caracteres')
+    .max(60, 'O nome do projeto não pode ter mais de 60 caracteres'),
+  features: z.object({
+    books: z.boolean().default(false),
+    citys: z.boolean().default(false),
+    familys: z.boolean().default(false),
+    institutions: z.boolean().default(false),
+    languages: z.boolean().default(false),
+    nations: z.boolean().default(false),
+    persons: z.boolean().default(true),
+    planets: z.boolean().default(false),
+    plot: z.boolean().default(true),
+    powers: z.boolean().default(false),
+    races: z.boolean().default(false),
+    religions: z.boolean().default(false),
+    timeLines: z.boolean().default(false),
+  }),
+  initialDate: z.coerce
+    .number({
+      invalid_type_error: 'Coloque apenas números',
+    })
+    .optional(),
+  timeChrist: z.enum(['A.C.', 'D.C.']).default('D.C.'),
+})
+
+type INewProjectFormaData = z.infer<typeof newProjectFormSchema>
+
 export function NewProjectModal({
   onSuccessCreateProject,
 }: INewProjectModalProps) {
   const [successToastOpen, setSuccessToastOpen] = useState(false)
   const [error, setError] = useState<IError | null>(null)
 
-  const { loadingProjects, refetchProjects, callEvent } = useProjects()
+  const {
+    register,
+    watch,
+    handleSubmit,
+    setError: setErrorForm,
+    setValue,
+    formState,
+  } = useForm<INewProjectFormaData>({
+    resolver: zodResolver(newProjectFormSchema),
+    defaultValues: {
+      features: {
+        books: false,
+        citys: false,
+        familys: false,
+        institutions: false,
+        languages: false,
+        nations: false,
+        persons: true,
+        planets: false,
+        plot: true,
+        powers: false,
+        races: false,
+        religions: false,
+        timeLines: false,
+      },
+      timeChrist: 'D.C.',
+    },
+  })
+
+  const featuresToUse = watch('features')
+  const timeChrist = watch('timeChrist')
+
+  const { loadingProjects, callEvent } = useProjects()
   const { theme } = useContext(InterfaceContext)
 
   const isDarkMode = theme === 'dark'
 
-  const [
-    isPrivate,
-    // setIsPrivate
-  ] = useState(false)
-  const [
-    type,
-    // setType
-  ] = useState('book')
-  const [name, setName] = useState('')
-  const [
-    password,
-    // setPassword
-  ] = useState('')
-  const [errorIn, setErrorIn] = useState('')
-
-  async function handleNewProject(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-
-    if (!name) {
-      return setErrorIn('name')
+  async function handleChangeFeatures(
+    featureName: IKeysOfFeatures,
+    value: boolean,
+  ) {
+    const featuresValue = {
+      ...featuresToUse,
+      [featureName]: value,
     }
 
-    if (!type) {
-      return setErrorIn('type')
+    setValue('features', featuresValue)
+  }
+
+  function handleSetTimeChrist(time: 'A.C.' | 'D.C.') {
+    setValue('timeChrist', time)
+  }
+
+  async function handleNewProject(data: INewProjectFormaData) {
+    if (data.features.timeLines && !data.initialDate) {
+      setErrorForm('initialDate', {
+        message:
+          'Você precisa definir o ano em que a história se passa para continuar',
+      })
+      return
     }
 
-    const newProject = {
-      name,
-      private: isPrivate,
-      type,
-      password,
+    const newProject: ICreateProjectDTO = {
+      name: data.name,
+      private: false,
+      type: 'book',
+      features: featuresToUse,
+      timeLine: featuresToUse.timeLines
+        ? {
+            initialDate: data.initialDate!,
+            timeChrist: data.timeChrist!,
+          }
+        : undefined,
     }
+
+    console.log(newProject)
 
     const { resolved, error } = await callEvent.createProject(newProject)
 
-    if (resolved) {
-      setSuccessToastOpen(true)
-      setName('')
-      setErrorIn('')
-      onSuccessCreateProject()
-      await refetchProjects()
-    }
-
     if (error) {
       setError(error)
+      return
+    }
+
+    if (resolved) {
+      setSuccessToastOpen(true)
+      onSuccessCreateProject()
     }
   }
 
@@ -92,22 +169,74 @@ export function NewProjectModal({
 
       <ToastError error={error} setError={setError} />
 
-      <NewProjectForm onSubmit={handleNewProject} darkMode={isDarkMode}>
-        <Input as="label" size="xs" css={{ color: isDarkMode ? '$white' : '' }}>
-          Nome do projeto
+      <NewProjectForm
+        onSubmit={handleSubmit(handleNewProject)}
+        darkMode={isDarkMode}
+      >
+        <LabelInput
+          label="Nome do projeto"
+          error={formState.errors.name?.message}
+        >
           <TextInputRoot
+            size="sm"
             css={{ background: !isDarkMode ? '$base700' : '' }}
-            variant={errorIn === 'name' ? 'denied' : 'default'}
+            variant={formState.errors.name ? 'denied' : 'default'}
           >
             <TextInputInput
+              css={{ color: isDarkMode ? '$white' : '' }}
               placeholder="Insira o nome do projeto"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setName(e.target.value)
-              }
-              value={name}
+              {...register('name')}
             />
           </TextInputRoot>
-        </Input>
+        </LabelInput>
+
+        <InfoDefault
+          size="sm"
+          title="Quais modelos você deseja usar no seu novo projeto?"
+        >
+          <SelectFeatures
+            css={{ marginTop: '$4' }}
+            columns={8}
+            features={featuresToUse}
+            setFeature={handleChangeFeatures}
+          />
+        </InfoDefault>
+
+        {featuresToUse?.timeLines && (
+          <ContainerGrid
+            padding={0}
+            css={{ display: 'flex', alignItems: 'center' }}
+          >
+            <LabelInput
+              label="Ano em que a história se passa"
+              error={formState.errors.initialDate?.message}
+            >
+              <TextInputRoot
+                size="sm"
+                css={{ background: !isDarkMode ? '$base700' : '' }}
+                variant={formState.errors.initialDate ? 'denied' : 'default'}
+              >
+                <TextInputInput
+                  css={{ color: isDarkMode ? '$white' : '' }}
+                  placeholder="Insira o ano em que a história se passa"
+                  {...register('initialDate')}
+                />
+              </TextInputRoot>
+            </LabelInput>
+
+            <InfoDefault
+              css={{ width: '30%' }}
+              title="Antes ou depois de Cristo?"
+            >
+              <TimeChristSelect
+                value={timeChrist}
+                setValue={handleSetTimeChrist}
+                activeThemeVerification
+              />
+            </InfoDefault>
+          </ContainerGrid>
+        )}
+
         {/* <Input as="label" size="xs">
             Selecione o tipo do projeto {type}
             <Text

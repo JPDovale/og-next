@@ -8,72 +8,6 @@ export const SettingsProject = styled('div', {
   padding: '$4',
 })
 
-export const Info = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: '$4',
-
-  '.buttons': {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '$8',
-
-    button: {
-      padding: '$2',
-      minWidth: '45%',
-
-      fontSize: 12,
-
-      boxShadow: 'none',
-    },
-  },
-
-  variants: {
-    isCard: {
-      true: {
-        alignItems: 'flex-start',
-        gap: '$2',
-
-        padding: '$5',
-
-        background: '$gray900',
-        borderRadius: '$md',
-
-        label: {
-          display: 'flex',
-          gap: '$2',
-          flexDirection: 'column',
-
-          width: '100%',
-        },
-
-        header: {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: '$1',
-        },
-      },
-      false: {},
-    },
-
-    columns: {
-      1: {},
-      2: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '$4',
-      },
-
-      3: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
-      },
-    },
-  },
-})
-
 export const Creator = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 4fr',
@@ -81,14 +15,6 @@ export const Creator = styled('div', {
   gap: '$4',
 
   padding: '0',
-
-  p: {
-    marginTop: '-$4',
-  },
-
-  label: {
-    marginBottom: '$3',
-  },
 
   '@media screen and (max-width: 768px)': {
     display: 'flex',

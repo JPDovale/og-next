@@ -1,7 +1,7 @@
-import { forwardRef, ReactNode } from 'react'
+import { ComponentProps, forwardRef, ReactNode } from 'react'
 import { Text } from '../Text'
 
-interface ILabelInputProps {
+interface ILabelInputProps extends ComponentProps<typeof Text> {
   label: string
   error?: string | null
   children: ReactNode
@@ -9,7 +9,7 @@ interface ILabelInputProps {
 
 export const LabelInput = forwardRef<HTMLLabelElement, ILabelInputProps>(
   ({ label, error, children: input }, ref) => (
-    <Text as="label">
+    <Text as="label" css={{ width: 'stretch' }}>
       <Text
         family="body"
         size="sm"

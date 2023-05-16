@@ -3,7 +3,7 @@ import { styled } from '@styles/index'
 import { ReactNode } from 'react'
 
 interface IContainerGrid {
-  columns?: 1 | 2 | 3 | 4 | 5 | 6
+  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
   padding?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
   children?: ReactNode
   darkBackground?: boolean
@@ -83,6 +83,55 @@ const ContainerGridContainer = styled('div', {
 
         '@media screen and (max-width: 768px)': {
           gridTemplateColumns: '1fr 1fr',
+        },
+      },
+      7: {
+        gridTemplateColumns: 'repeat(7, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr',
+        },
+      },
+      8: {
+        gridTemplateColumns: 'repeat(8, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        },
+      },
+      9: {
+        gridTemplateColumns: 'repeat(9, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        },
+      },
+      10: {
+        gridTemplateColumns: 'repeat(10, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        },
+      },
+      11: {
+        gridTemplateColumns: 'repeat(11, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        },
+      },
+      12: {
+        gridTemplateColumns: 'repeat(12, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        },
+      },
+      13: {
+        gridTemplateColumns: 'repeat(13, 1fr)',
+
+        '@media screen and (max-width: 768px)': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
         },
       },
     },

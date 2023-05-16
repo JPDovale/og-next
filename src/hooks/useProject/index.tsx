@@ -6,6 +6,7 @@ import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
 import { getDate } from '@utils/dates/getDate'
 import { useQuery } from 'react-query'
+import { changeFeaturesUsing } from './events/changeFeaturesUsing'
 import { commentInPlot } from './events/commentInPlot'
 import { createBook } from './events/createBook'
 import { createPerson } from './events/createPerson'
@@ -16,6 +17,7 @@ import { responseCommentInPlot } from './events/responseCommentInPlot'
 import { shareProject } from './events/share'
 import { unshare } from './events/unshare'
 import { updateImage } from './events/updateImage'
+import { updateInitialDate } from './events/updateInitialDate'
 import { updateName } from './events/updateName'
 import { updatePlot } from './events/updatePlot'
 import { ICallEvent } from './types/ICallEvent'
@@ -280,6 +282,12 @@ export function useProject(id: string) {
 
     createPerson: (newPerson) =>
       createPerson(project!.id, newPerson, refetchProject, refetchProjects),
+
+    changeFeaturesUsing: (features) =>
+      changeFeaturesUsing(project!.id, features, refetchProject),
+
+    updateInitialDate: (newDate) =>
+      updateInitialDate(project!.id, newDate, refetchProject),
   }
 
   return {

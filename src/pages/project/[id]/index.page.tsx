@@ -202,91 +202,112 @@ export default function ProjectPage() {
                   {usersInProject.length}
                 </Text>
               </Info>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Livros:
-                </Text>
-                <Text as="p" size="sm" weight="bold">
-                  {project?._count.books || 0}
-                </Text>
-              </Info>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Poderes:
-                </Text>
-                <Text as="p" size="sm" weight="bold">
-                  Em breve
-                </Text>
-              </Info>
-              <Info>
-                <Text as="span" size="sm" family="body" height="shorter">
-                  Personagens:
-                </Text>
-                <Text as="p" size="sm" weight="bold">
-                  {project?._count.persons || 0}
-                </Text>
-              </Info>
+
+              {project?.features.books && (
+                <Info>
+                  <Text as="span" size="sm" family="body" height="shorter">
+                    Livros:
+                  </Text>
+                  <Text as="p" size="sm" weight="bold">
+                    {project?._count.books || 0}
+                  </Text>
+                </Info>
+              )}
+
+              {project?.features.powers && (
+                <Info>
+                  <Text as="span" size="sm" family="body" height="shorter">
+                    Poderes:
+                  </Text>
+                  <Text as="p" size="sm" weight="bold">
+                    Em breve
+                  </Text>
+                </Info>
+              )}
+
+              {project?.features.persons && (
+                <Info>
+                  <Text as="span" size="sm" family="body" height="shorter">
+                    Personagens:
+                  </Text>
+                  <Text as="p" size="sm" weight="bold">
+                    {project?._count.persons || 0}
+                  </Text>
+                </Info>
+              )}
             </Infos>
           </InfosContainer>
         </HeaderProjectInfos>
 
         <PlotProjectContainer>
-          <HeadingPart
-            onClick={() => router.push(`/project/${project?.id}/books`)}
-          >
-            <Books size={40} />
-            Livros
-          </HeadingPart>
-          <BooksContainer isEmpty={!booksThisProject[0]}>
-            {booksThisProject[0] ? (
-              booksThisProject.map((book) => (
-                <CardBook
-                  key={book.id}
-                  bookId={book?.id}
-                  projectId={project?.id!}
-                  isPreview
-                />
-              ))
-            ) : (
-              <ListEmpty
-                message="Você ainda não criou nenhum livro para esse projeto."
-                icon={<Books size={48} />}
-              />
-            )}
-          </BooksContainer>
-
-          <HeadingPart
-            onClick={() => router.push(`/project/${project?.id}/plot`)}
-          >
-            <BookOpen size={40} />
-            PLOT
-          </HeadingPart>
-          {loadingProject ? (
-            <Loading />
-          ) : (
-            <PlotParts projectId={project?.id!} isPreview />
+          {project?.features.books && (
+            <>
+              <HeadingPart
+                onClick={() => router.push(`/project/${project?.id}/books`)}
+              >
+                <Books size={40} />
+                Livros
+              </HeadingPart>
+              <BooksContainer isEmpty={!booksThisProject[0]}>
+                {booksThisProject[0] ? (
+                  booksThisProject.map((book) => (
+                    <CardBook
+                      key={book.id}
+                      bookId={book?.id}
+                      projectId={project?.id!}
+                      isPreview
+                    />
+                  ))
+                ) : (
+                  <ListEmpty
+                    message="Você ainda não criou nenhum livro para esse projeto."
+                    icon={<Books size={48} />}
+                  />
+                )}
+              </BooksContainer>
+            </>
           )}
 
-          <HeadingPart
-            onClick={() => router.push(`/project/${project?.id}/persons`)}
-          >
-            <UserFocus size={40} />
-            Personagens
-          </HeadingPart>
-          <PersonsContainer>
-            {permission === 'edit' && (
-              <CardPerson personId={''} key="--" isAdd />
-            )}
+          {project?.features.plot && (
+            <>
+              <HeadingPart
+                onClick={() => router.push(`/project/${project?.id}/plot`)}
+              >
+                <BookOpen size={40} />
+                PLOT
+              </HeadingPart>
+              {loadingProject ? (
+                <Loading />
+              ) : (
+                <PlotParts projectId={project?.id!} isPreview />
+              )}
+            </>
+          )}
 
-            {personsThisProject.map((person, i) => {
-              const index = permission === 'edit' ? i : i - 1
+          {project?.features.persons && (
+            <>
+              <HeadingPart
+                onClick={() => router.push(`/project/${project?.id}/persons`)}
+              >
+                <UserFocus size={40} />
+                Personagens
+              </HeadingPart>
+              <PersonsContainer>
+                {permission === 'edit' && (
+                  <CardPerson personId={''} key="--" isAdd />
+                )}
 
-              if (largeWindow && index >= 14) return null
-              if (!largeWindow && index >= 11) return null
-              if (smallWindow && index >= 5) return null
-              return <CardPerson key={person.id} personId={person.id} />
-            })}
-          </PersonsContainer>
+                {personsThisProject.map((person, i) => {
+                  const index = permission === 'edit' ? i : i - 1
+
+                  if (largeWindow && index >= 14) return null
+                  if (!largeWindow && index >= 11) return null
+                  if (smallWindow && index >= 5) return null
+                  return <CardPerson key={person.id} personId={person.id} />
+                })}
+              </PersonsContainer>
+            </>
+          )}
         </PlotProjectContainer>
 
         {/* {timelineOfProject && !smallWindow && (
