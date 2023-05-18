@@ -22,7 +22,9 @@ export function TimelineCard({ timeline, isMain = false }: ITimelineCardProps) {
   const router = useRouter()
   const { id } = router.query
 
-  const eventsInChronologicOrd = orderDatesOfTimelines(timeline.timeEvents)
+  const eventsInChronologicOrd = orderDatesOfTimelines(
+    timeline?.timeEvents ?? [],
+  )
 
   return (
     <TimeLineCardContainer
