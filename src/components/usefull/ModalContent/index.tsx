@@ -9,12 +9,14 @@ interface IModalContentProps {
   title?: string
   children?: ReactNode
   sizeWid?: 'sm' | 'md' | 'lg'
+  hideCloseButton?: boolean
 }
 
 export function ModalContent({
   children,
   title,
   sizeWid = 'md',
+  hideCloseButton = false,
 }: IModalContentProps) {
   const { theme } = useContext(InterfaceContext)
 
@@ -25,9 +27,11 @@ export function ModalContent({
       <ModalOverlay />
 
       <ModalContentContainer darkMode={isDarkMode} sizeWid={sizeWid}>
-        <ModalClose>
-          <X size={20} />
-        </ModalClose>
+        {!hideCloseButton && (
+          <ModalClose>
+            <X size={20} />
+          </ModalClose>
+        )}
 
         {title && (
           <ModalTitle asChild>

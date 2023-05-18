@@ -46,45 +46,6 @@ export const CardProjectContainer = styled(Box, {
   '&:active': {
     scale: '99%',
   },
-
-  variants: {
-    isList: {
-      true: {
-        textAlign: 'center',
-
-        background: '$gray600',
-
-        '&:hover': {
-          scale: '102%',
-        },
-
-        '&:focus': {
-          boxShadow: '$inFocus',
-        },
-      },
-
-      example: {
-        textAlign: 'center',
-
-        background: '$blue900',
-        cursor: 'default',
-
-        '&:hover': {
-          scale: '100%',
-        },
-
-        '&:active': {
-          boxShadow: '$default',
-        },
-      },
-
-      false: {},
-    },
-  },
-
-  defaultVariants: {
-    isList: false,
-  },
 })
 
 export const Preview = styled(Box, {
@@ -119,53 +80,6 @@ export const ProjectInfos = styled('div', {
     display: 'flex',
     flexDirection: 'column',
   },
-
-  variants: {
-    isList: {
-      true: {
-        display: 'grid',
-        gridTemplateColumns: '10fr 8fr 1fr',
-        gap: '$4',
-
-        p: {
-          flexDirection: 'row',
-          alignItems: 'center',
-          textAlign: 'start',
-
-          gap: '$4',
-        },
-
-        '@media screen and (max-width: 768px)': {
-          p: {
-            fontSize: '$xxs',
-            textAlign: 'start',
-          },
-        },
-      },
-
-      example: {
-        padding: '$3 $8',
-
-        display: 'grid',
-        gridTemplateColumns: '10fr 8fr 1fr',
-
-        textAlign: 'start',
-
-        '@media screen and (max-width: 768px)': {
-          p: {
-            fontSize: '$xxs',
-            textAlign: 'start',
-          },
-        },
-      },
-
-      false: {},
-    },
-  },
-
-  defaultVariants: {
-    isList: false,
-  },
 })
 
 export const InfosContainer = styled('div', {
@@ -178,18 +92,6 @@ export const InfosContainer = styled('div', {
       3: {
         gridTemplateColumns: '3fr 3fr 4fr',
       },
-    },
-    isList: {
-      true: {
-        display: 'flex',
-        justifyContent: 'space-around',
-        gap: '$6',
-        p: {
-          width: '100%',
-        },
-      },
-      false: {},
-      example: {},
     },
   },
 })

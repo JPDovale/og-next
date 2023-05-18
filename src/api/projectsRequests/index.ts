@@ -3,6 +3,9 @@ import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../responsesTypes/IProjectResponse'
+import { IChangeFeaturesUsingRequest } from './types/IChangeFeaturesUsingRequest'
+import { ICreateTimeEventRequest } from './types/ICreateTimeEventRequest'
+import { IUpdateInitialDateRequest } from './types/IUpdateInitialDateRequest'
 
 export async function getProjectsRequest() {
   try {
@@ -250,6 +253,47 @@ export async function getWishesRequest(projectId: string) {
 export async function getPowersRequest(projectId: string) {
   try {
     const response = await api.get(`/projects/${projectId}/powers`)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function changeFeaturesUsingRequest({
+  features,
+  projectId,
+}: IChangeFeaturesUsingRequest) {
+  try {
+    const response = await api.patch(`/projects/${projectId}/features`, {
+      features,
+    })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function updateInitialDateRequest({
+  body,
+  projectId,
+}: IUpdateInitialDateRequest) {
+  try {
+    const response = await api.patch(`/projects/${projectId}/date`, body)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function createTimeEventRequest({
+  projectId,
+  data,
+}: ICreateTimeEventRequest) {
+  try {
+    const response = await api.post(
+      `/projects/${projectId}/timelines/timeEvents`,
+      data,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data

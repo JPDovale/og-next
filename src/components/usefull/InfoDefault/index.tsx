@@ -15,8 +15,9 @@ const InfoContainer = styled('div', {
 interface IInfoDefaultProps extends ComponentProps<typeof InfoContainer> {
   children?: ReactNode
   title: string
-  size?: 'md' | 'lg' | 'sm'
+  size?: 'md' | 'lg' | 'sm' | 'xs'
   as?: 'div' | 'span' | 'label'
+  disableBold?: boolean
 }
 
 export function InfoDefault({
@@ -24,15 +25,22 @@ export function InfoDefault({
   title,
   size = 'md',
   as = 'div',
+  disableBold = false,
   ...props
 }: IInfoDefaultProps) {
   return (
     <InfoContainer {...props}>
-      <Text as="span" size={size} family="body" height="shorter" weight="bold">
+      <Text
+        as="span"
+        size={size}
+        family="body"
+        height="shorter"
+        weight={disableBold ? 'medium' : 'bold'}
+      >
         {title}
       </Text>
 
-      <Text as={as} size={size} weight="bold">
+      <Text as={as} size={size} weight={disableBold ? 'medium' : 'bold'}>
         {children}
       </Text>
     </InfoContainer>

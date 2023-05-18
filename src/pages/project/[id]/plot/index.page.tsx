@@ -55,6 +55,7 @@ export default function PlotPage() {
         paths={['Plot']}
         loading={loadingProject}
         inError={!loadingProject && !project}
+        inErrorNotAuthorized={!project?.features.plot}
         isFullScreen
       >
         <ToastError error={error} setError={setError} />

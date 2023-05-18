@@ -4,11 +4,14 @@ import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
+import { orderDatesOfTimelines } from '@services/orderElements'
 import { getDate } from '@utils/dates/getDate'
 import { useQuery } from 'react-query'
+import { changeFeaturesUsing } from './events/changeFeaturesUsing'
 import { commentInPlot } from './events/commentInPlot'
 import { createBook } from './events/createBook'
 import { createPerson } from './events/createPerson'
+import { createTimeEventOnMainTimeLien } from './events/createTimeEventOnMainTimeLien'
 import { deleteProject } from './events/delete'
 import { deleteImage } from './events/deleteImage'
 import { quitProject } from './events/quit'
@@ -16,6 +19,7 @@ import { responseCommentInPlot } from './events/responseCommentInPlot'
 import { shareProject } from './events/share'
 import { unshare } from './events/unshare'
 import { updateImage } from './events/updateImage'
+import { updateInitialDate } from './events/updateInitialDate'
 import { updateName } from './events/updateName'
 import { updatePlot } from './events/updatePlot'
 import { ICallEvent } from './types/ICallEvent'
@@ -76,6 +80,9 @@ export function useProject(id: string) {
   let permission: 'edit' | 'view' | 'comment' = 'view'
   const usersInProject: IUserInProject[] = []
   const usersWithPermissionEdit: IUserInProject[] = []
+  const mainTimeLine = project?.timeLines?.find(
+    (timeLine) => !timeLine.is_alternative,
+  )
 
   project?.users_with_access_comment?.users.map((user) => {
     usersInProject.push({
@@ -254,6 +261,18 @@ export function useProject(id: string) {
     return filteredPersons
   }
 
+  function findTimeLine(id: string) {
+    const timeLine = project?.timeLines?.find((timeLine) => timeLine.id === id)
+    const eventsInChronologicOrd = orderDatesOfTimelines(
+      timeLine?.timeEvents ?? [],
+    )
+
+    return {
+      timeLine,
+      eventsInChronologicOrd,
+    }
+  }
+
   const callEvent: ICallEvent = {
     delete: () => deleteProject(project!.id, refetchProjects),
     quit: () => quitProject(project!.id, refetchProjects),
@@ -280,6 +299,15 @@ export function useProject(id: string) {
 
     createPerson: (newPerson) =>
       createPerson(project!.id, newPerson, refetchProject, refetchProjects),
+
+    changeFeaturesUsing: (features) =>
+      changeFeaturesUsing(project!.id, features, refetchProject),
+
+    updateInitialDate: (newDate) =>
+      updateInitialDate(project!.id, newDate, refetchProject),
+
+    createTimeEventOnMainTimeLien: (newTimeEvent) =>
+      createTimeEventOnMainTimeLien(project!.id, newTimeEvent, refetchProject),
   }
 
   return {
@@ -299,10 +327,12 @@ export function useProject(id: string) {
     timelineOfProject: [],
     usersInProject: usersInProject ?? [],
     usersWithPermissionEdit: usersWithPermissionEdit ?? [],
+    mainTimeLine,
 
     findBook,
     findPerson,
     queryPerson,
     findManyPersons,
+    findTimeLine,
   }
 }

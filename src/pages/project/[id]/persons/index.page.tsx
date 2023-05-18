@@ -55,6 +55,7 @@ export default function PersonsPage() {
         paths={['Personagens']}
         loading={loadingProject}
         inError={!loadingProject && !project}
+        inErrorNotAuthorized={!project?.features.persons}
         isScrolling
       >
         <Toast

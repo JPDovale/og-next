@@ -1,5 +1,6 @@
 import { ButtonIcon } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { InfoDefault } from '@components/usefull/InfoDefault'
 import { Text } from '@components/usefull/Text'
 import { InterfaceContext } from '@contexts/interface'
 import { useProject } from '@hooks/useProject'
@@ -74,24 +75,19 @@ export function CardPerson({
               />
             )}
           </div>
-          <ContainerGrid padding={0} columns={2}>
+          <ContainerGrid padding={0} columns={isNotPreview ? 2 : 1}>
             <PersonInfos>
-              <ItemInfo>
-                <Text as="label" size="sm" family="body" height="shorter">
-                  Nome:
-                </Text>
-                <Text size="sm" weight="bold">
-                  {personName}
-                </Text>
-              </ItemInfo>
-              <ItemInfo>
-                <Text as="label" size="sm" family="body" height="shorter">
-                  Idade:
-                </Text>
-                <Text size="sm" weight="bold">
-                  {person?.age} anos
-                </Text>
-              </ItemInfo>
+              <InfoDefault title="Nome" size="sm" css={{ alignItems: 'start' }}>
+                {personName}
+              </InfoDefault>
+
+              <InfoDefault
+                title="Idade"
+                size="sm"
+                css={{ alignItems: 'start' }}
+              >
+                {person?.age ? `${person.age} anos` : 'Idade desconhecida'}
+              </InfoDefault>
 
               {isNotPreview && (
                 <ObjectsOfPerson>
