@@ -1,5 +1,4 @@
 import { getProjectsRequest } from '@api/projectsRequests'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { refreshSessionRequest } from '@api/userRequest'
 import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
@@ -7,16 +6,12 @@ import { orderElements } from '@services/orderElements'
 import { getDate } from '@utils/dates/getDate'
 import { useContext, useMemo } from 'react'
 import { useQuery } from 'react-query'
+import { IProjectPreview, IUserInProject } from './entities/IProjectPreview'
 import { createProject } from './events/createProject'
 import { ICallEvent } from './types/ICallEvent'
 
-interface IUserInProject {
-  id: string
-  avatarImage: string | undefined
-}
-
 interface IFindProjectResponse {
-  project: IProjectResponse | null
+  project: IProjectPreview | null
 
   projectName: string
   projectImage: string | undefined
@@ -56,7 +51,7 @@ export function useProjects(params?: IUseProjectsParams) {
         }
       }
 
-      const projects = response.projects as IProjectResponse[]
+      const projects = response.projects as IProjectPreview[]
 
       return { projects, errorMessage, errorTitle }
     },
@@ -74,7 +69,7 @@ export function useProjects(params?: IUseProjectsParams) {
     const projects = data?.projects || []
     const query = config.query
 
-    let projectsInOrd = orderElements(projects, orderBy) as IProjectResponse[]
+    let projectsInOrd = orderElements(projects, orderBy) as IProjectPreview[]
 
     if (query) {
       projectsInOrd = projectsInOrd?.filter((project) => {
@@ -85,14 +80,14 @@ export function useProjects(params?: IUseProjectsParams) {
           .replace(/[\u0300-\u036f]/g, '')
           .includes(query.toLowerCase().trim())
 
-        const userCreatorInQuery = project.user.username
+        const userCreatorInQuery = project.creator.username
           ?.toLowerCase()
           .trim()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           .includes(query.toLowerCase().trim())
 
-        const createdAtInQuery = getDate(project.created_at)
+        const createdAtInQuery = getDate(project.createdAt)
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
           .includes(query.toLowerCase().trim())
@@ -104,16 +99,14 @@ export function useProjects(params?: IUseProjectsParams) {
     }
 
     const projectsThisUser = projectsInOrd.filter(
-      (project) => project.user.id === user?.id,
+      (project) => project.creator.id === user?.id,
     )
     const projectsSharedWithUser = projectsInOrd.filter(
-      (project) => project.user.id !== user?.id,
+      (project) => project.creator.id !== user?.id,
     )
     const projectsEditablePerUser = projectsInOrd.filter((project) => {
-      const userPermissionEdit = project.users_with_access_edit?.users.find(
-        (u) => u.id === user?.id,
-      )
-      const projectOfUser = project.user.id === user?.id
+      const userPermissionEdit = project.users.find((u) => u.id === user?.id)
+      const projectOfUser = project.creator.id === user?.id
 
       if (!userPermissionEdit && !projectOfUser) {
         return undefined
@@ -136,31 +129,12 @@ export function useProjects(params?: IUseProjectsParams) {
     const project = projects.find((project) => project.id === id)
 
     const projectName = project?.name ?? 'Carregando...'
-    const projectImage = project?.image_url ?? undefined
-    const createdAt = project?.created_at
-      ? getDate(project.created_at)
+    const projectImage = project?.image.url ?? undefined
+    const createdAt = project?.createdAt
+      ? getDate(project.createdAt)
       : 'Carregando...'
 
-    const usersInProject: IUserInProject[] = []
-
-    project?.users_with_access_comment?.users.map((user) =>
-      usersInProject.push({
-        id: user.id,
-        avatarImage: user.avatar_url ?? undefined,
-      }),
-    )
-    project?.users_with_access_view?.users.map((user) =>
-      usersInProject.push({
-        id: user.id,
-        avatarImage: user.avatar_url ?? undefined,
-      }),
-    )
-    project?.users_with_access_edit?.users.map((user) =>
-      usersInProject.push({
-        id: user.id,
-        avatarImage: user.avatar_url ?? undefined,
-      }),
-    )
+    const usersInProject: IUserInProject[] = project?.users ?? []
 
     return {
       project: project ?? null,

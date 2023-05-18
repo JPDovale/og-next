@@ -70,7 +70,6 @@ export function ProjectPageLayout({
           <ProjectContainer
             isFullScreen={isFullScreen}
             isScrolling={isScrolling}
-            isTimelineInWindow={isTimelineInWindow}
           >
             {children}
             <Dialog.Root open={isToShowAlert}>

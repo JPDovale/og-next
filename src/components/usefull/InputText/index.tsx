@@ -23,7 +23,7 @@ export interface ITextInputRootProps
   disabled?: boolean
   children?: ReactNode
   variant?: 'default' | 'accepted' | 'denied' | 'attention' | 'noShadow'
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg'
 }
 
 export function TextInputRoot(props: ITextInputRootProps) {

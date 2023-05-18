@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import {
   BookOpen,
   Books,
+  HourglassSimpleMedium,
   Image as ImageIco,
   Pencil,
   Trash,
@@ -37,6 +38,8 @@ import {
 // import { TimelineView } from '@components/TimelinesComponents/TimelineView'
 import { InterfaceContext } from '@contexts/interface'
 import { useProject } from '@hooks/useProject'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { TimelineCard } from '@components/TimelinesComponents/TimelineCard'
 
 export default function ProjectPage() {
   usePreventBack('/projects')
@@ -61,6 +64,7 @@ export default function ProjectPage() {
     projectImage,
     usersInProject,
     callEvent,
+    mainTimeLine,
   } = useProject(id as string)
 
   const windowSize = useWindowSize()
@@ -240,6 +244,21 @@ export default function ProjectPage() {
         </HeaderProjectInfos>
 
         <PlotProjectContainer>
+          {project?.features.timeLines && (
+            <>
+              <HeadingPart
+                onClick={() => router.push(`/project/${project?.id}/timelines`)}
+              >
+                <HourglassSimpleMedium size={40} />
+                Time-Lines
+              </HeadingPart>
+
+              <ContainerGrid padding={0}>
+                <TimelineCard isMain timeline={mainTimeLine!} />
+              </ContainerGrid>
+            </>
+          )}
+
           {project?.features.books && (
             <>
               <HeadingPart

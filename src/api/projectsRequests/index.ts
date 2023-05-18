@@ -4,6 +4,7 @@ import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../responsesTypes/IProjectResponse'
 import { IChangeFeaturesUsingRequest } from './types/IChangeFeaturesUsingRequest'
+import { ICreateTimeEventRequest } from './types/ICreateTimeEventRequest'
 import { IUpdateInitialDateRequest } from './types/IUpdateInitialDateRequest'
 
 export async function getProjectsRequest() {
@@ -278,6 +279,21 @@ export async function updateInitialDateRequest({
 }: IUpdateInitialDateRequest) {
   try {
     const response = await api.patch(`/projects/${projectId}/date`, body)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function createTimeEventRequest({
+  projectId,
+  data,
+}: ICreateTimeEventRequest) {
+  try {
+    const response = await api.post(
+      `/projects/${projectId}/timelines/timeEvents`,
+      data,
+    )
     return response.data
   } catch (err: any) {
     return err.response.data

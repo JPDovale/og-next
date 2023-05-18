@@ -1,11 +1,13 @@
 import { IError } from '@@types/errors/IError'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { Checkbox } from '@components/usefull/Checkbox'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import {
   TextInputIcon,
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { LabelInput } from '@components/usefull/LabelInput'
 import { ModalContent } from '@components/usefull/ModalContent'
 import { Text } from '@components/usefull/Text'
 import { Textarea } from '@components/usefull/Textarea'
@@ -22,7 +24,7 @@ import {
   IdentificationCard,
   PlusCircle,
 } from 'phosphor-react'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import {
@@ -53,30 +55,34 @@ const newPersonFormSchema = z.object({
     .number({
       invalid_type_error: 'Coloque apenas números na idade do personagem.',
     })
-    .max(1000000000000),
-  birthHour: z.coerce
+    .max(1000000000000)
+    .nullable(),
+  bornMonth: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números no mês.' })
+    .min(0, { message: 'O mês precisa ser maior ou igual à 0' })
+    .max(12, { message: 'Existem apenas 12 meses no ano' })
+    .optional()
+    .nullable(),
+  bornDay: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números no dia.' })
+    .min(0, { message: 'O dia precisa ser maior ou igual à 0' })
+    .max(31, { message: 'Existem apenas 31 dias no mês' })
+    .optional()
+    .nullable(),
+  bornHour: z.coerce
     .number({ invalid_type_error: 'Coloque apenas números na hora.' })
-    // .regex(/^([0-9]+)$/, {
-    //   message: 'Coloque apenas números na hora.',
-    // })
     .min(0, { message: 'A hora precisa ser maior ou igual à 0' })
     .max(24, { message: 'Existem apenas 24 horas no dia' })
     .optional()
     .nullable(),
-  birthMinute: z.coerce
+  bornMinute: z.coerce
     .number({ invalid_type_error: 'Coloque apenas números no minuto.' })
-    // .regex(/^([0-9]+)$/, {
-    //   message: 'Coloque apenas números no minuto.',
-    // })
     .min(0, { message: 'Os minutos precisam ser maior ou igual à 0' })
     .max(60, { message: 'Existem apenas 60 minutos em uma hora' })
     .optional()
     .nullable(),
-  birthSecond: z.coerce
+  bornSecond: z.coerce
     .number({ invalid_type_error: 'Coloque apenas números no segundo.' })
-    // .regex(/^([0-9]+)$/, {
-    //   message: 'Coloque apenas números no segundo.',
-    // })
     .min(0, { message: 'Os segundos precisam ser maior ou igual à 0' })
     .max(60, { message: 'Existem apenas 60 segundos em um minuto' })
     .optional()
@@ -95,6 +101,7 @@ interface INewPersonModalProps {
 
 export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
   const [projectSelected, setProjectSelected] = useState('')
+  const [unknownAge, setUnknownAge] = useState(false)
   const [error, setError] = useState<IError | null>(null)
 
   const { theme } = useContext(InterfaceContext)
@@ -106,13 +113,16 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
     handleSubmit,
     formState,
     reset,
+    setValue,
     setError: setErrorForm,
   } = useForm<NewPersonFormData>({
     resolver: zodResolver(newPersonFormSchema),
     defaultValues: {
-      birthHour: 0,
-      birthMinute: 0,
-      birthSecond: 0,
+      bornMonth: 0,
+      bornDay: 0,
+      bornHour: 0,
+      bornMinute: 0,
+      bornSecond: 0,
     },
   })
 
@@ -125,18 +135,20 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
       setErrorForm('lastName', { message: 'Selecione um projeto' })
       setErrorForm('age', { message: 'Selecione um projeto' })
       setErrorForm('history', { message: 'Selecione um projeto' })
-      setErrorForm('birthHour', { message: 'Selecione um projeto' })
-      setErrorForm('birthMinute', { message: 'Selecione um projeto' })
-      setErrorForm('birthSecond', { message: 'Selecione um projeto' })
+      setErrorForm('bornMonth', { message: 'Selecione um projeto' })
+      setErrorForm('bornDay', { message: 'Selecione um projeto' })
+      setErrorForm('bornHour', { message: 'Selecione um projeto' })
+      setErrorForm('bornMinute', { message: 'Selecione um projeto' })
+      setErrorForm('bornSecond', { message: 'Selecione um projeto' })
 
       return
     }
 
-    const birthHour = data.birthHour?.toString().padStart(2, '0') || '00'
-    const birthMinute = data.birthMinute?.toString().padStart(2, '0') || '00'
-    const birthSecond = data.birthSecond?.toString().padStart(2, '0') || '00'
-
-    const birthInHour = `${birthHour}:${birthMinute}:${birthSecond}`
+    const bornMonth = data.bornMonth?.toString().padStart(2, '0') || '00'
+    const bornDay = data.bornDay?.toString().padStart(2, '0') || '00'
+    const bornHour = data.bornHour?.toString().padStart(2, '0') || '00'
+    const bornMinute = data.bornMinute?.toString().padStart(2, '0') || '00'
+    const bornSecond = data.bornSecond?.toString().padStart(2, '0') || '00'
 
     const newPerson = {
       name: data.name,
@@ -144,7 +156,11 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
       age: data.age,
       history: data.history,
       projectId: projectId || projectSelected,
-      birthHour: birthInHour,
+      bornMonth,
+      bornDay,
+      bornHour,
+      bornMinute,
+      bornSecond,
     }
 
     const { resolved, error } = await callEvent.createPerson(newPerson)
@@ -158,6 +174,12 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
     onSuccess && onSuccess()
     reset()
   }
+
+  useEffect(() => {
+    if (unknownAge) {
+      setValue('age', null)
+    }
+  }, [unknownAge, setValue])
 
   return (
     <ModalContent
@@ -221,24 +243,9 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
             </Text>
           )}
 
-          <Text as="label">
-            <Text
-              family="body"
-              size="sm"
-              css={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              Nome
-              <Text
-                as="span"
-                family="body"
-                size="sm"
-                css={{ color: '$errorDefault', float: 'right' }}
-              >
-                {formState.errors?.name?.message}
-              </Text>
-            </Text>
-
+          <LabelInput label="Nome" error={formState.errors.name?.message}>
             <TextInputRoot
+              size="sm"
               variant={formState.errors.name?.message ? 'denied' : 'default'}
               css={{ background: !isDarkMode ? '$base600' : '' }}
             >
@@ -251,26 +258,14 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 {...register('name')}
               />
             </TextInputRoot>
-          </Text>
+          </LabelInput>
 
-          <Text as="label">
-            <Text
-              family="body"
-              size="sm"
-              css={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              Sobrenome
-              <Text
-                as="span"
-                family="body"
-                size="sm"
-                css={{ color: '$errorDefault', float: 'right' }}
-              >
-                {formState.errors?.lastName?.message}
-              </Text>
-            </Text>
-
+          <LabelInput
+            label="Sobrenome"
+            error={formState.errors.lastName?.message}
+          >
             <TextInputRoot
+              size="sm"
               variant={
                 formState.errors.lastName?.message ? 'denied' : 'default'
               }
@@ -285,131 +280,132 @@ export function NewPersonModal({ onSuccess, projectId }: INewPersonModalProps) {
                 {...register('lastName')}
               />
             </TextInputRoot>
-          </Text>
+          </LabelInput>
 
-          <Text as="label">
-            <Text
-              family="body"
-              size="sm"
-              css={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-              Idade
-              <Text
-                as="span"
-                family="body"
+          <ContainerGrid padding={0} css={{ justifyContent: 'start' }}>
+            <LabelInput label="Idade" error={formState.errors.age?.message}>
+              <TextInputRoot
                 size="sm"
-                css={{ color: '$errorDefault', float: 'right' }}
+                variant={formState.errors.age?.message ? 'denied' : 'default'}
+                css={{ background: !isDarkMode ? '$base600' : '' }}
               >
-                {formState.errors?.age?.message}
-              </Text>
-            </Text>
+                <TextInputIcon>
+                  <Calendar weight="bold" />
+                </TextInputIcon>
 
-            <TextInputRoot
-              variant={formState.errors.age?.message ? 'denied' : 'default'}
-              css={{ background: !isDarkMode ? '$base600' : '' }}
-            >
-              <TextInputIcon>
-                <Calendar weight="bold" />
-              </TextInputIcon>
+                <TextInputInput
+                  disabled={unknownAge}
+                  placeholder={unknownAge ? '??????' : 'Idade do personagem'}
+                  {...register('age')}
+                />
+              </TextInputRoot>
+            </LabelInput>
 
-              <TextInputInput
-                placeholder="Idade do personagem"
-                {...register('age')}
+            <LabelInput label="Idade desconhecida">
+              <Checkbox
+                checked={unknownAge}
+                onCheckedChange={() => setUnknownAge(!unknownAge)}
               />
-            </TextInputRoot>
-          </Text>
-
-          <ContainerGrid padding={0} columns={3}>
-            <Text as="label">
-              <Text
-                family="body"
-                size="sm"
-                css={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                Hora do nascimento
-                <Text
-                  as="span"
-                  family="body"
-                  size="sm"
-                  css={{ color: '$errorDefault', float: 'right' }}
-                >
-                  {formState.errors?.birthHour?.message}
-                </Text>
-              </Text>
-
-              <TextInputRoot
-                variant={
-                  formState.errors.birthHour?.message ? 'denied' : 'default'
-                }
-                css={{ background: !isDarkMode ? '$base600' : '' }}
-              >
-                <TextInputInput
-                  placeholder="Hora do nascimento"
-                  {...register('birthHour')}
-                />
-              </TextInputRoot>
-            </Text>
-
-            <Text as="label">
-              <Text
-                family="body"
-                size="sm"
-                css={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                Minuto do nascimento
-                <Text
-                  as="span"
-                  family="body"
-                  size="sm"
-                  css={{ color: '$errorDefault', float: 'right' }}
-                >
-                  {formState.errors?.birthMinute?.message}
-                </Text>
-              </Text>
-
-              <TextInputRoot
-                variant={
-                  formState.errors.birthMinute?.message ? 'denied' : 'default'
-                }
-                css={{ background: !isDarkMode ? '$base600' : '' }}
-              >
-                <TextInputInput
-                  placeholder="Minuto do nascimento"
-                  {...register('birthMinute')}
-                />
-              </TextInputRoot>
-            </Text>
-
-            <Text as="label">
-              <Text
-                family="body"
-                size="sm"
-                css={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                Segundo do nascimento
-                <Text
-                  as="span"
-                  family="body"
-                  size="sm"
-                  css={{ color: '$errorDefault', float: 'right' }}
-                >
-                  {formState.errors?.birthSecond?.message}
-                </Text>
-              </Text>
-
-              <TextInputRoot
-                variant={
-                  formState.errors.birthSecond?.message ? 'denied' : 'default'
-                }
-                css={{ background: !isDarkMode ? '$base600' : '' }}
-              >
-                <TextInputInput
-                  placeholder="Segundo do nascimento"
-                  {...register('birthSecond')}
-                />
-              </TextInputRoot>
-            </Text>
+            </LabelInput>
           </ContainerGrid>
+
+          {project?.features.timeLines && (
+            <ContainerGrid padding={0} columns={5}>
+              <LabelInput
+                label="Mês do nascimento (opcional)"
+                error={formState.errors?.bornMonth?.message}
+              >
+                <TextInputRoot
+                  size="sm"
+                  variant={
+                    formState.errors.bornMonth?.message ? 'denied' : 'default'
+                  }
+                  css={{ background: !isDarkMode ? '$base600' : '' }}
+                >
+                  <TextInputInput
+                    placeholder="Mês do nascimento"
+                    {...register('bornMonth')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
+
+              <LabelInput
+                label="
+                Dia do nascimento (opcional)
+                "
+                error={formState.errors?.bornDay?.message}
+              >
+                <TextInputRoot
+                  size="sm"
+                  variant={
+                    formState.errors.bornDay?.message ? 'denied' : 'default'
+                  }
+                  css={{ background: !isDarkMode ? '$base600' : '' }}
+                >
+                  <TextInputInput
+                    placeholder="Dia do nascimento"
+                    {...register('bornDay')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
+
+              <LabelInput
+                label="Hora do nascimento (opcional)"
+                error={formState.errors?.bornHour?.message}
+              >
+                {' '}
+                <TextInputRoot
+                  size="sm"
+                  variant={
+                    formState.errors.bornHour?.message ? 'denied' : 'default'
+                  }
+                  css={{ background: !isDarkMode ? '$base600' : '' }}
+                >
+                  <TextInputInput
+                    placeholder="Hora do nascimento"
+                    {...register('bornHour')}
+                  />
+                </TextInputRoot>{' '}
+              </LabelInput>
+
+              <LabelInput
+                label="Minuto do nascimento (opcional)"
+                error={formState.errors?.bornMinute?.message}
+              >
+                {' '}
+                <TextInputRoot
+                  size="sm"
+                  variant={
+                    formState.errors.bornMinute?.message ? 'denied' : 'default'
+                  }
+                  css={{ background: !isDarkMode ? '$base600' : '' }}
+                >
+                  <TextInputInput
+                    placeholder="Minuto do nascimento"
+                    {...register('bornMinute')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
+
+              <LabelInput
+                label="Segundo do nascimento (opcional)"
+                error={formState.errors?.bornSecond?.message}
+              >
+                <TextInputRoot
+                  size="sm"
+                  variant={
+                    formState.errors.bornSecond?.message ? 'denied' : 'default'
+                  }
+                  css={{ background: !isDarkMode ? '$base600' : '' }}
+                >
+                  <TextInputInput
+                    placeholder="Segundo do nascimento"
+                    {...register('bornSecond')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
+            </ContainerGrid>
+          )}
         </ContainerGrid>
 
         <ContainerGrid padding={0}>

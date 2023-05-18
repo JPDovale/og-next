@@ -13,7 +13,9 @@ export function constructInfos(person: IPersonsResponse | null) {
         },
         {
           label: 'Idade:',
-          value: `${person?.age} anos` || 'Carregando...',
+          value: person?.age
+            ? `${person.age} anos`
+            : 'Idade desconhecida' || 'Carregando...',
         },
         {
           label: 'Criado em:',

@@ -138,7 +138,6 @@ const ContainerGridContainer = styled('div', {
     darkBackground: {
       true: {
         background: '$gray900',
-        padding: '$6 $4',
         borderRadius: '$md',
       },
       false: {},

@@ -321,6 +321,29 @@ export function ProjectNavigation({
               </ButtonRoot>
             </Label>
 
+            {project?.features.timeLines && (
+              <Label size="sm" height="shorter" family="body" weight="bold">
+                {navigatorProjectIsOpen && 'Linhas de tempo'}
+
+                <ButtonRoot
+                  title="Linhas de tempo"
+                  type="button"
+                  size="xs"
+                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
+                  align="center"
+                  variant={onWindow === 'timelines' ? 'active' : 'default'}
+                  onClick={() => {
+                    router.push(`/project/${id}/timelines`)
+                    setNavigatorProjectIsOpen(false)
+                  }}
+                >
+                  <ButtonIcon>
+                    <Clock />
+                  </ButtonIcon>
+                </ButtonRoot>
+              </Label>
+            )}
+
             {project?.features.books && (
               <Label size="sm" height="shorter" family="body" weight="bold">
                 {navigatorProjectIsOpen && 'livros'}
@@ -604,30 +627,6 @@ export function ProjectNavigation({
                 >
                   <ButtonIcon>
                     <Bank />
-                  </ButtonIcon>
-                </ButtonRoot>
-              </Label>
-            )}
-
-            {project?.features.timeLines && (
-              <Label size="sm" height="shorter" family="body" weight="bold">
-                {navigatorProjectIsOpen && 'Linhas de tempo'}
-
-                <ButtonRoot
-                  title="Linhas de tempo"
-                  type="button"
-                  size="xs"
-                  disabled
-                  wid={navigatorProjectIsOpen ? 'full' : 'hug'}
-                  align="center"
-                  variant={onWindow === 'timelines' ? 'active' : 'default'}
-                  onClick={() => {
-                    router.push(`/project/${id}/timelines`)
-                    setNavigatorProjectIsOpen(false)
-                  }}
-                >
-                  <ButtonIcon>
-                    <Clock />
                   </ButtonIcon>
                 </ButtonRoot>
               </Label>

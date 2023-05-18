@@ -43,7 +43,9 @@ export function Toast({
       </ToastTitle>
 
       <ToastDescription>
-        <Text family="body">{message}</Text>
+        <Text family="body" size="sm" height="shorter">
+          {message}
+        </Text>
       </ToastDescription>
 
       <ToastClose>

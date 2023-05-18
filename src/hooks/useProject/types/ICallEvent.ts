@@ -1,3 +1,4 @@
+import { ICreateTimeEventDTO } from './../../../api/dtos/timeLinesDTOS/ICreateTimeEventDTO'
 import { ICreateBookDTO } from '@api/dtos/booksDTOS/ICreateBookDTO'
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
 import { ICreatePersonDTO } from '@api/dtos/ICreatePersonDTO'
@@ -25,4 +26,7 @@ export interface ICallEvent {
   createBook: (newBook: ICreateBookDTO) => Promise<IResolveEvent>
   changeFeaturesUsing: (features: IFeatures) => Promise<IResolveEvent>
   updateInitialDate: (newDate: IUpdateInitialDate) => Promise<IResolveEvent>
+  createTimeEventOnMainTimeLien: (
+    timeEvent: ICreateTimeEventDTO,
+  ) => Promise<IResolveEvent>
 }

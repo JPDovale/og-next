@@ -1,5 +1,6 @@
 import { IBooksResponse } from './IBooksResponse'
 import { IPersonsResponse } from './IPersonsResponse'
+import { ITimeLineResponse } from './ITimeLineResponse'
 
 export interface IResponse {
   id: string
@@ -112,6 +113,7 @@ export interface IProjectResponse {
   user: IUserInProject
   books?: IBooksResponse[]
   persons?: IPersonsResponse[]
+  timeLines?: ITimeLineResponse[]
   features: IFeatures
   _count: {
     persons?: number

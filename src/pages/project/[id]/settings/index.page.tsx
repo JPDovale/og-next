@@ -1,3 +1,4 @@
+import * as AlertDialog from '@radix-ui/react-alert-dialog'
 import { IError } from '@@types/errors/IError'
 import {
   IFeatures,
@@ -30,6 +31,7 @@ import { z, ZodError } from 'zod'
 
 import { CardUserWithAccess } from './components/CardUserWithAccess'
 import { Creator, SettingsProject } from './styles'
+import { AlertModal } from '@components/usefull/AlertModal'
 
 const initialDateSchema = z.coerce.number({
   invalid_type_error: 'Coloque apenas números',
@@ -79,6 +81,15 @@ export default function SettingsPage() {
   }
 
   async function handleUpdateInitialDate() {
+    if (!initialDate) {
+      setError({
+        title: 'Data não informada',
+        message:
+          'Você precisa inserir uma data no campo para que a alteração possa ser feita',
+      })
+      return
+    }
+
     try {
       const initialDateValidate = initialDateSchema.parse(initialDate)
 
@@ -260,24 +271,43 @@ export default function SettingsPage() {
             </InfoDefault>
 
             <ContainerGrid css={{ display: 'flex', gap: '$4' }} padding={0}>
-              <ButtonRoot
-                wid="hug"
-                variant="noShadow"
-                css={{ padding: '$3 $8' }}
-                onClick={
-                  inUpdateFeatures
-                    ? handleUpdateFeatures
-                    : handleEditModeFeatures
-                }
-              >
-                <ButtonIcon>
-                  {inUpdateFeatures ? <ArchiveBox /> : <Pencil />}
-                </ButtonIcon>
+              {!inUpdateFeatures && (
+                <ButtonRoot
+                  wid="hug"
+                  variant="noShadow"
+                  css={{ padding: '$3 $8' }}
+                  onClick={handleEditModeFeatures}
+                >
+                  <ButtonIcon>
+                    <Pencil />
+                  </ButtonIcon>
 
-                <ButtonLabel>
-                  {inUpdateFeatures ? 'Salvar' : 'Editar'}
-                </ButtonLabel>
-              </ButtonRoot>
+                  <ButtonLabel>Editar</ButtonLabel>
+                </ButtonRoot>
+              )}
+
+              {inUpdateFeatures && (
+                <AlertDialog.Root>
+                  <AlertDialog.Trigger asChild>
+                    <ButtonRoot
+                      wid="hug"
+                      variant="noShadow"
+                      css={{ padding: '$3 $8' }}
+                    >
+                      <ButtonIcon>
+                        <ArchiveBox />
+                      </ButtonIcon>
+
+                      <ButtonLabel>Salvar</ButtonLabel>
+                    </ButtonRoot>
+                  </AlertDialog.Trigger>
+
+                  <AlertModal
+                    onAccept={handleUpdateFeatures}
+                    description="Caso você esteja usando algum e modelo e resolveu o remover, tudo relacionado a esse modelo será apagado permanentemente. Isso não poderá ser desfeito"
+                  />
+                </AlertDialog.Root>
+              )}
 
               {inUpdateFeatures && (
                 <ButtonRoot

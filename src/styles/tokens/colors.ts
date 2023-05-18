@@ -1,5 +1,6 @@
 export const colors = {
   transparent: '#00000000',
+  semiTransparentBack: '#000000ac',
 
   primary500: '',
 
@@ -14,6 +15,17 @@ export const colors = {
 
   text800: '',
   text100: '',
+
+  importance1: '#006ba9',
+  importance2: '#0d8a53',
+  importance3: '#005842',
+  importance4: '#ffc63f',
+  importance5: '#ff9416',
+  importance6: '#d7518d',
+  importance7: '#a62d54',
+  importance8: '#f2434e',
+  importance9: '#5729BA',
+  importance10: '#300D79',
 
   t0: '#d8f3dc',
   t1: '#b7e4c7',
