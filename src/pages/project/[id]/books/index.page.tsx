@@ -36,6 +36,7 @@ export default function BooksPage() {
         paths={['Livros']}
         loading={loadingProject}
         inError={!loadingProject && !project}
+        inErrorNotAuthorized={!project?.features.books}
         isScrolling
       >
         <Toast

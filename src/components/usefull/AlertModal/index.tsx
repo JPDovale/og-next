@@ -18,7 +18,7 @@ export function AlertModal({ description, onAccept }: IAlertModalProps) {
 
       <ModalContentContainer darkMode={theme === 'dark'}>
         <AlertTitle>
-          <Text size="lg" weight="bold" css={{ color: '$alertDefault' }}>
+          <Text size="3xl" weight="bold" family="body">
             Você tem certeza que quer fazer isso?
           </Text>
         </AlertTitle>
@@ -52,7 +52,7 @@ const ModalOverlay = styled(AlertDialog.Overlay, {
   height: '100vh',
   inset: 0,
 
-  background: '#00000070',
+  background: '#000000da',
 })
 
 const ModalContentContainer = styled(AlertDialog.Content, {
@@ -107,7 +107,7 @@ const ModalContentContainer = styled(AlertDialog.Content, {
 })
 
 const AlertTitle = styled(AlertDialog.Title, {
-  padding: '$4',
+  padding: '$2 $4',
 })
 
 const AlertDescription = styled(AlertDialog.Description, {
@@ -123,7 +123,7 @@ const Buttons = styled('div', {
 
 const Cancel = styled('button', {
   all: 'unset',
-  padding: '$3 $8',
+  padding: '$2 $8',
 
   background: '$gray500',
   borderRadius: '$sm',
@@ -142,7 +142,7 @@ const Cancel = styled('button', {
 
 const Accept = styled('button', {
   all: 'unset',
-  padding: '$3 $8',
+  padding: '$2 $8',
 
   border: '1px solid $fullError',
   background: '$errorDefault',

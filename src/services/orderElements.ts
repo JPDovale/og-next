@@ -1,5 +1,5 @@
+import { ITimeEvent } from '@api/responsesTypes/ITimeLineResponse'
 import lodash from 'lodash'
-import { IDateResponse } from '@api/responsesTypes/ITimelinesResponse'
 
 export function orderElements(
   elements: any[],
@@ -53,11 +53,9 @@ export function orderElements(
   }
 }
 
-export function orderDatesOfTimelines(
-  elements: IDateResponse[],
-): IDateResponse[] {
+export function orderDatesOfTimelines(elements: ITimeEvent[]): ITimeEvent[] {
   const elementsOrd = lodash.sortBy(elements, (object) => {
-    return object.dateDif
+    return Number(object.happened_date_timestamp)
   })
 
   return elementsOrd === undefined ? [] : elementsOrd

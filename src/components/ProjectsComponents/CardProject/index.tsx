@@ -1,12 +1,11 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon } from '@components/usefull/Button'
 
 import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { BookBookmark, Image as ImageIco, Share } from 'phosphor-react'
+import { Image as ImageIco, Share } from 'phosphor-react'
 import { useState } from 'react'
 import { ShareProjectButton } from './components/ShareProjectButton'
 import {
@@ -19,16 +18,18 @@ import {
 } from './styles'
 import { ShareProjectModal } from './components/ShareProjectModal'
 import { useProjects } from '@hooks/useProjects'
+import { IProjectPreview } from '@hooks/useProjects/entities/IProjectPreview'
+import { InfoDefault } from '@components/usefull/InfoDefault'
+import { useUser } from '@hooks/useUser'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
 
 interface ICardProjectProps {
-  project: IProjectResponse
-  isList?: boolean | 'example'
+  project: IProjectPreview
   isSharable?: boolean
 }
 
 export function CardProject({
   project,
-  isList = false,
   isSharable = false,
 }: ICardProjectProps) {
   const [onShareProject, setOnShareProject] = useState('')
@@ -40,134 +41,120 @@ export function CardProject({
     project.id,
   )
 
+  const { user } = useUser()
+
   return (
-    <CardProjectContainer isList={isList}>
+    <CardProjectContainer>
       <Preview
         title={projectName}
-        as={isList !== 'example' ? 'button' : 'div'}
+        as="button"
         onClick={() => {
           router.push(`/project/${project.id}`)
         }}
       >
-        {isList === false && (
-          <div className="project-image">
-            {projectImage ? (
-              <Image
-                src={projectImage}
-                alt={projectName}
-                width={300}
-                height={300}
-                priority
-              />
-            ) : (
-              <ImageIco weight="thin" size={64} alt={projectName} />
-            )}
-          </div>
-        )}
-
-        <ProjectInfos isList={isList}>
-          <InfosContainer isList={isList}>
-            <Text>
-              {isList === true && <BookBookmark size={20} />}
-              {isList === false && (
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Nome do projeto
-                </Text>
-              )}
-              {isList === 'example' ? 'NOME DO PROJETO' : projectName}
-            </Text>
-            <Text as="p" height={'shorter'} size={'sm'}>
-              {isList === false && (
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Data de criação
-                </Text>
-              )}
-              {isList === 'example' ? 'DATA DE CRIAÇÃO' : createdAt}
-            </Text>
-          </InfosContainer>
-
-          <InfosContainer columns={3} isList={isList}>
-            <Text as="p" height={'shorter'} size={'sm'}>
-              {isList === false && (
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Tipo do projeto
-                </Text>
-              )}
-              {isList === 'example' ? 'TIPO DO PROJETO' : project.type}
-            </Text>
-            <Text as="p" height={'shorter'} size={'sm'}>
-              {isList === false && (
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Criado por
-                </Text>
-              )}
-              {isList === 'example'
-                ? 'CRIADO POR'
-                : project.user.username
-                ? (project.user.username as string)
-                : 'Você'}
-            </Text>
-            <Text as="p" height={'shorter'} size={'sm'}>
-              {isList === false && (
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Usuários com acesso
-                </Text>
-              )}
-              {isList === 'example' ? 'Usuários' : usersInProject.length}
-            </Text>
-          </InfosContainer>
-
-          {isList === false && (
-            <InfosContainer columns={3}>
-              <Text as="p" height={'shorter'} size={'sm'}>
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Livros
-                </Text>
-                {project._count.books || 0}
-              </Text>
-
-              <Text as="p" height={'shorter'} size={'sm'}>
-                <Text as="span" family="body" size="sm" height="shorter">
-                  Personagens
-                </Text>
-                {project._count.persons || 0}
-              </Text>
-            </InfosContainer>
+        <div className="project-image">
+          {projectImage ? (
+            <Image
+              src={projectImage}
+              alt={projectName}
+              width={300}
+              height={300}
+              priority
+            />
+          ) : (
+            <ImageIco weight="thin" size={64} alt={projectName} />
           )}
+        </div>
 
-          {isList === false && (
-            <>
-              <Text as="span" family="body" size="sm" height="shorter">
-                Usuários com acesso:
-              </Text>
+        <ProjectInfos>
+          <InfosContainer>
+            <InfoDefault disableBold title="Nome do projeto" size="md">
+              {projectName}
+            </InfoDefault>
+          </InfosContainer>
 
-              <UsersWhitAccess>
-                <UserImage first>
+          <InfosContainer columns={3}>
+            <InfoDefault disableBold title="Tipo do projeto" size="sm">
+              {project.type}
+            </InfoDefault>
+
+            <InfoDefault disableBold title="Criador" size="sm">
+              {project.creator.id !== user?.id
+                ? project.creator.username
+                : 'Você'}
+            </InfoDefault>
+
+            <InfoDefault disableBold title="Usuários com acesso" size="sm">
+              {usersInProject.length}
+            </InfoDefault>
+          </InfosContainer>
+
+          <InfosContainer columns={3}>
+            {project?.features?.books && (
+              <InfoDefault disableBold title="Livros" size="sm">
+                {project.collections.book.itensLength ?? 0}
+              </InfoDefault>
+            )}
+
+            {project?.features?.persons && (
+              <InfoDefault disableBold title="Personagens" size="sm">
+                {project.collections.person.itensLength ?? 0}
+              </InfoDefault>
+            )}
+
+            {project?.features?.timeLines && (
+              <InfoDefault disableBold title="Time-lines" size="sm">
+                {project.collections.timeLine.itensLength}
+              </InfoDefault>
+            )}
+          </InfosContainer>
+
+          <ContainerGrid padding={0} columns={2}>
+            {project?.features?.timeLines && (
+              <InfoDefault disableBold title="A história se passa em" size="sm">
+                {project.initialDate.year ?? 0}
+              </InfoDefault>
+            )}
+
+            <InfoDefault disableBold title="Criado em" size="sm">
+              {createdAt}
+            </InfoDefault>
+          </ContainerGrid>
+
+          <Text as="span" family="body" size="sm" height="shorter">
+            Usuários com acesso:
+          </Text>
+
+          <UsersWhitAccess>
+            <UserImage first>
+              <AvatarWeb
+                whitShadow
+                src={project.creator.avatar.url}
+                size="xsm"
+                alt={project.creator.avatar.alt}
+              />
+            </UserImage>
+            {usersInProject.map((u) => {
+              return (
+                <UserImage key={u.id}>
                   <AvatarWeb
                     whitShadow
-                    src={project.user?.avatar_url ?? undefined}
+                    src={u.avatar.url}
                     size="xsm"
+                    alt={u.avatar.alt}
                   />
                 </UserImage>
-                {usersInProject.map((u) => {
-                  return (
-                    <UserImage key={u.id}>
-                      <AvatarWeb whitShadow src={u.avatarImage} size="xsm" />
-                    </UserImage>
-                  )
-                })}
-              </UsersWhitAccess>
-            </>
-          )}
+              )
+            })}
+          </UsersWhitAccess>
         </ProjectInfos>
       </Preview>
-      {isList !== 'example' && isSharable && (
+      {isSharable && (
         <Dialog.Root>
           <Dialog.Trigger asChild>
             <ShareProjectButton
               title="Compartilhar projeto"
               disabled={usersInProject.length >= 5}
-              isList={isList}
               wid="hug"
               onClick={() => {
                 setOnShareProject(`${project.id}`)

@@ -5,8 +5,6 @@ import {
   ArrowFatLinesUp,
   ArrowLineDown,
   ArrowLineUp,
-  GridFour,
-  List,
   Moon,
   SortAscending,
   SortDescending,
@@ -27,7 +25,7 @@ import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { useWindowSize } from '@hooks/useWindow'
 
 export function PreferenciesPopover() {
-  const { isList, setIsList, orderBy, setOrderBy, theme, setThemeFunction } =
+  const { orderBy, setOrderBy, theme, setThemeFunction } =
     useContext(InterfaceContext)
 
   const windowSize = useWindowSize()
@@ -53,7 +51,7 @@ export function PreferenciesPopover() {
         </HeaderPreferencies>
 
         <Options>
-          <ContainerGrid padding={0} columns={smallWindow ? 1 : 2}>
+          {/* <ContainerGrid padding={0} columns={smallWindow ? 1 : 2}>
             <ButtonRoot
               size="xs"
               type="button"
@@ -81,7 +79,7 @@ export function PreferenciesPopover() {
               </ButtonIcon>
               <ButtonLabel>List</ButtonLabel>
             </ButtonRoot>
-          </ContainerGrid>
+          </ContainerGrid> */}
 
           <Text size="sm" css={{ color: theme === 'dark' ? '$base100' : '' }}>
             Ordenar por:

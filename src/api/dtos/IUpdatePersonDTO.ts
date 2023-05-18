@@ -3,5 +3,9 @@ export interface IUpdatePersonDTO {
   lastName?: string | null
   age?: number | null
   history?: string | null
-  birthHour?: string | null
+  bornMonth?: string | null
+  bornDay?: string | null
+  bornHour?: string | null
+  bornMinute?: string | null
+  bornSecond?: string | null
 }

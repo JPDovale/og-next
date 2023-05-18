@@ -1,7 +1,6 @@
 import { Text } from '@components/usefull/Text'
 import { UserCircleMinus, X } from 'phosphor-react'
 
-import { Info } from '../../styles'
 import {
   CardUserWithAccessContainer,
   UnshareButton,
@@ -12,6 +11,7 @@ import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { IUserInProject, useProject } from '@hooks/useProject'
 import { useUser } from '@hooks/useUser'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
 
 interface ICardUserWithAccessContainerProps {
   project: IProjectResponse
@@ -74,7 +74,7 @@ export function CardUserWithAccess({
 
       {unshare === userWithAccess.id && (
         <UnshareConfirm>
-          <Info isCard>
+          <ContainerGrid padding={2} darkBackground>
             <Text size="sm" as="span">
               Quer memos remover o usuário do projeto?
             </Text>
@@ -95,7 +95,7 @@ export function CardUserWithAccess({
 
               <ButtonLabel>Confirmar</ButtonLabel>
             </ButtonRoot>
-          </Info>
+          </ContainerGrid>
         </UnshareConfirm>
       )}
     </CardUserWithAccessContainer>
