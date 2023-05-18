@@ -163,6 +163,15 @@ export interface IPersonsResponse {
   image_url: string | null
   user_id?: string
   project_id?: string
+  born_date_timestamp: string
+  born_year: string
+  born_year_time_christ: string
+  born_month: string
+  born_date: string
+  born_day: number
+  born_hour: number
+  born_minute: number
+  born_second: number
 
   appearances?: IAppearance[]
   objectives?: IObjective[]

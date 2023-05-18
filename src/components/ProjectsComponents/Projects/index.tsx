@@ -1,14 +1,12 @@
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { InterfaceContext } from '@contexts/interface'
+import { IProjectPreview } from '@hooks/useProjects/entities/IProjectPreview'
 import { useUser } from '@hooks/useUser'
 import { ProjectorScreenChart } from 'phosphor-react'
-import { useContext } from 'react'
 import { CardProject } from '../CardProject'
 import { ProjectsContainer } from './styles'
 
 interface IProjectProps {
-  projects: IProjectResponse[]
+  projects: IProjectPreview[]
   listEmptyMessage: string
   query?: string
   isLoading: boolean
@@ -22,25 +20,15 @@ export function Projects({
   isLoading,
   isFirst = false,
 }: IProjectProps) {
-  const { isList } = useContext(InterfaceContext)
   const { user } = useUser()
 
   return (
-    <ProjectsContainer
-      isFirst={isFirst}
-      isList={isList}
-      isEmpty={projects && !projects[0]}
-    >
-      {isList && (
-        <CardProject project={{} as IProjectResponse} isList="example" />
-      )}
-
+    <ProjectsContainer isFirst={isFirst} isEmpty={projects && !projects[0]}>
       {projects?.map((project) => {
         return (
           <CardProject
             key={project.id}
-            isList={isList}
-            isSharable={project?.user.id === user?.id}
+            isSharable={project.creator.id === user?.id}
             project={project}
           />
         )

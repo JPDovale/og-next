@@ -108,7 +108,7 @@ export const Buttons = styled('div', {
 })
 
 export const Space = styled('div', {
-  zIndex: 4,
+  zIndex: 1,
 
   width: '100%',
   height: 58,

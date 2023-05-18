@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { EditContainer, Info } from './styles'
 import {
   Crosshair,
@@ -34,18 +34,51 @@ import { getDate } from '@utils/dates/getDate'
 import { IError } from '@@types/errors/IError'
 import { IUpdatePersonDTO } from '@api/dtos/IUpdatePersonDTO'
 import { InfoDefault } from '@components/usefull/InfoDefault'
+import { LabelInput } from '@components/usefull/LabelInput'
+import { Checkbox } from '@components/usefull/Checkbox'
 
 const personFormSchema = z.object({
   name: z.string().optional().nullable(),
   lastName: z.string().optional().nullable(),
   age: z.coerce.number().optional().nullable(),
   history: z.string().optional().nullable(),
+  bornMonth: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números no mês.' })
+    .min(0, { message: 'O mês precisa ser maior ou igual à 0' })
+    .max(12, { message: 'Existem apenas 12 meses no ano' })
+    .optional()
+    .nullable(),
+  bornDay: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números no dia.' })
+    .min(0, { message: 'O dia precisa ser maior ou igual à 0' })
+    .max(31, { message: 'Existem apenas 31 dias no mês' })
+    .optional()
+    .nullable(),
+  bornHour: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números na hora.' })
+    .min(0, { message: 'A hora precisa ser maior ou igual à 0' })
+    .max(24, { message: 'Existem apenas 24 horas no dia' })
+    .optional()
+    .nullable(),
+  bornMinute: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números no minuto.' })
+    .min(0, { message: 'Os minutos precisam ser maior ou igual à 0' })
+    .max(60, { message: 'Existem apenas 60 minutos em uma hora' })
+    .optional()
+    .nullable(),
+  bornSecond: z.coerce
+    .number({ invalid_type_error: 'Coloque apenas números no segundo.' })
+    .min(0, { message: 'Os segundos precisam ser maior ou igual à 0' })
+    .max(60, { message: 'Existem apenas 60 segundos em um minuto' })
+    .optional()
+    .nullable(),
 })
 
 type PersonFormData = z.infer<typeof personFormSchema>
 
 export default function EditPersonPage() {
   const [error, setError] = useState<IError | null>(null)
+  const [unknownAge, setUnknownAge] = useState(false)
 
   const router = useRouter()
   const { id, personId } = router.query
@@ -60,11 +93,27 @@ export default function EditPersonPage() {
   const lastName = watch('lastName')
   const age = watch('age')
   const history = watch('history')
+  const bornMonth = watch('bornMonth')
+  const bornDay = watch('bornDay')
+  const bornHour = watch('bornHour')
+  const bornMinute = watch('bornMinute')
+  const bornSecond = watch('bornSecond')
 
   const { project, projectName, permission } = useProject(id as string)
   const { person, personName, loadingPerson, callEvent } = usePerson(
     personId as string,
   )
+
+  useEffect(() => {
+    if (unknownAge) {
+      setValue('age', null)
+      setValue('bornMonth', null)
+      setValue('bornDay', null)
+      setValue('bornHour', null)
+      setValue('bornMinute', null)
+      setValue('bornSecond', null)
+    }
+  }, [unknownAge, setValue])
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
@@ -75,16 +124,18 @@ export default function EditPersonPage() {
 
   async function handleUpdatePerson() {
     const updatedPerson: IUpdatePersonDTO = {
-      name: name || person?.name,
-      lastName: lastName || person?.last_name,
-      age: age || person?.age,
-      history: history || person?.history,
-      birthHour: '00',
+      name: name || undefined,
+      lastName: lastName || undefined,
+      age: age === null ? null : age || undefined,
+      history: history === person?.history ? undefined : history,
+      bornDay: bornDay?.toString() ? bornDay?.toString() : undefined,
+      bornHour: bornHour?.toString() ? bornHour?.toString() : undefined,
+      bornMinute: bornMinute?.toString() ? bornMinute?.toString() : undefined,
+      bornMonth: bornMonth?.toString() ? bornMonth?.toString() : undefined,
+      bornSecond: bornSecond?.toString() ? bornSecond?.toString() : undefined,
     }
 
     const { resolved, error } = await callEvent.update(updatedPerson)
-
-    console.log(error)
 
     if (resolved) {
       reset()
@@ -118,39 +169,163 @@ export default function EditPersonPage() {
 
           <ToastError error={error} setError={setError} />
 
-          <Info isCard columns={smallWindow ? 1 : 3}>
-            <Text family="body" as="label">
-              Nome
-              <TextInputRoot>
-                <TextInputInput
-                  placeholder={person?.name}
-                  {...register('name')}
-                />
-              </TextInputRoot>
-            </Text>
+          <ContainerGrid padding={4} darkBackground>
+            <ContainerGrid padding={0}>
+              <LabelInput label="Nome" error={formState.errors.name?.message}>
+                <TextInputRoot size="sm">
+                  <TextInputInput
+                    placeholder={person?.name}
+                    {...register('name')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
 
-            <Text family="body" as="label">
-              Sobrenome
-              <TextInputRoot>
-                <TextInputInput
-                  placeholder={person?.last_name || 'Carregando...'}
-                  {...register('lastName')}
-                />
-              </TextInputRoot>
-            </Text>
+              <LabelInput
+                label="Sobrenome"
+                error={formState.errors.lastName?.message}
+              >
+                <TextInputRoot size="sm">
+                  <TextInputInput
+                    placeholder={person?.last_name}
+                    {...register('lastName')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
 
-            <Text family="body" as="label">
-              Idade
-              <TextInputRoot>
-                <TextInputInput
-                  placeholder={person?.age.toString() || 'Carregando...'}
-                  {...register('age')}
-                />
-              </TextInputRoot>
-            </Text>
-          </Info>
+              <LabelInput label="Idade" error={formState.errors.age?.message}>
+                <TextInputRoot size="sm">
+                  <TextInputInput
+                    placeholder={
+                      person?.age ? person.age.toString() : 'Idade desconhecida'
+                    }
+                    {...register('age')}
+                  />
+                </TextInputRoot>
+              </LabelInput>
 
-          <ContainerGrid darkBackground>
+              {person?.age && (
+                <LabelInput label="Idade desconhecida">
+                  <Checkbox
+                    checked={unknownAge}
+                    onCheckedChange={() => setUnknownAge(!unknownAge)}
+                  />
+                </LabelInput>
+              )}
+            </ContainerGrid>
+
+            {project?.features.timeLines && (
+              <ContainerGrid padding={0} columns={5}>
+                <LabelInput
+                  label="Mês do nascimento"
+                  error={formState.errors?.bornMonth?.message}
+                >
+                  <TextInputRoot
+                    size="sm"
+                    variant={
+                      formState.errors.bornMonth?.message ? 'denied' : 'default'
+                    }
+                  >
+                    <TextInputInput
+                      placeholder={
+                        person?.age ? person?.born_month : 'Desconhecido'
+                      }
+                      {...register('bornMonth')}
+                    />
+                  </TextInputRoot>
+                </LabelInput>
+
+                <LabelInput
+                  label="Dia do nascimento"
+                  error={formState.errors?.bornDay?.message}
+                >
+                  <TextInputRoot
+                    size="sm"
+                    variant={
+                      formState.errors.bornDay?.message ? 'denied' : 'default'
+                    }
+                  >
+                    <TextInputInput
+                      placeholder={
+                        person?.age
+                          ? person?.born_day.toString()
+                          : 'Desconhecido'
+                      }
+                      {...register('bornDay')}
+                    />
+                  </TextInputRoot>
+                </LabelInput>
+
+                <LabelInput
+                  label="Hora do nascimento"
+                  error={formState.errors?.bornHour?.message}
+                >
+                  <TextInputRoot
+                    size="sm"
+                    variant={
+                      formState.errors.bornHour?.message ? 'denied' : 'default'
+                    }
+                  >
+                    <TextInputInput
+                      placeholder={
+                        person?.age
+                          ? person?.born_hour.toString()
+                          : 'Desconhecido'
+                      }
+                      {...register('bornHour')}
+                    />
+                  </TextInputRoot>{' '}
+                </LabelInput>
+
+                <LabelInput
+                  label="Minuto do nascimento"
+                  error={formState.errors?.bornMinute?.message}
+                >
+                  <TextInputRoot
+                    size="sm"
+                    variant={
+                      formState.errors.bornMinute?.message
+                        ? 'denied'
+                        : 'default'
+                    }
+                  >
+                    <TextInputInput
+                      placeholder={
+                        person?.age
+                          ? person?.born_minute.toString()
+                          : 'Desconhecido'
+                      }
+                      {...register('bornMinute')}
+                    />
+                  </TextInputRoot>
+                </LabelInput>
+
+                <LabelInput
+                  label="Segundo do nascimento"
+                  error={formState.errors?.bornSecond?.message}
+                >
+                  <TextInputRoot
+                    size="sm"
+                    variant={
+                      formState.errors.bornSecond?.message
+                        ? 'denied'
+                        : 'default'
+                    }
+                  >
+                    <TextInputInput
+                      placeholder={
+                        person?.age
+                          ? person?.born_second.toString()
+                          : 'Desconhecido'
+                      }
+                      {...register('bornSecond')}
+                    />
+                  </TextInputRoot>
+                </LabelInput>
+              </ContainerGrid>
+            )}
+          </ContainerGrid>
+
+          <ContainerGrid padding={4} darkBackground>
             <Text family="body" as="label" css={{ color: '$base900' }}>
               História
               {/* <Textarea
@@ -170,10 +345,7 @@ export default function EditPersonPage() {
             type="submit"
             wid={smallWindow ? 'full' : 'middle'}
             align="center"
-            disabled={
-              !!(!name && !lastName && !age && !history) ||
-              formState.isSubmitting
-            }
+            disabled={!formState.isDirty || formState.isSubmitting}
             css={{
               padding: '$3 $10',
               alignSelf: 'center',

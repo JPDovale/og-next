@@ -34,14 +34,14 @@ export const ToastRoot = styled(Toast.Root, {
   flexDirection: 'column',
   gap: '$2',
 
-  padding: '$4',
-  width: 360,
+  padding: '$2 $4',
+  width: 350,
   height: 'auto',
 
   background: '$gray900',
   borderRadius: '$sm',
-  boxShadow:
-    'hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px',
+  boxShadow: '3px 3px 8px #000000dc',
+
   border: '2px solid $purple300',
 
   '@media screen and (max-width: 768px)': {
@@ -64,8 +64,9 @@ export const ToastRoot = styled(Toast.Root, {
     darkMode: {
       true: {},
       false: {
-        background: '$base300',
+        background: '$base400',
         color: '$text800',
+        textAlign: 'justify',
       },
     },
   },

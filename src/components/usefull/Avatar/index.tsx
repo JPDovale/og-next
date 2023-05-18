@@ -10,6 +10,7 @@ interface IAvatarProps {
   whitShadow?: boolean
   isClickable?: boolean
   selfCenter?: boolean
+  alt?: string
 }
 
 export function AvatarWeb({
@@ -20,6 +21,7 @@ export function AvatarWeb({
   whitShadow = false,
   isClickable = false,
   selfCenter = false,
+  alt,
 }: IAvatarProps) {
   return (
     <AvatarRoot
@@ -30,12 +32,7 @@ export function AvatarWeb({
       isClickable={isClickable}
       selfCenter={selfCenter}
     >
-      <AvatarImage
-        size={size}
-        src={src}
-        alt="Foto do usuário"
-        whitShadow={whitShadow}
-      />
+      <AvatarImage size={size} src={src} alt={alt} whitShadow={whitShadow} />
       <AvatarFallback size={size} whitShadow={whitShadow}>
         <UserCircle weight="thin" />
       </AvatarFallback>

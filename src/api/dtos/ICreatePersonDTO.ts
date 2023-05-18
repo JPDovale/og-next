@@ -1,7 +1,11 @@
 export interface ICreatePersonDTO {
   name: string
   lastName: string
-  age: number
+  age: number | null
   history: string
-  birthHour: string
+  bornMonth: string
+  bornDay: string
+  bornHour: string
+  bornMinute: string
+  bornSecond: string
 }

@@ -40,6 +40,7 @@ export const TextInputContainer = styled('div', {
       },
     },
     size: {
+      xxs: { padding: '$1' },
       xs: { padding: '$2' },
       sm: { padding: '$3' },
       md: {},

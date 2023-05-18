@@ -26,19 +26,6 @@ export const ProjectsContainer = styled('div', {
       },
       false: {},
     },
-
-    isList: {
-      true: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '$5',
-
-        padding: '0 $8 $10 $8',
-        '@media screen and (max-width: 768px)': {
-          padding: '$4',
-        },
-      },
-    },
   },
 
   '@media screen and (max-width: 768px)': {

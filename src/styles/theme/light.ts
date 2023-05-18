@@ -4,6 +4,7 @@ import { createTheme } from '..'
 export const lightMode = createTheme({
   colors: {
     primary500: '#230C40',
+    semiTransparentBack: '#000000ac',
 
     secondary500: '#6f3bdd',
     secondary700: '#441c9c',
@@ -16,6 +17,17 @@ export const lightMode = createTheme({
 
     text800: '#101012',
     text100: '#E2E2E2',
+
+    importance1: '#006ba9',
+    importance2: '#0d8a53',
+    importance3: '#005842',
+    importance4: '#ffc63f',
+    importance5: '#ff9416',
+    importance6: '#d7518d',
+    importance7: '#a62d54',
+    importance8: '#f2434e',
+    importance9: '#5729BA',
+    importance10: '#300D79',
 
     t0: '#d8f3dc',
     t1: '#b7e4c7',
