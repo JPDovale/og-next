@@ -1,5 +1,11 @@
 # og-next
 
+## 0.3.0
+
+### Minor Changes
+
+- Adding incomplete features time-lines
+
 ## 0.2.1
 
 ### Patch Changes
