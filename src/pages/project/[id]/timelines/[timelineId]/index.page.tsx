@@ -207,7 +207,7 @@ export default function TimeLinePage() {
                   </ButtonRoot>
                 </Dialog.Trigger>
 
-                <NewTimeEventModal projectId={project!.id} />
+                <NewTimeEventModal projectId={project?.id ?? ''} />
               </Dialog.Root>
 
               <TextInputRoot size="xxs" variant="noShadow">
