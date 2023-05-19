@@ -51,8 +51,6 @@ export function GenericCardObject({
     (person) => person.id === object.coupleWithPerson?.person_id,
   )
 
-  console.log(object)
-
   return (
     <GenericCardObjectContainer>
       <ObjectInfos>

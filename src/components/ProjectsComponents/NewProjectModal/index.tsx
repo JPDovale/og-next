@@ -143,8 +143,6 @@ export function NewProjectModal({
         : undefined,
     }
 
-    console.log(newProject)
-
     const { resolved, error } = await callEvent.createProject(newProject)
 
     if (error) {

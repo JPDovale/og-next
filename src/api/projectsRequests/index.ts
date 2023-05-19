@@ -118,7 +118,6 @@ export async function updatePlotRequest(
   projectId: string,
   newPlot: IUpdatePlotDTO,
 ): Promise<IProjectResponse> {
-  console.log(newPlot)
   try {
     const response = await api.put(`/projects/${projectId}/plot`, newPlot)
     return response.data
