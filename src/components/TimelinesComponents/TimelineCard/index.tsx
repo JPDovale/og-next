@@ -48,7 +48,8 @@ export function TimelineCard({ timeline, isMain = false }: ITimelineCardProps) {
               size={isMain ? 'lg' : 'sm'}
               weight={isMain ? 'bold' : 'medium'}
             >
-              {event.title}
+              {event.title.slice(0, 27)}
+              {event.title.length > 27 && '...'}
             </Text>
 
             <Text colorInvert={theme === 'light'} size={isMain ? 'sm' : 'xs'}>
