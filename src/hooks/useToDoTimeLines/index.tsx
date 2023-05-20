@@ -5,6 +5,7 @@ import { useUser } from '@hooks/useUser'
 import { useQuery } from 'react-query'
 import { createTimeEventToDo } from './events/createTimeEventToDo'
 import { createToDoTimeLine } from './events/createToDoTimeLine'
+import { deleteToDoTimeEvent } from './events/deleteTimeEventToDo'
 import { ICallEvent } from './types/ICallEvent'
 
 export function useToDoTimeLines() {
@@ -54,6 +55,8 @@ export function useToDoTimeLines() {
       createToDoTimeLine(newToDoTimeLine, refetchToDoTimelines),
     createToDoTimeEvent: (timeLineId, timeEvent) =>
       createTimeEventToDo(timeLineId, timeEvent, refetchToDoTimelines),
+    deleteToDoTimeEvent: (timeLineId, timeEventId) =>
+      deleteToDoTimeEvent(timeLineId, timeEventId, refetchToDoTimelines),
   }
 
   return {

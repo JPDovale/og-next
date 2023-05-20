@@ -47,7 +47,7 @@ export default function ToDoTimeLinePage() {
   const router = useRouter()
   const { timelineId } = router.query
 
-  const { findTimeLine, loadingToDoTimeLines } = useToDoTimeLines()
+  const { findTimeLine, loadingToDoTimeLines, callEvent } = useToDoTimeLines()
 
   const { timeline } = findTimeLine(timelineId as string)
   const eventsInChronologicOrd = orderDatesOfTimelines(
@@ -193,6 +193,21 @@ export default function ToDoTimeLinePage() {
     }
 
     setEventSelected(id)
+  }
+
+  async function handleDeleteToDoEvent() {
+    const { resolved, error } = await callEvent.deleteToDoTimeEvent(
+      timelineId as string,
+      eventSelectedToShow.id,
+    )
+
+    if (resolved) {
+      setEventSelected(eventsInChronologicOrd[0].id ?? '')
+    }
+
+    if (error) {
+      alert(error.message)
+    }
   }
 
   return (
@@ -394,7 +409,7 @@ export default function ToDoTimeLinePage() {
                   variant="noShadow"
                   wid="hug"
                   css={{ background: '$fullError' }}
-                  disabled
+                  onClick={handleDeleteToDoEvent}
                 >
                   <ButtonIcon>
                     <Trash />
