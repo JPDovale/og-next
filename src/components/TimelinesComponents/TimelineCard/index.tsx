@@ -10,14 +10,20 @@ import {
   EventCard,
   EventsTable,
   TimeLineCardContainer,
+  TimeLineEmptyMessage,
 } from './styles'
 
 interface ITimelineCardProps {
   timeline: ITimeLineResponse
   isMain?: boolean
+  isEmpty?: boolean
 }
 
-export function TimelineCard({ timeline, isMain = false }: ITimelineCardProps) {
+export function TimelineCard({
+  timeline,
+  isMain = false,
+  isEmpty = false,
+}: ITimelineCardProps) {
   const { theme } = useContext(InterfaceContext)
   const router = useRouter()
   const { id } = router.query
@@ -31,8 +37,12 @@ export function TimelineCard({ timeline, isMain = false }: ITimelineCardProps) {
       title="Acessar calendário"
       onClick={() => router.push(`/project/${id}/timelines/${timeline.id}`)}
       isMain={isMain}
+      isEmpty={isEmpty}
     >
-      <CenterLine className="center-line" />
+      {isEmpty && (
+        <TimeLineEmptyMessage>Nenhum evento criado ainda</TimeLineEmptyMessage>
+      )}
+      <CenterLine className="center-line" isEmpty={isEmpty} />
 
       <EventsTable>
         {eventsInChronologicOrd.map((event, i) => (

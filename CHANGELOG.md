@@ -1,5 +1,11 @@
 # og-next
 
+## 0.3.4
+
+### Patch Changes
+
+- Add new time lines
+
 ## 0.3.3
 
 ### Patch Changes

@@ -25,6 +25,7 @@ interface ICommentsOnPageProps {
     newResponse: ICreateCommentDTO,
     commentId: string,
   ) => Promise<void>
+  size?: 'md' | 'xxs'
 }
 
 export function CommentsOnPage({
@@ -35,6 +36,7 @@ export function CommentsOnPage({
   onNewComment,
   onNewCommentTo,
   onResponseIntersect,
+  size = 'md',
 }: ICommentsOnPageProps) {
   const [newComment, setNewComment] = useState('')
 
@@ -53,7 +55,7 @@ export function CommentsOnPage({
   }
 
   return (
-    <CommentsOnPageContainer>
+    <CommentsOnPageContainer size={size}>
       <CommentsHeader>
         <Text as="p" weight="bold">
           <Chats size={24} />
@@ -73,7 +75,13 @@ export function CommentsOnPage({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
           />
-          <ButtonRoot disabled={isNew} type="submit" align="center">
+          <ButtonRoot
+            disabled={isNew}
+            type="submit"
+            align="center"
+            size={size}
+            variant="noShadow"
+          >
             <ButtonIcon>
               <PaperPlaneTilt weight="bold" />
             </ButtonIcon>

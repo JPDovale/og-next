@@ -27,6 +27,12 @@ export const TimeLineCardContainer = styled('div', {
         height: '200px',
       },
     },
+    isEmpty: {
+      true: {
+        height: '120px',
+      },
+      false: {},
+    },
   },
 })
 
@@ -39,6 +45,14 @@ export const CenterLine = styled('span', {
   boxShadow: ' 0 0 40px 6px #8D5DF1 ',
   opacity: 0.9,
   transition: 'ease-in-out 250ms',
+  variants: {
+    isEmpty: {
+      true: {
+        opacity: 0.3,
+      },
+      false: {},
+    },
+  },
 })
 
 export const EventsTable = styled('div', {
@@ -170,4 +184,21 @@ export const Conector = styled('span', {
       },
     },
   },
+})
+
+export const TimeLineEmptyMessage = styled('span', {
+  zIndex: 3,
+
+  left: '$20',
+  padding: '$4',
+  fontFamily: '$bodyText',
+  fontSize: '$lg',
+  fontWeight: 'bold',
+  textTransform: 'uppercase',
+  position: 'absolute',
+  background: '$semiTransparentBack',
+  color: '$text100',
+  borderRadius: '$lg',
+  boxShadow: '$default',
+  backdropFilter: '$blur(1px)',
 })
