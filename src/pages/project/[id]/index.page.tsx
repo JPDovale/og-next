@@ -16,6 +16,7 @@ import {
   Books,
   HourglassSimpleMedium,
   Image as ImageIco,
+  ListChecks,
   Pencil,
   Trash,
   UserFocus,
@@ -35,11 +36,13 @@ import {
   PersonsContainer,
   PlotProjectContainer,
 } from './styles'
+import { HeadingPart as HeadingPartAlternative } from '@components/usefull/HeadingPart'
 // import { TimelineView } from '@components/TimelinesComponents/TimelineView'
 import { InterfaceContext } from '@contexts/interface'
 import { useProject } from '@hooks/useProject'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { TimelineCard } from '@components/TimelinesComponents/TimelineCard'
+import { InfoDefault } from '@components/usefull/InfoDefault'
 
 export default function ProjectPage() {
   usePreventBack('/projects')
@@ -65,6 +68,7 @@ export default function ProjectPage() {
     usersInProject,
     callEvent,
     mainTimeLine,
+    todoFirst,
   } = useProject(id as string)
 
   const windowSize = useWindowSize()
@@ -254,8 +258,35 @@ export default function ProjectPage() {
               </HeadingPart>
 
               <ContainerGrid padding={0}>
-                <TimelineCard isMain timeline={mainTimeLine!} />
+                <TimelineCard
+                  isEmpty={mainTimeLine?.timeEvents.length === 0}
+                  isMain
+                  timeline={mainTimeLine!}
+                />
               </ContainerGrid>
+
+              {todoFirst && (
+                <ContainerGrid padding={0}>
+                  <HeadingPartAlternative
+                    icon={<ListChecks size={40} />}
+                    label="To-do"
+                  />
+                  <ContainerGrid padding={0} columns={2}>
+                    <InfoDefault title="Titulo">
+                      <Text family="body" size="xl">
+                        {todoFirst.title}
+                      </Text>
+                    </InfoDefault>
+
+                    <InfoDefault title="Descrição">
+                      <Text family="body" size="xl">
+                        {todoFirst.title}
+                      </Text>
+                    </InfoDefault>
+                  </ContainerGrid>
+                  <TimelineCard isMain timeline={todoFirst} />
+                </ContainerGrid>
+              )}
             </>
           )}
 

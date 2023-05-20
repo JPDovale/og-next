@@ -7,8 +7,10 @@ import { useUser } from '@hooks/useUser'
 import { orderDatesOfTimelines } from '@services/orderElements'
 import { getDate } from '@utils/dates/getDate'
 import { useQuery } from 'react-query'
+import { changeDoneTimeEvent } from './events/changeDoneTimeEvent'
 import { changeFeaturesUsing } from './events/changeFeaturesUsing'
 import { commentInPlot } from './events/commentInPlot'
+import { copyTimeLineToProject } from './events/copyTimeLineToProject'
 import { createBook } from './events/createBook'
 import { createPerson } from './events/createPerson'
 import { createTimeEventOnMainTimeLien } from './events/createTimeEventOnMainTimeLien'
@@ -82,6 +84,12 @@ export function useProject(id: string) {
   const usersWithPermissionEdit: IUserInProject[] = []
   const mainTimeLine = project?.timeLines?.find(
     (timeLine) => !timeLine.is_alternative,
+  )
+  const todoFirst = project?.timeLines?.find(
+    (timeline) => timeline.type === 'to_do',
+  )
+  const anotherTodos = project?.timeLines?.filter(
+    (timeline) => timeline.id !== todoFirst?.id,
   )
 
   project?.users_with_access_comment?.users.map((user) => {
@@ -308,6 +316,12 @@ export function useProject(id: string) {
 
     createTimeEventOnMainTimeLien: (newTimeEvent) =>
       createTimeEventOnMainTimeLien(project!.id, newTimeEvent, refetchProject),
+
+    copyTimeLineToProject: (timeLineId) =>
+      copyTimeLineToProject(project!.id, timeLineId, refetchProject),
+
+    changeDoneTimeEvent: (timeEventId, timeLineId) =>
+      changeDoneTimeEvent(project!.id, timeLineId, timeEventId, refetchProject),
   }
 
   return {
@@ -328,6 +342,8 @@ export function useProject(id: string) {
     usersInProject: usersInProject ?? [],
     usersWithPermissionEdit: usersWithPermissionEdit ?? [],
     mainTimeLine,
+    todoFirst,
+    anotherTodos,
 
     findBook,
     findPerson,
