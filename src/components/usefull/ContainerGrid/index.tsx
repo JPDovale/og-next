@@ -1,39 +1,6 @@
 import { CSS } from '@stitches/react'
 import { styled } from '@styles/index'
-import { ReactNode } from 'react'
-
-interface IContainerGrid {
-  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
-  padding?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
-  children?: ReactNode
-  darkBackground?: boolean
-  alignCenter?: boolean
-  isRelativePosition?: boolean
-  css?: CSS
-}
-
-export function ContainerGrid({
-  columns = 1,
-  padding = 2,
-  children,
-  darkBackground = false,
-  alignCenter = false,
-  isRelativePosition = false,
-  css,
-}: IContainerGrid) {
-  return (
-    <ContainerGridContainer
-      css={css}
-      columns={columns}
-      darkBackground={darkBackground}
-      padding={padding}
-      alignCenter={alignCenter}
-      isRelativePosition={isRelativePosition}
-    >
-      {children}
-    </ContainerGridContainer>
-  )
-}
+import { ComponentProps, ReactNode } from 'react'
 
 const ContainerGridContainer = styled('div', {
   display: 'grid',
@@ -187,3 +154,38 @@ const ContainerGridContainer = styled('div', {
     },
   },
 })
+
+interface IContainerGrid extends ComponentProps<typeof ContainerGridContainer> {
+  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
+  padding?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+  children?: ReactNode
+  darkBackground?: boolean
+  alignCenter?: boolean
+  isRelativePosition?: boolean
+  css?: CSS
+}
+
+export function ContainerGrid({
+  columns = 1,
+  padding = 2,
+  children,
+  darkBackground = false,
+  alignCenter = false,
+  isRelativePosition = false,
+  css,
+  ...rest
+}: IContainerGrid) {
+  return (
+    <ContainerGridContainer
+      css={css}
+      columns={columns}
+      darkBackground={darkBackground}
+      padding={padding}
+      alignCenter={alignCenter}
+      isRelativePosition={isRelativePosition}
+      {...rest}
+    >
+      {children}
+    </ContainerGridContainer>
+  )
+}
