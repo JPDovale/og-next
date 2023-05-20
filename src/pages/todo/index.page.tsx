@@ -63,10 +63,10 @@ export default function ToDoPage() {
 
                 <ContainerGrid padding={0} columns={2}>
                   <InfoDefault title="Dia de inicio">
-                    {getDate(toDoTimeLine.startDate)}
+                    {getDate(toDoTimeLine?.start_date)}
                   </InfoDefault>
                   <InfoDefault title="Dia de fim">
-                    {getDate(toDoTimeLine.endDate)}
+                    {getDate(toDoTimeLine?.end_date)}
                   </InfoDefault>
                 </ContainerGrid>
               </ContainerGrid>
