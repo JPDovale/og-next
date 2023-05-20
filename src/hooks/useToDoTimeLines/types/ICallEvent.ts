@@ -10,4 +10,8 @@ export interface ICallEvent {
     timeLineId: string,
     newTimeEventToDo: ICreateTimeEventToDoDTO,
   ) => Promise<IResolveEvent>
+  deleteToDoTimeEvent: (
+    timeLineId: string,
+    timeEventId: string,
+  ) => Promise<IResolveEvent>
 }
