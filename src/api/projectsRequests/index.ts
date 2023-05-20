@@ -3,6 +3,7 @@ import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
 import { IProjectResponse } from '../responsesTypes/IProjectResponse'
+import { IChangeDoneTimeEventRequest } from './types/IChangeDoneTimeEventRequest'
 import { IChangeFeaturesUsingRequest } from './types/IChangeFeaturesUsingRequest'
 import { ICreateTimeEventRequest } from './types/ICreateTimeEventRequest'
 import { IUpdateInitialDateRequest } from './types/IUpdateInitialDateRequest'
@@ -118,7 +119,6 @@ export async function updatePlotRequest(
   projectId: string,
   newPlot: IUpdatePlotDTO,
 ): Promise<IProjectResponse> {
-  console.log(newPlot)
   try {
     const response = await api.put(`/projects/${projectId}/plot`, newPlot)
     return response.data
@@ -293,6 +293,35 @@ export async function createTimeEventRequest({
     const response = await api.post(
       `/projects/${projectId}/timelines/timeEvents`,
       data,
+    )
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function copyTimeLineToProjectRequest(
+  projectId: string,
+  timeLineId: string,
+) {
+  try {
+    const response = await api.post(
+      `/projects/${projectId}/timelines/${timeLineId}/copy`,
+    )
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function changeDoneToDoEventRequest({
+  projectId,
+  timeEventId,
+  timeLineId,
+}: IChangeDoneTimeEventRequest) {
+  try {
+    const response = await api.patch(
+      `/timelines/${timeLineId}/todo/${projectId}/timeEvents/${timeEventId}`,
     )
     return response.data
   } catch (err: any) {

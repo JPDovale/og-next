@@ -1,7 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { ITimeEvent } from '@api/responsesTypes/ITimeLineResponse'
-import { TimeLineCalendar } from '@components/TimelinesComponents/TimeLineCalendar'
-import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -11,37 +9,49 @@ import {
   TextInputRoot,
 } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
-import { usePerson } from '@hooks/usePerson'
-import { useProject } from '@hooks/useProject'
-import { ProjectPageLayout } from '@layouts/ProjectPageLayout'
+import { useToDoTimeLines } from '@hooks/useToDoTimeLines'
+import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
+import { orderDatesOfTimelines } from '@services/orderElements'
 import { getMonthName } from '@utils/dates/parserMonthName'
 import dayjs from 'dayjs'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { Check, MagnifyingGlass, Trash } from 'phosphor-react'
+import { MagnifyingGlass, Trash } from 'phosphor-react'
 import { useMemo, useState } from 'react'
 import { EventCard, EventImportance, EventInfos, EventTime } from './styles'
-import { NewTimeEventModal } from '@components/TimelinesComponents/NewTimeEventModal'
-import { getDate } from '@utils/dates/getDate'
+import { Calendar } from '@components/usefull/Calendar'
 import { NewTimeEventToDoToDoModal } from '@components/TimelinesComponents/NewTimeEventToDoModal'
-// import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 
 interface IEventInThisMonth {
   day: string
   events: ITimeEvent[]
 }
 
-export default function TimeLinePage() {
+interface ICalendarWeek {
+  week: number
+  days: {
+    date: dayjs.Dayjs
+    disabled: boolean
+  }[]
+}
+
+type ICalendarWeeks = ICalendarWeek[]
+
+export default function ToDoTimeLinePage() {
   const [currentEventIndex, setCurrentEventIndex] = useState(0)
+  const [currentDate, setCurrentDate] = useState(() => {
+    return dayjs().set('date', 1)
+  })
   const [eventSelected, setEventSelected] = useState('')
+
   const router = useRouter()
-  const { id, timelineId } = router.query
+  const { timelineId } = router.query
 
-  const { projectName, loadingProject, project, findTimeLine, callEvent } =
-    useProject(id as string)
+  const { findTimeLine, loadingToDoTimeLines } = useToDoTimeLines()
 
-  const { timeLine, eventsInChronologicOrd } = findTimeLine(
-    timelineId as string,
+  const { timeline } = findTimeLine(timelineId as string)
+  const eventsInChronologicOrd = orderDatesOfTimelines(
+    timeline?.timeEvents ?? [],
   )
 
   const monthsWeenExistsEvent = eventsInChronologicOrd.filter(
@@ -105,13 +115,76 @@ export default function TimeLinePage() {
     return { eventsInThisMonth, eventsAllocatedInThisMonth }
   }, [eventInitial, eventsInChronologicOrd])
 
+  const startDate = dayjs(timeline?.start_date)
+  const endDate = dayjs(timeline?.end_date)
+  const diferenceMonthsBetweenDate = endDate.diff(startDate, 'month')
+
+  const { calendarWeeks } = useMemo(() => {
+    const daysInMonthArray = Array.from({
+      length: currentDate.daysInMonth(),
+    }).map((_, i) => {
+      return currentDate.set('date', i + 1)
+    })
+
+    const firstWeekDay = currentDate.get('day')
+    const previousMonthFillArray = Array.from({
+      length: firstWeekDay,
+    })
+      .map((_, i) => {
+        return currentDate.subtract(i + 1, 'day')
+      })
+      .reverse()
+
+    const lastDayInCurrentMonth = currentDate.set(
+      'date',
+      currentDate.daysInMonth(),
+    )
+    const lastWeekDay = lastDayInCurrentMonth.get('day')
+
+    const nextMonthFillArray = Array.from({
+      length: 7 - (lastWeekDay + 1),
+    }).map((_, i) => {
+      return lastDayInCurrentMonth.add(i + 1, 'day')
+    })
+
+    const calendarDays = [
+      ...previousMonthFillArray.map((date) => ({ date, disabled: true })),
+      ...daysInMonthArray.map((date) => ({ date, disabled: false })),
+      ...nextMonthFillArray.map((date) => ({ date, disabled: true })),
+    ]
+
+    const calendarWeeks = calendarDays.reduce<ICalendarWeeks>(
+      (weeks, _, i, self) => {
+        const isNewWeek = i % 7 === 0
+
+        if (isNewWeek) {
+          weeks.push({
+            week: i / 7 + 1,
+            days: self.slice(i, i + 7),
+          })
+        }
+
+        return weeks
+      },
+      [],
+    )
+
+    return { calendarWeeks }
+  }, [currentDate])
+
+  function handleNextMonth() {
+    setCurrentEventIndex((state) => state + 1)
+    setCurrentDate((state) => state.add(1, 'month'))
+  }
+
+  function handlePreviousMonth() {
+    setCurrentEventIndex((state) => state - 1)
+    setCurrentDate((state) => state.subtract(1, 'month'))
+  }
+
   const eventSelectedToShow =
     eventsInChronologicOrd.find((event) => event.id === eventSelected) ??
     eventInitial
-
-  const { person: personInEventIfExiste } = usePerson(
-    eventSelectedToShow?.timeEventBorn?.person.id ?? '',
-  )
 
   function handleSelectEvent(id: string) {
     if (id === eventSelected) {
@@ -122,22 +195,16 @@ export default function TimeLinePage() {
     setEventSelected(id)
   }
 
-  async function handleDoneTimeEvent() {
-    await callEvent.changeDoneTimeEvent(eventSelectedToShow.id, timeLine!.id)
-  }
-
   return (
     <>
-      <NextSeo title={`${projectName}-Time-lines | Magiscrita`} noindex />
+      <NextSeo
+        title={`ToDo Time Line ${timeline?.title} | Magiscrita`}
+        noindex
+      />
 
-      <ProjectPageLayout
-        projectName={projectName}
-        projectId={`${id}`}
-        paths={['Time-lines', `${timeLine?.title ?? 'Linha principal'}`]}
-        loading={loadingProject}
-        inError={!loadingProject && !project}
-        inErrorNotAuthorized={!project?.features.timeLines}
-        isFullScreen
+      <DashboardPageLayout
+        window={`Todo time lines ${timeline?.title}`}
+        loading={loadingToDoTimeLines}
       >
         <ContainerGrid columns={3} padding={4} css={{ height: '100%' }}>
           <ContainerGrid
@@ -151,11 +218,23 @@ export default function TimeLinePage() {
               gap: '$4',
             }}
           >
-            <TimeLineCalendar
+            <Calendar
               timeEvents={eventsInChronologicOrd}
-              currentEventIndex={currentEventIndex}
-              setCurrentEventIndex={setCurrentEventIndex}
               onSelectDay={handleSelectEvent}
+              calendarWeeks={calendarWeeks}
+              currentDate={{
+                calendarTitle: `${getMonthName(
+                  (currentDate.get('month') + 1).toString().padStart(2, '0'),
+                )} ${currentDate.get('year').toString().replace('-', '')} ${
+                  currentDate.get('year').toString().includes('-')
+                    ? 'A.C.'
+                    : 'D.C.'
+                }`,
+                index: currentEventIndex,
+              }}
+              handleNextDate={handleNextMonth}
+              handlePreviousDate={handlePreviousMonth}
+              maxLengthCalendar={diferenceMonthsBetweenDate}
             />
 
             <ContainerGrid
@@ -213,13 +292,7 @@ export default function TimeLinePage() {
                   </ButtonRoot>
                 </Dialog.Trigger>
 
-                {timeLine?.type === 'plan' ? (
-                  <NewTimeEventModal projectId={project?.id ?? ''} />
-                ) : (
-                  <NewTimeEventToDoToDoModal
-                    timeLineId={timelineId as string}
-                  />
-                )}
+                <NewTimeEventToDoToDoModal timeLineId={timelineId as string} />
               </Dialog.Root>
 
               <TextInputRoot size="xxs" variant="noShadow">
@@ -333,88 +406,14 @@ export default function TimeLinePage() {
                 {eventSelectedToShow?.description}
               </Text>
 
-              {!eventSelectedToShow?.timeEventToDo && (
-                <EventImportance importance={eventSelectedToShow?.importance}>
-                  Nível de importância do evento:{' '}
-                  {eventSelectedToShow?.importance}
-                </EventImportance>
-              )}
-
-              {eventSelectedToShow?.timeEventBorn && personInEventIfExiste && (
-                <ContainerGrid padding={0} columns={1}>
-                  <InfoDefault title="Personagem:">
-                    <ContainerGrid columns={2} padding={0}>
-                      <AvatarWeb
-                        size="2xl"
-                        src={personInEventIfExiste.image_url ?? undefined}
-                      />
-                      <ContainerGrid padding={0} css={{ gap: '0' }}>
-                        <InfoDefault title="Nome" size="xs">
-                          {personInEventIfExiste?.name}{' '}
-                          {personInEventIfExiste?.last_name}
-                        </InfoDefault>
-
-                        <InfoDefault title="Idade" size="xs">
-                          {personInEventIfExiste?.age}
-                        </InfoDefault>
-                      </ContainerGrid>
-                    </ContainerGrid>
-                  </InfoDefault>
-
-                  <InfoDefault title="História:">
-                    <Text
-                      family="body"
-                      height="shorter"
-                      size="lg"
-                      dangerouslySetInnerHTML={{
-                        __html: personInEventIfExiste?.history,
-                      }}
-                    />
-                  </InfoDefault>
-                </ContainerGrid>
-              )}
-
-              {eventSelectedToShow?.timeEventToDo && (
-                <ContainerGrid padding={0}>
-                  <InfoDefault
-                    title={
-                      eventSelectedToShow?.timeEventToDo.completed_at
-                        ? 'Concluído:'
-                        : 'Marcar como concluído'
-                    }
-                  >
-                    {eventSelectedToShow?.timeEventToDo.completed_at ? (
-                      <Text family="body" size="lg" weight="bold">
-                        {getDate(
-                          eventSelectedToShow?.timeEventToDo.completed_at,
-                        )}
-                      </Text>
-                    ) : (
-                      <ButtonRoot
-                        onClick={handleDoneTimeEvent}
-                        size="xs"
-                        variant="noShadow"
-                      >
-                        <ButtonIcon>
-                          <Check />
-                        </ButtonIcon>
-
-                        <ButtonLabel>Marcar como concluído</ButtonLabel>
-                      </ButtonRoot>
-                    )}
-                  </InfoDefault>
-                  {/* 
-                  <CommentsOnPage
-                    onNewComment={() => {}}
-                    comments={eventSelectedToShow.comments}
-                    size="xxs"
-                  /> */}
-                </ContainerGrid>
-              )}
+              <EventImportance importance={eventSelectedToShow?.importance}>
+                Nível de importância do evento:{' '}
+                {eventSelectedToShow?.importance}
+              </EventImportance>
             </ContainerGrid>
           </ContainerGrid>
         </ContainerGrid>
-      </ProjectPageLayout>
+      </DashboardPageLayout>
     </>
   )
 }

@@ -29,4 +29,9 @@ export interface ICallEvent {
   createTimeEventOnMainTimeLien: (
     timeEvent: ICreateTimeEventDTO,
   ) => Promise<IResolveEvent>
+  copyTimeLineToProject: (timeLineId: string) => Promise<IResolveEvent>
+  changeDoneTimeEvent: (
+    timeEventId: string,
+    timeLineId: string,
+  ) => Promise<IResolveEvent>
 }

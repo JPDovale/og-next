@@ -15,6 +15,16 @@ export const CommentsOnPageContainer = styled('div', {
     padding: '$4',
     overflow: 'unset',
   },
+
+  variants: {
+    size: {
+      md: {},
+      xxs: {
+        padding: 0,
+        gap: '$2',
+      },
+    },
+  },
 })
 
 export const CommentsHeader = styled('div', {
@@ -36,16 +46,10 @@ export const NewCommentForm = styled('form', {
     resize: 'none',
     height: 110,
     padding: '$2',
-    background: '$gray900',
 
     '&:focus': {
       boxShadow: 'none',
     },
-  },
-
-  button: {
-    padding: '$3',
-    boxShadow: 'none',
   },
 })
 
