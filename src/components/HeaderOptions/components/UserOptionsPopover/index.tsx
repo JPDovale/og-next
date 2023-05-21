@@ -6,6 +6,7 @@ import { Text } from '@components/usefull/Text'
 import { UserContext } from '@contexts/user'
 import { useRouter } from 'next/router'
 import {
+  Files,
   Fingerprint,
   Gear,
   UserMinus,
@@ -95,6 +96,21 @@ export function UserOptionsPopover() {
               <ButtonLabel>Projetos compartilhados</ButtonLabel>
             </ButtonRoot>
           )}
+
+          <ButtonRoot
+            variant="noShadow"
+            size="xs"
+            type="button"
+            onClick={() => {
+              router.push('/blog/posts')
+            }}
+          >
+            <ButtonIcon>
+              <Files weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Blog</ButtonLabel>
+          </ButtonRoot>
 
           <ButtonRoot
             variant="noShadow"

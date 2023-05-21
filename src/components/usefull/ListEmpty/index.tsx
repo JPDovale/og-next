@@ -27,6 +27,15 @@ const ListEmptyContainer = styled('div', {
         padding: ' $4 0',
       },
     },
+    contrast: {
+      1: {},
+      2: {
+        background: '$gray800',
+      },
+      3: {
+        background: '$gray700',
+      },
+    },
   },
 })
 
@@ -35,6 +44,7 @@ interface IListEmptyProps {
   message: string
   isInLine?: boolean
   isLoading?: boolean
+  contrast?: 1 | 2 | 3
 }
 
 export function ListEmpty({
@@ -42,9 +52,10 @@ export function ListEmpty({
   icon,
   isInLine = false,
   isLoading = false,
+  contrast = 1,
 }: IListEmptyProps) {
   return (
-    <ListEmptyContainer isInLine={isInLine}>
+    <ListEmptyContainer contrast={contrast} isInLine={isInLine}>
       {isLoading ? (
         <Loading autoAdapt />
       ) : (
