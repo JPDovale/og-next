@@ -25,8 +25,13 @@ export const globalStyles = globalCss({
     },
   },
 
+  a: {
+    all: 'unset',
+  },
+
   body: {
     overflowX: 'hidden',
     '-webkit-font-smoothing': 'antialiased',
+    color: '$text800',
   },
 })

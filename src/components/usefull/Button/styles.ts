@@ -96,6 +96,15 @@ export const ButtonContainer = styled('button', {
         boxShadow: 'unset',
       },
     },
+    colorInvert: {
+      true: {
+        svg: {
+          color: '$white',
+        },
+        color: '$white',
+      },
+      false: {},
+    },
   },
 
   defaultVariants: {
@@ -103,6 +112,7 @@ export const ButtonContainer = styled('button', {
     wid: 'full',
     variant: 'default',
     size: 'md',
+    colorInvert: true,
   },
 })
 

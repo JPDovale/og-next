@@ -8,8 +8,10 @@ const nextConfig = {
   images: {
     domains: [
       'firebasestorage.googleapis.com',
-      'https://googleusercontent.com',
+      'googleusercontent.com',
+      'source.unsplash.com',
       'm.media-amazon.com',
+      'images.prismic.io',
     ],
   },
   webpack: (config) => {
