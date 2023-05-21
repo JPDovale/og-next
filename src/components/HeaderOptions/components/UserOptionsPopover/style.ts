@@ -59,7 +59,7 @@ export const UserInfos = styled('div', {
   display: 'flex',
   gap: '$3',
 
-  padding: '$3 $5',
+  padding: '$3 $4',
   borderBottom: '0.5px solid $base900',
 
   span: {
@@ -72,5 +72,5 @@ export const Options = styled('div', {
   flexDirection: 'column',
   gap: '$2',
 
-  padding: '$5',
+  padding: '$3',
 })
