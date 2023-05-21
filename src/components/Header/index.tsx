@@ -12,6 +12,7 @@ import {
 import aloneLogoImg from '../../assets/logos/ogLogo.png'
 
 import {
+  Files,
   ProjectorScreen,
   SignIn,
   // Star,
@@ -49,6 +50,18 @@ export function Header() {
               <ButtonLabel>Preços</ButtonLabel>
             </ButtonRoot>
           )} */}
+
+          <ButtonRoot
+            variant="noShadow"
+            size="xs"
+            wid="hug"
+            onClick={() => router.push('/blog/posts')}
+          >
+            <ButtonIcon>
+              <Files weight="fill" />
+            </ButtonIcon>
+            <ButtonLabel>Blog</ButtonLabel>
+          </ButtonRoot>
         </ExplorerHeader>
 
         <ImageContent>

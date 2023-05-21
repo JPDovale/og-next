@@ -1,5 +1,11 @@
 # og-next
 
+## 1.0.0
+
+### Major Changes
+
+- Create blog to index on google
+
 ## 0.3.6
 
 ### Patch Changes

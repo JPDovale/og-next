@@ -3,6 +3,7 @@ import { ButtonsContainer, NavigationBarContainer } from './styles'
 import LogoToLeft from '../../assets/logos/logoOG.png'
 import {
   Bookmark,
+  Files,
   ListChecks,
   Package,
   ProjectorScreenChart,
@@ -171,6 +172,24 @@ export function NavigationBar() {
           </ButtonIcon>
 
           {navIsOpen && <ButtonLabel>To-Do</ButtonLabel>}
+        </ButtonRoot>
+
+        <ButtonRoot
+          type="button"
+          size="sm"
+          title="Blog"
+          align={navIsOpen ? 'left' : 'center'}
+          css={{ marginTop: '$8' }}
+          onClick={() => {
+            router.push('/blog/posts')
+            smallWindow && setNavIsOpen(false)
+          }}
+        >
+          <ButtonIcon>
+            <Files />
+          </ButtonIcon>
+
+          {navIsOpen && <ButtonLabel>Blog</ButtonLabel>}
         </ButtonRoot>
         {/* {!userIsPro && (
           <ButtonRoot
