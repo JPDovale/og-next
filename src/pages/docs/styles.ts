@@ -34,6 +34,12 @@ export const ContentPage = styled('div', {
     textAlign: 'justify',
   },
 
+  img: {
+    maxWidth: '100%',
+    maxHeight: '420px',
+    borderRadius: '$sm',
+  },
+
   a: {
     color: '$purple400',
     cursor: 'pointer',
@@ -46,6 +52,11 @@ export const ContentPage = styled('div', {
   h2: {
     fontSize: '$5xl',
     margin: '$8 0',
+  },
+
+  h5: {
+    fontSize: '$2xl',
+    margin: '$2 0',
   },
 
   'ul, ol': {
