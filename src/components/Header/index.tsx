@@ -12,6 +12,7 @@ import {
 import aloneLogoImg from '../../assets/logos/ogLogo.png'
 
 import {
+  Article,
   Files,
   ProjectorScreen,
   SignIn,
@@ -21,7 +22,11 @@ import {
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { AvatarWeb } from '@components/usefull/Avatar'
 
-export function Header() {
+interface IHeaderProps {
+  disableShadow?: boolean
+}
+
+export function Header({ disableShadow = false }: IHeaderProps) {
   const router = useRouter()
   // const location = router.pathname.split('/')[1]
 
@@ -32,7 +37,7 @@ export function Header() {
 
   return (
     <>
-      <HeaderContainer>
+      <HeaderContainer disableShadow={disableShadow}>
         <p>.</p>
 
         <ExplorerHeader>
@@ -58,9 +63,21 @@ export function Header() {
             onClick={() => router.push('/blog/posts')}
           >
             <ButtonIcon>
-              <Files weight="fill" />
+              <Article weight="fill" />
             </ButtonIcon>
             <ButtonLabel>Blog</ButtonLabel>
+          </ButtonRoot>
+
+          <ButtonRoot
+            variant="noShadow"
+            size="xs"
+            wid="hug"
+            onClick={() => router.push('/docs')}
+          >
+            <ButtonIcon>
+              <Files weight="fill" />
+            </ButtonIcon>
+            <ButtonLabel>Documentação</ButtonLabel>
           </ButtonRoot>
         </ExplorerHeader>
 
@@ -83,7 +100,11 @@ export function Header() {
                 <ButtonLabel>Dashboard</ButtonLabel>
               </ButtonRoot>
 
-              <AvatarWeb src={user?.avatar_url ?? undefined} size="xsm" />
+              <AvatarWeb
+                src={user?.infos.avatar.url}
+                alt={user?.infos.avatar.alt}
+                size="xsm"
+              />
             </>
           ) : (
             <>

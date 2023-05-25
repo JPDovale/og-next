@@ -6,6 +6,89 @@ import type * as prismic from "@prismicio/client";
 type Simplify<T> = {
   [KeyType in keyof T]: T[KeyType];
 };
+/** Content for doc documents */
+interface DocDocumentData {
+  /**
+   * title field in *doc*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: doc.title
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/core-concepts/key-text
+   *
+   */
+  title: prismic.KeyTextField;
+  /**
+   * content field in *doc*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: doc.content
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
+   *
+   */
+  content: prismic.RichTextField;
+  /**
+   * exemples field in *doc*
+   *
+   * - **Field Type**: Embed
+   * - **Placeholder**: *None*
+   * - **API ID Path**: doc.exemples
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/core-concepts/embed
+   *
+   */
+  exemples: prismic.EmbedField;
+  /**
+   * date field in *doc*
+   *
+   * - **Field Type**: Date
+   * - **Placeholder**: *None*
+   * - **API ID Path**: doc.date
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/core-concepts/date
+   *
+   */
+  date: prismic.DateField;
+}
+/**
+ * doc document from Prismic
+ *
+ * - **API ID**: `doc`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type DocDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<DocDocumentData>, "doc", Lang>;
+/** Content for page documents */
+interface PageDocumentData {
+  /**
+   * content field in *page*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.content
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/core-concepts/rich-text-title
+   *
+   */
+  content: prismic.RichTextField;
+}
+/**
+ * page document from Prismic
+ *
+ * - **API ID**: `page`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/core-concepts/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type PageDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 /** Content for post documents */
 interface PostDocumentData {
   /**
@@ -53,7 +136,7 @@ interface PostDocumentData {
  */
 export type PostDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<PostDocumentData>, "post", Lang>;
-export type AllDocumentTypes = PostDocument;
+export type AllDocumentTypes = DocDocument | PageDocument | PostDocument;
 declare module "@prismicio/client" {
   interface CreateClient {
     (
@@ -62,6 +145,14 @@ declare module "@prismicio/client" {
     ): prismic.Client<AllDocumentTypes>;
   }
   namespace Content {
-    export type { PostDocumentData, PostDocument, AllDocumentTypes };
+    export type {
+      DocDocumentData,
+      DocDocument,
+      PageDocumentData,
+      PageDocument,
+      PostDocumentData,
+      PostDocument,
+      AllDocumentTypes,
+    };
   }
 }

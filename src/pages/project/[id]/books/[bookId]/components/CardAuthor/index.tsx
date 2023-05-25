@@ -36,7 +36,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
           src={userAuthor?.avatar_url ?? undefined}
           selfCenter
         />
-        {userAuthor?.id !== user?.id && (
+        {userAuthor?.id !== user?.account.id && (
           <UnshareButton
             className="unshare"
             wid="hug"
@@ -54,7 +54,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
       <ContainerGrid padding={4}>
         <InfoDefault title="Nome:">
           <Text size="xs">{`${userAuthor?.name} ${
-            userAuthor?.id === user?.id ? ' (criador)' : ''
+            userAuthor?.id === user?.account.id ? ' (criador)' : ''
           }`}</Text>
         </InfoDefault>
 

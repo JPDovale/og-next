@@ -1,5 +1,5 @@
 import { NextSeo } from 'next-seo'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import Image from 'next/image'
 
 import LogoToDown from '../../../../assets/logos/logoOG.png'
@@ -17,14 +17,15 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
-import { UserContext } from '@contexts/user'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { InterfaceContext } from '@contexts/interface'
+import { sendMailForgotPasswordRequest } from '@api/userRequest'
+import { Toast } from '@components/usefull/Toast'
 
 const resetPasswordFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -33,8 +34,8 @@ const resetPasswordFormSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 
 export default function ForgotPasswordPage() {
-  const { error, success, sendMailForgotPassword, setSuccess, setError } =
-    useContext(UserContext)
+  const [successTostOpen, setSuccessTostOpen] = useState(false)
+  const { setError } = useContext(InterfaceContext)
 
   const { register, handleSubmit, formState, reset } =
     useForm<ForgotPasswordFormData>({
@@ -42,12 +43,20 @@ export default function ForgotPasswordPage() {
     })
 
   async function handleForgotPassword(data: ForgotPasswordFormData) {
-    setSuccess(null)
+    setSuccessTostOpen(false)
     setError(null)
 
-    await sendMailForgotPassword(data.email)
+    const response = await sendMailForgotPasswordRequest(data.email)
 
-    reset()
+    if (response.error) {
+      setError(response.error)
+      return
+    }
+
+    if (response.ok) {
+      reset()
+      setSuccessTostOpen(true)
+    }
   }
 
   return (
@@ -55,6 +64,12 @@ export default function ForgotPasswordPage() {
       <NextSeo title="Recuperação de senha | Magiscrita" />
 
       <ForgotPasswordPageContainer>
+        <Toast
+          open={successTostOpen}
+          setOpen={setSuccessTostOpen}
+          title="Email enviado"
+          message="Foi enviado um email de recuperação de senha para você... Confira sua caixa de mensagem"
+        />
         <CardForgotPassword>
           <Image className="logo" src={LogoToDown} alt="" />
 
@@ -103,9 +118,6 @@ export default function ForgotPasswordPage() {
           >
             Recuperação de senha
           </Text>
-
-          {error && <ResponseInfoApi error={error} />}
-          {success && <ResponseInfoApi success={success} />}
 
           <InputContainer>
             <InputHeader size={'xs'} weight="bold">

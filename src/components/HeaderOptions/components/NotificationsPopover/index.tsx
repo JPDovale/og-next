@@ -21,7 +21,10 @@ export function NotificationsPopover() {
   const { theme } = useContext(InterfaceContext)
 
   const notificationInHourOrd = lodash
-    .sortBy(user?.notifications, (notification) => notification.created_at)
+    .sortBy(
+      user?.account.notification.notifications,
+      (notification) => notification.created_at,
+    )
     .reverse()
 
   const isDarkMode = theme === 'dark'
@@ -45,8 +48,8 @@ export function NotificationsPopover() {
           </Text>
         </HeaderNotifications>
 
-        <Notifications isEmpty={user?.notifications && !user?.notifications[0]}>
-          {user?.notifications.length !== 0 ? (
+        <Notifications isEmpty={!user?.account.notification.notifications[0]}>
+          {user?.account.notification.notifications.length !== 0 ? (
             notificationInHourOrd?.map((notification, i) => {
               const createdAt = notification.created_at
                 ? getDate(notification.created_at)
