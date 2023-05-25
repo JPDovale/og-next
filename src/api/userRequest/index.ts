@@ -1,12 +1,10 @@
+import { IResponse } from '@api/responses/IResponse'
+import { IUserResponse } from '@api/responsesTypes/user/IUser'
 import { api } from '..'
 import { ICreateUserDTO } from '../dtos/ICreateUserDTO'
 import { INewInitializeDTO } from '../dtos/INewInitializeDTO'
 import { IUpdatePasswordDTO } from '../dtos/IUpdatePasswordDTO'
 import { IUpdateUserDTO } from '../dtos/IUpdateUserDTO'
-import {
-  ICreateResponse,
-  ICreateSessionResponse,
-} from '../responsesTypes/ICreateResponse'
 import { IInitResponse } from '../responsesTypes/IInitResponse'
 
 export async function verifyRequest() {
@@ -18,7 +16,7 @@ export async function verifyRequest() {
   }
 }
 
-export async function getUserRequest() {
+export async function getUserRequest(): Promise<IResponse<IUserResponse>> {
   try {
     const response = await api.get('/users')
     return response.data
@@ -30,17 +28,19 @@ export async function getUserRequest() {
 export async function createSessionRequest(
   email: string,
   password: string,
-): Promise<ICreateSessionResponse> {
+): Promise<IResponse<IUserResponse>> {
   try {
     const response = await api.post('/sessions/', { email, password })
-
     return response.data
   } catch (err: any) {
     return err.response.data
   }
 }
 
-export async function notifyUsersRequest(title: string, content: string) {
+export async function notifyUsersRequest(
+  title: string,
+  content: string,
+): Promise<IResponse> {
   try {
     const response = await api.post('/users/notify', { title, content })
     return response.data
@@ -51,7 +51,7 @@ export async function notifyUsersRequest(title: string, content: string) {
 
 export async function createUserRequest(
   user: ICreateUserDTO,
-): Promise<ICreateResponse> {
+): Promise<IResponse<IUserResponse>> {
   try {
     const response = await api.post('/users', user)
     return response.data
@@ -71,10 +71,10 @@ export async function initializeUserRequest(
   }
 }
 
-export async function refreshSessionRequest() {
+export async function refreshSessionRequest(): Promise<IResponse> {
   try {
     const response = await api.post('/sessions/refresh')
-    return response
+    return response.data
   } catch (err: any) {
     return err.response.data
   }
@@ -90,7 +90,9 @@ export async function loginWithGoogleRequest(user: any) {
   }
 }
 
-export async function updateUserRequest(newInfos: IUpdateUserDTO) {
+export async function updateUserRequest(
+  newInfos: IUpdateUserDTO,
+): Promise<IResponse<IUserResponse>> {
   try {
     const response = await api.patch('/users/', newInfos)
     return response.data
@@ -99,7 +101,9 @@ export async function updateUserRequest(newInfos: IUpdateUserDTO) {
   }
 }
 
-export async function updateAvatarRequest(file: File) {
+export async function updateAvatarRequest(
+  file: File,
+): Promise<IResponse<IUserResponse>> {
   try {
     const response = await api.patch(
       `/users/avatar-update`,
@@ -117,7 +121,9 @@ export async function updateAvatarRequest(file: File) {
   }
 }
 
-export async function updatePasswordRequest(passwords: IUpdatePasswordDTO) {
+export async function updatePasswordRequest(
+  passwords: IUpdatePasswordDTO,
+): Promise<IResponse> {
   try {
     const response = await api.patch('/users/password', passwords)
     return response.data
@@ -126,16 +132,16 @@ export async function updatePasswordRequest(passwords: IUpdatePasswordDTO) {
   }
 }
 
-export async function logouRequest() {
+export async function logouRequest(): Promise<IResponse> {
   try {
     const response = await api.patch('/users/logout')
-    return response
+    return response.data
   } catch (err: any) {
     return err.response
   }
 }
 
-export async function deleteAvatarRequest() {
+export async function deleteAvatarRequest(): Promise<IResponse<IUserResponse>> {
   try {
     const response = await api.delete('/users/avatar')
     return response.data
@@ -144,7 +150,9 @@ export async function deleteAvatarRequest() {
   }
 }
 
-export async function sendMailForgotPasswordRequest(email: string) {
+export async function sendMailForgotPasswordRequest(
+  email: string,
+): Promise<IResponse> {
   try {
     const response = await api.post('/users/password/forgot', { email })
     return response.data
@@ -153,7 +161,10 @@ export async function sendMailForgotPasswordRequest(email: string) {
   }
 }
 
-export async function recoveryPasswordRequest(password: string, token: string) {
+export async function recoveryPasswordRequest(
+  password: string,
+  token: string,
+): Promise<IResponse> {
   try {
     const response = await api.post('/users/password/recovery', {
       password,

@@ -40,14 +40,14 @@ export function useProjects(params?: IUseProjectsParams) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token' && !isRefreshingSession) {
+      if (response.error?.title === 'Login failed' && !isRefreshingSession) {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getProjectsRequest()
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
@@ -99,14 +99,16 @@ export function useProjects(params?: IUseProjectsParams) {
     }
 
     const projectsThisUser = projectsInOrd.filter(
-      (project) => project.creator.id === user?.id,
+      (project) => project.creator.id === user?.account.id,
     )
     const projectsSharedWithUser = projectsInOrd.filter(
-      (project) => project.creator.id !== user?.id,
+      (project) => project.creator.id !== user?.account.id,
     )
     const projectsEditablePerUser = projectsInOrd.filter((project) => {
-      const userPermissionEdit = project.users.find((u) => u.id === user?.id)
-      const projectOfUser = project.creator.id === user?.id
+      const userPermissionEdit = project.users.find(
+        (u) => u.id === user?.account.id,
+      )
+      const projectOfUser = project.creator.id === user?.account.id
 
       if (!userPermissionEdit && !projectOfUser) {
         return undefined
@@ -121,7 +123,7 @@ export function useProjects(params?: IUseProjectsParams) {
       projectsSharedWithUser,
       projectsEditablePerUser,
     }
-  }, [config.query, orderBy, data?.projects, user?.id])
+  }, [config.query, orderBy, data?.projects, user?.account.id])
 
   const loadingProjects = !(!isLoading && !loadingUser && !isFetching)
 

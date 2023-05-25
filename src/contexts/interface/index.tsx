@@ -1,3 +1,5 @@
+import { IError } from '@@types/errors/IError'
+import { ToastError } from '@components/usefull/ToastError'
 import { darkMode } from '@styles/theme/dark'
 import { lightMode } from '@styles/theme/light'
 import { createContext, ReactNode, useState, useEffect } from 'react'
@@ -38,6 +40,9 @@ interface IInterfaceContext {
   setThemeFunction: () => void
   theme: 'dark' | 'light'
 
+  error: IError | null
+  setError: (newState: IError | null) => void
+
   resetInterface: () => void
 }
 
@@ -54,6 +59,7 @@ export function InterfaceProvider({
   const [isList, setIsList] = useState(false)
   const [orderBy, setOrderBy] = useState<IOrderBy>('a-z')
   const [navigatorProjectIsOpen, setNavigatorProjectIsOpen] = useState(false)
+  const [error, setError] = useState<IError | null>(null)
 
   function resetInterface() {
     setNavIsOpen(false)
@@ -126,10 +132,18 @@ export function InterfaceProvider({
         setThemeFunction,
         theme,
 
+        error,
+        setError,
+
         resetInterface,
       }}
     >
-      {!loadingInterface && children}
+      {!loadingInterface && (
+        <>
+          {children}
+          <ToastError error={error} setError={setError} />
+        </>
+      )}
     </InterfaceContext.Provider>
   )
 }

@@ -8,7 +8,6 @@ import {
 } from '@components/usefull/InputText'
 import { Text } from '@components/usefull/Text'
 import { InterfaceContext } from '@contexts/interface'
-import { UserContext } from '@contexts/user'
 import { useWindowSize } from '@hooks/useWindow'
 import {
   ArrowFatLinesRight,
@@ -37,6 +36,8 @@ import { NewProjectModal } from '@components/ProjectsComponents/NewProjectModal'
 import { NewBoxModal } from '@components/BoxesComponents/NewBoxModal'
 import { useUser } from '@hooks/useUser'
 import pk from '../../../package.json'
+import { visualizeNotificationsRequest } from '@api/userRequest'
+import Link from 'next/link'
 
 interface IHeaderOptionsProps {
   windowName: string
@@ -61,17 +62,22 @@ export function HeaderOptions({
   const [modalCreateProjectIsOpen, setModalCreateProjectIsOpen] =
     useState(false)
 
-  const { visualizeNotifications } = useContext(UserContext)
   const { navIsOpen, setNavIsOpen } = useContext(InterfaceContext)
 
-  const { user, userIsPro } = useUser()
+  const { user, userIsPro, refetchUser } = useUser()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
   const newNotifications =
-    user?.new_notifications !== undefined && user?.new_notifications !== 0
-  const newNotificationsNumber = user?.new_notifications
+    user?.account.notification.numberNew !== undefined &&
+    user?.account.notification.numberNew !== 0
+  const newNotificationsNumber = user?.account.notification.numberNew
+
+  async function handleVisualizeNotifications() {
+    await visualizeNotificationsRequest()
+    refetchUser()
+  }
 
   return (
     <>
@@ -99,12 +105,20 @@ export function HeaderOptions({
         </Title>
 
         <Options>
-          <Text
-            css={{ width: '100%', lineHeight: 0, opacity: 0.6 }}
-            family="body"
-          >
-            Versão: {pk.version} Beta
-          </Text>
+          <Link href="/docs/versions" style={{ width: '100%' }}>
+            <Text
+              css={{
+                lineHeight: 0,
+                opacity: 0.6,
+                cursor: 'pointer',
+                transition: 'ease-in-out 250ms',
+                '&:hover': { opacity: 1, scale: 1.02 },
+              }}
+              family="body"
+            >
+              Versão: {pk.version} Beta
+            </Text>
+          </Link>
 
           <Dialog.Root>
             <Dialog.Trigger asChild>
@@ -206,7 +220,7 @@ export function HeaderOptions({
                 disabled={isLoading}
                 onClick={() => {
                   setTimeout(() => {
-                    newNotifications && visualizeNotifications()
+                    newNotifications && handleVisualizeNotifications()
                   }, 10000)
                 }}
               >
@@ -233,7 +247,8 @@ export function HeaderOptions({
               >
                 <AvatarWeb
                   size={smallWindow ? '2xs' : 'xsm'}
-                  src={user?.avatar_url ?? ''}
+                  src={user?.infos.avatar.url}
+                  alt={user?.infos.avatar.alt}
                 />
               </button>
             </Popover.Trigger>
