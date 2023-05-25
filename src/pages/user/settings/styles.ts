@@ -5,7 +5,8 @@ export const UserSettingsPageContainer = styled('div', {
   gridTemplateColumns: '8fr 4fr',
 
   width: '100%',
-  height: '100%',
+  minHeight: '100vh',
+
   overflow: 'hidden',
 
   '@media screen and (max-width: 768px)': {
@@ -13,7 +14,6 @@ export const UserSettingsPageContainer = styled('div', {
     flexDirection: 'column-reverse',
     height: 'unset',
 
-    marginTop: '60px',
     overflow: 'unset',
   },
 })
@@ -37,6 +37,7 @@ export const UserSettings = styled('div', {
   width: '100%',
   maxHeight: '100%',
   padding: '$4',
+  paddingBottom: '$20',
 
   overflowY: 'scroll',
 })

@@ -16,6 +16,14 @@ export const HeaderContainer = styled('header', {
 
   backgroundColor: '$gray700',
   boxShadow: '0 2px 8px black',
+
+  variants: {
+    disableShadow: {
+      true: {
+        boxShadow: 'none',
+      },
+    },
+  },
 })
 
 export const ExplorerHeader = styled('div', {

@@ -31,7 +31,6 @@ interface IPostPage {
 }
 
 export default function PostPage({ post }: IPostPage) {
-  console.log(post)
   return (
     <>
       <NextSeo title={post.title} description={post.excerpt} />

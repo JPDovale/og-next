@@ -67,7 +67,7 @@ export function CardProject({
         </div>
 
         <ProjectInfos>
-          <InfosContainer>
+          <InfosContainer columns={1}>
             <InfoDefault disableBold title="Nome do projeto" size="md">
               {projectName}
             </InfoDefault>
@@ -79,7 +79,7 @@ export function CardProject({
             </InfoDefault>
 
             <InfoDefault disableBold title="Criador" size="sm">
-              {project.creator.id !== user?.id
+              {project.creator.id !== user?.account.id
                 ? project.creator.username
                 : 'Você'}
             </InfoDefault>

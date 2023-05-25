@@ -1,5 +1,11 @@
 # og-next
 
+## 1.1.0
+
+### Minor Changes
+
+- Adding documentation page
+
 ## 1.0.0
 
 ### Major Changes

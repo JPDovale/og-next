@@ -1,5 +1,5 @@
 import { IError } from '@@types/errors/IError'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { refreshSessionRequest } from '@api/userRequest'
 
 interface IResponseDealings<T> {
   response: any
@@ -15,10 +15,10 @@ export async function responseDealings<TypeCallback>({
   response,
   callback,
 }: IResponseDealings<TypeCallback>): Promise<IResponse> {
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+  if (response.error?.title === 'Login failed') {
+    const response = await refreshSessionRequest()
 
-    if (isRefreshed) {
+    if (response.ok) {
       await callback()
     } else {
       return {

@@ -1,6 +1,6 @@
-import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { getUserRequest, refreshSessionRequest } from '@api/userRequest'
 import LogRocket from 'logrocket'
+import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { createCheckoutSession } from './events/createCheckoutSession'
 import { ICallEvent } from './types/ICallEvent'
@@ -14,20 +14,20 @@ export function useUser() {
       let errorTitle: string | null = null
       let isRefreshingSession: boolean = true
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           isRefreshingSession = false
           response = await getUserRequest()
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.title ?? null
+          errorTitle = refresh.error?.message ?? null
         }
       }
 
-      const user = response.user as IUserResponse
       isRefreshingSession = false
+      const user = response?.data?.user ?? null
 
       return { user, errorMessage, errorTitle, isRefreshingSession }
     },
@@ -37,19 +37,32 @@ export function useUser() {
   )
 
   const refetchUser = refetch
-  const user = data?.user ?? null
-  const userIsPro =
-    user?.subscription &&
-    (user.subscription.payment_status === 'active' ||
-      user.subscription.expires_at === null)
-  const userLogged = !!user
-  const loadingUser = isLoading
-  const isRefreshingSession = data?.isRefreshingSession
+
+  const { isRefreshingSession, loadingUser, user, userIsPro, userLogged } =
+    useMemo(() => {
+      const user = data?.user
+      const userIsPro =
+        user?.account.subscription &&
+        (user?.account.subscription.status === 'active' ||
+          user?.account.subscription.expiresAt === null)
+
+      const userLogged = !!user
+      const loadingUser = isLoading
+      const isRefreshingSession = data?.isRefreshingSession
+
+      return {
+        user,
+        userIsPro,
+        userLogged,
+        loadingUser,
+        isRefreshingSession,
+      }
+    }, [data, isLoading])
 
   if (!loadingUser && userLogged && user) {
-    LogRocket.identify(user.id, {
-      name: user.username,
-      email: user.email,
+    LogRocket.identify(user.account.id, {
+      name: user.infos.username,
+      email: user.infos.email,
 
       // Add your own custom user variables here, ie:
       subscriptionType: userIsPro ? 'pro' : 'trail',
