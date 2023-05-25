@@ -3,9 +3,9 @@ import * as Popover from '@radix-ui/react-popover'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
-import { UserContext } from '@contexts/user'
 import { useRouter } from 'next/router'
 import {
+  Article,
   Files,
   Fingerprint,
   Gear,
@@ -26,15 +26,28 @@ import {
 import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
 import { InterfaceContext } from '@contexts/interface'
+import { logouRequest } from '@api/userRequest'
 
 export function UserOptionsPopover() {
-  const { logout } = useContext(UserContext)
-  const { theme } = useContext(InterfaceContext)
+  const { theme, setError } = useContext(InterfaceContext)
 
   const { projectsSharedWithUser } = useProjects()
-  const { user } = useUser()
+  const { user, refetchUser } = useUser()
 
   const router = useRouter()
+
+  async function handleLogout() {
+    const response = await logouRequest()
+
+    if (response.error) {
+      setError(response.error)
+    }
+
+    if (response.ok) {
+      await refetchUser()
+      router.push('/')
+    }
+  }
 
   return (
     <Popover.Portal>
@@ -46,21 +59,25 @@ export function UserOptionsPopover() {
         </PopoverClose>
 
         <UserInfos>
-          <AvatarWeb size="sm" src={user?.avatar_url as string} />
+          <AvatarWeb
+            size="sm"
+            src={user?.infos.avatar.url}
+            alt={user?.infos.avatar.alt}
+          />
           <div>
             <Text
               as={'h3'}
               size={'lg'}
               css={{ color: theme === 'dark' ? '$white' : '' }}
             >
-              {user?.username}
+              {user?.infos.username}
             </Text>
             <Text
               family={'body'}
               size={'sm'}
               css={{ color: theme === 'dark' ? '' : '$black' }}
             >
-              {user?.email}
+              {user?.infos.email}
             </Text>
           </div>
         </UserInfos>
@@ -106,7 +123,7 @@ export function UserOptionsPopover() {
             }}
           >
             <ButtonIcon>
-              <Files weight="bold" />
+              <Article weight="bold" />
             </ButtonIcon>
 
             <ButtonLabel>Blog</ButtonLabel>
@@ -116,7 +133,22 @@ export function UserOptionsPopover() {
             variant="noShadow"
             size="xs"
             type="button"
-            onClick={logout}
+            onClick={() => {
+              router.push('/docs')
+            }}
+          >
+            <ButtonIcon>
+              <Files weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Documentação</ButtonLabel>
+          </ButtonRoot>
+
+          <ButtonRoot
+            variant="noShadow"
+            size="xs"
+            type="button"
+            onClick={handleLogout}
           >
             <ButtonIcon>
               <UserMinus weight="bold" />

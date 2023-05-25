@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app'
 
 import * as Toast from '@radix-ui/react-toast'
 import { InterfaceProvider } from '../contexts/interface'
-import { UserProvider } from '../contexts/user'
+// import { UserProvider } from '../contexts/user'
 import { globalStyles } from '../styles/global'
 import { DefaultSeo } from 'next-seo'
 
@@ -13,6 +13,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { useState } from 'react'
 import { lightMode } from '@styles/theme/light'
 import { Analytics } from '@vercel/analytics/react'
+import { SkeletonTheme } from '@components/usefull/Skeleton'
 
 LogRocket.init('iaiad2/og')
 
@@ -26,17 +27,22 @@ export default function App({ Component, pageProps }: AppProps) {
   const timeScreenToast = 1000 * 10 // 10 segundos
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Toast.Provider
-        swipeDirection="down"
-        label="Notificação"
-        duration={timeScreenToast}
-      >
-        <InterfaceProvider
-          setTheme={setTheme}
-          theme={theme === lightMode ? 'light' : 'dark'}
+    <SkeletonTheme
+      baseColor={theme === lightMode ? '#909090' : '#101012'}
+      highlightColor={theme === lightMode ? '#b0b0b0' : '#1f1f25'}
+      duration={2}
+      enableAnimation
+    >
+      <QueryClientProvider client={queryClient}>
+        <Toast.Provider
+          swipeDirection="down"
+          label="Notificação"
+          duration={timeScreenToast}
         >
-          <UserProvider>
+          <InterfaceProvider
+            setTheme={setTheme}
+            theme={theme === lightMode ? 'light' : 'dark'}
+          >
             <DefaultSeo
               openGraph={{
                 type: 'website',
@@ -54,13 +60,13 @@ export default function App({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
               <Analytics />
             </div>
-          </UserProvider>
-        </InterfaceProvider>
+          </InterfaceProvider>
 
-        <ToastViewport />
-      </Toast.Provider>
+          <ToastViewport />
+        </Toast.Provider>
 
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </SkeletonTheme>
   )
 }

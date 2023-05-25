@@ -1,31 +1,18 @@
 import { useContext, useState } from 'react'
 import {
   At,
-  // Crosshair,
   Envelope,
   Eye,
   EyeClosed,
-  // HeartBreak,
   Key,
-  // Lightning,
   LockKey,
   LockLaminated,
   PencilLine,
-  // Person,
-  // ProjectorScreenChart,
-  // RainbowCloud,
-  // SketchLogo,
-  // TreeStructure,
   UserCircle,
-  // UserCircleGear,
-  // UserFocus,
-  // UsersThree,
-  // Warning,
   X,
 } from 'phosphor-react'
 import { usePreventBack } from '@hooks/usePreventDefaultBack'
 import { useWindowSize } from '@hooks/useWindow'
-import { UserContext } from '@contexts/user'
 import { NextSeo } from 'next-seo'
 import { DashboardPageLayout } from '@layouts/DashboardPageLayout'
 import {
@@ -36,7 +23,6 @@ import {
   UserSettings,
   UserSettingsPageContainer,
 } from './styles'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
@@ -46,18 +32,13 @@ import {
   TextInputRoot,
 } from '@components/usefull/InputText'
 import { useUser } from '@hooks/useUser'
-
-// interface IObjects {
-//   objectives: IArchive[]
-//   dreams: IArchive[]
-//   fears: IArchive[]
-//   appearance: IArchive[]
-//   personality: IArchive[]
-//   powers: IArchive[]
-//   traumas: IArchive[]
-//   values: IArchive[]
-//   wishes: IArchive[]
-// }
+import {
+  deleteAvatarRequest,
+  updateAvatarRequest,
+  updatePasswordRequest,
+  updateUserRequest,
+} from '@api/userRequest'
+import { InterfaceContext } from '@contexts/interface'
 
 export default function UserSettingsPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
@@ -68,118 +49,14 @@ export default function UserSettingsPage() {
   const [oldPassword, setOldPassword] = useState('')
   const [password, setPassword] = useState('')
 
-  const {
-    updateUser,
-    error,
-    setError,
-    updateAvatar,
-    updatePassword,
-    deleteAvatar,
-  } = useContext(UserContext)
+  const { setError } = useContext(InterfaceContext)
 
-  const { user, loadingUser } = useUser()
+  const { user, loadingUser, refetchUser } = useUser()
 
   const windowSize = useWindowSize()
   const smallWindow = windowSize.width! < 786
 
   usePreventBack('/projects')
-
-  // const objects = useMemo(() => {
-  //   const findeObjectives: IObjects = {
-  //     objectives: [],
-  //     dreams: [],
-  //     fears: [],
-  //     appearance: [],
-  //     personality: [],
-  //     powers: [],
-  //     traumas: [],
-  //     values: [],
-  //     wishes: [],
-  //   }
-
-  //   boxes.map((box) => {
-  //     switch (box.name) {
-  //       case 'persons/objectives': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.objectives.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/dreams': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.dreams.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/fears': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.fears.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/appearance': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.appearance.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/personality': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.personality.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/powers': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.powers.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/traumas': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.traumas.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/values': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.values.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       case 'persons/wishes': {
-  //         box.archives.map((file) => {
-  //           return findeObjectives.wishes.push(file)
-  //         })
-  //         break
-  //       }
-
-  //       default:
-  //         break
-  //     }
-
-  //     return ''
-  //   })
-
-  //   return findeObjectives
-  // }, [boxes])
-
-  function handleSaveUser() {
-    setError(null)
-    updateUser(
-      name || user?.name,
-      username || user?.username,
-      email || user?.email,
-    )
-  }
 
   async function handleUpdateImage(files: FileList | null) {
     if (!files) return
@@ -188,7 +65,16 @@ export default function UserSettingsPage() {
 
     if (file?.type !== 'image/jpeg' && file.type !== 'image/png') return
 
-    await updateAvatar(file)
+    const response = await updateAvatarRequest(file)
+
+    if (response.error) {
+      setError(response.error)
+      return
+    }
+
+    if (response.ok) {
+      await refetchUser()
+    }
   }
 
   async function handleUpdatePassword() {
@@ -210,22 +96,62 @@ export default function UserSettingsPage() {
       })
     }
 
-    await updatePassword(oldPassword, password)
-    setTimeout(() => setError(null), 10000)
+    const response = await updatePasswordRequest({ oldPassword, password })
+
+    if (response.error) {
+      setError(response.error)
+    }
+  }
+
+  async function handleRemoAvatar() {
+    const response = await deleteAvatarRequest()
+
+    if (response.error) {
+      setError(response.error)
+      return
+    }
+
+    if (response.ok) {
+      await refetchUser()
+      setError(null)
+    }
+  }
+
+  async function handleUpdateUser() {
+    const response = await updateUserRequest({
+      email: email || user?.infos.email,
+      name: name || user?.infos.name,
+      username: username || user?.infos.username,
+    })
+
+    if (response.error) {
+      setError(response.error)
+      return
+    }
+
+    if (response.ok) {
+      await refetchUser()
+      setName('')
+      setEmail('')
+      setUsername('')
+      setError(null)
+    }
   }
 
   return (
     <>
-      <NextSeo title={`Configurações-${user?.username} | Magiscrita`} noindex />
+      <NextSeo
+        title={`Configurações-${user?.infos.username} | Magiscrita`}
+        noindex
+      />
 
       <DashboardPageLayout
         window="Configurações do usuário"
         loading={loadingUser}
+        disableScroll
       >
         <UserSettingsPageContainer>
           <UserSettings>
-            {error && <ResponseInfoApi error={error} />}
-
             <Info isCard>
               <Text family="body" as="label">
                 Nome
@@ -235,7 +161,7 @@ export default function UserSettingsPage() {
                   </TextInputIcon>
 
                   <TextInputInput
-                    placeholder={user?.name}
+                    placeholder={user?.infos.name}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -252,7 +178,7 @@ export default function UserSettingsPage() {
                   </TextInputIcon>
 
                   <TextInputInput
-                    placeholder={user?.username}
+                    placeholder={user?.infos.username}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
@@ -270,7 +196,7 @@ export default function UserSettingsPage() {
 
                   <TextInputInput
                     type="email"
-                    placeholder={user?.email}
+                    placeholder={user?.infos.email}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled
@@ -286,7 +212,7 @@ export default function UserSettingsPage() {
               wid={smallWindow ? 'full' : 'middle'}
               align="center"
               disabled={!!(!name && !email && !username)}
-              onClick={handleSaveUser}
+              onClick={handleUpdateUser}
               css={{
                 padding: '$3 $10',
                 alignSelf: 'center',
@@ -353,7 +279,7 @@ export default function UserSettingsPage() {
                   type="button"
                   wid="hug"
                   disabled={!oldPassword || !password}
-                  onClick={() => handleUpdatePassword()}
+                  onClick={handleUpdatePassword}
                   css={{
                     padding: '$3 $10',
                     alignSelf: 'center',
@@ -368,120 +294,19 @@ export default function UserSettingsPage() {
                 </ButtonRoot>
               </Text>
             </Info>
-
-            {/* <Info isCard columns={2}>
-              <Text family="body" as="label">
-                <header>Data de criação</header>
-                <Text size="sm">
-                  {user?.created_at
-                    ? getDate(user.created_at)
-                    : 'Carregando...'}
-                </Text>
-              </Text>
-            </Info> */}
-
-            {/* <Info css={{ marginTop: '$6' }}>
-              <Text family="body" as="label">
-                Ás referencias criadas não são contadas na listagem
-              </Text>
-            </Info> */}
-            {/* <Info columns={smallWindow ? 2 : 3} isCard>
-              <Text family="body" as="label">
-                <header>
-                  <ProjectorScreenChart /> Projetos
-                </header>
-                <Text>{projects.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <UserFocus />
-                  Personagens
-                </header>
-                <Text>{persons.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <Crosshair />
-                  Objetivos criados
-                </header>
-                <Text>{objects.objectives.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <RainbowCloud />
-                  Sonhos criados
-                </header>
-                <Text>{objects.dreams.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <Warning />
-                  Medos criados
-                </header>
-                <Text>{objects.fears.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <Person />
-                  Aparências criadas
-                </header>
-                <Text>{objects.appearance.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <UserCircleGear />
-                  Personalidades criadas
-                </header>
-                <Text>{objects.personality.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <Lightning />
-                  Poderes criados
-                </header>
-                <Text>{objects.powers.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <HeartBreak />
-                  Traumas criados
-                </header>
-                <Text>{objects.traumas.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <TreeStructure />
-                  Valores criados
-                </header>
-                <Text>{objects.values.length}</Text>
-              </Text>
-
-              <Text family="body" as="label">
-                <header>
-                  <SketchLogo />
-                  Desejos criados
-                </header>
-                <Text>{objects.wishes.length}</Text>
-              </Text>
-            </Info> */}
           </UserSettings>
 
           <UserInfos>
             <Info>
               <Avatar>
-                <AvatarWeb src={user?.avatar_url ?? undefined} size="full" />
+                <AvatarWeb
+                  src={user?.infos.avatar.url ?? undefined}
+                  size="full"
+                  alt={user?.infos.avatar.alt}
+                />
               </Avatar>
               <Text size="lg" weight="bold">
-                {user?.username?.toUpperCase()}
+                {user?.infos.username?.toUpperCase()}
               </Text>
 
               <div className="buttons">
@@ -500,8 +325,8 @@ export default function UserSettingsPage() {
                 </Input>
 
                 <ButtonRoot
-                  disabled={!user?.avatar_url || loadingUser}
-                  onClick={deleteAvatar}
+                  disabled={!user?.infos.avatar.url || loadingUser}
+                  onClick={handleRemoAvatar}
                   type="button"
                   wid="full"
                   align="center"

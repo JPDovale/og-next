@@ -40,7 +40,7 @@ export function CardUserWithAccess({
         size={smallWindow ? '2xl' : '4xl'}
         src={userWithAccess.avatar_url}
       />
-      {project.user.id === user?.id && (
+      {project.user.id === user?.account.id && (
         <UnshareButton
           className="unshare"
           wid="hug"

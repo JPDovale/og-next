@@ -89,6 +89,9 @@ export const InfosContainer = styled('div', {
 
   variants: {
     columns: {
+      1: {
+        gridTemplateColumns: '1fr',
+      },
       3: {
         gridTemplateColumns: '3fr 3fr 4fr',
       },

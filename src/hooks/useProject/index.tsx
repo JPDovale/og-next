@@ -47,14 +47,14 @@ export function useProject(id: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token' && !isRefreshingSession) {
+      if (response.error?.title === 'Login failed' && !isRefreshingSession) {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getProjectRequest(id)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
@@ -128,16 +128,16 @@ export function useProject(id: string) {
   )
 
   if (!loadingProject && project) {
-    if (project?.user.id !== user?.id) {
+    if (project?.user.id !== user?.account.id) {
       const userWithAccessComment =
         !!project.users_with_access_comment?.users.find(
-          (userWithAccess) => userWithAccess.id === user?.id,
+          (userWithAccess) => userWithAccess.id === user?.account.id,
         )
       const userWithAccessEdit = !!project.users_with_access_edit?.users.find(
-        (userWithAccess) => userWithAccess.id === user?.id,
+        (userWithAccess) => userWithAccess.id === user?.account.id,
       )
       const userWithAccessView = !!project.users_with_access_view?.users.find(
-        (userWithAccess) => userWithAccess.id === user?.id,
+        (userWithAccess) => userWithAccess.id === user?.account.id,
       )
 
       if (userWithAccessView) {

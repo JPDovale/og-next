@@ -31,7 +31,11 @@ export default function ProSuccessPage() {
             PARABÉNS! AGORA VOCÊ É MAGISCRITA PRO
           </Heading>
 
-          <AvatarWeb src={user.avatar_url ?? undefined} size="5xl" />
+          <AvatarWeb
+            src={user.infos.avatar.url ?? undefined}
+            size="5xl"
+            alt={user?.infos.avatar.alt}
+          />
 
           <Text
             css={{ textAlign: 'justify' }}
@@ -39,7 +43,7 @@ export default function ProSuccessPage() {
             family="body"
             height="shorter"
           >
-            Fala {user.username}, <br /> <br />
+            Fala {user.infos.username}, <br /> <br />
             Gostaríamos de expressar nosso mais sincero agradecimento por você
             ter escolhido assinar um plano em nossa plataforma de escrita
             criativa, MagiScrita. Sua confiança em nosso serviço é extremamente
@@ -68,7 +72,7 @@ export default function ProSuccessPage() {
             você encontre toda a inspiração e apoio que precisa em nossa
             plataforma.
             <br />
-            {user.subscription?.mode === 'payment' && (
+            {user.account.subscription?.mode === 'payment' && (
               <>
                 Notamos também que você executou a compra unica de nossa
                 plataforma!
