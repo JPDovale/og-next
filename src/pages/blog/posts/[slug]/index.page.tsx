@@ -65,7 +65,13 @@ export default function PostPage({ post }: IPostPage) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [],
+    paths: [
+      {
+        params: {
+          slug: 'guia-definitivo-para-criar-um-personagem-fantastico',
+        },
+      },
+    ],
     fallback: 'blocking',
   }
 }

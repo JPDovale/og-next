@@ -53,7 +53,14 @@ export default function DocsPage({ document, labelsProjects }: IDocPageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [],
+    paths: [
+      {
+        params: {
+          lessonSlug: 'como-criar-um-projeto',
+          lessonInto: 'projects',
+        },
+      },
+    ],
     fallback: 'blocking',
   }
 }

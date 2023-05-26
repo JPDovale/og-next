@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import {
   SideBarBlock,
@@ -30,19 +31,15 @@ export function SideBar({ addLabels = [] }: ISideBarProps) {
       <SideBarHeader>Documentação:</SideBarHeader>
 
       <SideBarBlock>
-        <SideBarItem
-          disabled={asPath === '/docs'}
-          onClick={() => router.push('/docs')}
-        >
-          Introdução
-        </SideBarItem>
+        <Link href={'/docs'}>
+          <SideBarItem disabled={asPath === '/docs'}>Introdução</SideBarItem>
+        </Link>
 
-        <SideBarItem
-          disabled={asPath === '/docs/versions'}
-          onClick={() => router.push('/docs/versions')}
-        >
-          Versões
-        </SideBarItem>
+        <Link href={'/docs/versions'}>
+          <SideBarItem disabled={asPath === '/docs/versions'}>
+            Versões
+          </SideBarItem>
+        </Link>
       </SideBarBlock>
 
       {addLabels.map((addLabel) => (
@@ -50,15 +47,16 @@ export function SideBar({ addLabels = [] }: ISideBarProps) {
           <SideBarHeader key={addLabel.title}>{addLabel.title}</SideBarHeader>
           <SideBarBlock>
             {addLabel.labels.map((label) => (
-              <SideBarItem
+              <Link
                 key={label.value}
-                disabled={asPath === `/docs/${addLabel.value}/${label.value}`}
-                onClick={() =>
-                  router.push(`/docs/${addLabel.value}/${label.value}`)
-                }
+                href={`/docs/${addLabel.value}/${label.value}`}
               >
-                {label.label}
-              </SideBarItem>
+                <SideBarItem
+                  disabled={asPath === `/docs/${addLabel.value}/${label.value}`}
+                >
+                  {label.label}
+                </SideBarItem>
+              </Link>
             ))}
           </SideBarBlock>
         </>
