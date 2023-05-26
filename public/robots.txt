@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.ognare.com.com
+
+# Sitemaps
+Sitemap: https://www.ognare.com.com/sitemap.xml
