@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://www.ognare.com.com
+Host: https://www.ognare.com.br
 
 # Sitemaps
-Sitemap: https://www.ognare.com.com/sitemap.xml
+Sitemap: https://www.ognare.com.br/sitemap.xml
