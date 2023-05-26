@@ -21,6 +21,7 @@ import {
 } from 'phosphor-react'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { AvatarWeb } from '@components/usefull/Avatar'
+import Link from 'next/link'
 
 interface IHeaderProps {
   disableShadow?: boolean
@@ -56,29 +57,23 @@ export function Header({ disableShadow = false }: IHeaderProps) {
             </ButtonRoot>
           )} */}
 
-          <ButtonRoot
-            variant="noShadow"
-            size="xs"
-            wid="hug"
-            onClick={() => router.push('/blog/posts')}
-          >
-            <ButtonIcon>
-              <Article weight="fill" />
-            </ButtonIcon>
-            <ButtonLabel>Blog</ButtonLabel>
-          </ButtonRoot>
+          <Link href={'/blog/posts'}>
+            <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
+              <ButtonIcon>
+                <Article weight="fill" />
+              </ButtonIcon>
+              <ButtonLabel>Blog</ButtonLabel>
+            </ButtonRoot>
+          </Link>
 
-          <ButtonRoot
-            variant="noShadow"
-            size="xs"
-            wid="hug"
-            onClick={() => router.push('/docs')}
-          >
-            <ButtonIcon>
-              <Files weight="fill" />
-            </ButtonIcon>
-            <ButtonLabel>Documentação</ButtonLabel>
-          </ButtonRoot>
+          <Link href={'/docs'}>
+            <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
+              <ButtonIcon>
+                <Files weight="fill" />
+              </ButtonIcon>
+              <ButtonLabel>Documentação</ButtonLabel>
+            </ButtonRoot>
+          </Link>
         </ExplorerHeader>
 
         <ImageContent>
@@ -108,29 +103,23 @@ export function Header({ disableShadow = false }: IHeaderProps) {
             </>
           ) : (
             <>
-              <ButtonRoot
-                wid="hug"
-                size="xs"
-                variant="noShadow"
-                onClick={() => router.push('/register')}
-              >
-                <ButtonIcon>
-                  <UserCirclePlus />
-                </ButtonIcon>
-                <ButtonLabel>Registrar</ButtonLabel>
-              </ButtonRoot>
+              <Link href={'/register'}>
+                <ButtonRoot as="a" wid="hug" size="xs" variant="noShadow">
+                  <ButtonIcon>
+                    <UserCirclePlus />
+                  </ButtonIcon>
+                  <ButtonLabel>Registrar</ButtonLabel>
+                </ButtonRoot>
+              </Link>
 
-              <ButtonRoot
-                size="xs"
-                variant="noShadow"
-                wid="hug"
-                onClick={() => router.push('/login')}
-              >
-                <ButtonIcon>
-                  <SignIn />
-                </ButtonIcon>
-                <ButtonLabel>Login</ButtonLabel>
-              </ButtonRoot>
+              <Link href={'/login'}>
+                <ButtonRoot as="a" size="xs" variant="noShadow" wid="hug">
+                  <ButtonIcon>
+                    <SignIn />
+                  </ButtonIcon>
+                  <ButtonLabel>Login</ButtonLabel>
+                </ButtonRoot>
+              </Link>
             </>
           )}
         </ButtonsContent>

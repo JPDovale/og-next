@@ -47,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
               openGraph={{
                 type: 'website',
                 locale: 'pt-br',
-                url: 'https://magiscrita.com',
+                url: 'https://www.ognare.com.br',
                 siteName: 'Magiscrita',
                 title: 'Magiscrita',
                 description: 'A origem das suas ideias...',

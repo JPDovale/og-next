@@ -27,6 +27,9 @@ export const globalStyles = globalCss({
 
   a: {
     all: 'unset',
+    fontFamily: '$bodyText',
+    fontSize: '$lg',
+    lineHeight: '$shorter',
   },
 
   body: {

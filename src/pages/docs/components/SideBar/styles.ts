@@ -28,7 +28,7 @@ export const SideBarBlock = styled('div', {
   padding: '0 $4',
 })
 
-export const SideBarItem = styled('button', {
+export const SideBarItem = styled('a', {
   all: 'unset',
 
   display: 'block',
@@ -51,9 +51,14 @@ export const SideBarItem = styled('button', {
     color: '$text100',
   },
 
-  '&:disabled': {
-    background: '$purple500',
-    color: '$text100',
-    cursor: 'not-allowed',
+  variants: {
+    disabled: {
+      true: {
+        background: '$purple500',
+        color: '$text100',
+        cursor: 'not-allowed',
+      },
+      false: {},
+    },
   },
 })
