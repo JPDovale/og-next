@@ -21,6 +21,8 @@ export async function getUserRequest(): Promise<IResponse<IUserResponse>> {
     const response = await api.get('/users')
     return response.data
   } catch (err: any) {
+    console.log(err)
+
     return err?.response?.data
   }
 }
@@ -33,7 +35,9 @@ export async function createSessionRequest(
     const response = await api.post('/sessions/', { email, password })
     return response.data
   } catch (err: any) {
-    return err.response.data
+    console.log(err)
+
+    return err
   }
 }
 

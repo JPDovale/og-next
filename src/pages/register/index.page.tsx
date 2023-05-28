@@ -60,7 +60,6 @@ const registerFormSchema = z.object({
     .max(30, {
       message: 'O nome de usuário não pode ter mais de 30 caracteres',
     })
-
     .transform((username) => username.toLowerCase()),
   email: z.string().email({ message: 'O email é invalido.' }),
   password: z
