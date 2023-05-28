@@ -33,8 +33,9 @@ export const HeaderImageAndInfosContainer = styled('div', {
     minHeight: 'unset',
 
     '.image': {
+      width: '100%',
       maxWidth: '100%',
-      minHeight: '680px',
+      minHeight: '480px',
       height: '100%',
     },
   },
