@@ -1,5 +1,11 @@
 # og-next
 
+## 1.1.2
+
+### Patch Changes
+
+- Correction of bugs
+
 ## 1.1.1
 
 ### Patch Changes

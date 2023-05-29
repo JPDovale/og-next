@@ -66,8 +66,7 @@ export function HeaderOptions({
 
   const { user, userIsPro, refetchUser } = useUser()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const newNotifications =
     user?.account.notification.numberNew !== undefined &&
@@ -94,7 +93,11 @@ export function HeaderOptions({
           <Text
             family="headingText"
             as="span"
-            css={{ display: 'flex', gap: '$2', alignItems: 'center' }}
+            css={{
+              display: 'flex',
+              gap: '$2',
+              alignItems: 'center',
+            }}
             size={smallWindow ? 'xs' : 'md'}
           >
             {userIsPro && (
@@ -105,53 +108,59 @@ export function HeaderOptions({
         </Title>
 
         <Options>
-          <Link href="/docs/versions" style={{ width: '100%' }}>
-            <Text
-              css={{
-                lineHeight: 0,
-                opacity: 0.6,
-                cursor: 'pointer',
-                transition: 'ease-in-out 250ms',
-                '&:hover': { opacity: 1, scale: 1.02 },
-              }}
-              family="body"
-            >
-              Versão: {pk.version} Beta
-            </Text>
-          </Link>
+          {!smallWindow && (
+            <>
+              <Link href="/docs/versions" style={{ width: '100%' }}>
+                <Text
+                  css={{
+                    lineHeight: 0,
+                    opacity: 0.6,
+                    cursor: 'pointer',
+                    transition: 'ease-in-out 250ms',
+                    '&:hover': { opacity: 1, scale: 1.02 },
+                  }}
+                  family="body"
+                >
+                  Versão: {pk.version} Beta
+                </Text>
+              </Link>
 
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <button
-                type="button"
-                className="icon-button"
-                disabled={isLoading}
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <button
+                    type="button"
+                    className="icon-button"
+                    disabled={isLoading}
+                  >
+                    <Package size={24} />
+                  </button>
+                </Dialog.Trigger>
+
+                <NewBoxModal />
+              </Dialog.Root>
+
+              <Dialog.Root
+                open={modalCreateProjectIsOpen}
+                onOpenChange={setModalCreateProjectIsOpen}
               >
-                <Package size={24} />
-              </button>
-            </Dialog.Trigger>
+                <Dialog.Trigger asChild>
+                  <button
+                    type="button"
+                    className="icon-button"
+                    disabled={isLoading}
+                  >
+                    <FilePlus size={24} />
+                  </button>
+                </Dialog.Trigger>
 
-            <NewBoxModal />
-          </Dialog.Root>
-
-          <Dialog.Root
-            open={modalCreateProjectIsOpen}
-            onOpenChange={setModalCreateProjectIsOpen}
-          >
-            <Dialog.Trigger asChild>
-              <button
-                type="button"
-                className="icon-button"
-                disabled={isLoading}
-              >
-                <FilePlus size={24} />
-              </button>
-            </Dialog.Trigger>
-
-            <NewProjectModal
-              onSuccessCreateProject={() => setModalCreateProjectIsOpen(false)}
-            />
-          </Dialog.Root>
+                <NewProjectModal
+                  onSuccessCreateProject={() =>
+                    setModalCreateProjectIsOpen(false)
+                  }
+                />
+              </Dialog.Root>
+            </>
+          )}
 
           <Popover.Root>
             <Popover.Trigger asChild>

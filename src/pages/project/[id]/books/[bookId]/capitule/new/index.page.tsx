@@ -71,8 +71,7 @@ export default function NewCapitule() {
     },
   })
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { projectName } = useProject(id as string)
   const { book, bookName, loadingBook, callEvent } = useBook(bookId as string)

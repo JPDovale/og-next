@@ -111,8 +111,7 @@ export default function CapitulePage() {
     },
   })
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   async function handleUpdateCapitule(data: updateCapituleBodyData) {
     if (data.act1 === ' ') data.act1 = ''

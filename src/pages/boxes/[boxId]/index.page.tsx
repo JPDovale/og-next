@@ -63,8 +63,7 @@ export default function BoxPage() {
   const { findBox, loadingBoxes, callEvent } = useBoxes()
   const { box, boxName } = findBox(boxId as string)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { GoBackButton } = usePreventBack('/boxes')
 

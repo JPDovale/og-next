@@ -1,9 +1,10 @@
 import { ButtonsContainer, NavigationBarContainer } from './styles'
-
+import * as Dialog from '@radix-ui/react-dialog'
 import LogoToLeft from '../../assets/logos/logoOG.png'
 import {
   Article,
   Bookmark,
+  FilePlus,
   Files,
   ListChecks,
   Package,
@@ -13,7 +14,7 @@ import {
   UsersThree,
   XCircle,
 } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { InterfaceContext } from '@contexts/interface'
@@ -22,15 +23,22 @@ import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Text } from '@components/usefull/Text'
 import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import Link from 'next/link'
+import pk from '../../../package.json'
+import { NewProjectModal } from '@components/ProjectsComponents/NewProjectModal'
+import { NewBoxModal } from '@components/BoxesComponents/NewBoxModal'
 
 export function NavigationBar() {
+  const [modalCreateProjectIsOpen, setModalCreateProjectIsOpen] =
+    useState(false)
+
   const { navIsOpen, setNavIsOpen, theme } = useContext(InterfaceContext)
 
   const router = useRouter()
   const location = router.pathname.split('/')[1]
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { projectsThisUser, projectsSharedWithUser } = useProjects()
   const { userIsPro } = useUser()
@@ -55,6 +63,24 @@ export function NavigationBar() {
         <XCircle size={32} />
       </button>
 
+      {smallWindow && (
+        <Link href="/docs/versions" style={{ width: '100%' }}>
+          <Text
+            css={{
+              lineHeight: 0,
+              opacity: 0.6,
+              cursor: 'pointer',
+              transition: 'ease-in-out 250ms',
+              textAlign: 'center',
+              '&:hover': { opacity: 1, scale: 1.02 },
+            }}
+            family="body"
+          >
+            Versão: {pk.version} Beta
+          </Text>
+        </Link>
+      )}
+
       <ButtonsContainer>
         {smallWindow && (
           <Text
@@ -68,22 +94,112 @@ export function NavigationBar() {
           </Text>
         )}
 
+        <ContainerGrid padding={0} columns={smallWindow ? 2 : 1}>
+          <ButtonRoot
+            type="button"
+            title="Todos os projetos"
+            align={navIsOpen ? 'left' : 'center'}
+            variant={location === 'projects' ? 'active' : 'default'}
+            size="sm"
+            onClick={() => {
+              router.push('/projects')
+              smallWindow && setNavIsOpen(false)
+            }}
+          >
+            <ButtonIcon>
+              <ProjectorScreenChart />
+            </ButtonIcon>
+
+            {navIsOpen && <ButtonLabel>Projetos</ButtonLabel>}
+          </ButtonRoot>
+
+          {smallWindow && (
+            <Dialog.Root
+              open={modalCreateProjectIsOpen}
+              onOpenChange={setModalCreateProjectIsOpen}
+            >
+              <Dialog.Trigger asChild>
+                <ButtonRoot
+                  type="button"
+                  title="Criar projeto"
+                  size="sm"
+                  align="left"
+                >
+                  <ButtonIcon>
+                    <FilePlus size={24} />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Criar projeto</ButtonLabel>
+                </ButtonRoot>
+              </Dialog.Trigger>
+
+              <NewProjectModal
+                onSuccessCreateProject={() =>
+                  setModalCreateProjectIsOpen(false)
+                }
+              />
+            </Dialog.Root>
+          )}
+        </ContainerGrid>
+
+        <ContainerGrid padding={0} columns={smallWindow ? 2 : 1}>
+          <ButtonRoot
+            type="button"
+            size="sm"
+            align={navIsOpen ? 'left' : 'center'}
+            title="Caixotes de ideias"
+            variant={location === 'boxes' ? 'active' : 'default'}
+            onClick={() => {
+              router.push('/boxes')
+              smallWindow && setNavIsOpen(false)
+            }}
+          >
+            <ButtonIcon>
+              <Package />
+            </ButtonIcon>
+
+            {navIsOpen && <ButtonLabel>Boxes</ButtonLabel>}
+          </ButtonRoot>
+
+          {smallWindow && (
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <ButtonRoot
+                  type="button"
+                  title="Criar box de ideias"
+                  size="sm"
+                  align="left"
+                >
+                  <ButtonIcon>
+                    <Package size={24} />
+                  </ButtonIcon>
+
+                  <ButtonLabel>Criar box</ButtonLabel>
+                </ButtonRoot>
+              </Dialog.Trigger>
+
+              <NewBoxModal />
+            </Dialog.Root>
+          )}
+        </ContainerGrid>
+
         <ButtonRoot
           type="button"
-          title="Todos os projetos"
-          align={navIsOpen ? 'left' : 'center'}
-          variant={location === 'projects' ? 'active' : 'default'}
           size="sm"
+          title="To-Do"
+          align={navIsOpen ? 'left' : 'center'}
+          variant={location === 'todo' ? 'active' : 'default'}
           onClick={() => {
-            router.push('/projects')
+            router.push('/todo')
             smallWindow && setNavIsOpen(false)
           }}
+          disabled={!userIsPro}
         >
           <ButtonIcon>
-            <ProjectorScreenChart />
+            <ListChecks />
           </ButtonIcon>
 
-          {navIsOpen && <ButtonLabel>Projetos</ButtonLabel>}
+          {navIsOpen && <ButtonLabel>To-Do</ButtonLabel>}
         </ButtonRoot>
 
         {projectsThisUser?.length > 0 &&
@@ -137,43 +253,6 @@ export function NavigationBar() {
             {navIsOpen && <ButtonLabel>Compartilhados comigo</ButtonLabel>}
           </ButtonRoot>
         )}
-
-        <ButtonRoot
-          type="button"
-          size="sm"
-          align={navIsOpen ? 'left' : 'center'}
-          title="Caixotes de ideias"
-          variant={location === 'boxes' ? 'active' : 'default'}
-          onClick={() => {
-            router.push('/boxes')
-            smallWindow && setNavIsOpen(false)
-          }}
-        >
-          <ButtonIcon>
-            <Package />
-          </ButtonIcon>
-
-          {navIsOpen && <ButtonLabel>Boxes</ButtonLabel>}
-        </ButtonRoot>
-
-        <ButtonRoot
-          type="button"
-          size="sm"
-          title="To-Do"
-          align={navIsOpen ? 'left' : 'center'}
-          variant={location === 'todo' ? 'active' : 'default'}
-          onClick={() => {
-            router.push('/todo')
-            smallWindow && setNavIsOpen(false)
-          }}
-          disabled={!userIsPro}
-        >
-          <ButtonIcon>
-            <ListChecks />
-          </ButtonIcon>
-
-          {navIsOpen && <ButtonLabel>To-Do</ButtonLabel>}
-        </ButtonRoot>
 
         <ButtonRoot
           type="button"

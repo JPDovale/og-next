@@ -71,9 +71,7 @@ export default function ProjectPage() {
     todoFirst,
   } = useProject(id as string)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
-  const largeWindow = windowSize.width! > 1700
+  const { smallWindow, largeWindow } = useWindowSize()
 
   async function handleUpdateImage(files: FileList | null) {
     setOnEditImg(false)

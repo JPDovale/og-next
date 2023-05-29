@@ -101,6 +101,7 @@ export const Title = styled('div', {
 
   '@media screen and (max-width: 768px)': {
     svg: { width: 20 },
+    width: '100%',
     gap: '$2',
   },
 })
