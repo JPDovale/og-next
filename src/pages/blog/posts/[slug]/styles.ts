@@ -26,6 +26,7 @@ export const PostDate = styled('time', {
   lineHeight: '0.5',
   fontFamily: '$bodyText',
   opacity: 0.6,
+  paddingBottom: '$6',
 })
 
 export const PostContent = styled('div', {

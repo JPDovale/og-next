@@ -66,4 +66,8 @@ export const ContentPage = styled('div', {
       margin: '$2 0',
     },
   },
+
+  '@media screen and (max-width: 768px)': {
+    padding: '$8',
+  },
 })

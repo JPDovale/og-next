@@ -37,8 +37,7 @@ export default function PersonsPage() {
   const { id } = router.query
   usePreventBack(`/project/${id}`)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { project, projectName, queryPerson, loadingProject } = useProject(
     id as string,

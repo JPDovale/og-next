@@ -106,7 +106,8 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const posts = postsReceived.map((post) => {
     const firstParagraph = post.data.content.find(
-      (content) => content.type === 'paragraph',
+      (content) =>
+        content.type === 'paragraph' && content.text.trim().length > 0,
     ) as ContentPostP
 
     return {

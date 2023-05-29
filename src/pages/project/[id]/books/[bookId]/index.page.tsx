@@ -35,8 +35,7 @@ export default function BookPage() {
   const { id, bookId } = router.query
   usePreventBack(`/project/${id}`)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { permission, projectName } = useProject(id as string)
   const {

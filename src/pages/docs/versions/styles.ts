@@ -22,6 +22,10 @@ export const MultipleContent = styled('div', {
 
   padding: '$8 16rem 20rem 16rem',
   overflowY: 'auto',
+
+  '@media screen and (max-width: 768px)': {
+    padding: '$8',
+  },
 })
 
 export const ContentPage = styled('div', {
