@@ -28,8 +28,7 @@ export function PreferenciesPopover() {
   const { orderBy, setOrderBy, theme, setThemeFunction } =
     useContext(InterfaceContext)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   return (
     <Popover.Portal>

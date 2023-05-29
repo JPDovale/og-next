@@ -64,8 +64,7 @@ export default function SettingsPage() {
     updatedAt,
   } = useProject(id as string)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   function handleUnshare() {
     const userToRemove = usersInProject.find((user) => user.id === unshare)

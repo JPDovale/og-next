@@ -34,6 +34,10 @@ export const PostsContainer = styled('div', {
       },
     },
   },
+
+  '@media screen and (max-width: 768px)': {
+    gridTemplateColumns: '1fr',
+  },
 })
 
 export const PostPreview = styled('a', {

@@ -23,8 +23,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
 
   const { user } = useUser()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   function handleUnshare() {}
 

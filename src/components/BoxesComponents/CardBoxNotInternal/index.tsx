@@ -16,8 +16,7 @@ interface ICardBoxNotInternalProps {
 export function CardBoxNotInternal({ box }: ICardBoxNotInternalProps) {
   const router = useRouter()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { theme } = useContext(InterfaceContext)
 

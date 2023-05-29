@@ -1,10 +1,14 @@
+import { useWindowSize } from '@hooks/useWindow'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { ArrowLeft } from 'phosphor-react'
+import { useState } from 'react'
 import {
   SideBarBlock,
   SideBarContainer,
   SideBarHeader,
   SideBarItem,
+  SideBarOpen,
 } from './styles'
 
 interface ILabel {
@@ -23,11 +27,26 @@ interface ISideBarProps {
 }
 
 export function SideBar({ addLabels = [] }: ISideBarProps) {
+  const [sideBarIsOpen, setSideBarIsOpen] = useState(false)
+
   const router = useRouter()
   const { asPath } = router
 
+  const { smallWindow } = useWindowSize()
+
   return (
-    <SideBarContainer>
+    <SideBarContainer sideBarIsOpen={sideBarIsOpen}>
+      {smallWindow && (
+        <SideBarOpen
+          sideBarIsOpen={sideBarIsOpen}
+          type="button"
+          title={sideBarIsOpen ? 'Fechar barra lateral' : 'Abrir barra lateral'}
+          onClick={() => setSideBarIsOpen(!sideBarIsOpen)}
+        >
+          <ArrowLeft size={20} />
+        </SideBarOpen>
+      )}
+
       <SideBarHeader>Documentação:</SideBarHeader>
 
       <SideBarBlock>
