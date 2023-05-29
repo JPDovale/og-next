@@ -13,6 +13,7 @@ import {
   PostPageContainer,
 } from './styles'
 import Image from 'next/image'
+import { useWindowSize } from '@hooks/useWindow'
 
 interface IPost {
   slug: string
@@ -31,6 +32,8 @@ interface IPostPage {
 }
 
 export default function PostPage({ post }: IPostPage) {
+  const { smallWindow } = useWindowSize()
+
   return (
     <>
       <NextSeo title={post.title} description={post.excerpt} />
@@ -39,7 +42,9 @@ export default function PostPage({ post }: IPostPage) {
         <Header />
 
         <PostBody>
-          <PostTitle>{post.title}</PostTitle>
+          <PostTitle css={{ fontSize: smallWindow ? '$5xl' : '$7xl' }}>
+            {post.title}
+          </PostTitle>
 
           <PostDate>{post.updatedAt}</PostDate>
 

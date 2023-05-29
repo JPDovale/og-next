@@ -48,3 +48,4 @@ next.config.original.js
 # DEV
 Dockerfile
 .dockerignore
+changesToDo.mkd

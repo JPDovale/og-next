@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { EditContainer, Info } from './styles'
 import {
   Crosshair,
@@ -28,19 +28,22 @@ import { Text } from '@components/usefull/Text'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { TextEditor } from '@components/TextEditor'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
-import { ToastError } from '@components/usefull/ToastError'
 import { usePerson } from '@hooks/usePerson'
 import { getDate } from '@utils/dates/getDate'
-import { IError } from '@@types/errors/IError'
 import { IUpdatePersonDTO } from '@api/dtos/IUpdatePersonDTO'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { LabelInput } from '@components/usefull/LabelInput'
 import { Checkbox } from '@components/usefull/Checkbox'
+import { InterfaceContext } from '@contexts/interface'
 
 const personFormSchema = z.object({
   name: z.string().optional().nullable(),
   lastName: z.string().optional().nullable(),
-  age: z.coerce.number().optional().nullable(),
+  age: z.coerce
+    .number()
+    .max(999999, 'A idade maxima permitida é 999999')
+    .optional()
+    .nullable(),
   history: z.string().optional().nullable(),
   bornMonth: z.coerce
     .number({ invalid_type_error: 'Coloque apenas números no mês.' })
@@ -77,8 +80,9 @@ const personFormSchema = z.object({
 type PersonFormData = z.infer<typeof personFormSchema>
 
 export default function EditPersonPage() {
-  const [error, setError] = useState<IError | null>(null)
   const [unknownAge, setUnknownAge] = useState(false)
+
+  const { setError } = useContext(InterfaceContext)
 
   const router = useRouter()
   const { id, personId } = router.query
@@ -115,8 +119,7 @@ export default function EditPersonPage() {
     }
   }, [unknownAge, setValue])
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { GoBackButton } = usePreventBack(
     `/project/${project?.id}/persons/${person?.id}`,
@@ -137,12 +140,13 @@ export default function EditPersonPage() {
 
     const { resolved, error } = await callEvent.update(updatedPerson)
 
-    if (resolved) {
-      reset()
-    }
-
     if (error) {
       setError(error)
+      return
+    }
+
+    if (resolved) {
+      reset()
     }
   }
 
@@ -166,8 +170,6 @@ export default function EditPersonPage() {
       >
         <EditContainer onSubmit={handleSubmit(handleUpdatePerson)}>
           <GoBackButton topDistance={4} />
-
-          <ToastError error={error} setError={setError} />
 
           <ContainerGrid padding={4} darkBackground>
             <ContainerGrid padding={0}>
@@ -273,7 +275,7 @@ export default function EditPersonPage() {
                       }
                       {...register('bornHour')}
                     />
-                  </TextInputRoot>{' '}
+                  </TextInputRoot>
                 </LabelInput>
 
                 <LabelInput
@@ -345,7 +347,7 @@ export default function EditPersonPage() {
             type="submit"
             wid={smallWindow ? 'full' : 'middle'}
             align="center"
-            disabled={!formState.isDirty || formState.isSubmitting}
+            disabled={formState.isSubmitting}
             css={{
               padding: '$3 $10',
               alignSelf: 'center',

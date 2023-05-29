@@ -11,6 +11,56 @@ export const SideBarContainer = styled('aside', {
   background: '$gray800',
   overflowY: 'auto',
   borderRight: '1px solid $purple500',
+  transition: 'ease-in-out 250ms',
+
+  '@media screen and (max-width: 768px)': {
+    position: 'fixed',
+    overflow: 'unset',
+
+    width: '75%',
+    maxWidth: '75%',
+    boxShadow: '0 -16px 20px 6px #000000aa',
+  },
+
+  variants: {
+    sideBarIsOpen: {
+      true: {},
+      false: {
+        '@media screen and (max-width: 768px)': {
+          left: '-75%',
+          boxShadow: 'unset',
+        },
+      },
+    },
+  },
+})
+
+export const SideBarOpen = styled('button', {
+  all: 'unset',
+  zIndex: 1,
+  position: 'absolute',
+  lineHeight: 0,
+  padding: '$1',
+  right: '-$7',
+  background: '$purple900',
+  borderRadius: '0 $xxs $xxs 0',
+  cursor: 'pointer',
+  transition: 'ease-in-out 250ms',
+
+  '&:hover': {
+    background: '$purple800',
+  },
+
+  variants: {
+    sideBarIsOpen: {
+      true: {},
+      false: {
+        svg: {
+          transform: 'rotate(180deg)',
+        },
+      },
+    },
+  },
 })
 
 export const SideBarHeader = styled('div', {
@@ -26,6 +76,7 @@ export const SideBarBlock = styled('div', {
   flexDirection: 'column',
   gap: '$1',
   padding: '0 $4',
+  overflow: 'hidden',
 })
 
 export const SideBarItem = styled('a', {

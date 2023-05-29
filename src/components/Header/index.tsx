@@ -22,6 +22,7 @@ import {
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import Link from 'next/link'
+import { useWindowSize } from '@hooks/useWindow'
 
 interface IHeaderProps {
   disableShadow?: boolean
@@ -30,6 +31,7 @@ interface IHeaderProps {
 export function Header({ disableShadow = false }: IHeaderProps) {
   const router = useRouter()
   // const location = router.pathname.split('/')[1]
+  const { smallWindow } = useWindowSize()
 
   const {
     user,
@@ -57,23 +59,27 @@ export function Header({ disableShadow = false }: IHeaderProps) {
             </ButtonRoot>
           )} */}
 
-          <Link href={'/blog/posts'}>
-            <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
-              <ButtonIcon>
-                <Article weight="fill" />
-              </ButtonIcon>
-              <ButtonLabel>Blog</ButtonLabel>
-            </ButtonRoot>
-          </Link>
+          {!smallWindow && (
+            <>
+              <Link href={'/blog/posts'}>
+                <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
+                  <ButtonIcon>
+                    <Article weight="fill" />
+                  </ButtonIcon>
+                  <ButtonLabel>Blog</ButtonLabel>
+                </ButtonRoot>
+              </Link>
 
-          <Link href={'/docs'}>
-            <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
-              <ButtonIcon>
-                <Files weight="fill" />
-              </ButtonIcon>
-              <ButtonLabel>Documentação</ButtonLabel>
-            </ButtonRoot>
-          </Link>
+              <Link href={'/docs'}>
+                <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
+                  <ButtonIcon>
+                    <Files weight="fill" />
+                  </ButtonIcon>
+                  <ButtonLabel>Documentação</ButtonLabel>
+                </ButtonRoot>
+              </Link>
+            </>
+          )}
         </ExplorerHeader>
 
         <ImageContent>

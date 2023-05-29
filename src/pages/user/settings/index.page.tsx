@@ -53,8 +53,7 @@ export default function UserSettingsPage() {
 
   const { user, loadingUser, refetchUser } = useUser()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   usePreventBack('/projects')
 
