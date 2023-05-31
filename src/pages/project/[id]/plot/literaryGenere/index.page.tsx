@@ -24,7 +24,7 @@ export default function LiteraryGenerePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsLiteraryGenre = project?.comments?.filter(
+  const commentsLiteraryGenre = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'literaryGenre',
   )
 

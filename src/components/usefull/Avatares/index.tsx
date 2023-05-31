@@ -1,4 +1,4 @@
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPersonPreview } from '@api/responsesTypes/person/IPersonPreview'
 import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
@@ -13,7 +13,7 @@ import {
 } from './styles'
 
 interface IAvataresProps {
-  persons: IPersonsResponse[]
+  persons: IPersonPreview[]
   firstButtonIcon?: ReactNode
   secondaryButtonIcon?: ReactNode
   internalButtonIcon?: ReactNode
@@ -128,14 +128,15 @@ export function Avatares({
             >
               <AvatarWeb
                 size={size}
-                src={person?.image_url ?? undefined}
+                src={person?.image.url}
+                alt={person?.image.alt}
                 selected={personSelected === person?.id && true}
                 error={!personSelected && error && true}
                 isClickable={isClickable}
               />
 
               <Text size="sm" family="body">
-                {person?.name}
+                {person?.name.first}
               </Text>
             </Header>
           </PersonAvatar>

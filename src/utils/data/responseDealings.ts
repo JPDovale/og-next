@@ -1,12 +1,13 @@
 import { IError } from '@@types/errors/IError'
+import { IResponse } from '@api/responses/IResponse'
 import { refreshSessionRequest } from '@api/userRequest'
 
 interface IResponseDealings<T> {
-  response: any
+  response: IResponse
   callback: () => Promise<T>
 }
 
-interface IResponse {
+interface IResponseDealingsResponse {
   error?: IError
   handledAnswer: boolean
 }
@@ -14,7 +15,7 @@ interface IResponse {
 export async function responseDealings<TypeCallback>({
   response,
   callback,
-}: IResponseDealings<TypeCallback>): Promise<IResponse> {
+}: IResponseDealings<TypeCallback>): Promise<IResponseDealingsResponse> {
   if (response.error?.title === 'Login failed') {
     const response = await refreshSessionRequest()
 
@@ -31,12 +32,12 @@ export async function responseDealings<TypeCallback>({
     }
   }
 
-  if (response.errorMessage) {
+  if (response.error) {
     return {
       handledAnswer: false,
       error: {
-        title: response.errorTitle,
-        message: response.errorMessage,
+        title: response.error.title,
+        message: response.error.message,
       },
     }
   }

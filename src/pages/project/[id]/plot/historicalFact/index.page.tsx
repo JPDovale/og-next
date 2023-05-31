@@ -24,7 +24,7 @@ export default function HistoricalFactPage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsHistoricalFact = project?.comments?.filter(
+  const commentsHistoricalFact = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'historicalFact',
   )
 

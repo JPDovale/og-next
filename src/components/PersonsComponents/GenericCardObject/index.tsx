@@ -123,15 +123,16 @@ export function GenericCardObject({
               </Text>
               <Relational>
                 <AvatarWeb
-                  src={relationalPerson?.image_url ?? undefined}
+                  src={relationalPerson?.image.url}
+                  alt={relationalPerson?.image.alt}
                   size="lg"
                 />
                 <RelationalInfos>
                   <Text as="label" size="lg" family="body" height="shorter">
-                    {relationalPerson?.name}
+                    {relationalPerson?.name.full}
                   </Text>
                   <Text as="label" size="lg" family="body" height="shorter">
-                    {relationalPerson?.age} anos
+                    {relationalPerson?.age.number} anos
                   </Text>
                 </RelationalInfos>
               </Relational>

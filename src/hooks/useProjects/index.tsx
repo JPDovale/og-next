@@ -1,4 +1,8 @@
 import { getProjectsRequest } from '@api/projectsRequests'
+import {
+  IProjectPreview,
+  IUserInProject,
+} from '@api/responsesTypes/project/IProjectPreview'
 import { refreshSessionRequest } from '@api/userRequest'
 import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
@@ -6,7 +10,6 @@ import { orderElements } from '@services/orderElements'
 import { getDate } from '@utils/dates/getDate'
 import { useContext, useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { IProjectPreview, IUserInProject } from './entities/IProjectPreview'
 import { createProject } from './events/createProject'
 import { ICallEvent } from './types/ICallEvent'
 
@@ -51,7 +54,7 @@ export function useProjects(params?: IUseProjectsParams) {
         }
       }
 
-      const projects = response.projects as IProjectPreview[]
+      const projects = response.data?.projects as IProjectPreview[]
 
       return { projects, errorMessage, errorTitle }
     },

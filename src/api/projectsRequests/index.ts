@@ -1,14 +1,18 @@
 import { IShareProjectDTO } from '@api/dtos/IShareProjectDTO'
+import { IResponse } from '@api/responses/IResponse'
+import { IProjectResponse } from '@api/responsesTypes/project/IProject'
+import { IProjectPreviewResponse } from '@api/responsesTypes/project/IProjectPreview'
 import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
-import { IProjectResponse } from '../responsesTypes/IProjectResponse'
 import { IChangeDoneTimeEventRequest } from './types/IChangeDoneTimeEventRequest'
 import { IChangeFeaturesUsingRequest } from './types/IChangeFeaturesUsingRequest'
 import { ICreateTimeEventRequest } from './types/ICreateTimeEventRequest'
 import { IUpdateInitialDateRequest } from './types/IUpdateInitialDateRequest'
 
-export async function getProjectsRequest() {
+export async function getProjectsRequest(): Promise<
+  IResponse<IProjectPreviewResponse>
+> {
   try {
     const response = await api.get('/projects')
     return response.data
@@ -17,7 +21,9 @@ export async function getProjectsRequest() {
   }
 }
 
-export async function getProjectRequest(projectId: string) {
+export async function getProjectRequest(
+  projectId: string,
+): Promise<IResponse<IProjectResponse>> {
   try {
     const response = await api.get(`/projects/${projectId}`)
     return response.data
@@ -26,9 +32,7 @@ export async function getProjectRequest(projectId: string) {
   }
 }
 
-export async function createProjectRequest(
-  project: any,
-): Promise<IProjectResponse> {
+export async function createProjectRequest(project: any) {
   try {
     const response = await api.post('/projects', project)
     return response.data

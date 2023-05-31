@@ -83,7 +83,9 @@ export default function PlotPage() {
                   <TextInputRoot id="linkOfText">
                     <TextInputInput
                       type="url"
-                      placeholder={project?.url_text || 'https://exemplo.com'}
+                      placeholder={
+                        project?.plot?.urlText || 'https://exemplo.com'
+                      }
                       value={urlOfText}
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setUrlOfText(e.target.value)
@@ -98,16 +100,16 @@ export default function PlotPage() {
                   </ButtonRoot>
                 </BoxInput>
 
-                {project?.url_text && (
+                {project?.plot?.urlText && (
                   <LinkOfText
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={project.url_text}
+                    href={project.plot?.urlText}
                   >
                     <Text css={{ color: '$black' }} weight="bold" size="sm">
                       Link do texto:
                     </Text>
-                    {project.url_text}
+                    {project.plot?.urlText}
                   </LinkOfText>
                 )}
               </BoxInputUrlOfText>
