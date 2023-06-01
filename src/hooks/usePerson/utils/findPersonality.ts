@@ -1,11 +1,8 @@
-import {
-  IPersonality,
-  IPersonsResponse,
-} from '@api/responsesTypes/IPersonsResponse'
+import { IPerson, IPersonality } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindPersonality {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -22,7 +19,7 @@ export function findPersonalityUtil({
   id,
   person,
 }: IFindPersonality): IResponsePersonality {
-  const personality = person?.personalities?.find(
+  const personality = person?.collections.personality.itens?.find(
     (personality) => personality.id === id,
   )
 

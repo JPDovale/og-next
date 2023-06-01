@@ -1,8 +1,8 @@
-import { IWishe, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson, IWishe } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindWishe {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -15,7 +15,9 @@ interface IResponseWishe {
 }
 
 export function findWisheUtil({ id, person }: IFindWishe): IResponseWishe {
-  const wishe = person?.wishes?.find((wishe) => wishe.id === id)
+  const wishe = person?.collections.wishe.itens?.find(
+    (wishe) => wishe.id === id,
+  )
 
   const response: IResponseWishe = {
     wishe,

@@ -48,7 +48,7 @@ export default function AppearancePage() {
   return (
     <>
       <NextSeo
-        title={`${personName}-${appearance?.title} | Magiscrita`}
+        title={`${personName}-${appearance?.infos.title} | Magiscrita`}
         noindex
       />
 
@@ -59,7 +59,7 @@ export default function AppearancePage() {
           'Personagens',
           `${personName}`,
           'Aparências',
-          appearance?.title ?? 'Carregando...',
+          appearance?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -84,20 +84,20 @@ export default function AppearancePage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {appearance?.title}
+                {appearance?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {appearance?.description}
+                {appearance?.infos.description}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {appearance?.created_at
-                  ? getDate(appearance?.created_at)
+                {appearance?.infos.createdAt
+                  ? getDate(appearance?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -107,7 +107,7 @@ export default function AppearancePage() {
         <CommentsOnPage
           onNewComment={handleCommentInAppearance}
           permission={permission}
-          comments={appearance?.comments}
+          comments={appearance?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics

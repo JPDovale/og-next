@@ -1,32 +1,32 @@
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson } from '@api/responsesTypes/person/IPerson'
 import { IInfos } from '@hooks/useBook'
 import { getDate } from '@utils/dates/getDate'
 
-export function constructInfos(person: IPersonsResponse | null) {
+export function constructInfos(person: IPerson | null) {
   const infos: IInfos[] = [
     {
       columns: 2,
       infos: [
         {
           label: 'Nome:',
-          value: `${person?.name || 'Carregando...'} ${person?.last_name}`,
+          value: `${person?.name.full || 'Carregando...'}`,
         },
         {
           label: 'Idade:',
-          value: person?.age
-            ? `${person.age} anos`
-            : 'Idade desconhecida' || 'Carregando...',
+          value: person?.age.number
+            ? `${person.age.number} anos`
+            : 'Idade desconhecida',
         },
         {
           label: 'Criado em:',
-          value: person?.created_at
-            ? getDate(person.created_at)
+          value: person?.infos.createdAt
+            ? getDate(person?.infos.createdAt)
             : 'Carregando...',
         },
         {
           label: 'Atualizado em:',
-          value: person?.updated_at
-            ? getDate(person.updated_at)
+          value: person?.infos.updatedAt
+            ? getDate(person?.infos.updatedAt)
             : 'Carregando...',
         },
       ],
@@ -36,43 +36,43 @@ export function constructInfos(person: IPersonsResponse | null) {
       infos: [
         {
           label: 'Objetivos:',
-          value: `${person?.objectives?.length || 0}`,
+          value: `${person?.collections.objective.itensLength || 0}`,
         },
         {
           label: 'Personalidade:',
-          value: `${person?.personalities?.length || 0}`,
+          value: `${person?.collections.personality.itensLength || 0}`,
         },
         {
           label: 'Valores:',
-          value: `${person?.values?.length || 0}`,
+          value: `${person?.collections.value.itensLength || 0}`,
         },
         {
           label: 'Traumas:',
-          value: `${person?.traumas?.length || 0}`,
+          value: `${person?.collections.trauma?.itensLength || 0}`,
         },
         {
           label: 'Aparência:',
-          value: `${person?.appearances?.length || 0}`,
+          value: `${person?.collections.appearance?.itensLength || 0}`,
         },
         {
           label: 'Sonhos:',
-          value: `${person?.dreams?.length || 0}`,
+          value: `${person?.collections.dream?.itensLength || 0}`,
         },
         {
           label: 'Medos:',
-          value: `${person?.fears?.length || 0}`,
+          value: `${person?.collections.fear?.itensLength || 0}`,
         },
         {
           label: 'Desejos:',
-          value: `${person?.wishes?.length || 0}`,
+          value: `${person?.collections.wishe?.itensLength || 0}`,
         },
         {
           label: 'Casais:',
-          value: `${person?.couples?.length || 0}`,
+          value: `${person?.collections.couple?.itensLength || 0}`,
         },
         {
           label: 'Poderes:',
-          value: `${person?.powers?.length || 0}`,
+          value: `${person?.collections.power?.itensLength || 0}`,
         },
       ],
     },

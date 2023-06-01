@@ -48,7 +48,10 @@ export default function WishePage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-${wishe?.title} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${wishe?.infos.title} | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -57,7 +60,7 @@ export default function WishePage() {
           'Personagens',
           `${personName}`,
           'Desejos',
-          wishe?.title ?? 'Carregando...',
+          wishe?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -82,20 +85,20 @@ export default function WishePage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {wishe?.title}
+                {wishe?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {wishe?.description}
+                {wishe?.infos.description}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {wishe?.created_at
-                  ? getDate(wishe?.created_at)
+                {wishe?.infos.createdAt
+                  ? getDate(wishe?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -105,7 +108,7 @@ export default function WishePage() {
         <CommentsOnPage
           onNewComment={handleCommentInWishe}
           permission={permission}
-          comments={wishe?.comments}
+          comments={wishe?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics

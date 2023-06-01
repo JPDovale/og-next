@@ -13,24 +13,40 @@ import {
 } from './styles'
 import { useRouter } from 'next/router'
 import { AvatarWeb } from '@components/usefull/Avatar'
-import { useProject } from '@hooks/useProject'
 import { InterfaceContext } from '@contexts/interface'
+import {
+  IInCouplePerson,
+  IPersonInObject,
+  ISubObject,
+} from '@api/responsesTypes/person/IPerson'
 
 interface IGenericObject {
   id?: string
-  title: string
-  description: string
-  coupleWithPerson?: {
-    person_id: string
+  infos: {
+    title: string
+    description: string
+    createdAt: Date
+    untilEnd?: boolean
   }
-  until_end?: boolean
+  collections?: {
+    consequence?: {
+      itens?: ISubObject[]
+    }
+    exception?: {
+      itens?: ISubObject[]
+    }
+    referencesIt?: {
+      itens: IPersonInObject[]
+    }
+    couple?: IInCouplePerson
+  }
 }
 
 interface IGenericCardObjectProps {
   object: IGenericObject
   to: string
   withSubObjects?: 'consequências' | 'exceções' | undefined
-  subObjects?: IGenericObject[]
+  subObjects?: ISubObject[]
   isUniqueRelational?: boolean
 }
 
@@ -46,11 +62,6 @@ export function GenericCardObject({
   const router = useRouter()
   const { id, personId } = router.query
 
-  const { personsThisProject } = useProject(id as string)
-  const relationalPerson = personsThisProject?.find(
-    (person) => person.id === object.coupleWithPerson?.person_id,
-  )
-
   return (
     <GenericCardObjectContainer>
       <ObjectInfos>
@@ -59,7 +70,7 @@ export function GenericCardObject({
             Titulo
           </Text>
           <Text weight="bold" size="2xl" family="body" height="shorter">
-            {object.title}
+            {object.infos.title}
           </Text>
         </ItemInfo>
 
@@ -68,7 +79,7 @@ export function GenericCardObject({
             Descrição
           </Text>
           <Text size="xl" family="body" weight="bold" height="shorter">
-            {object.description}
+            {object.infos.description}
           </Text>
         </ItemInfo>
 
@@ -86,7 +97,7 @@ export function GenericCardObject({
             <SubObjects>
               {subObjects?.map((subObject) => (
                 <SubObjectCard
-                  key={`${subObject.description}${subObject.title}`}
+                  key={`${subObject.infos.description}${subObject.infos.title}`}
                 >
                   <ItemInfo>
                     <Text as="label" size="sm" family="body" height="shorter">
@@ -98,7 +109,7 @@ export function GenericCardObject({
                       family="body"
                       height="shorter"
                     >
-                      {subObject.title}
+                      {subObject.infos.title}
                     </Text>
                   </ItemInfo>
                   <ItemInfo>
@@ -106,7 +117,7 @@ export function GenericCardObject({
                       Descrição
                     </Text>
                     <Text weight="bold" family="body" height="shorter">
-                      {subObject.description}
+                      {subObject.infos.description}
                     </Text>
                   </ItemInfo>
                 </SubObjectCard>
@@ -123,16 +134,16 @@ export function GenericCardObject({
               </Text>
               <Relational>
                 <AvatarWeb
-                  src={relationalPerson?.image.url}
-                  alt={relationalPerson?.image.alt}
+                  src={object.collections?.couple?.image.url}
+                  alt={object.collections?.couple?.image.alt}
                   size="lg"
                 />
                 <RelationalInfos>
                   <Text as="label" size="lg" family="body" height="shorter">
-                    {relationalPerson?.name.full}
+                    {object.collections?.couple?.name.first}
                   </Text>
                   <Text as="label" size="lg" family="body" height="shorter">
-                    {relationalPerson?.age.number} anos
+                    {object.collections?.couple?.age} anos
                   </Text>
                 </RelationalInfos>
               </Relational>
@@ -145,10 +156,12 @@ export function GenericCardObject({
               <Text
                 weight="bold"
                 css={{
-                  color: object.until_end ? '$successDefault' : '$errorDefault',
+                  color: object.infos.untilEnd
+                    ? '$successDefault'
+                    : '$errorDefault',
                 }}
               >
-                {object.until_end ? 'Sim' : 'Não'}
+                {object.infos.untilEnd ? 'Sim' : 'Não'}
               </Text>
             </ItemInfo>
           </>

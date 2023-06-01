@@ -1,4 +1,4 @@
-import { IAppearance } from '@api/responsesTypes/IPersonsResponse'
+import { IAppearance } from '@api/responsesTypes/person/IPerson'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -20,26 +20,22 @@ export function Appearance({
     <AppearanceContainer selected={selected} onClick={onClick}>
       <InfoDefault title="Titulo:">
         <Text weight="bold" family="body">
-          {appearance.title}
+          {appearance.infos.title}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Descrição:">
         <Text weight="bold" family="body">
-          {appearance.description.slice(0, 100)}
-          {appearance.description.length > 120 && '...'}
+          {appearance.infos.description.slice(0, 100)}
+          {appearance.infos.description.length > 120 && '...'}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Personagens associados:">
         <ContainerGrid padding={0} columns={6}>
-          {appearance.persons?.map((person) => (
+          {appearance.collections.referencesIt.itens?.map((person) => (
             <ContainerGrid padding={0} key={person.id} css={{ gap: 0 }}>
-              <AvatarWeb
-                src={person.image_url ?? undefined}
-                size="xsm"
-                selfCenter
-              />
+              <AvatarWeb src={person.image.url} size="xsm" selfCenter />
               <Text
                 family="body"
                 height="shorter"
@@ -47,7 +43,7 @@ export function Appearance({
                 weight="bold"
                 css={{ textAlign: 'center' }}
               >
-                {person.name}
+                {person.name.first}
               </Text>
             </ContainerGrid>
           ))}

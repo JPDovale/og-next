@@ -224,7 +224,7 @@ export default function NewObjectivePage() {
             icon={<Crosshair size={40} />}
             label={
               objectiveSelected && objective
-                ? `Objetivo selecionado: ${objective.title}`
+                ? `Objetivo selecionado: ${objective.infos.title}`
                 : 'Novo objetivo'
             }
             inTop
@@ -410,7 +410,7 @@ export default function NewObjectivePage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{objective?.title}&quot; ao personagem{' '}
+                  Atribuir &quot;{objective?.infos.title}&quot; ao personagem{' '}
                   {personName}
                 </ButtonLabel>
               </ButtonRoot>

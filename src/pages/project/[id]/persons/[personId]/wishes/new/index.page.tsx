@@ -124,7 +124,7 @@ export default function NewWishePage() {
             icon={<SketchLogo size={40} />}
             label={
               wisheSelected && wishe
-                ? `Desejo selecionado: ${wishe.title}`
+                ? `Desejo selecionado: ${wishe.infos.title}`
                 : 'Novo desejo'
             }
             inTop
@@ -209,7 +209,8 @@ export default function NewWishePage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{wishe?.title}&quot; ao personagem {personName}
+                  Atribuir &quot;{wishe?.infos.title}&quot; ao personagem{' '}
+                  {personName}
                 </ButtonLabel>
               </ButtonRoot>
             </ContainerGrid>

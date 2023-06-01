@@ -193,7 +193,7 @@ export default function NewTraumaPage() {
             icon={<HeartBreak size={40} />}
             label={
               traumaSelected && trauma
-                ? `Trauma selecionado: ${trauma.title}`
+                ? `Trauma selecionado: ${trauma.infos.title}`
                 : 'Novo trauma'
             }
             inTop
@@ -334,7 +334,7 @@ export default function NewTraumaPage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{trauma?.title}&quot; ao personagem{' '}
+                  Atribuir &quot;{trauma?.infos.title}&quot; ao personagem{' '}
                   {personName}
                 </ButtonLabel>
               </ButtonRoot>

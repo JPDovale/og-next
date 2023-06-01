@@ -1,5 +1,5 @@
 import { getAppearancesRequest } from '@api/projectsRequests'
-import { IAppearance } from '@api/responsesTypes/IPersonsResponse'
+import { IAppearance } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -24,7 +24,7 @@ export function useAppearances(projectId: string) {
         }
       }
 
-      const appearances = response.appearances as IAppearance[]
+      const appearances = response.data?.appearances as IAppearance[]
 
       return { appearances, errorMessage, errorTitle }
     },
@@ -34,9 +34,10 @@ export function useAppearances(projectId: string) {
 
   function findAppearanceWherePersonNotExisteIn(personId: string) {
     const appearancesWherePersonNorFund = appearances.filter((appearance) => {
-      const personExisteInAppearance = appearance.persons?.find(
-        (person) => person.id === personId,
-      )
+      const personExisteInAppearance =
+        appearance.collections.referencesIt.itens?.find(
+          (person) => person.id === personId,
+        )
 
       if (personExisteInAppearance) {
         return false

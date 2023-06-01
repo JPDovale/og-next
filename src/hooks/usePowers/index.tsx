@@ -1,5 +1,5 @@
 import { getPowersRequest } from '@api/projectsRequests'
-import { IPower } from '@api/responsesTypes/IPersonsResponse'
+import { IPower } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -24,7 +24,7 @@ export function usePowers(projectId: string) {
         }
       }
 
-      const powers = response.powers as IPower[]
+      const powers = response.data?.powers as IPower[]
 
       return { powers, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function usePowers(projectId: string) {
 
   function findPowerWherePersonNotExisteIn(personId: string) {
     const powersWherePersonNorFund = powers.filter((power) => {
-      const personExisteInPower = power.persons?.find(
+      const personExisteInPower = power.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

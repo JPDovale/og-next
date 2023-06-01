@@ -48,7 +48,10 @@ export default function DreamPage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-${dream?.title}  Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${dream?.infos.title}  Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -57,7 +60,7 @@ export default function DreamPage() {
           'Personagens',
           `${personName}`,
           'Sonho',
-          dream?.title ?? 'Carregando...',
+          dream?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -82,20 +85,20 @@ export default function DreamPage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {dream?.title}
+                {dream?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {dream?.description}
+                {dream?.infos.description}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {dream?.created_at
-                  ? getDate(dream?.created_at)
+                {dream?.infos.createdAt
+                  ? getDate(dream?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -105,7 +108,7 @@ export default function DreamPage() {
         <CommentsOnPage
           onNewComment={handleCommentInDream}
           permission={permission}
-          comments={dream?.comments}
+          comments={dream?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics

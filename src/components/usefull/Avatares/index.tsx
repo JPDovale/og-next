@@ -1,3 +1,4 @@
+import { IPersonInObject } from '@api/responsesTypes/person/IPerson'
 import { IPersonPreview } from '@api/responsesTypes/person/IPersonPreview'
 import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
@@ -13,7 +14,7 @@ import {
 } from './styles'
 
 interface IAvataresProps {
-  persons: IPersonPreview[]
+  persons: IPersonPreview[] | IPersonInObject[]
   firstButtonIcon?: ReactNode
   secondaryButtonIcon?: ReactNode
   internalButtonIcon?: ReactNode

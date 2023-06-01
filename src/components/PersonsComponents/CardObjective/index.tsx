@@ -1,4 +1,4 @@
-import { IObjective } from '@api/responsesTypes/IPersonsResponse'
+import { IObjective, IPersonInObject } from '@api/responsesTypes/person/IPerson'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ListEmpty } from '@components/usefull/ListEmpty'
 import { Text } from '@components/usefull/Text'
@@ -20,8 +20,8 @@ import {
 
 interface ICardObjectiveProps {
   objective: IObjective
-  avoiders: Array<{ id: string; name: string; image_url: string | null }>
-  supporters: Array<{ id: string; name: string; image_url: string | null }>
+  avoiders: IPersonInObject[]
+  supporters: IPersonInObject[]
 }
 
 export function CardObjective({
@@ -42,7 +42,7 @@ export function CardObjective({
             Titulo
           </Text>
           <Text weight="bold" size="2xl" family="body" height="shorter">
-            {objective.title}
+            {objective.infos.title}
           </Text>
         </ItemInfo>
 
@@ -51,7 +51,7 @@ export function CardObjective({
             Descrição
           </Text>
           <Text size="xl" family="body" weight="bold" height="shorter">
-            {objective.description}
+            {objective.infos.description}
           </Text>
         </ItemInfo>
 
@@ -62,12 +62,12 @@ export function CardObjective({
           <Text
             weight="bold"
             css={{
-              color: objective.it_be_realized
+              color: objective.infos.itBeRealized
                 ? '$successDefault'
                 : '$errorDefault',
             }}
           >
-            {objective.it_be_realized ? 'Sim' : 'Não'}
+            {objective.infos.itBeRealized ? 'Sim' : 'Não'}
           </Text>
         </ItemInfo>
       </ObjectiveInfos>
@@ -88,9 +88,13 @@ export function CardObjective({
                   router.push(`/project/${projectId}/persons/${avoider.id}`)
                 }
               >
-                <AvatarWeb src={avoider?.image_url ?? undefined} size="sm" />
+                <AvatarWeb
+                  src={avoider?.image.url}
+                  alt={avoider.image.url}
+                  size="sm"
+                />
                 <Text as="label" size="sm" family="body" height="shorter">
-                  {avoider.name}
+                  {avoider.name.first}
                 </Text>
               </ItemInfo>
             ))
@@ -116,9 +120,13 @@ export function CardObjective({
                   router.push(`/project/${projectId}/persons/${supporter.id}`)
                 }
               >
-                <AvatarWeb src={supporter?.image_url ?? undefined} size="sm" />
+                <AvatarWeb
+                  src={supporter?.image.url}
+                  alt={supporter.image.alt}
+                  size="sm"
+                />
                 <Text as="label" size="sm" family="body" height="shorter">
-                  {supporter.name}
+                  {supporter.name.first}
                 </Text>
               </ItemInfo>
             ))

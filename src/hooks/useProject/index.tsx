@@ -1,4 +1,5 @@
 import { getProjectRequest } from '@api/projectsRequests'
+import { IPersonPreview } from '@api/responsesTypes/person/IPersonPreview'
 import { IProject } from '@api/responsesTypes/project/IProject'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useProjects } from '@hooks/useProjects'
@@ -148,15 +149,14 @@ export function useProject(id: string) {
     const reverse = config?.reverse ?? false
 
     if (reverse) {
-      const filteredPersons = project?.collections.person.itens.filter(
-        (person) => {
+      const filteredPersons =
+        project?.collections.person.itens.filter((person) => {
           const personToRemove = ids?.find((id) => id === person.id)
 
           if (personToRemove) return false
 
           return true
-        },
-      )
+        }) ?? []
 
       return filteredPersons ?? []
     } else {
@@ -170,7 +170,7 @@ export function useProject(id: string) {
 
       const persons = queryPersons?.filter(
         (queriedPerson) => queriedPerson !== undefined,
-      )
+      ) as IPersonPreview[]
 
       return persons ?? []
     }
