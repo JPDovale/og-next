@@ -13,6 +13,7 @@ import aloneLogoImg from '../../assets/logos/ogLogo.png'
 
 import {
   Article,
+  Atom,
   Files,
   ProjectorScreen,
   SignIn,
@@ -76,6 +77,15 @@ export function Header({ disableShadow = false }: IHeaderProps) {
                     <Files weight="fill" />
                   </ButtonIcon>
                   <ButtonLabel>Documentação</ButtonLabel>
+                </ButtonRoot>
+              </Link>
+
+              <Link href={'https://forgecontentai.magiscrita.com/'}>
+                <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
+                  <ButtonIcon>
+                    <Atom weight="fill" />
+                  </ButtonIcon>
+                  <ButtonLabel>Forge Content AI</ButtonLabel>
                 </ButtonRoot>
               </Link>
             </>
