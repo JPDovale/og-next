@@ -311,7 +311,7 @@ export default function TimeLinePage() {
                   alignItems: 'center',
                 }}
               >
-                <Text weight="bold" family="body" size="3xl" height="shorter">
+                <Text weight="bold" family="body" size="2xl" height="shorter">
                   {eventSelectedToShow?.title}
                 </Text>
 
@@ -374,43 +374,44 @@ export default function TimeLinePage() {
                 </ContainerGrid>
               )}
 
-              {eventSelectedToShow?.timeEventToDo && (
-                <ContainerGrid padding={0}>
-                  <InfoDefault
-                    title={
-                      eventSelectedToShow?.timeEventToDo.completed_at
-                        ? 'Concluído:'
-                        : 'Marcar como concluído'
-                    }
-                  >
-                    {eventSelectedToShow?.timeEventToDo.completed_at ? (
-                      <Text family="body" size="lg" weight="bold">
-                        {getDate(
-                          eventSelectedToShow?.timeEventToDo.completed_at,
-                        )}
-                      </Text>
-                    ) : (
-                      <ButtonRoot
-                        onClick={handleDoneTimeEvent}
-                        size="xs"
-                        variant="noShadow"
-                      >
-                        <ButtonIcon>
-                          <Check />
-                        </ButtonIcon>
+              {eventSelectedToShow?.timeEventToDo &&
+                eventSelectedToShow.importance > 2 && (
+                  <ContainerGrid padding={0}>
+                    <InfoDefault
+                      title={
+                        eventSelectedToShow?.timeEventToDo.completed_at
+                          ? 'Concluído:'
+                          : 'Marcar como concluído'
+                      }
+                    >
+                      {eventSelectedToShow?.timeEventToDo.completed_at ? (
+                        <Text family="body" size="lg" weight="bold">
+                          {getDate(
+                            eventSelectedToShow?.timeEventToDo.completed_at,
+                          )}
+                        </Text>
+                      ) : (
+                        <ButtonRoot
+                          onClick={handleDoneTimeEvent}
+                          size="xs"
+                          variant="noShadow"
+                        >
+                          <ButtonIcon>
+                            <Check />
+                          </ButtonIcon>
 
-                        <ButtonLabel>Marcar como concluído</ButtonLabel>
-                      </ButtonRoot>
-                    )}
-                  </InfoDefault>
-                  {/* 
+                          <ButtonLabel>Marcar como concluído</ButtonLabel>
+                        </ButtonRoot>
+                      )}
+                    </InfoDefault>
+                    {/* 
                   <CommentsOnPage
                     onNewComment={() => {}}
                     comments={eventSelectedToShow.comments}
                     size="xxs"
                   /> */}
-                </ContainerGrid>
-              )}
+                  </ContainerGrid>
+                )}
             </ContainerGrid>
           </ContainerGrid>
         </ContainerGrid>
