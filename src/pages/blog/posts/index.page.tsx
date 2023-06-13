@@ -41,7 +41,7 @@ export default function PostsPage({ posts }: IPostPageProps) {
       <NextSeo title="Blog | MagiScrita" />
 
       <PostsPageContainer>
-        <Header user={null} userIsPro={false} />
+        <Header />
 
         <Group>
           <Heading as="h1" size="lg">
