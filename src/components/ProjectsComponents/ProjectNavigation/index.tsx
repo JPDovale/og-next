@@ -7,7 +7,7 @@ import {
   ProjectNavigationContainer,
 } from './styles'
 
-import logoSvg from '../../../assets/logos/logoOG.png'
+import logoSvg from '../../../assets/logos/logo.png'
 import {
   ArrowFatLinesDown,
   ArrowFatLinesUp,

@@ -1,6 +1,6 @@
 import { ButtonsContainer, NavigationBarContainer } from './styles'
 import * as Dialog from '@radix-ui/react-dialog'
-import LogoToLeft from '../../assets/logos/logoOG.png'
+import LogoToLeft from '../../assets/logos/logo.png'
 import {
   Article,
   Bookmark,
@@ -9,7 +9,7 @@ import {
   ListChecks,
   Package,
   ProjectorScreenChart,
-  // Star,
+  Star,
   UserCircle,
   UsersThree,
   XCircle,
@@ -287,7 +287,7 @@ export function NavigationBar() {
 
           {navIsOpen && <ButtonLabel>Documentação</ButtonLabel>}
         </ButtonRoot>
-        {/* {!userIsPro && (
+        {!userIsPro && (
           <ButtonRoot
             type="button"
             title="Pro"
@@ -301,7 +301,7 @@ export function NavigationBar() {
 
             {navIsOpen && <ButtonLabel>Pro</ButtonLabel>}
           </ButtonRoot>
-        )} */}
+        )}
         {smallWindow && (
           <>
             <Text

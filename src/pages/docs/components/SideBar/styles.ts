@@ -12,6 +12,7 @@ export const SideBarContainer = styled('aside', {
   overflowY: 'auto',
   borderRight: '1px solid $purple500',
   transition: 'ease-in-out 250ms',
+  color: '$text800',
 
   '@media screen and (max-width: 768px)': {
     position: 'fixed',
