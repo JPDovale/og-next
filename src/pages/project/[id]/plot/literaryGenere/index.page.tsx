@@ -24,14 +24,14 @@ export default function LiteraryGenerePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsLiteraryGenre = project?.comments?.filter(
+  const commentsLiteraryGenre = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'literaryGenre',
   )
 
   async function handleUpdateLiteraryGenere() {
     setSuccessMessage('')
 
-    if (literaryGenre === project?.one_phrase) return
+    if (literaryGenre === project?.plot.literaryGenre) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       literaryGenre: literaryGenre || null,
@@ -84,7 +84,7 @@ export default function LiteraryGenerePage() {
         <Editor
           handleUpdate={handleUpdateLiteraryGenere}
           permission={permission}
-          preValue={project?.literary_genre ?? ''}
+          preValue={project?.plot.literaryGenre ?? ''}
           projectId={project!.id}
           setValue={setLiteraryGenre}
           to="literaryGenre"
@@ -127,7 +127,7 @@ export default function LiteraryGenerePage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsLiteraryGenre}
-          isNew={!project?.literary_genre}
+          isNew={!project?.plot.literaryGenre}
           onNewComment={handleNewComment}
           onNewCommentTo="literaryGenre"
         />

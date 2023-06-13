@@ -1,4 +1,4 @@
-import { IPower } from '@api/responsesTypes/IPersonsResponse'
+import { IPower } from '@api/responsesTypes/person/IPerson'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -16,26 +16,22 @@ export function Power({ onClick, selected, power }: IPowerProps) {
     <PowerContainer selected={selected} onClick={onClick}>
       <InfoDefault title="Titulo:">
         <Text weight="bold" family="body">
-          {power.title}
+          {power.infos.title}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Descrição:">
         <Text weight="bold" family="body">
-          {power.description.slice(0, 100)}
-          {power.description.length > 120 && '...'}
+          {power.infos.description.slice(0, 100)}
+          {power.infos.description.length > 120 && '...'}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Personagens associados:">
         <ContainerGrid padding={0} columns={6}>
-          {power.persons?.map((person) => (
+          {power.collections.referencesIt.itens?.map((person) => (
             <ContainerGrid padding={0} key={person.id} css={{ gap: 0 }}>
-              <AvatarWeb
-                src={person.image_url ?? undefined}
-                size="xsm"
-                selfCenter
-              />
+              <AvatarWeb src={person.image.url} size="xsm" selfCenter />
               <Text
                 family="body"
                 height="shorter"
@@ -43,7 +39,7 @@ export function Power({ onClick, selected, power }: IPowerProps) {
                 weight="bold"
                 css={{ textAlign: 'center' }}
               >
-                {person.name}
+                {person.name.first}
               </Text>
             </ContainerGrid>
           ))}

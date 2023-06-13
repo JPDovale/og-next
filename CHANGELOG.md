@@ -1,5 +1,11 @@
 # og-next
 
+## 1.1.3
+
+### Patch Changes
+
+- Update recive types of api
+
 ## 1.1.2
 
 ### Patch Changes

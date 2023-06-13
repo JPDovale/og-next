@@ -55,11 +55,11 @@ export function UpdateBookForm({ bookId }: IUpdateBookFormProps) {
   } = useForm<UpdateBookData>({
     resolver: zodResolver(updateBookFormSchema),
     defaultValues: {
-      title: book?.title,
-      subtitle: book?.subtitle,
-      isbn: book?.isbn,
-      literaryGenere: book?.literary_genre,
-      words: book?.words,
+      title: book?.name.title,
+      subtitle: book?.name.subtitle,
+      isbn: book?.infos.isbn,
+      literaryGenere: book?.infos.literaryGenre,
+      words: book?.infos.words,
     },
   })
 

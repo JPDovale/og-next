@@ -1,8 +1,8 @@
-import { IDream, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IDream, IPerson } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindDream {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -15,7 +15,9 @@ interface IResponseDream {
 }
 
 export function findDreamUtil({ id, person }: IFindDream): IResponseDream {
-  const dream = person?.dreams?.find((dream) => dream.id === id)
+  const dream = person?.collections.dream.itens?.find(
+    (dream) => dream.id === id,
+  )
 
   const response: IResponseDream = {
     dream,

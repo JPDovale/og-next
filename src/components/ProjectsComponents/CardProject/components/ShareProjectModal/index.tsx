@@ -31,7 +31,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
 
   const isDarkMode = theme === 'dark'
 
-  const { projectName, usersInProject, loadingProject, callEvent } =
+  const { projectName, project, loadingProject, callEvent } =
     useProject(projectId)
 
   async function handleShareProject(e: FormEvent<HTMLFormElement>) {
@@ -41,7 +41,7 @@ export function ShareProjectModal({ projectId }: IShareProjectModalProps) {
       return setErrorIn('email')
     }
 
-    const userInExisteProject = usersInProject.find(
+    const userInExisteProject = project?.users.find(
       (user) => user.email === shareEmail,
     )
 

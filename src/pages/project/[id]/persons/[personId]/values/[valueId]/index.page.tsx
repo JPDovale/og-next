@@ -49,7 +49,10 @@ export default function ValuePage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-${value?.title} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${value?.infos.title} | Magiscrita`}
+        noindex
+      />
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
@@ -57,7 +60,7 @@ export default function ValuePage() {
           'Personagens',
           `${personName}`,
           'Valores',
-          value?.title ?? 'Carregando...',
+          value?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -82,13 +85,13 @@ export default function ValuePage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {value?.title}
+                {value?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {value?.description}
+                {value?.infos.description}
               </Text>
             </InfoDefault>
 
@@ -96,10 +99,16 @@ export default function ValuePage() {
               <ContainerGrid
                 css={{ gap: '$8', marginTop: '$4' }}
                 padding={0}
-                columns={value?.exceptions && value.exceptions[0] ? 2 : 1}
+                columns={
+                  value?.collections.exception.itens &&
+                  value.collections.exception.itens[0]
+                    ? 2
+                    : 1
+                }
               >
-                {value?.exceptions && value.exceptions[0] ? (
-                  value.exceptions.map((exception) => (
+                {value?.collections.exception.itens &&
+                value.collections.exception.itens[0] ? (
+                  value.collections.exception.itens.map((exception) => (
                     <ContainerGrid
                       padding={4}
                       css={{
@@ -116,13 +125,13 @@ export default function ValuePage() {
                           height="shorter"
                           weight="bold"
                         >
-                          {exception?.title}
+                          {exception?.infos.title}
                         </Text>
                       </InfoDefault>
 
                       <InfoDefault title="Descrição:">
                         <Text family="body" height="shorter" weight="bold">
-                          {exception?.description}
+                          {exception?.infos.description}
                         </Text>
                       </InfoDefault>
                     </ContainerGrid>
@@ -139,8 +148,8 @@ export default function ValuePage() {
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {value?.created_at
-                  ? getDate(value?.created_at)
+                {value?.infos.createdAt
+                  ? getDate(value?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -150,7 +159,7 @@ export default function ValuePage() {
         <CommentsOnPage
           onNewComment={handleCommentInValue}
           permission={permission}
-          comments={value?.comments}
+          comments={value?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics

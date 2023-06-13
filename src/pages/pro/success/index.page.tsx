@@ -24,7 +24,7 @@ export default function ProSuccessPage() {
       <NextSeo title="Bem-vindo ao premium" noindex />
 
       <ProSuccessPageContainer>
-        <Header />
+        <Header userIsPro={true} user={user} />
 
         <CongratsContainer>
           <Heading css={{ marginBottom: '$8' }}>

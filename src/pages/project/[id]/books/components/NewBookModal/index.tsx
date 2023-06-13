@@ -83,9 +83,7 @@ export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
   const router = useRouter()
   const { id } = router.query
 
-  const { callEvent, usersWithPermissionEdit, project } = useProject(
-    id as string,
-  )
+  const { callEvent, project } = useProject(id as string)
 
   const isDarkMode = theme === 'dark'
 
@@ -156,15 +154,16 @@ export function NewBookModal({ openToast, onSuccess }: INewBookModalProps) {
       literaryGenre: data.literaryGenre,
       title: data.title,
       subtitle: data.subtitle,
-      authors: [{ user_id: project!.user.id }],
+      authors: [{ user_id: project!.creator.id }],
       isbn: data.isbn,
       words: data.words,
       writtenWords: data.writtenWords,
     }
 
-    usersWithPermissionEdit.map((user) =>
-      newBook.authors.push({ user_id: user.id }),
-    )
+    project?.users.map((user) => {
+      if (user.permission !== 'edit') return ''
+      return newBook.authors.push({ user_id: user.id })
+    })
 
     const { resolved, error } = await callEvent.createBook(newBook)
 

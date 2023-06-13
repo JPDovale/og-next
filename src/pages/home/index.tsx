@@ -1,13 +1,25 @@
 import { NextSeo } from 'next-seo'
 import { HomeContent, HomePageContainer, SideInfo } from './styles'
 
-import aloneLogoImg from '../../assets/logos/logoOG.png'
+import aloneLogoImg from '../../assets/logos/logo.png'
 import Image from 'next/image'
 import { Header } from '@components/Header'
 import { Text } from '@components/usefull/Text'
 import { Heading } from '@components/usefull/Heading'
+import { GetServerSideProps } from 'next'
+import { getUserRequest, refreshSessionRequest } from '@api/userRequest'
+import { IResponse } from '@api/responses/IResponse'
+import { IUser, IUserResponse } from '@api/responsesTypes/user/IUser'
 
-export default function HomePage() {
+interface IHomePageProps {
+  user: IUser | null
+}
+
+export default function HomePage({ user }: IHomePageProps) {
+  const userIsPro = user
+    ? user.account.subscription?.status === 'active'
+    : false
+
   return (
     <>
       <NextSeo
@@ -16,7 +28,7 @@ export default function HomePage() {
       />
 
       <HomePageContainer>
-        <Header />
+        <Header user={user} userIsPro={userIsPro} />
 
         <HomeContent>
           <SideInfo>
@@ -38,4 +50,35 @@ export default function HomePage() {
       </HomePageContainer>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  let response: IResponse<IUserResponse> | null
+
+  response = await getUserRequest({
+    cookies: {
+      token: String(req.cookies['@og-token']),
+      refreshToken: String(req.cookies['@og-refresh-token']),
+    },
+  })
+
+  if (response.error) {
+    const refreshed = await refreshSessionRequest({ setToken: true })
+
+    if (refreshed.error) {
+      return {
+        props: {
+          user: null,
+        },
+      }
+    } else {
+      response = await getUserRequest()
+    }
+  }
+
+  return {
+    props: {
+      user: response.data ? response.data?.user : null,
+    },
+  }
 }

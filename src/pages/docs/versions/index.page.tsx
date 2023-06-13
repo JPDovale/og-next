@@ -38,7 +38,7 @@ export default function VersionsPage({
       <NextSeo title="Documentação - Versionamento | MagiScrita" />
 
       <VersionsPageContainer>
-        <Header disableShadow />
+        <Header user={null} userIsPro={false} disableShadow />
 
         <Documentation>
           <SideBar

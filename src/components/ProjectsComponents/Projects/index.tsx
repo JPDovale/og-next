@@ -1,5 +1,5 @@
+import { IProjectPreview } from '@api/responsesTypes/project/IProjectPreview'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { IProjectPreview } from '@hooks/useProjects/entities/IProjectPreview'
 import { useUser } from '@hooks/useUser'
 import { ProjectorScreenChart } from 'phosphor-react'
 import { CardProject } from '../CardProject'

@@ -15,7 +15,7 @@ import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Heading } from '@components/usefull/Heading'
 import { Text } from '@components/usefull/Text'
 import { getDate } from '@utils/dates/getDate'
-import { IUserInProject, useProject } from '@hooks/useProject'
+import { useProject } from '@hooks/useProject'
 import { useRouter } from 'next/router'
 import { useUser } from '@hooks/useUser'
 import { ICreateCommentDTO } from '@api/dtos/ICreateNewCommentDTO'
@@ -39,14 +39,13 @@ export function Comment({
   const router = useRouter()
   const { id } = router.query
 
-  const { usersInProject, project, callEvent } = useProject(id as string)
+  const { project, callEvent } = useProject(id as string)
   const { user } = useUser()
 
   const responses = comment.responses
 
-  const userComment = (usersInProject.find(
-    (user) => user.id === comment.user_id,
-  ) || user) as IUserInProject
+  const userComment = project?.users.find((user) => user.id === comment.user_id)
+  const userIsCommenter = !!userComment
 
   async function handleNewResponse(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -70,12 +69,21 @@ export function Comment({
   }
 
   return (
-    <CommentContainer key={userComment?.id}>
+    <CommentContainer
+      key={userIsCommenter ? userComment?.id : user?.account.id}
+    >
       <HeaderComment>
-        <AvatarWeb src={userComment?.avatar_url ?? undefined} size="sm" />
+        <AvatarWeb
+          src={
+            userIsCommenter ? userComment?.avatar.url : user?.infos.avatar.url
+          }
+          size="sm"
+        />
         <Text as="span" size="2xl" height="shorter" weight="bold" family="body">
           {userComment?.username}
-          {userComment?.id === project?.user.id && ' (Criador)'}
+          {userIsCommenter
+            ? userComment?.id === project?.creator.id && ' (Criador)'
+            : user?.account.id === project?.creator.id && ' (Criador)'}
           <Text as="span" size="xxs">
             {getDate(comment.created_at)}
           </Text>
@@ -97,20 +105,31 @@ export function Comment({
 
           {responses &&
             responses.map((response) => {
-              const userResponse = (usersInProject.find(
+              const userResponse = project?.users.find(
                 (user) => user.id === response.user_id,
-              ) || user) as IUserInProject
+              )
+              const userIsResponser = !!userResponse
 
               return (
                 <Response key={response.id}>
                   <HeaderComment isPreview="false">
                     <AvatarWeb
-                      src={userResponse?.avatar_url ?? undefined}
+                      src={
+                        userIsResponser
+                          ? userResponse?.avatar.url
+                          : user?.infos.avatar.url
+                      }
                       size="sm"
                     />
                     <Heading as="span" size="sm">
-                      {userResponse?.username}
-                      {userResponse?.id === project?.user.id && ' (Criador)'}
+                      {userIsResponser
+                        ? userResponse?.username
+                        : user?.infos.username}
+                      {userIsResponser
+                        ? userResponse?.id === project?.creator.id &&
+                          ' (Criador)'
+                        : user?.account.id === project?.creator.id &&
+                          ' (Criador)'}
                       <Text as="p" size="xxs">
                         {getDate(response.created_at)}
                       </Text>

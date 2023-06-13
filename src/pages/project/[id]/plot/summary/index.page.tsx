@@ -24,14 +24,14 @@ export default function SummaryPage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsSummary = project?.comments?.filter(
+  const commentsSummary = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'summary',
   )
 
   async function handleUpdateSummary() {
     setSuccessMessage('')
 
-    if (summary === project?.summary) return
+    if (summary === project?.plot.summary) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       summary: summary || null,
@@ -84,7 +84,7 @@ export default function SummaryPage() {
         <Editor
           handleUpdate={handleUpdateSummary}
           permission={permission}
-          preValue={project?.summary ?? ''}
+          preValue={project?.plot.summary ?? ''}
           projectId={project!.id}
           setValue={setSummary}
           to="summary"
@@ -114,7 +114,7 @@ export default function SummaryPage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsSummary}
-          isNew={!project?.summary}
+          isNew={!project?.plot.summary}
           onNewComment={handleNewComment}
           onNewCommentTo="summary"
         />

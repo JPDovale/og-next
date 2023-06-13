@@ -24,14 +24,14 @@ export default function StorytellerPage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsStoryteller = project?.comments?.filter(
+  const commentsStoryteller = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'storyteller',
   )
 
   async function handleUpdateStoryteller() {
     setSuccessMessage('')
 
-    if (storyteller === project?.storyteller) return
+    if (storyteller === project?.plot.storyteller) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       storyteller: storyteller || null,
@@ -85,7 +85,7 @@ export default function StorytellerPage() {
         <Editor
           handleUpdate={handleUpdateStoryteller}
           permission={permission}
-          preValue={project?.storyteller ?? ''}
+          preValue={project?.plot.storyteller ?? ''}
           projectId={project!.id}
           setValue={setStoryteller}
           to="storyteller"
@@ -122,7 +122,7 @@ export default function StorytellerPage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsStoryteller}
-          isNew={!project?.storyteller}
+          isNew={!project?.plot.storyteller}
           onNewComment={handleNewComment}
           onNewCommentTo="storyteller"
         />

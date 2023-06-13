@@ -7,7 +7,7 @@ import {
   ProjectNavigationContainer,
 } from './styles'
 
-import logoSvg from '../../../assets/logos/logoOG.png'
+import logoSvg from '../../../assets/logos/logo.png'
 import {
   ArrowFatLinesDown,
   ArrowFatLinesUp,
@@ -672,7 +672,7 @@ export function ProjectNavigation({
                 </ButtonIcon>
               </ButtonRoot>
             </Label>
-            {project?.user.id !== user?.account.id && (
+            {project?.creator.id !== user?.account.id && (
               <Label size="sm" height="shorter" family="body" weight="bold">
                 {navigatorProjectIsOpen && 'Sair do projeto'}
 
@@ -694,7 +694,7 @@ export function ProjectNavigation({
                 </ButtonRoot>
               </Label>
             )}
-            {project?.user.id === user?.account.id && (
+            {project?.creator.id === user?.account.id && (
               <>
                 <Label
                   size="xxs"
@@ -727,7 +727,7 @@ export function ProjectNavigation({
           </Options>
         </OptionsContainer>
       </ProjectNavigationContainer>
-      {onOpenDelete && project?.user.id === user?.account.id && (
+      {onOpenDelete && project?.creator.id === user?.account.id && (
         <DeletePopUp>
           <Box as="div">
             <Text size="sm">
@@ -768,7 +768,7 @@ export function ProjectNavigation({
         </DeletePopUp>
       )}
 
-      {onOpenQuit && project?.user.id !== user?.account.id && (
+      {onOpenQuit && project?.creator.id !== user?.account.id && (
         <DeletePopUp>
           <Box as="div">
             <Text size="sm">

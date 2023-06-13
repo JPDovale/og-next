@@ -24,14 +24,14 @@ export default function CountTimePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsCountTime = project?.comments?.filter(
+  const commentsCountTime = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'countTime',
   )
 
   async function handleUpdateCountTime() {
     setSuccessMessage('')
 
-    if (countTime === project?.count_time) return
+    if (countTime === project?.plot.countTime) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       countTime: countTime || null,
@@ -86,7 +86,7 @@ export default function CountTimePage() {
         <Editor
           handleUpdate={handleUpdateCountTime}
           permission={permission}
-          preValue={project?.count_time ?? ''}
+          preValue={project?.plot.countTime ?? ''}
           projectId={project!.id}
           setValue={setCountTime}
           to="countTime"
@@ -118,7 +118,7 @@ export default function CountTimePage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsCountTime}
-          isNew={!project?.count_time}
+          isNew={!project?.plot.countTime}
           onNewComment={handleNewComment}
           onNewCommentTo="countTime"
         />

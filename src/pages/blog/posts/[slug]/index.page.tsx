@@ -39,7 +39,7 @@ export default function PostPage({ post }: IPostPage) {
       <NextSeo title={post.title} description={post.excerpt} />
 
       <PostPageContainer>
-        <Header />
+        <Header user={null} userIsPro={false} />
 
         <PostBody>
           <PostTitle css={{ fontSize: smallWindow ? '$5xl' : '$7xl' }}>

@@ -40,7 +40,7 @@ export function ProjectPageLayout({
     (path) => path.toLowerCase().trim() === 'configurações',
   )
   const isToShowAlert =
-    project?.initial_date === 'non-set' &&
+    project?.initialDate.year === 'Não definido' &&
     project.features.timeLines &&
     !inConfigPage
 

@@ -1,8 +1,8 @@
-import { ITrauma, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson, ITrauma } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindTrauma {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -16,7 +16,9 @@ interface IResponseTrauma {
 }
 
 export function findTraumaUtil({ id, person }: IFindTrauma): IResponseTrauma {
-  const trauma = person?.traumas?.find((trauma) => trauma.id === id)
+  const trauma = person?.collections.trauma.itens?.find(
+    (trauma) => trauma.id === id,
+  )
 
   const response: IResponseTrauma = {
     trauma,

@@ -1,5 +1,5 @@
 import { getWishesRequest } from '@api/projectsRequests'
-import { IWishe } from '@api/responsesTypes/IPersonsResponse'
+import { IWishe } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -24,7 +24,7 @@ export function useWishes(projectId: string) {
         }
       }
 
-      const wishes = response.wishes as IWishe[]
+      const wishes = response.data?.wishes as IWishe[]
 
       return { wishes, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function useWishes(projectId: string) {
 
   function findWisheWherePersonNotExisteIn(personId: string) {
     const wishesWherePersonNorFund = wishes.filter((wishe) => {
-      const personExisteInWishe = wishe.persons?.find(
+      const personExisteInWishe = wishe.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

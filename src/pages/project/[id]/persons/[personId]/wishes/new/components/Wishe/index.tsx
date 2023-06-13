@@ -1,4 +1,4 @@
-import { IWishe } from '@api/responsesTypes/IPersonsResponse'
+import { IWishe } from '@api/responsesTypes/person/IPerson'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -16,26 +16,22 @@ export function Wishe({ onClick, selected, wishe }: IWisheProps) {
     <WisheContainer selected={selected} onClick={onClick}>
       <InfoDefault title="Titulo:">
         <Text weight="bold" family="body">
-          {wishe.title}
+          {wishe.infos.title}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Descrição:">
         <Text weight="bold" family="body">
-          {wishe.description.slice(0, 100)}
-          {wishe.description.length > 120 && '...'}
+          {wishe.infos.description.slice(0, 100)}
+          {wishe.infos.description.length > 120 && '...'}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Personagens associados:">
         <ContainerGrid padding={0} columns={6}>
-          {wishe.persons?.map((person) => (
+          {wishe.collections.referencesIt.itens?.map((person) => (
             <ContainerGrid padding={0} key={person.id} css={{ gap: 0 }}>
-              <AvatarWeb
-                src={person.image_url ?? undefined}
-                size="xsm"
-                selfCenter
-              />
+              <AvatarWeb src={person.image.url} size="xsm" selfCenter />
               <Text
                 family="body"
                 height="shorter"
@@ -43,7 +39,7 @@ export function Wishe({ onClick, selected, wishe }: IWisheProps) {
                 weight="bold"
                 css={{ textAlign: 'center' }}
               >
-                {person.name}
+                {person.name.first}
               </Text>
             </ContainerGrid>
           ))}

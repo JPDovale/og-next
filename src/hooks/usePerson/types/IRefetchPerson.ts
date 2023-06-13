@@ -1,4 +1,4 @@
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson } from '@api/responsesTypes/person/IPerson'
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -10,7 +10,7 @@ export type IRefetchPerson = <TPageData>(
 ) => Promise<
   QueryObserverResult<
     | {
-        person: IPersonsResponse
+        person: IPerson
         errorMessage: string | null
         errorTitle: string | null
       }

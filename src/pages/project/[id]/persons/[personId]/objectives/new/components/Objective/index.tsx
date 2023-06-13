@@ -1,4 +1,4 @@
-import { IObjective } from '@api/responsesTypes/IPersonsResponse'
+import { IObjective } from '@api/responsesTypes/person/IPerson'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -16,7 +16,7 @@ export function Objective({ objective, selected, onClick }: IObjectiveProps) {
     <ObjectiveContainer selected={selected} onClick={onClick}>
       <InfoDefault title="Titulo:">
         <Text weight="bold" family="body">
-          {objective.title}
+          {objective.infos.title}
         </Text>
       </InfoDefault>
 
@@ -28,7 +28,7 @@ export function Objective({ objective, selected, onClick }: IObjectiveProps) {
             size="xl"
             css={{ color: '$successDefault' }}
           >
-            {objective.supporters?._count?.persons}
+            {objective.collections.supporter.itensLength}
           </Text>
         </InfoDefault>
 
@@ -39,20 +39,16 @@ export function Objective({ objective, selected, onClick }: IObjectiveProps) {
             size="xl"
             css={{ color: '$fullError' }}
           >
-            {objective.avoiders?._count?.persons}
+            {objective.collections.avoider.itensLength}
           </Text>
         </InfoDefault>
       </ContainerGrid>
 
       <InfoDefault title="Personagens associados:">
         <ContainerGrid padding={0} columns={6}>
-          {objective.persons?.map((person) => (
+          {objective.collections.referencesIt.itens?.map((person) => (
             <ContainerGrid padding={0} key={person.id} css={{ gap: 0 }}>
-              <AvatarWeb
-                src={person.image_url ?? undefined}
-                size="xsm"
-                selfCenter
-              />
+              <AvatarWeb src={person.image.url} size="xsm" selfCenter />
               <Text
                 family="body"
                 height="shorter"
@@ -60,7 +56,7 @@ export function Objective({ objective, selected, onClick }: IObjectiveProps) {
                 weight="bold"
                 css={{ textAlign: 'center' }}
               >
-                {person.name}
+                {person.name.first}
               </Text>
             </ContainerGrid>
           ))}

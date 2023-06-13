@@ -1,10 +1,9 @@
 import { getPersonRequest } from '@api/personsRequests'
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useProject } from '@hooks/useProject'
 import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
-import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { commentInPerson } from './events/commentInPerson'
 import { createObject } from './events/createObject'
@@ -50,7 +49,7 @@ export function usePerson(id: string) {
         }
       }
 
-      const person = response.person as IPersonsResponse
+      const person = response.data?.person as IPerson
 
       return { person, errorMessage, errorTitle }
     },
@@ -60,43 +59,14 @@ export function usePerson(id: string) {
   )
 
   const refetchPerson = refetch
-
   const person = data?.person ?? null
-
-  const { couples } = useMemo(() => {
-    const couples = person?.couples ?? []
-
-    person?.coupleWithPersons?.map((CWP) => {
-      const existeCoupleIn = couples.find(
-        (couple) => couple.id === CWP.couple.id,
-      )
-
-      if (existeCoupleIn) return ''
-
-      return couples.push({
-        ...CWP.couple,
-        person_id: CWP.person_id,
-        coupleWithPerson: {
-          ...CWP.couple.coupleWithPerson,
-          person_id: CWP.couple.person_id,
-        },
-      })
-    })
-
-    return {
-      couples,
-    }
-  }, [person])
-
   const loadingPerson = !(!loadingUser && !isLoading)
   const historyPersons = person?.history ?? 'Carregando...'
-  const personName = person?.name
-    ? `${person?.name} ${person?.last_name}`
-    : 'Carregando...'
+  const personName = person?.name.full ?? 'Carregando...'
 
   const personInfos = constructInfos(person)
 
-  const { refetchProject } = useProject(person?.project_id ?? '')
+  const { refetchProject } = useProject(person?.infos.projectId ?? '')
   const { refetchProjects } = useProjects()
 
   function findObjective(id: string) {
@@ -161,7 +131,6 @@ export function usePerson(id: string) {
 
   return {
     person,
-    couples,
     loadingPerson,
     historyPersons,
     personName,
