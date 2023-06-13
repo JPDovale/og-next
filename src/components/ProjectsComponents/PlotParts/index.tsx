@@ -29,8 +29,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Ideia central"
-        element={project?.one_phrase}
-        disabled={permission !== 'edit' && !project?.one_phrase}
+        element={project?.plot?.onePhrase}
+        disabled={permission !== 'edit' && !project?.plot?.onePhrase}
         keyValue={`${!isToProject ? 'plot/' : ''}onePhrase`}
       />
 
@@ -40,8 +40,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Premissa"
-        element={project?.premise}
-        disabled={permission !== 'edit' && !project?.premise}
+        element={project?.plot?.premise}
+        disabled={permission !== 'edit' && !project?.plot?.premise}
         keyValue={`${!isToProject ? 'plot/' : ''}premise`}
       />
       <PlotPart
@@ -50,8 +50,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Narrador"
-        element={project?.storyteller}
-        disabled={permission !== 'edit' && !project?.storyteller}
+        element={project?.plot.storyteller}
+        disabled={permission !== 'edit' && !project?.plot.storyteller}
         keyValue={`${!isToProject ? 'plot/' : ''}storyteller`}
       />
       {project && (
@@ -62,8 +62,8 @@ export function PlotParts({
             isPreview={isPreview}
             permission={permission}
             to="Gênero literário"
-            element={project.literary_genre}
-            disabled={permission !== 'edit' && !project.literary_genre}
+            element={project.plot.literaryGenre}
+            disabled={permission !== 'edit' && !project.plot.literaryGenre}
             keyValue={`${!isToProject ? 'plot/' : ''}literaryGenere`}
           />
           <PlotPart
@@ -72,8 +72,8 @@ export function PlotParts({
             isPreview={isPreview}
             permission={permission}
             to="Subgênero"
-            element={project.subgenre}
-            disabled={permission !== 'edit' && !project.subgenre}
+            element={project.plot.subgenre}
+            disabled={permission !== 'edit' && !project.plot.subgenre}
             keyValue={`${!isToProject ? 'plot/' : ''}subgenre`}
           />
         </>
@@ -85,8 +85,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Ambiente"
-        element={project?.ambient}
-        disabled={permission !== 'edit' && !project?.ambient}
+        element={project?.plot.ambient}
+        disabled={permission !== 'edit' && !project?.plot.ambient}
         keyValue={`${!isToProject ? 'plot/' : ''}ambient`}
       />
       <PlotPart
@@ -95,8 +95,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Tempo em que se passa"
-        element={project?.count_time}
-        disabled={permission !== 'edit' && !project?.count_time}
+        element={project?.plot.countTime}
+        disabled={permission !== 'edit' && !project?.plot.countTime}
         keyValue={`${!isToProject ? 'plot/' : ''}countTime`}
       />
       <PlotPart
@@ -105,8 +105,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Fato histórico"
-        element={project?.historical_fact}
-        disabled={permission !== 'edit' && !project?.historical_fact}
+        element={project?.plot.historicalFact}
+        disabled={permission !== 'edit' && !project?.plot.historicalFact}
         keyValue={`${!isToProject ? 'plot/' : ''}historicalFact`}
       />
       <PlotPart
@@ -115,8 +115,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Detalhes"
-        element={project?.details}
-        disabled={permission !== 'edit' && !project?.details}
+        element={project?.plot.details}
+        disabled={permission !== 'edit' && !project?.plot.details}
         keyValue={`${!isToProject ? 'plot/' : ''}details`}
       />
       <PlotPart
@@ -125,8 +125,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Resumo"
-        element={project?.summary}
-        disabled={permission !== 'edit' && !project?.summary}
+        element={project?.plot.summary}
+        disabled={permission !== 'edit' && !project?.plot.summary}
         keyValue={`${!isToProject ? 'plot/' : ''}summary`}
       />
       <PlotPart
@@ -135,8 +135,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Estrutura: Ato 1"
-        element={project?.structure_act_1 || ''}
-        disabled={permission !== 'edit' && !project?.structure_act_1}
+        element={project?.plot.structure.act1 || ''}
+        disabled={permission !== 'edit' && !project?.plot.structure.act1}
         keyValue={`${!isToProject ? 'plot/' : ''}structure`}
       />
       <PlotPart
@@ -145,8 +145,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Estrutura: Ato 2"
-        element={project?.structure_act_2 || ''}
-        disabled={permission !== 'edit' && !project?.structure_act_1}
+        element={project?.plot.structure.act2 || ''}
+        disabled={permission !== 'edit' && !project?.plot.structure.act1}
         keyValue={`${!isToProject ? 'plot/' : ''}structure`}
       />
       <PlotPart
@@ -155,8 +155,8 @@ export function PlotParts({
         isPreview={isPreview}
         permission={permission}
         to="Estrutura: Ato 3"
-        element={project?.structure_act_3 || ''}
-        disabled={permission !== 'edit' && !project?.structure_act_1}
+        element={project?.plot.structure.act3 || ''}
+        disabled={permission !== 'edit' && !project?.plot.structure.act1}
         keyValue={`${!isToProject ? 'plot/' : ''}structure`}
       />
     </PlotPartsContainer>

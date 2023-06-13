@@ -30,21 +30,12 @@ export default function ObjectivePage() {
     objectiveId as string,
   )
 
-  const personsInObjectiveIds = finalObjective?.persons?.map((person) => {
-    if (person.id === personId) return ''
-    return person.id
-  })
+  const personsInObjectiveIds =
+    finalObjective?.collections.referencesIt.itens?.map((person) => {
+      if (person.id === personId) return ''
+      return person.id
+    })
   const personsInObjective = findManyPersons(personsInObjectiveIds ?? [])
-
-  const supportersIds = objective?.supporters?.persons?.map(
-    (supporter) => supporter.id,
-  )
-  const supporters = findManyPersons(supportersIds ?? [])
-
-  const avoidersIds = objective?.avoiders?.persons?.map(
-    (supporter) => supporter.id,
-  )
-  const avoiders = findManyPersons(avoidersIds ?? [])
 
   async function handleCommentInObjective(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -71,7 +62,7 @@ export default function ObjectivePage() {
   return (
     <>
       <NextSeo
-        title={`${personName}-${objective?.title} | Magiscrita`}
+        title={`${personName}-${objective?.infos.title} | Magiscrita`}
         noindex
       />
 
@@ -82,7 +73,7 @@ export default function ObjectivePage() {
           'Personagens',
           `${personName}`,
           'Objetivos',
-          objective?.title ?? 'Carregando...',
+          objective?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -107,13 +98,13 @@ export default function ObjectivePage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {objective?.title}
+                {objective?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {objective?.description}
+                {objective?.infos.description}
               </Text>
             </InfoDefault>
 
@@ -124,19 +115,19 @@ export default function ObjectivePage() {
                 height="shorter"
                 weight="bold"
                 css={{
-                  color: objective?.it_be_realized
+                  color: objective?.infos.itBeRealized
                     ? '$successDefault'
                     : '$fullError',
                 }}
               >
-                {objective?.it_be_realized ? 'SIM' : 'NÃO'}
+                {objective?.infos.itBeRealized ? 'SIM' : 'NÃO'}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Apoiadores:">
               <Text family="body" size="xl" height="shorter" weight="bold">
                 <Avatares
-                  persons={supporters}
+                  persons={objective?.collections.supporter.itens ?? []}
                   columns={10}
                   size="2xl"
                   listEmptyIcon={<UsersThree />}
@@ -149,7 +140,7 @@ export default function ObjectivePage() {
             <InfoDefault title="Contras:">
               <Text family="body" size="xl" height="shorter" weight="bold">
                 <Avatares
-                  persons={avoiders}
+                  persons={objective?.collections.avoider.itens ?? []}
                   columns={10}
                   size="2xl"
                   listEmptyIcon={<Skull />}
@@ -161,8 +152,8 @@ export default function ObjectivePage() {
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {objective?.created_at
-                  ? getDate(objective?.created_at)
+                {objective?.infos.createdAt
+                  ? getDate(objective?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -188,7 +179,7 @@ export default function ObjectivePage() {
         <CommentsOnPage
           onNewComment={handleCommentInObjective}
           permission={permission}
-          comments={objective?.comments}
+          comments={objective?.collections.comment.itens ?? []}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToObjective

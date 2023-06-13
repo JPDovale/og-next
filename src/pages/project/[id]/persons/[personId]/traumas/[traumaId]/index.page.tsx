@@ -49,7 +49,7 @@ export default function TraumaPage() {
   return (
     <>
       <NextSeo
-        title={`${personName}-${trauma?.title} trauma | Magiscrita`}
+        title={`${personName}-${trauma?.infos.title} trauma | Magiscrita`}
         noindex
       />
       <ProjectPageLayout
@@ -59,10 +59,11 @@ export default function TraumaPage() {
           'Personagens',
           `${personName}`,
           'Trauma',
-          trauma?.title ?? 'Carregando...',
+          trauma?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
+        isScrolling
       >
         <ContainerGrid padding={4} isRelativePosition>
           <GoBackButton topDistance={4} />
@@ -83,13 +84,13 @@ export default function TraumaPage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {trauma?.title}
+                {trauma?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {trauma?.description}
+                {trauma?.infos.description}
               </Text>
             </InfoDefault>
 
@@ -97,10 +98,16 @@ export default function TraumaPage() {
               <ContainerGrid
                 css={{ gap: '$8', marginTop: '$4' }}
                 padding={0}
-                columns={trauma?.consequences && trauma.consequences[0] ? 2 : 1}
+                columns={
+                  trauma?.collections.consequence.itens &&
+                  trauma?.collections.consequence.itens[0]
+                    ? 2
+                    : 1
+                }
               >
-                {trauma?.consequences && trauma.consequences[0] ? (
-                  trauma.consequences.map((consequence) => (
+                {trauma?.collections.consequence.itens &&
+                trauma?.collections.consequence.itens[0] ? (
+                  trauma?.collections.consequence.itens.map((consequence) => (
                     <ContainerGrid
                       padding={4}
                       css={{
@@ -117,13 +124,13 @@ export default function TraumaPage() {
                           height="shorter"
                           weight="bold"
                         >
-                          {consequence?.title}
+                          {consequence?.infos.title}
                         </Text>
                       </InfoDefault>
 
                       <InfoDefault title="Descrição:">
                         <Text family="body" height="shorter" weight="bold">
-                          {consequence?.description}
+                          {consequence?.infos.description}
                         </Text>
                       </InfoDefault>
                     </ContainerGrid>
@@ -140,8 +147,8 @@ export default function TraumaPage() {
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {trauma?.created_at
-                  ? getDate(trauma?.created_at)
+                {trauma?.infos.createdAt
+                  ? getDate(trauma?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -151,7 +158,7 @@ export default function TraumaPage() {
         <CommentsOnPage
           onNewComment={handleCommentInTrauma}
           permission={permission}
-          comments={trauma?.comments}
+          comments={trauma?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics
@@ -164,7 +171,7 @@ export default function TraumaPage() {
           object={
             {
               ...trauma,
-              subObjects: trauma?.consequences || [],
+              subObjects: trauma?.collections.consequence.itens || [],
             } as IGenericObject
           }
           withSubObjects={keysTrauma.subObjects}

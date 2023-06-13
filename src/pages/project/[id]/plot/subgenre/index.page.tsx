@@ -24,14 +24,14 @@ export default function SubgenrePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsSubGenre = project?.comments?.filter(
+  const commentsSubGenre = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'subgenre',
   )
 
   async function handleUpdateSubgenre() {
     setSuccessMessage('')
 
-    if (subgenre === project?.subgenre) return
+    if (subgenre === project?.plot.subgenre) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       subgenre: subgenre || null,
@@ -84,7 +84,7 @@ export default function SubgenrePage() {
         <Editor
           handleUpdate={handleUpdateSubgenre}
           permission={permission}
-          preValue={project?.subgenre ?? ''}
+          preValue={project?.plot.subgenre ?? ''}
           projectId={project!.id}
           setValue={setSubgenre}
           to="subgenre"
@@ -126,7 +126,7 @@ export default function SubgenrePage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsSubGenre}
-          isNew={!project?.subgenre}
+          isNew={!project?.plot.subgenre}
           onNewComment={handleNewComment}
           onNewCommentTo="subgenre"
         />

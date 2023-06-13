@@ -1,3 +1,4 @@
+import { IAuthor } from '@api/responsesTypes/book/IBook'
 import { Text } from '@components/usefull/Text'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -23,7 +24,6 @@ import {
   UserImage,
   UsersWhitAccess,
 } from './styles'
-import { IAuthor } from '@api/responsesTypes/IBooksResponse'
 
 interface IInfos {
   infos: Array<{
@@ -201,7 +201,8 @@ export function HeaderImageAndInfos({
                     <UserImage key={u.id} first={i === 0}>
                       <AvatarWeb
                         whitShadow
-                        src={u?.user.avatar_url ?? undefined}
+                        src={u?.user.avatar.url}
+                        alt={u?.user.avatar.alt}
                         size="xsm"
                       />
                     </UserImage>

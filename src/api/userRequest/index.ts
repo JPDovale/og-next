@@ -16,13 +16,24 @@ export async function verifyRequest() {
   }
 }
 
-export async function getUserRequest(): Promise<IResponse<IUserResponse>> {
+interface IGetUserRequestHeaders {
+  cookies?: {
+    token: string
+    refreshToken: string
+  }
+}
+
+export async function getUserRequest(
+  props?: IGetUserRequestHeaders,
+): Promise<IResponse<IUserResponse>> {
+  if (props && props.cookies) {
+    api.defaults.headers.cookies = JSON.stringify(props.cookies)
+  }
+
   try {
     const response = await api.get('/users')
     return response.data
   } catch (err: any) {
-    console.log(err)
-
     return err?.response?.data
   }
 }
@@ -75,9 +86,28 @@ export async function initializeUserRequest(
   }
 }
 
-export async function refreshSessionRequest(): Promise<IResponse> {
+interface IRefreshSessionRequest {
+  setToken: boolean
+}
+
+export async function refreshSessionRequest(
+  props?: IRefreshSessionRequest,
+): Promise<IResponse> {
+  const setToken = props?.setToken ?? false
+
   try {
     const response = await api.post('/sessions/refresh')
+
+    if (setToken) {
+      const token =
+        response.headers['set-cookie']![1].split('=')[1].split(';')[0]
+
+      const refreshToken =
+        response.headers['set-cookie']![0].split('=')[1].split(';')[0]
+
+      api.defaults.headers.cookies = JSON.stringify({ token, refreshToken })
+    }
+
     return response.data
   } catch (err: any) {
     return err.response.data

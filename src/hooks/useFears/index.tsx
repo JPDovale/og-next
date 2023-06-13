@@ -1,5 +1,5 @@
 import { getFearsRequest } from '@api/projectsRequests'
-import { IFear } from '@api/responsesTypes/IPersonsResponse'
+import { IFear } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -24,7 +24,7 @@ export function useFears(projectId: string) {
         }
       }
 
-      const fears = response.fears as IFear[]
+      const fears = response.data?.fears as IFear[]
 
       return { fears, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function useFears(projectId: string) {
 
   function findFearWherePersonNotExisteIn(personId: string) {
     const fearsWherePersonNorFund = fears.filter((fear) => {
-      const personExisteInFear = fear.persons?.find(
+      const personExisteInFear = fear.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

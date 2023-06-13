@@ -1,8 +1,8 @@
-import { ICouple, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { ICouple, IPerson } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindCouple {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -15,7 +15,9 @@ interface IResponseCouple {
 }
 
 export function findCoupleUtil({ id, person }: IFindCouple): IResponseCouple {
-  const couple = person?.couples?.find((couple) => couple.id === id)
+  const couple = person?.collections.couple?.itens.find(
+    (couple) => couple.id === id,
+  )
 
   const response: IResponseCouple = {
     couple,

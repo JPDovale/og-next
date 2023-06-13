@@ -1,4 +1,4 @@
-import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { IBook } from '@api/responsesTypes/book/IBook'
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -10,7 +10,7 @@ export type IRefetchBook = <TPageData>(
 ) => Promise<
   QueryObserverResult<
     | {
-        book: IBooksResponse
+        book: IBook
         errorMessage: string | null
         errorTitle: string | null
       }

@@ -35,12 +35,12 @@ export function CardPerson({
   const { theme } = useContext(InterfaceContext)
 
   const { findPerson } = useProject(id as string)
-  const { person, personImage, personName } = findPerson(personId)
+  const { person } = findPerson(personId)
 
   return (
     <CardPersonContainer
       as={isNotPreview ? 'div' : 'button'}
-      title={isAdd ? 'Adicionar personagem' : `${personName}`}
+      title={isAdd ? 'Adicionar personagem' : `${person?.name.full}`}
       isAdd={isAdd}
       isNotPreview={isNotPreview}
       onClick={() =>
@@ -58,10 +58,10 @@ export function CardPerson({
       ) : (
         <>
           <div className="person-image">
-            {personImage ? (
+            {person?.image.url ? (
               <Image
-                src={personImage}
-                alt={`${personName}`}
+                src={person?.image.url}
+                alt={person?.image.alt ?? ''}
                 width={400}
                 height={400}
                 priority
@@ -78,7 +78,7 @@ export function CardPerson({
           <ContainerGrid padding={0} columns={isNotPreview ? 2 : 1}>
             <PersonInfos>
               <InfoDefault title="Nome" size="sm" css={{ alignItems: 'start' }}>
-                {personName}
+                {person?.name.full}
               </InfoDefault>
 
               <InfoDefault
@@ -86,7 +86,9 @@ export function CardPerson({
                 size="sm"
                 css={{ alignItems: 'start' }}
               >
-                {person?.age ? `${person.age} anos` : 'Idade desconhecida'}
+                {person?.age.number
+                  ? `${person.age.number} anos`
+                  : 'Idade desconhecida'}
               </InfoDefault>
 
               {isNotPreview && (
@@ -96,7 +98,7 @@ export function CardPerson({
                       Objetivos:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.objectives || 0}
+                      {person?.collections.objective.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -105,7 +107,7 @@ export function CardPerson({
                       Sonhos:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.dreams || 0}
+                      {person?.collections.dream.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -114,7 +116,7 @@ export function CardPerson({
                       Medos:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.fears || 0}
+                      {person?.collections.fear.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -123,7 +125,7 @@ export function CardPerson({
                       Casais:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.couples || 0}
+                      {person?.collections.couple.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -132,7 +134,7 @@ export function CardPerson({
                       Aparência:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.appearances || 0}
+                      {person?.collections.appearance.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -141,7 +143,7 @@ export function CardPerson({
                       Personalidade:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.personalities || 0}
+                      {person?.collections.personality.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -150,7 +152,7 @@ export function CardPerson({
                       Poderes:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.powers || 0}
+                      {person?.collections.power.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -159,7 +161,7 @@ export function CardPerson({
                       Traumas:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.traumas || 0}
+                      {person?.collections.trauma.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -168,7 +170,7 @@ export function CardPerson({
                       Valores:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.values || 0}
+                      {person?.collections.value.itensLength}
                     </Text>
                   </ItemInfo>
 
@@ -177,7 +179,7 @@ export function CardPerson({
                       Desejos:
                     </Text>
                     <Text weight="bold" size="xs">
-                      {person?._count.wishes || 0}
+                      {person?.collections.wishe.itensLength}
                     </Text>
                   </ItemInfo>
                 </ObjectsOfPerson>

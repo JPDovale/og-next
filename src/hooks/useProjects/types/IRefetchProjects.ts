@@ -1,9 +1,9 @@
+import { IProjectPreview } from '@api/responsesTypes/project/IProjectPreview'
 import {
   QueryObserverResult,
   RefetchOptions,
   RefetchQueryFilters,
 } from 'react-query'
-import { IProjectPreview } from '../entities/IProjectPreview'
 
 export type IRefetchProjects = <TPageData>(
   options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,

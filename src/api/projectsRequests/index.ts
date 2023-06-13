@@ -1,14 +1,29 @@
 import { IShareProjectDTO } from '@api/dtos/IShareProjectDTO'
+import { IResponse } from '@api/responses/IResponse'
+import {
+  IAppearance,
+  IDream,
+  IFear,
+  IObjective,
+  IPersonality,
+  IPower,
+  ITrauma,
+  IValue,
+  IWishe,
+} from '@api/responsesTypes/person/IPerson'
+import { IProjectResponse } from '@api/responsesTypes/project/IProject'
+import { IProjectPreviewResponse } from '@api/responsesTypes/project/IProjectPreview'
 import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { IUpdatePlotDTO } from '../dtos/IUpdatePlotDTO'
-import { IProjectResponse } from '../responsesTypes/IProjectResponse'
 import { IChangeDoneTimeEventRequest } from './types/IChangeDoneTimeEventRequest'
 import { IChangeFeaturesUsingRequest } from './types/IChangeFeaturesUsingRequest'
 import { ICreateTimeEventRequest } from './types/ICreateTimeEventRequest'
 import { IUpdateInitialDateRequest } from './types/IUpdateInitialDateRequest'
 
-export async function getProjectsRequest() {
+export async function getProjectsRequest(): Promise<
+  IResponse<IProjectPreviewResponse>
+> {
   try {
     const response = await api.get('/projects')
     return response.data
@@ -17,7 +32,9 @@ export async function getProjectsRequest() {
   }
 }
 
-export async function getProjectRequest(projectId: string) {
+export async function getProjectRequest(
+  projectId: string,
+): Promise<IResponse<IProjectResponse>> {
   try {
     const response = await api.get(`/projects/${projectId}`)
     return response.data
@@ -26,9 +43,7 @@ export async function getProjectRequest(projectId: string) {
   }
 }
 
-export async function createProjectRequest(
-  project: any,
-): Promise<IProjectResponse> {
+export async function createProjectRequest(project: any) {
   try {
     const response = await api.post('/projects', project)
     return response.data
@@ -118,7 +133,7 @@ export async function shareProjectRequest(
 export async function updatePlotRequest(
   projectId: string,
   newPlot: IUpdatePlotDTO,
-): Promise<IProjectResponse> {
+) {
   try {
     const response = await api.put(`/projects/${projectId}/plot`, newPlot)
     return response.data
@@ -178,7 +193,9 @@ export async function quitProjectRequest({ projectId }: IQuitProjectRequest) {
   }
 }
 
-export async function getObjectivesRequest(projectId: string) {
+export async function getObjectivesRequest(
+  projectId: string,
+): Promise<IResponse<{ objectives: IObjective[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/objectives`)
     return response.data
@@ -187,7 +204,9 @@ export async function getObjectivesRequest(projectId: string) {
   }
 }
 
-export async function getPersonalitiesRequest(projectId: string) {
+export async function getPersonalitiesRequest(
+  projectId: string,
+): Promise<IResponse<{ personalities: IPersonality[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/personalities`)
     return response.data
@@ -196,7 +215,9 @@ export async function getPersonalitiesRequest(projectId: string) {
   }
 }
 
-export async function getValuesRequest(projectId: string) {
+export async function getValuesRequest(
+  projectId: string,
+): Promise<IResponse<{ values: IValue[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/values`)
     return response.data
@@ -205,7 +226,9 @@ export async function getValuesRequest(projectId: string) {
   }
 }
 
-export async function getTraumasRequest(projectId: string) {
+export async function getTraumasRequest(
+  projectId: string,
+): Promise<IResponse<{ traumas: ITrauma[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/traumas`)
     return response.data
@@ -214,7 +237,9 @@ export async function getTraumasRequest(projectId: string) {
   }
 }
 
-export async function getAppearancesRequest(projectId: string) {
+export async function getAppearancesRequest(
+  projectId: string,
+): Promise<IResponse<{ appearances: IAppearance[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/appearances`)
     return response.data
@@ -223,7 +248,9 @@ export async function getAppearancesRequest(projectId: string) {
   }
 }
 
-export async function getDreamsRequest(projectId: string) {
+export async function getDreamsRequest(
+  projectId: string,
+): Promise<IResponse<{ dreams: IDream[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/dreams`)
     return response.data
@@ -232,7 +259,9 @@ export async function getDreamsRequest(projectId: string) {
   }
 }
 
-export async function getFearsRequest(projectId: string) {
+export async function getFearsRequest(
+  projectId: string,
+): Promise<IResponse<{ fears: IFear[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/fears`)
     return response.data
@@ -241,7 +270,9 @@ export async function getFearsRequest(projectId: string) {
   }
 }
 
-export async function getWishesRequest(projectId: string) {
+export async function getWishesRequest(
+  projectId: string,
+): Promise<IResponse<{ wishes: IWishe[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/wishes`)
     return response.data
@@ -250,7 +281,9 @@ export async function getWishesRequest(projectId: string) {
   }
 }
 
-export async function getPowersRequest(projectId: string) {
+export async function getPowersRequest(
+  projectId: string,
+): Promise<IResponse<{ powers: IPower[] }>> {
   try {
     const response = await api.get(`/projects/${projectId}/powers`)
     return response.data

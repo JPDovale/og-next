@@ -1,16 +1,16 @@
-import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
+import { IBook } from '@api/responsesTypes/book/IBook'
 import { getDate } from '@utils/dates/getDate'
 import { IInfos } from '..'
 
-export function constructInfosBook(book: IBooksResponse | null) {
+export function constructInfosBook(book: IBook | null) {
   const bookInfos: IInfos[] = [
     {
       infos: [
-        { label: 'Titulo', value: book?.title || 'Carregando...' },
-        book?.subtitle
+        { label: 'Titulo', value: book?.name.title || 'Carregando...' },
+        book?.name.subtitle
           ? {
               label: 'Subtitulo',
-              value: book?.subtitle || 'Carregando...',
+              value: book?.name.subtitle || 'Carregando...',
             }
           : {
               label: '',
@@ -23,19 +23,19 @@ export function constructInfosBook(book: IBooksResponse | null) {
       infos: [
         {
           label: 'Gênero literário',
-          value: book?.literary_genre || 'Carregando...',
+          value: book?.infos.literaryGenre || 'Carregando...',
         },
         {
           label: 'Gêneros',
-          value: `${book?.genres?.length}` || 'Carregando...',
+          value: `${book?.collections.genre.itensLength}` || 'Carregando...',
         },
         {
           label: 'Autores',
-          value: `${book?.authors?.length}` || 'Carregando...',
+          value: `${book?.collections.author?.itensLength}` || 'Carregando...',
         },
         {
           label: 'ISBN',
-          value: book?.isbn || 'Você ainda não definiu o seu ISBN',
+          value: book?.infos.isbn || 'Carregando...',
         },
         // {
         //   label: 'Estimativa de palavras',
@@ -47,15 +47,20 @@ export function constructInfosBook(book: IBooksResponse | null) {
         // },
         {
           label: 'Capítulos',
-          value: `${book?.capitules?.length}` || 'Carregando...',
+          value:
+            `${book?.collections.capitules.itensLength}` || 'Carregando...',
         },
         {
           label: 'Criado em',
-          value: book?.created_at ? getDate(book.created_at) : 'Carregando...',
+          value: book?.infos.createdAt
+            ? getDate(book.infos.createdAt)
+            : 'Carregando...',
         },
         {
           label: 'Atualizado em',
-          value: book?.updated_at ? getDate(book.updated_at) : 'Carregando...',
+          value: book?.infos.updatedAt
+            ? getDate(book.infos.updatedAt)
+            : 'Carregando...',
         },
       ],
       columns: 4,

@@ -51,14 +51,12 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
     })
   }
 
-  router.push('/projects')
-
   return (
     <>
       <NextSeo title="Preços dos planos do MagiScrita" />
 
       <PricingPTBRPageContainer>
-        <Header />
+        <Header user={user} userIsPro={userIsPro ?? false} />
 
         <ToastError error={error} setError={setError} />
 
@@ -84,6 +82,10 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
               buttonIsDisabled={userIsPro}
               priceId="0"
               features={[
+                {
+                  text: 'Sem inteligencia artificial',
+                  limited: true,
+                },
                 {
                   text: '1 projeto',
                   limited: true,
@@ -141,6 +143,10 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
               priceId={prices[0].id}
               features={[
                 {
+                  text: 'Sem inteligencia artificial',
+                  limited: true,
+                },
+                {
                   text: 'Projeto ilimitados',
                 },
                 {
@@ -188,6 +194,10 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
               buttonIsDisabled={userIsPro}
               priceId={prices[1].id}
               features={[
+                {
+                  text: 'Sem inteligencia artificial',
+                  limited: true,
+                },
                 {
                   text: 'Projeto ilimitados',
                 },
@@ -237,6 +247,10 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
               priceId={prices[2].id}
               features={[
                 {
+                  text: 'Sem inteligencia artificial',
+                  limited: true,
+                },
+                {
                   text: 'Projeto ilimitados',
                 },
                 {
@@ -284,6 +298,10 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
               buttonIsDisabled={userIsPro}
               priceId={prices[3].id}
               features={[
+                {
+                  text: 'Custo adicional por uso da inteligencia artificial',
+                  limited: true,
+                },
                 {
                   text: 'Acesso a uma comunidade exclusiva com contato direto com os desenvolvedores do projeto',
                 },

@@ -1,5 +1,5 @@
 import { getObjectivesRequest } from '@api/projectsRequests'
-import { IObjective } from '@api/responsesTypes/IPersonsResponse'
+import { IObjective } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -24,7 +24,7 @@ export function useObjectives(projectId: string) {
         }
       }
 
-      const objectives = response.objectives as IObjective[]
+      const objectives = response.data?.objectives as IObjective[]
 
       return { objectives, errorMessage, errorTitle }
     },
@@ -34,9 +34,10 @@ export function useObjectives(projectId: string) {
 
   function findObjectiveWherePersonNotExisteIn(personId: string) {
     const objectivesWherePersonNorFund = objectives.filter((objective) => {
-      const personExisteInObjective = objective.persons?.find(
-        (person) => person.id === personId,
-      )
+      const personExisteInObjective =
+        objective.collections.referencesIt.itens?.find(
+          (person) => person.id === personId,
+        )
 
       if (personExisteInObjective) {
         return false

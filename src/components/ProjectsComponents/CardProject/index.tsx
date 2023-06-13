@@ -18,10 +18,10 @@ import {
 } from './styles'
 import { ShareProjectModal } from './components/ShareProjectModal'
 import { useProjects } from '@hooks/useProjects'
-import { IProjectPreview } from '@hooks/useProjects/entities/IProjectPreview'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { useUser } from '@hooks/useUser'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { IProjectPreview } from '@api/responsesTypes/project/IProjectPreview'
 
 interface ICardProjectProps {
   project: IProjectPreview

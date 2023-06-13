@@ -1,4 +1,4 @@
-import { IGenre } from '@api/responsesTypes/IBooksResponse'
+import { IGenre } from '@api/responsesTypes/book/IBook'
 import { Box } from '@components/usefull/Box'
 import { Text } from '@components/usefull/Text'
 import { styled } from '@styles/index'

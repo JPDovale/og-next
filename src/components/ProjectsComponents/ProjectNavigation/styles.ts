@@ -64,6 +64,8 @@ export const Logo = styled('div', {
     cursor: 'pointer',
     width: '100%',
     height: '100%',
+    maxHeight: '50px',
+    marginTop: '$4',
   },
 
   variants: {
