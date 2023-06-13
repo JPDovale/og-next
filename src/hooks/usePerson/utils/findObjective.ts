@@ -1,12 +1,14 @@
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson } from '@api/responsesTypes/person/IPerson'
 
 interface IFindObjective {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
 export function findObjectiveUtil({ person, id }: IFindObjective) {
-  const objective = person?.objectives?.find((objective) => objective.id === id)
+  const objective = person?.collections.objective.itens?.find(
+    (objective) => objective.id === id,
+  )
 
   return {
     objective,

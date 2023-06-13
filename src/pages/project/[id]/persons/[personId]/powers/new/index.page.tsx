@@ -124,7 +124,7 @@ export default function NewPowerPage() {
             icon={<Lightning size={40} />}
             label={
               powerSelected && power
-                ? `Poder selecionado: ${power.title}`
+                ? `Poder selecionado: ${power.infos.title}`
                 : 'Novo poder'
             }
             inTop
@@ -209,7 +209,8 @@ export default function NewPowerPage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{power?.title}&quot; ao personagem {personName}
+                  Atribuir &quot;{power?.infos.title}&quot; ao personagem{' '}
+                  {personName}
                 </ButtonLabel>
               </ButtonRoot>
             </ContainerGrid>

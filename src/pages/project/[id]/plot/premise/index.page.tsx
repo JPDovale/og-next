@@ -25,14 +25,14 @@ export default function PremisePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsPremise = project?.comments?.filter(
+  const commentsPremise = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'premise',
   )
 
   async function handleUpdatePremise() {
     setSuccessMessage('')
 
-    if (premise === project?.premise) return
+    if (premise === project?.plot.premise) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       premise: premise || null,
@@ -85,7 +85,7 @@ export default function PremisePage() {
         <Editor
           handleUpdate={handleUpdatePremise}
           permission={permission}
-          preValue={project?.premise ?? ''}
+          preValue={project?.plot.premise ?? ''}
           projectId={project!.id}
           setValue={setPremise}
           to="premise"
@@ -117,7 +117,7 @@ export default function PremisePage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsPremise}
-          isNew={!project?.premise}
+          isNew={!project?.plot.premise}
           onNewComment={handleNewComment}
           onNewCommentTo="premise"
         />

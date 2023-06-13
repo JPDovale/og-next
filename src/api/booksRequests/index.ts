@@ -1,3 +1,6 @@
+import { IResponse } from '@api/responses/IResponse'
+import { IBookResponse } from '@api/responsesTypes/book/IBook'
+import { ICapituleResponse } from '@api/responsesTypes/capitule/ICapitule'
 import { api } from '..'
 import { IAddGenreRequest } from './types/IAddGenreRequest'
 import { ICreateBookRequest } from './types/ICreateBookRequest'
@@ -242,7 +245,9 @@ export async function deleteBookRequest(bookId: string) {
 
 // GET
 
-export async function getBookRequest(bookId: string) {
+export async function getBookRequest(
+  bookId: string,
+): Promise<IResponse<IBookResponse>> {
   try {
     const response = await api.get(`/books/${bookId}`)
     return response.data
@@ -251,7 +256,9 @@ export async function getBookRequest(bookId: string) {
   }
 }
 
-export async function getCapituleRequest(capituleId: string) {
+export async function getCapituleRequest(
+  capituleId: string,
+): Promise<IResponse<ICapituleResponse>> {
   try {
     const response = await api.get(`/books/capitules/${capituleId}`)
     return response.data

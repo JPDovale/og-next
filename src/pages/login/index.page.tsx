@@ -11,7 +11,7 @@ import {
   LoginPageContainer,
 } from './styles'
 
-import LogoToDown from '../../assets/logos/logoOG.png'
+import LogoToDown from '../../assets/logos/logo.png'
 
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'

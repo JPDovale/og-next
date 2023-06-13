@@ -1,4 +1,4 @@
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { IProject } from '@api/responsesTypes/project/IProject'
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -10,7 +10,7 @@ export type IRefetchProject = <TPageData>(
 ) => Promise<
   QueryObserverResult<
     | {
-        project: IProjectResponse
+        project: IProject
         errorMessage: string | null
         errorTitle: string | null
       }

@@ -1,5 +1,5 @@
 import { getCapituleRequest } from '@api/booksRequests'
-import { ICapitule } from '@api/responsesTypes/IBooksResponse'
+import { ICapitule } from '@api/responsesTypes/capitule/ICapitule'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useBook } from '@hooks/useBook'
 import { useUser } from '@hooks/useUser'
@@ -36,7 +36,7 @@ export function useCapitule(id: string) {
         }
       }
 
-      const capitule = response.capitule as ICapitule
+      const capitule = response.data?.capitule as ICapitule
 
       return { capitule, errorMessage, errorTitle }
     },
@@ -50,16 +50,18 @@ export function useCapitule(id: string) {
   const refetchCapitule = refetch
   const loadingCapitule = !(!loadingUser && !isLoading)
   const capituleName = capitule?.name ?? 'Carregando...'
-  const capituleObjective = capitule?.objective ?? 'Carregando...'
-  const capituleAct1 = capitule?.structure_act_1 ?? 'Carregando...'
-  const capituleAct2 = capitule?.structure_act_2 ?? 'Carregando...'
-  const capituleAct3 = capitule?.structure_act_3 ?? 'Carregando...'
-  const capituleWords = capitule?.words ?? 0
+  const capituleObjective = capitule?.infos.objective ?? 'Carregando...'
+  const capituleAct1 = capitule?.structure.act1 ?? 'Carregando...'
+  const capituleAct2 = capitule?.structure.act2 ?? 'Carregando...'
+  const capituleAct3 = capitule?.structure.act3 ?? 'Carregando...'
+  const capituleWords = capitule?.infos.words ?? 0
 
-  const { refetchBook } = useBook(capitule?.book_id ?? '')
+  const { refetchBook } = useBook(capitule?.infos.bookId ?? '')
 
   function findScene(id: string) {
-    const scene = capitule?.scenes.find((scene) => scene.id === id)
+    const scene = capitule?.collections.scene.itens.find(
+      (scene) => scene.id === id,
+    )
 
     return {
       scene,
@@ -70,16 +72,17 @@ export function useCapitule(id: string) {
     update: (capituleUpdated) =>
       updateCapitule(
         capitule!.id,
-        capitule!.book_id,
+        capitule!.infos.bookId,
         capituleUpdated,
         refetchCapitule,
         refetchBook,
       ),
-    delete: () => deleteCapitule(capitule!.id, capitule!.book_id, refetchBook),
+    delete: () =>
+      deleteCapitule(capitule!.id, capitule!.infos.bookId, refetchBook),
     createScene: (newScene) =>
       createScene(
         capitule!.id,
-        capitule!.book_id,
+        capitule!.infos.bookId,
         newScene,
         refetchCapitule,
         refetchBook,
@@ -87,7 +90,7 @@ export function useCapitule(id: string) {
     updateScene: (scene) =>
       updateScene(
         capitule!.id,
-        capitule!.book_id,
+        capitule!.infos.bookId,
         scene,
         refetchCapitule,
         refetchBook,
@@ -95,7 +98,7 @@ export function useCapitule(id: string) {
     setSceneToComplete: (completeInfos) =>
       setSceneToComplete(
         capitule!.id,
-        capitule!.book_id,
+        capitule!.infos.bookId,
         completeInfos,
         refetchCapitule,
         refetchBook,
@@ -104,7 +107,7 @@ export function useCapitule(id: string) {
     reorderScenes: (sequences) =>
       reorderScenes(
         capitule!.id,
-        capitule!.book_id,
+        capitule!.infos.bookId,
         sequences,
         refetchCapitule,
       ),
@@ -112,7 +115,7 @@ export function useCapitule(id: string) {
     deleteScene: (sceneId) =>
       deleteScene(
         capitule!.id,
-        capitule!.book_id,
+        capitule!.infos.bookId,
         sceneId,
         refetchCapitule,
         refetchBook,

@@ -1,3 +1,8 @@
+import {
+  IInCouplePerson,
+  IPersonInObject,
+  ISubObject,
+} from '@api/responsesTypes/person/IPerson'
 import { GenericCardObject } from '@components/PersonsComponents/GenericCardObject'
 import { Error } from '@components/usefull/Error'
 import { ListEmpty } from '@components/usefull/ListEmpty'
@@ -7,17 +12,25 @@ import { PlusCircle } from 'phosphor-react'
 import { ReactNode } from 'react'
 import { CampuContainer, CampuContent, HeadingCampu } from './styles'
 
-interface ISubObject {
-  title: string
-  description: string
-}
-
 interface IObjectOfCampu {
   id?: string
-  title: string
-  description: string
-  consequences?: ISubObject[]
-  exceptions?: ISubObject[]
+  infos: {
+    title: string
+    description: string
+    createdAt: Date
+  }
+  collections?: {
+    consequence?: {
+      itens?: ISubObject[]
+    }
+    exception?: {
+      itens?: ISubObject[]
+    }
+    referencesIt?: {
+      itens: IPersonInObject[]
+    }
+    couple?: IInCouplePerson
+  }
 }
 
 interface ICampuProps {
@@ -71,15 +84,16 @@ export function Campu({
 
           <CampuContent columns={columns} isEmpty={!objectOfCampu[0]}>
             {objectOfCampu && objectOfCampu[0] ? (
-              objectOfCampu.map((personality) => {
+              objectOfCampu.map((object) => {
                 const subObjects =
-                  personality.consequences || personality.exceptions
+                  object.collections?.consequence?.itens ||
+                  object.collections?.exception?.itens
 
                 return (
                   <GenericCardObject
                     to={keyIndex}
-                    key={personality.id}
-                    object={personality}
+                    key={object.id}
+                    object={object}
                     withSubObjects={withSubObjects && withSubObjects}
                     subObjects={withSubObjects && subObjects}
                     isUniqueRelational={isUniqueRelational}

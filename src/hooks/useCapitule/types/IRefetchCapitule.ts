@@ -1,4 +1,4 @@
-import { ICapitule } from '@api/responsesTypes/IBooksResponse'
+import { ICapitule } from '@api/responsesTypes/capitule/ICapitule'
 import {
   QueryObserverResult,
   RefetchOptions,

@@ -1,4 +1,4 @@
-import { ITimeEvent } from '@api/responsesTypes/ITimeLineResponse'
+import { ITimeEvent } from '@api/responsesTypes/timeline/ITimeLine'
 import dayjs from 'dayjs'
 import { CaretLeft, CaretRight } from 'phosphor-react'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '../Button'
@@ -120,25 +120,25 @@ export function Calendar({
 
                   const eventFondInThisDate = timeEvents.find(
                     (event) =>
-                      event.happened_day === date.get('date') &&
-                      event.happened_month ===
+                      event.happened.day === date.get('date') &&
+                      event.happened.month ===
                         dayIsInMonth.toString().padStart(2, '0') &&
-                      event.happened_year === date.get('year').toString(),
+                      event.happened.year === date.get('year').toString(),
                   )
 
                   const eventsInThisDay = timeEvents.filter((event) => {
                     return (
-                      event.happened_day === date.get('date') &&
-                      event.happened_month ===
+                      event.happened.day === date.get('date') &&
+                      event.happened.month ===
                         dayIsInMonth.toString().padStart(2, '0') &&
-                      event.happened_year === date.get('year').toString()
+                      event.happened.year === date.get('year').toString()
                     )
                   }).length
 
                   return (
                     <td key={date.toString()}>
                       <CalendarDay
-                        importance={eventFondInThisDate?.importance}
+                        importance={eventFondInThisDate?.infos.importance}
                         disabled={disabled || !eventFondInThisDate}
                         onClick={() => onSelectDay(eventFondInThisDate!.id)}
                       >

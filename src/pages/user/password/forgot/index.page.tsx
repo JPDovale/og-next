@@ -2,7 +2,7 @@ import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
 import Image from 'next/image'
 
-import LogoToDown from '../../../../assets/logos/logoOG.png'
+import LogoToDown from '../../../../assets/logos/logo.png'
 import {
   InputContainer,
   InputHeader,

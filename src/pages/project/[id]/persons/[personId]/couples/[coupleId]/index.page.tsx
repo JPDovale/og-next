@@ -19,14 +19,10 @@ export default function CouplePage() {
   const { id, personId, coupleId } = router.query
   const { GoBackButton } = usePreventBack(`/project/${id}/persons/${personId}`)
 
-  const { projectName, permission, findPerson } = useProject(id as string)
+  const { projectName, permission } = useProject(id as string)
   const { person, personName, findCouple, loadingPerson, callEvent } =
     usePerson(personId as string)
   const { couple } = findCouple(coupleId as string)
-
-  const { person: coupleWithPerson, personName: coupleName } = findPerson(
-    couple?.coupleWithPerson?.person_id || '',
-  )
 
   async function handleCommentInCouple(newComment: ICreateCommentDTO) {
     if (!newComment) return
@@ -52,7 +48,10 @@ export default function CouplePage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-${couple?.title}  | Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${couple?.infos.title}  | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -61,7 +60,7 @@ export default function CouplePage() {
           'Personagens',
           `${personName}`,
           'Casais',
-          couple?.title ?? 'Carregando...',
+          couple?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -86,13 +85,13 @@ export default function CouplePage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {couple?.title}
+                {couple?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault size="lg" title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {couple?.description}
+                {couple?.infos.description}
               </Text>
             </InfoDefault>
 
@@ -103,13 +102,15 @@ export default function CouplePage() {
                 height="shorter"
                 weight="bold"
                 onClick={() =>
-                  router.push(`/project/${id}/persons/${coupleWithPerson?.id}`)
+                  router.push(
+                    `/project/${id}/persons/${couple?.collections.couple.id}`,
+                  )
                 }
               >
                 <ContainerGrid padding={0} css={{ display: 'flex' }}>
                   <AvatarWeb
                     size="4xl"
-                    src={coupleWithPerson?.image_url ?? undefined}
+                    src={couple?.collections.couple.image.url}
                     isClickable
                   />
                   <ContainerGrid padding={0}>
@@ -120,7 +121,7 @@ export default function CouplePage() {
                         height="shorter"
                         weight="bold"
                       >
-                        {coupleName}
+                        {couple?.collections.couple.name.first}
                       </Text>
                     </InfoDefault>
 
@@ -131,7 +132,7 @@ export default function CouplePage() {
                         height="shorter"
                         weight="bold"
                       >
-                        {coupleWithPerson?.age}
+                        {couple?.collections.couple.age}
                       </Text>
                     </InfoDefault>
 
@@ -142,7 +143,10 @@ export default function CouplePage() {
                         height="shorter"
                         weight="bold"
                       >
-                        {`${coupleWithPerson?.history.slice(0, 280)}...`}
+                        {`${couple?.collections.couple?.history.slice(
+                          0,
+                          280,
+                        )}...`}
                       </Text>
                     </InfoDefault>
                   </ContainerGrid>
@@ -157,17 +161,19 @@ export default function CouplePage() {
                 height="shorter"
                 weight="bold"
                 css={{
-                  color: couple?.until_end ? '$successDefault' : '$fullError',
+                  color: couple?.infos.untilEnd
+                    ? '$successDefault'
+                    : '$fullError',
                 }}
               >
-                {couple?.until_end ? 'SIM' : 'NÃO'}
+                {couple?.infos.untilEnd ? 'SIM' : 'NÃO'}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {couple?.created_at
-                  ? getDate(couple?.created_at)
+                {couple?.infos.createdAt
+                  ? getDate(couple?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -177,7 +183,7 @@ export default function CouplePage() {
         <CommentsOnPage
           onNewComment={handleCommentInCouple}
           permission={permission}
-          comments={couple?.comments}
+          comments={couple?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
         {/* <EditorAndCommentsToGenerics

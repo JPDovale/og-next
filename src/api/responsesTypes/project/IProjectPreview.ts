@@ -1,4 +1,4 @@
-import { IFeatures } from '@api/responsesTypes/IProjectResponse'
+import { IFeatures } from '../IProjectResponse'
 
 export interface ICreator {
   avatar: {
@@ -13,6 +13,8 @@ export interface ICreator {
 
 export interface IUserInProject {
   permission: 'edit' | 'view' | 'comment'
+  email: string
+  username: string
   avatar: {
     url: string | undefined
     alt: string
@@ -46,4 +48,8 @@ export interface IProjectPreview {
       itensLength: number
     }
   }
+}
+
+export interface IProjectPreviewResponse {
+  projects: IProjectPreview[]
 }

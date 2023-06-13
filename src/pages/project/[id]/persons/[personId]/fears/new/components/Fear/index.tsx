@@ -1,4 +1,4 @@
-import { IFear } from '@api/responsesTypes/IPersonsResponse'
+import { IFear } from '@api/responsesTypes/person/IPerson'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -16,26 +16,22 @@ export function Fear({ onClick, selected, fear }: IFearProps) {
     <FearContainer selected={selected} onClick={onClick}>
       <InfoDefault title="Titulo:">
         <Text weight="bold" family="body">
-          {fear.title}
+          {fear.infos.title}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Descrição:">
         <Text weight="bold" family="body">
-          {fear.description.slice(0, 100)}
-          {fear.description.length > 120 && '...'}
+          {fear.infos.description.slice(0, 100)}
+          {fear.infos.description.length > 120 && '...'}
         </Text>
       </InfoDefault>
 
       <InfoDefault title="Personagens associados:">
         <ContainerGrid padding={0} columns={6}>
-          {fear.persons?.map((person) => (
+          {fear.collections.referencesIt.itens?.map((person) => (
             <ContainerGrid padding={0} key={person.id} css={{ gap: 0 }}>
-              <AvatarWeb
-                src={person.image_url ?? undefined}
-                size="xsm"
-                selfCenter
-              />
+              <AvatarWeb src={person.image.url} size="xsm" selfCenter />
               <Text
                 family="body"
                 height="shorter"
@@ -43,7 +39,7 @@ export function Fear({ onClick, selected, fear }: IFearProps) {
                 weight="bold"
                 css={{ textAlign: 'center' }}
               >
-                {person.name}
+                {person.name.first}
               </Text>
             </ContainerGrid>
           ))}

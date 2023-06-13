@@ -124,7 +124,7 @@ export default function NewFearPage() {
             icon={<Warning size={40} />}
             label={
               fearSelected && fear
-                ? `Medo selecionado: ${fear.title}`
+                ? `Medo selecionado: ${fear.infos.title}`
                 : 'Novo medo'
             }
             inTop
@@ -209,7 +209,8 @@ export default function NewFearPage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{fear?.title}&quot; ao personagem {personName}
+                  Atribuir &quot;{fear?.infos.title}&quot; ao personagem{' '}
+                  {personName}
                 </ButtonLabel>
               </ButtonRoot>
             </ContainerGrid>

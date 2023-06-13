@@ -49,7 +49,7 @@ export default function PersonalityPage() {
   return (
     <>
       <NextSeo
-        title={`${personName}-${personality?.title}  | Magiscrita`}
+        title={`${personName}-${personality?.infos.title}  | Magiscrita`}
         noindex
       />
       <ProjectPageLayout
@@ -59,7 +59,7 @@ export default function PersonalityPage() {
           'Personagens',
           `${personName}`,
           'Personalidade',
-          personality?.title ?? 'Carregando...',
+          personality?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -84,13 +84,13 @@ export default function PersonalityPage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {personality?.title}
+                {personality?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {personality?.description}
+                {personality?.infos.description}
               </Text>
             </InfoDefault>
 
@@ -99,40 +99,44 @@ export default function PersonalityPage() {
                 css={{ gap: '$8', marginTop: '$4' }}
                 padding={0}
                 columns={
-                  personality?.consequences && personality.consequences[0]
+                  personality?.collections.consequence.itens &&
+                  personality.collections.consequence.itens[0]
                     ? 2
                     : 1
                 }
               >
-                {personality?.consequences && personality.consequences[0] ? (
-                  personality.consequences.map((consequence) => (
-                    <ContainerGrid
-                      padding={4}
-                      css={{
-                        background: '$gray700',
-                        borderRadius: '$sm',
-                        boxShadow: '$default',
-                      }}
-                      key={consequence.id}
-                    >
-                      <InfoDefault size="lg" title="Titulo:">
-                        <Text
-                          family="body"
-                          size="xl"
-                          height="shorter"
-                          weight="bold"
-                        >
-                          {consequence?.title}
-                        </Text>
-                      </InfoDefault>
+                {personality?.collections.consequence.itens &&
+                personality.collections.consequence.itens[0] ? (
+                  personality.collections.consequence.itens.map(
+                    (consequence) => (
+                      <ContainerGrid
+                        padding={4}
+                        css={{
+                          background: '$gray700',
+                          borderRadius: '$sm',
+                          boxShadow: '$default',
+                        }}
+                        key={consequence.id}
+                      >
+                        <InfoDefault size="lg" title="Titulo:">
+                          <Text
+                            family="body"
+                            size="xl"
+                            height="shorter"
+                            weight="bold"
+                          >
+                            {consequence?.infos.title}
+                          </Text>
+                        </InfoDefault>
 
-                      <InfoDefault title="Descrição:">
-                        <Text family="body" height="shorter" weight="bold">
-                          {consequence?.description}
-                        </Text>
-                      </InfoDefault>
-                    </ContainerGrid>
-                  ))
+                        <InfoDefault title="Descrição:">
+                          <Text family="body" height="shorter" weight="bold">
+                            {consequence?.infos.description}
+                          </Text>
+                        </InfoDefault>
+                      </ContainerGrid>
+                    ),
+                  )
                 ) : (
                   <ListEmpty
                     message="Nenhuma consequência adicionada a lista."
@@ -145,8 +149,8 @@ export default function PersonalityPage() {
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {personality?.created_at
-                  ? getDate(personality?.created_at)
+                {personality?.infos.createdAt
+                  ? getDate(personality?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -156,7 +160,7 @@ export default function PersonalityPage() {
         <CommentsOnPage
           onNewComment={handleCommentInPersonality}
           permission={permission}
-          comments={personality?.comments}
+          comments={personality?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
 

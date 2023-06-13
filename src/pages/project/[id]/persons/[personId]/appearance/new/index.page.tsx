@@ -128,7 +128,7 @@ export default function NewAppearancePage() {
             icon={<Person size={40} />}
             label={
               appearanceSelected && appearance
-                ? `Aparência selecionada: ${appearance.title}`
+                ? `Aparência selecionada: ${appearance.infos.title}`
                 : 'Nova aparência'
             }
             inTop
@@ -215,7 +215,7 @@ export default function NewAppearancePage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{appearance?.title}&quot; ao personagem{' '}
+                  Atribuir &quot;{appearance?.infos.title}&quot; ao personagem{' '}
                   {personName}
                 </ButtonLabel>
               </ButtonRoot>

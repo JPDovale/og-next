@@ -34,15 +34,7 @@ export function CardBook({
   const { id } = router.query
 
   const { findBook } = useProject(projectId)
-  const {
-    book,
-    bookTitle,
-    createdAt,
-    literaryGenre,
-    updatedAt,
-    isbn,
-    bookFrontCover,
-  } = findBook(bookId)
+  const { book, createdAt, updatedAt } = findBook(bookId)
 
   return (
     <CardBookContainer
@@ -52,10 +44,10 @@ export function CardBook({
     >
       <PreviewContainer isPreview={isPreview}>
         <ImageContainer>
-          {bookFrontCover ? (
+          {book?.frontCover.url ? (
             <Image
-              src={bookFrontCover}
-              alt={bookTitle}
+              src={book.frontCover.url}
+              alt={book.frontCover.alt}
               width={400}
               height={400}
               data-testid="image-cover"
@@ -73,21 +65,21 @@ export function CardBook({
 
         <InfosContainer>
           <InfoDefault size={isPreview ? 'sm' : 'md'} title="Nome:">
-            {bookTitle}
+            {book?.name.fullName}
           </InfoDefault>
 
           <InfoDefault size={isPreview ? 'sm' : 'md'} title="Gênero literário:">
-            {literaryGenre}
+            {book?.infos.literaryGenre}
           </InfoDefault>
 
           <InfoContainer>
             <InfoDefault
               size={isPreview ? 'sm' : 'md'}
-              title={`Progresso: ${book?.written_words} de ${book?.words} palavras escritas`}
+              title={`Progresso: ${book?.infos.writtenWords} de ${book?.infos.words} palavras escritas`}
             >
               <ProgressBar
-                final={book?.words ?? 0}
-                actual={book?.written_words ?? 0}
+                final={book?.infos.words ?? 0}
+                actual={book?.infos.writtenWords ?? 0}
               />
             </InfoDefault>
           </InfoContainer>
@@ -98,7 +90,7 @@ export function CardBook({
                 Gêneros:
               </Text>
               <Text size="xs" weight="bold">
-                {book?._count.genres}
+                {book?.collections.genre.itensLength}
               </Text>
             </Info>
 
@@ -107,7 +99,7 @@ export function CardBook({
                 Autores:
               </Text>
               <Text size="xs" weight="bold">
-                {book?._count.authors}
+                {book?.collections.author.itensLength}
               </Text>
             </Info>
 
@@ -116,7 +108,7 @@ export function CardBook({
                 Capítulos:
               </Text>
               <Text size="xs" weight="bold">
-                {book?._count.capitules}
+                {book?.collections.capitules.itensLength}
               </Text>
             </Info>
           </InfoContainer>
@@ -127,7 +119,7 @@ export function CardBook({
                 ISBN:
               </Text>
               <Text size="xs" weight="bold">
-                {isbn}
+                {book?.infos.isbn}
               </Text>
             </Info>
           </InfoContainer>

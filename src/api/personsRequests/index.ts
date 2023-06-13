@@ -1,4 +1,6 @@
 import { IUpdatePersonDTO } from '@api/dtos/IUpdatePersonDTO'
+import { IResponse } from '@api/responses/IResponse'
+import { IPersonResponse } from '@api/responsesTypes/person/IPerson'
 import { api } from '..'
 import { ICreateCommentDTO } from '../dtos/ICreateNewCommentDTO'
 import { ICreateObjectiveDTO } from '../dtos/ICreateObjectiveDTO'
@@ -23,7 +25,9 @@ export async function getAllPersonsThisUserRequest(projectId: string) {
   }
 }
 
-export async function getPersonRequest(personId: string) {
+export async function getPersonRequest(
+  personId: string,
+): Promise<IResponse<IPersonResponse>> {
   try {
     const response = await api.get(`/persons/${personId}`)
     return response.data

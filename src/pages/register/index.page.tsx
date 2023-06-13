@@ -10,7 +10,7 @@ import {
 
 import { useForm } from 'react-hook-form'
 
-import LogoToDown from '../../assets/logos/logoOG.png'
+import LogoToDown from '../../assets/logos/logo.png'
 import Image from 'next/image'
 import { Text } from '@components/usefull/Text'
 import Link from 'next/link'

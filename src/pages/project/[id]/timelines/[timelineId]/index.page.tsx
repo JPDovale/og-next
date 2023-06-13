@@ -1,5 +1,4 @@
 import * as Dialog from '@radix-ui/react-dialog'
-import { ITimeEvent } from '@api/responsesTypes/ITimeLineResponse'
 import { TimeLineCalendar } from '@components/TimelinesComponents/TimeLineCalendar'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
@@ -24,6 +23,7 @@ import { EventCard, EventImportance, EventInfos, EventTime } from './styles'
 import { NewTimeEventModal } from '@components/TimelinesComponents/NewTimeEventModal'
 import { getDate } from '@utils/dates/getDate'
 import { NewTimeEventToDoToDoModal } from '@components/TimelinesComponents/NewTimeEventToDoModal'
+import { ITimeEvent } from '@api/responsesTypes/timeline/ITimeLine'
 // import { CommentsOnPage } from '@components/ProjectsComponents/CommentsOnPage'
 
 interface IEventInThisMonth {
@@ -49,15 +49,15 @@ export default function TimeLinePage() {
       i ===
       self.findIndex(
         (obj) =>
-          obj.happened_month === event.happened_month &&
-          obj.happened_year === event.happened_year,
+          obj.happened.month === event.happened.month &&
+          obj.happened.year === event.happened.year,
       ),
   )
   const eventInitial = monthsWeenExistsEvent[currentEventIndex]
-  const monthEvent = getMonthName(eventInitial?.happened_month)
+  const monthEvent = getMonthName(eventInitial?.happened.month)
 
   const { eventsInThisMonth, eventsAllocatedInThisMonth } = useMemo(() => {
-    const currentDate = dayjs(Number(eventInitial?.happened_date_timestamp))
+    const currentDate = dayjs(eventInitial?.happened.timestamp)
       .add(1, 'day')
       .set('date', 1)
 
@@ -71,8 +71,8 @@ export default function TimeLinePage() {
     const eventsAllocatedInThisMonth = eventsInChronologicOrd.filter(
       (event) => {
         return (
-          event.happened_month === dayIsInMonth.toString().padStart(2, '0') &&
-          event.happened_year === currentDate.get('year').toString()
+          event.happened.month === dayIsInMonth.toString().padStart(2, '0') &&
+          event.happened.year === currentDate.get('year').toString()
         )
       },
     )
@@ -86,7 +86,7 @@ export default function TimeLinePage() {
       }
 
       eventsAllocatedInThisMonth.map((eventAllocated) => {
-        const eventAllocatedInThisDay = eventAllocated.happened_day === i + 1
+        const eventAllocatedInThisDay = eventAllocated.happened.day === i + 1
 
         if (eventAllocatedInThisDay) {
           eventsInThisDay.events.push(eventAllocated)
@@ -110,7 +110,7 @@ export default function TimeLinePage() {
     eventInitial
 
   const { person: personInEventIfExiste } = usePerson(
-    eventSelectedToShow?.timeEventBorn?.person.id ?? '',
+    eventSelectedToShow?.collections.timeEventBorn?.person.id ?? '',
   )
 
   function handleSelectEvent(id: string) {
@@ -213,7 +213,7 @@ export default function TimeLinePage() {
                   </ButtonRoot>
                 </Dialog.Trigger>
 
-                {timeLine?.type === 'plan' ? (
+                {timeLine?.infos.type === 'plan' ? (
                   <NewTimeEventModal projectId={project?.id ?? ''} />
                 ) : (
                   <NewTimeEventToDoToDoModal
@@ -247,7 +247,7 @@ export default function TimeLinePage() {
                     <ContainerGrid padding={0}>
                       {events.map((event) => (
                         <EventCard
-                          importance={event.importance}
+                          importance={event.infos.importance}
                           key={event.id}
                           onClick={() => handleSelectEvent(event.id)}
                           selected={
@@ -256,12 +256,12 @@ export default function TimeLinePage() {
                         >
                           <EventTime>
                             <Text weight="bold" family="body" size="lg">
-                              {event.happened_hour.toString().padStart(2, '0')}:
-                              {event.happened_minute
+                              {event.happened.hour.toString().padStart(2, '0')}:
+                              {event.happened.minute
                                 .toString()
                                 .padStart(2, '0')}
                               :
-                              {event.happened_second
+                              {event.happened.second
                                 .toString()
                                 .padStart(2, '0')}
                             </Text>
@@ -333,61 +333,66 @@ export default function TimeLinePage() {
                 {eventSelectedToShow?.description}
               </Text>
 
-              {!eventSelectedToShow?.timeEventToDo && (
-                <EventImportance importance={eventSelectedToShow?.importance}>
+              {!eventSelectedToShow?.collections.timeEventToDo && (
+                <EventImportance
+                  importance={eventSelectedToShow?.infos.importance}
+                >
                   Nível de importância do evento:{' '}
-                  {eventSelectedToShow?.importance}
+                  {eventSelectedToShow?.infos.importance}
                 </EventImportance>
               )}
 
-              {eventSelectedToShow?.timeEventBorn && personInEventIfExiste && (
-                <ContainerGrid padding={0} columns={1}>
-                  <InfoDefault title="Personagem:">
-                    <ContainerGrid columns={2} padding={0}>
-                      <AvatarWeb
-                        size="2xl"
-                        src={personInEventIfExiste.image_url ?? undefined}
-                      />
-                      <ContainerGrid padding={0} css={{ gap: '0' }}>
-                        <InfoDefault title="Nome" size="xs">
-                          {personInEventIfExiste?.name}{' '}
-                          {personInEventIfExiste?.last_name}
-                        </InfoDefault>
+              {eventSelectedToShow?.collections.timeEventBorn &&
+                personInEventIfExiste && (
+                  <ContainerGrid padding={0} columns={1}>
+                    <InfoDefault title="Personagem:">
+                      <ContainerGrid columns={2} padding={0}>
+                        <AvatarWeb
+                          size="2xl"
+                          src={personInEventIfExiste.image.url}
+                        />
+                        <ContainerGrid padding={0} css={{ gap: '0' }}>
+                          <InfoDefault title="Nome" size="xs">
+                            {personInEventIfExiste?.name.full}
+                          </InfoDefault>
 
-                        <InfoDefault title="Idade" size="xs">
-                          {personInEventIfExiste?.age}
-                        </InfoDefault>
+                          <InfoDefault title="Idade" size="xs">
+                            {personInEventIfExiste?.age.number}
+                          </InfoDefault>
+                        </ContainerGrid>
                       </ContainerGrid>
-                    </ContainerGrid>
-                  </InfoDefault>
+                    </InfoDefault>
 
-                  <InfoDefault title="História:">
-                    <Text
-                      family="body"
-                      height="shorter"
-                      size="lg"
-                      dangerouslySetInnerHTML={{
-                        __html: personInEventIfExiste?.history,
-                      }}
-                    />
-                  </InfoDefault>
-                </ContainerGrid>
-              )}
+                    <InfoDefault title="História:">
+                      <Text
+                        family="body"
+                        height="shorter"
+                        size="lg"
+                        dangerouslySetInnerHTML={{
+                          __html: personInEventIfExiste?.history,
+                        }}
+                      />
+                    </InfoDefault>
+                  </ContainerGrid>
+                )}
 
-              {eventSelectedToShow?.timeEventToDo &&
-                eventSelectedToShow.importance > 2 && (
+              {eventSelectedToShow?.collections.timeEventToDo &&
+                eventSelectedToShow.infos.importance > 2 && (
                   <ContainerGrid padding={0}>
                     <InfoDefault
                       title={
-                        eventSelectedToShow?.timeEventToDo.completed_at
+                        eventSelectedToShow?.collections.timeEventToDo
+                          ?.completed_at
                           ? 'Concluído:'
                           : 'Marcar como concluído'
                       }
                     >
-                      {eventSelectedToShow?.timeEventToDo.completed_at ? (
+                      {eventSelectedToShow?.collections.timeEventToDo
+                        .completed_at ? (
                         <Text family="body" size="lg" weight="bold">
                           {getDate(
-                            eventSelectedToShow?.timeEventToDo.completed_at,
+                            eventSelectedToShow?.collections.timeEventToDo
+                              .completed_at,
                           )}
                         </Text>
                       ) : (

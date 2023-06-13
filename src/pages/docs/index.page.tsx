@@ -29,7 +29,7 @@ export default function DocsPage({ page, labelsProjects }: IDocPageProps) {
       <NextSeo title="Documentação - Introdução | MagiScrita" />
 
       <DocsPageContainer>
-        <Header disableShadow />
+        <Header user={null} userIsPro={false} disableShadow />
 
         <Documentation>
           <SideBar

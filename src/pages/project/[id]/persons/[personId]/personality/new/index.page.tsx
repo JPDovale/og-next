@@ -202,7 +202,7 @@ export default function NewPersonalityPage() {
             icon={<UserCircleGear size={40} />}
             label={
               personalitySelected && personality
-                ? `Personalidade selecionada: ${personality.title}`
+                ? `Personalidade selecionada: ${personality.infos.title}`
                 : 'Nova personalidade'
             }
             inTop
@@ -345,7 +345,7 @@ export default function NewPersonalityPage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{personality?.title}&quot; ao personagem{' '}
+                  Atribuir &quot;{personality?.infos.title}&quot; ao personagem{' '}
                   {personName}
                 </ButtonLabel>
               </ButtonRoot>

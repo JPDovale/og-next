@@ -24,14 +24,14 @@ export default function DetailsPage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsDetails = project?.comments?.filter(
+  const commentsDetails = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'details',
   )
 
   async function handleUpdateDetails() {
     setSuccessMessage('')
 
-    if (details === project?.details) return
+    if (details === project?.plot.details) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       details: details || null,
@@ -83,7 +83,7 @@ export default function DetailsPage() {
         <Editor
           handleUpdate={handleUpdateDetails}
           permission={permission}
-          preValue={project?.details ?? ''}
+          preValue={project?.plot.details ?? ''}
           projectId={project!.id}
           setValue={setDetails}
           to="details"
@@ -98,7 +98,7 @@ export default function DetailsPage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsDetails}
-          isNew={!project?.details}
+          isNew={!project?.plot.details}
           onNewComment={handleNewComment}
           onNewCommentTo="details"
         />

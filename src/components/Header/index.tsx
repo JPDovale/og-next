@@ -1,4 +1,3 @@
-import { useUser } from '@hooks/useUser'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import {
@@ -9,7 +8,8 @@ import {
   Space,
 } from './styles'
 
-import aloneLogoImg from '../../assets/logos/ogLogo.png'
+import aloneLogoLgImg from '../../assets/logos/ogLogoLG.png'
+import aloneLogoDkImg from '../../assets/logos/ogLogoDK.png'
 
 import {
   Article,
@@ -17,27 +17,31 @@ import {
   Files,
   ProjectorScreen,
   SignIn,
-  // Star,
+  Star,
   UserCirclePlus,
 } from 'phosphor-react'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import Link from 'next/link'
 import { useWindowSize } from '@hooks/useWindow'
+import { useContext } from 'react'
+import { InterfaceContext } from '@contexts/interface'
+import { IUser } from '@api/responsesTypes/user/IUser'
 
 interface IHeaderProps {
+  user?: IUser | null
+  userIsPro: boolean
   disableShadow?: boolean
 }
 
-export function Header({ disableShadow = false }: IHeaderProps) {
+export function Header({
+  disableShadow = false,
+  user,
+  userIsPro,
+}: IHeaderProps) {
   const router = useRouter()
-  // const location = router.pathname.split('/')[1]
   const { smallWindow } = useWindowSize()
-
-  const {
-    user,
-    // userIsPro
-  } = useUser()
+  const { theme } = useContext(InterfaceContext)
 
   return (
     <>
@@ -45,20 +49,16 @@ export function Header({ disableShadow = false }: IHeaderProps) {
         <p>.</p>
 
         <ExplorerHeader>
-          {/* {!userIsPro && (
-            <ButtonRoot
-              variant="noShadow"
-              size="xs"
-              wid="hug"
-              onClick={() => router.push('/pricing/pt_br')}
-              disabled={location === 'pricing'}
-            >
-              <ButtonIcon>
-                <Star weight="fill" color="#f97700" />
-              </ButtonIcon>
-              <ButtonLabel>Preços</ButtonLabel>
-            </ButtonRoot>
-          )} */}
+          {!userIsPro && (
+            <Link href={'/pricing/pt_br'}>
+              <ButtonRoot as="a" variant="noShadow" size="xs" wid="hug">
+                <ButtonIcon>
+                  <Star weight="fill" color="#f97700" />
+                </ButtonIcon>
+                <ButtonLabel>Preços</ButtonLabel>
+              </ButtonRoot>
+            </Link>
+          )}
 
           {!smallWindow && (
             <>
@@ -93,7 +93,12 @@ export function Header({ disableShadow = false }: IHeaderProps) {
         </ExplorerHeader>
 
         <ImageContent>
-          <Image src={aloneLogoImg} alt="Magiscrita" quality={100} priority />
+          <Image
+            src={theme === 'light' ? aloneLogoLgImg : aloneLogoDkImg}
+            alt="Magiscrita"
+            quality={100}
+            priority
+          />
         </ImageContent>
 
         <ButtonsContent>

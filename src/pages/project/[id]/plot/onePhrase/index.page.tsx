@@ -24,14 +24,14 @@ export default function OnePhrasePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsOnePhrase = project?.comments?.filter(
+  const commentsOnePhrase = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'onePhrase',
   )
 
   async function handleUpdateOnePhrase() {
     setSuccessMessage('')
 
-    if (onePhrase === project?.one_phrase) return
+    if (onePhrase === project?.plot.onePhrase) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       onePhrase: onePhrase || null,
@@ -84,7 +84,7 @@ export default function OnePhrasePage() {
         <Editor
           handleUpdate={handleUpdateOnePhrase}
           permission={permission}
-          preValue={project?.one_phrase ?? ''}
+          preValue={project?.plot.onePhrase ?? ''}
           projectId={project?.id}
           setValue={setOnePhrase}
           to="onePhrase"
@@ -121,7 +121,7 @@ export default function OnePhrasePage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsOnePhrase}
-          isNew={!project?.one_phrase}
+          isNew={!project?.plot.onePhrase}
           onNewComment={handleNewComment}
           onNewCommentTo="onePhrase"
         />

@@ -124,7 +124,7 @@ export default function NewDreamPage() {
             icon={<RainbowCloud size={40} />}
             label={
               dreamSelected && dream
-                ? `Sonho selecionado: ${dream.title}`
+                ? `Sonho selecionado: ${dream.infos.title}`
                 : 'Novo sonho'
             }
             inTop
@@ -209,7 +209,8 @@ export default function NewDreamPage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{dream?.title}&quot; ao personagem {personName}
+                  Atribuir &quot;{dream?.infos.title}&quot; ao personagem{' '}
+                  {personName}
                 </ButtonLabel>
               </ButtonRoot>
             </ContainerGrid>

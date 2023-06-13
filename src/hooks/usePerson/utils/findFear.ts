@@ -1,8 +1,8 @@
-import { IFear, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IFear, IPerson } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindFear {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -15,7 +15,7 @@ interface IResponseFear {
 }
 
 export function findFearUtil({ id, person }: IFindFear): IResponseFear {
-  const fear = person?.fears?.find((fear) => fear.id === id)
+  const fear = person?.collections.fear.itens?.find((fear) => fear.id === id)
 
   const response: IResponseFear = {
     fear,
