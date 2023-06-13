@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://www.ognare.com.br
+Host: https://magiscrita.com
 
 # Sitemaps
-Sitemap: https://www.ognare.com.br/sitemap.xml
+Sitemap: https://magiscrita.com/sitemap.xml

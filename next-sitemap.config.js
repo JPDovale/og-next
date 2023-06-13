@@ -1,4 +1,4 @@
 module.exports = {
-  siteUrl: 'https://www.ognare.com.br',
+  siteUrl: 'https://magiscrita.com',
   generateRobotsTxt: true,
 }
