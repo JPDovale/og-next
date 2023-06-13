@@ -3,6 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import LogoToLeft from '../../assets/logos/logo.png'
 import {
   Article,
+  Atom,
   Bookmark,
   FilePlus,
   Files,
@@ -287,6 +288,24 @@ export function NavigationBar() {
 
           {navIsOpen && <ButtonLabel>Documentação</ButtonLabel>}
         </ButtonRoot>
+
+        <ButtonRoot
+          type="button"
+          size="sm"
+          title="AI"
+          align={navIsOpen ? 'left' : 'center'}
+          onClick={() => {
+            router.push('https://forgecontentai.magiscrita.com/')
+            smallWindow && setNavIsOpen(false)
+          }}
+        >
+          <ButtonIcon>
+            <Atom />
+          </ButtonIcon>
+
+          {navIsOpen && <ButtonLabel>Forge Content AI</ButtonLabel>}
+        </ButtonRoot>
+
         {!userIsPro && (
           <ButtonRoot
             type="button"

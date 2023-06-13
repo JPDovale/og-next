@@ -6,6 +6,7 @@ import { Text } from '@components/usefull/Text'
 import { useRouter } from 'next/router'
 import {
   Article,
+  Atom,
   Files,
   Fingerprint,
   Gear,
@@ -142,6 +143,21 @@ export function UserOptionsPopover() {
             </ButtonIcon>
 
             <ButtonLabel>Documentação</ButtonLabel>
+          </ButtonRoot>
+
+          <ButtonRoot
+            variant="noShadow"
+            size="xs"
+            type="button"
+            onClick={() => {
+              router.push('https://forgecontentai.magiscrita.com/')
+            }}
+          >
+            <ButtonIcon>
+              <Atom weight="bold" />
+            </ButtonIcon>
+
+            <ButtonLabel>Forge Content AI</ButtonLabel>
           </ButtonRoot>
 
           <ButtonRoot
