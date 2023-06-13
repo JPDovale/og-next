@@ -56,7 +56,7 @@ export default function PricingPTBRPage({ prices }: IPricingPTBRPage) {
       <NextSeo title="Preços dos planos do MagiScrita" />
 
       <PricingPTBRPageContainer>
-        <Header user={user} userIsPro={userIsPro ?? false} />
+        <Header />
 
         <ToastError error={error} setError={setError} />
 
