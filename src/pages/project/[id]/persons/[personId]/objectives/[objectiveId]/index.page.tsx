@@ -30,10 +30,11 @@ export default function ObjectivePage() {
     objectiveId as string,
   )
 
-  const personsInObjectiveIds = finalObjective?.persons?.map((person) => {
-    if (person.id === personId) return ''
-    return person.id
-  })
+  const personsInObjectiveIds =
+    finalObjective?.collections.referencesIt.itens?.map((person) => {
+      if (person.id === personId) return ''
+      return person.id
+    })
   const personsInObjective = findManyPersons(personsInObjectiveIds ?? [])
 
   async function handleCommentInObjective(newComment: ICreateCommentDTO) {

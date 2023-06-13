@@ -349,16 +349,15 @@ export default function TimeLinePage() {
                       <ContainerGrid columns={2} padding={0}>
                         <AvatarWeb
                           size="2xl"
-                          src={personInEventIfExiste.image_url ?? undefined}
+                          src={personInEventIfExiste.image.url}
                         />
                         <ContainerGrid padding={0} css={{ gap: '0' }}>
                           <InfoDefault title="Nome" size="xs">
-                            {personInEventIfExiste?.name}{' '}
-                            {personInEventIfExiste?.last_name}
+                            {personInEventIfExiste?.name.full}
                           </InfoDefault>
 
                           <InfoDefault title="Idade" size="xs">
-                            {personInEventIfExiste?.age}
+                            {personInEventIfExiste?.age.number}
                           </InfoDefault>
                         </ContainerGrid>
                       </ContainerGrid>

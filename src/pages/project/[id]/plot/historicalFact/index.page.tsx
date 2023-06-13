@@ -31,7 +31,7 @@ export default function HistoricalFactPage() {
   async function handleUpdateHistoricalFact() {
     setSuccessMessage('')
 
-    if (historicalFact === project?.historical_fact) return
+    if (historicalFact === project?.plot.historicalFact) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       historicalFact: historicalFact || null,
@@ -84,7 +84,7 @@ export default function HistoricalFactPage() {
         <Editor
           handleUpdate={handleUpdateHistoricalFact}
           permission={permission}
-          preValue={project?.historical_fact ?? ''}
+          preValue={project?.plot.historicalFact ?? ''}
           projectId={project!.id}
           setValue={setHistoricalFact}
           to="historicalFact"
@@ -122,7 +122,7 @@ export default function HistoricalFactPage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsHistoricalFact}
-          isNew={!project?.historical_fact}
+          isNew={!project?.plot.historicalFact}
           onNewComment={handleNewComment}
           onNewCommentTo="historicalFact"
         />

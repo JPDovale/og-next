@@ -1,5 +1,6 @@
 import { IScene } from '@api/responsesTypes/capitule/ICapitule'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPersonInObject } from '@api/responsesTypes/person/IPerson'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Checkbox } from '@components/usefull/Checkbox'
@@ -38,7 +39,6 @@ const writtenWordsInput = z.string().regex(/^([0-9]+)$/, {
 export function SceneCard({
   scene,
   persons,
-  bookId,
   capituleId,
   setOnEditScene,
 }: ISceneCardProps) {
@@ -303,7 +303,7 @@ export function SceneCard({
                 size="2xs"
                 columns={10}
                 listEmptyMessage="Nenhum personagem presente na cena"
-                persons={persons}
+                persons={persons as unknown as IPersonInObject[]}
               />
             </InfoDefault>
 
