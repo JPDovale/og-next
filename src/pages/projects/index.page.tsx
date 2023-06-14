@@ -19,8 +19,7 @@ export default function ProjectsPage() {
     },
   })
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   return (
     <>

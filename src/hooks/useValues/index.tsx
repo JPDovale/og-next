@@ -1,5 +1,5 @@
 import { getValuesRequest } from '@api/projectsRequests'
-import { IValue } from '@api/responsesTypes/IPersonsResponse'
+import { IValue } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -13,18 +13,18 @@ export function useValues(projectId: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getValuesRequest(projectId)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const values = response.values as IValue[]
+      const values = response.data?.values as IValue[]
 
       return { values, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function useValues(projectId: string) {
 
   function findValueWherePersonNotExisteIn(personId: string) {
     const valuesWherePersonNorFund = values.filter((value) => {
-      const personExisteInValue = value.persons?.find(
+      const personExisteInValue = value.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

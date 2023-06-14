@@ -17,8 +17,7 @@ export default function BoxesPage() {
 
   const { boxes, loadingBoxes } = useBoxes()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   usePreventBack()
 

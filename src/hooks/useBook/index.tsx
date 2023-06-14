@@ -1,5 +1,6 @@
 import { getBookRequest } from '@api/booksRequests'
-import { IBooksResponse, ICapitule } from '@api/responsesTypes/IBooksResponse'
+import { IBook } from '@api/responsesTypes/book/IBook'
+import { ICapitulePreview } from '@api/responsesTypes/capitule/ICapitulePreview'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useProject } from '@hooks/useProject'
 import { useUser } from '@hooks/useUser'
@@ -24,7 +25,7 @@ export interface IInfos {
 }
 
 export interface IFindCapituleResponse {
-  capitule: ICapitule | undefined
+  capitule: ICapitulePreview | undefined
   capituleName: string
   capituleWords: number
 }
@@ -41,18 +42,18 @@ export function useBook(id: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token' && !isRefreshingSession) {
+      if (response.error?.title === 'Login failed' && !isRefreshingSession) {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getBookRequest(id)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const book = response.book as IBooksResponse
+      const book = response.data?.book as IBook
 
       return { book, errorMessage, errorTitle }
     },
@@ -61,27 +62,19 @@ export function useBook(id: string) {
     },
   )
 
-  const { refetchProject } = useProject(data?.book.project_id ?? '')
+  const { refetchProject } = useProject(data?.book.infos.projectId ?? '')
 
   const book = data?.book ?? null
-
+  const loadingBook = isLoading || loadingUser
   const refetchBook = refetch
-  const loadingBook = !(!loadingUser && !isLoading)
-  const bookName = loadingBook
-    ? 'Carregando...'
-    : `${book?.title}
-     ${book?.subtitle ? ' - ' + book.subtitle : ''}`
   const bookInfos = constructInfosBook(book)
 
-  const bookWords = book?.words || 0
-  const bookWrittenWords = book?.written_words || 0
-
-  const bookAuthors = book?.authors ?? []
-
   function findCapitule(id: string): IFindCapituleResponse {
-    const capitule = book?.capitules?.find((capitule) => capitule.id === id)
+    const capitule = book?.collections.capitules?.itens.find(
+      (capitule) => capitule.id === id,
+    )
     const capituleName = capitule?.name || 'Carregando...'
-    const capituleWords = Number(capitule?.words)
+    const capituleWords = capitule?.infos.words ?? 0
 
     return { capitule, capituleName, capituleWords }
   }
@@ -102,12 +95,8 @@ export function useBook(id: string) {
 
   return {
     book,
-    bookName,
     bookInfos,
-    bookAuthors,
     findCapitule,
-    bookWords,
-    bookWrittenWords,
     loadingBook,
     callEvent,
     refetchBook,

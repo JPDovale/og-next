@@ -25,5 +25,8 @@ export function useWindowSize() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  return windowSize
+  const smallWindow = windowSize.width! < 786
+  const largeWindow = windowSize.width! > 1700
+
+  return { windowSize, smallWindow, largeWindow }
 }

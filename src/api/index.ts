@@ -6,12 +6,14 @@ const cookieJar = new CookieJar()
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_OG_API_CONNECTION,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  jar: cookieJar,
 })
 
 wrapper(api)
-
-api.defaults.jar = cookieJar
-api.defaults.withCredentials = true
 
 export async function GetInfoUser() {
   try {

@@ -15,8 +15,7 @@ export default function SharedPage() {
 
   const { projectsSharedWithUser, loadingProjects } = useProjects()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   return (
     <>

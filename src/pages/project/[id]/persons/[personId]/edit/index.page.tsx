@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { EditContainer, Info } from './styles'
 import {
   Crosshair,
@@ -28,19 +28,22 @@ import { Text } from '@components/usefull/Text'
 import { TextInputInput, TextInputRoot } from '@components/usefull/InputText'
 import { TextEditor } from '@components/TextEditor'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
-import { ToastError } from '@components/usefull/ToastError'
 import { usePerson } from '@hooks/usePerson'
 import { getDate } from '@utils/dates/getDate'
-import { IError } from '@@types/errors/IError'
 import { IUpdatePersonDTO } from '@api/dtos/IUpdatePersonDTO'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { LabelInput } from '@components/usefull/LabelInput'
 import { Checkbox } from '@components/usefull/Checkbox'
+import { InterfaceContext } from '@contexts/interface'
 
 const personFormSchema = z.object({
   name: z.string().optional().nullable(),
   lastName: z.string().optional().nullable(),
-  age: z.coerce.number().optional().nullable(),
+  age: z.coerce
+    .number()
+    .max(999999, 'A idade maxima permitida é 999999')
+    .optional()
+    .nullable(),
   history: z.string().optional().nullable(),
   bornMonth: z.coerce
     .number({ invalid_type_error: 'Coloque apenas números no mês.' })
@@ -77,8 +80,9 @@ const personFormSchema = z.object({
 type PersonFormData = z.infer<typeof personFormSchema>
 
 export default function EditPersonPage() {
-  const [error, setError] = useState<IError | null>(null)
   const [unknownAge, setUnknownAge] = useState(false)
+
+  const { setError } = useContext(InterfaceContext)
 
   const router = useRouter()
   const { id, personId } = router.query
@@ -115,8 +119,7 @@ export default function EditPersonPage() {
     }
   }, [unknownAge, setValue])
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { GoBackButton } = usePreventBack(
     `/project/${project?.id}/persons/${person?.id}`,
@@ -137,12 +140,13 @@ export default function EditPersonPage() {
 
     const { resolved, error } = await callEvent.update(updatedPerson)
 
-    if (resolved) {
-      reset()
-    }
-
     if (error) {
       setError(error)
+      return
+    }
+
+    if (resolved) {
+      reset()
     }
   }
 
@@ -167,14 +171,12 @@ export default function EditPersonPage() {
         <EditContainer onSubmit={handleSubmit(handleUpdatePerson)}>
           <GoBackButton topDistance={4} />
 
-          <ToastError error={error} setError={setError} />
-
           <ContainerGrid padding={4} darkBackground>
             <ContainerGrid padding={0}>
               <LabelInput label="Nome" error={formState.errors.name?.message}>
                 <TextInputRoot size="sm">
                   <TextInputInput
-                    placeholder={person?.name}
+                    placeholder={person?.name.first}
                     {...register('name')}
                   />
                 </TextInputRoot>
@@ -186,7 +188,7 @@ export default function EditPersonPage() {
               >
                 <TextInputRoot size="sm">
                   <TextInputInput
-                    placeholder={person?.last_name}
+                    placeholder={person?.name.last}
                     {...register('lastName')}
                   />
                 </TextInputRoot>
@@ -196,7 +198,9 @@ export default function EditPersonPage() {
                 <TextInputRoot size="sm">
                   <TextInputInput
                     placeholder={
-                      person?.age ? person.age.toString() : 'Idade desconhecida'
+                      person?.age.number
+                        ? person.age.number.toString()
+                        : 'Idade desconhecida'
                     }
                     {...register('age')}
                   />
@@ -227,7 +231,9 @@ export default function EditPersonPage() {
                   >
                     <TextInputInput
                       placeholder={
-                        person?.age ? person?.born_month : 'Desconhecido'
+                        person?.age.number
+                          ? person?.age.bornDateMonth
+                          : 'Desconhecido'
                       }
                       {...register('bornMonth')}
                     />
@@ -246,8 +252,8 @@ export default function EditPersonPage() {
                   >
                     <TextInputInput
                       placeholder={
-                        person?.age
-                          ? person?.born_day.toString()
+                        person?.age.number
+                          ? person?.age.bornDateDay.toString()
                           : 'Desconhecido'
                       }
                       {...register('bornDay')}
@@ -267,13 +273,13 @@ export default function EditPersonPage() {
                   >
                     <TextInputInput
                       placeholder={
-                        person?.age
-                          ? person?.born_hour.toString()
+                        person?.age.number
+                          ? person?.age.bornDateHour.toString()
                           : 'Desconhecido'
                       }
                       {...register('bornHour')}
                     />
-                  </TextInputRoot>{' '}
+                  </TextInputRoot>
                 </LabelInput>
 
                 <LabelInput
@@ -290,8 +296,8 @@ export default function EditPersonPage() {
                   >
                     <TextInputInput
                       placeholder={
-                        person?.age
-                          ? person?.born_minute.toString()
+                        person?.age.number
+                          ? person?.age.bornDateMinute.toString()
                           : 'Desconhecido'
                       }
                       {...register('bornMinute')}
@@ -313,8 +319,8 @@ export default function EditPersonPage() {
                   >
                     <TextInputInput
                       placeholder={
-                        person?.age
-                          ? person?.born_second.toString()
+                        person?.age.number
+                          ? person?.age.bornDateSecond.toString()
                           : 'Desconhecido'
                       }
                       {...register('bornSecond')}
@@ -345,7 +351,7 @@ export default function EditPersonPage() {
             type="submit"
             wid={smallWindow ? 'full' : 'middle'}
             align="center"
-            disabled={!formState.isDirty || formState.isSubmitting}
+            disabled={formState.isSubmitting}
             css={{
               padding: '$3 $10',
               alignSelf: 'center',
@@ -364,8 +370,8 @@ export default function EditPersonPage() {
             <Text family="body" as="label">
               <header>Data de criação</header>
               <Text size="sm">
-                {person?.created_at
-                  ? getDate(person.created_at)
+                {person?.infos.createdAt
+                  ? getDate(person.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </Text>
@@ -373,8 +379,8 @@ export default function EditPersonPage() {
             <Text family="body" as="label">
               <header>Ultima alteração</header>
               <Text size="sm">
-                {person?.updated_at
-                  ? getDate(person.updated_at)
+                {person?.infos.updatedAt
+                  ? getDate(person.infos.updatedAt)
                   : 'Carregando...'}
               </Text>
             </Text>
@@ -386,7 +392,7 @@ export default function EditPersonPage() {
                 <Crosshair />
                 Objetivos criados
               </header>
-              <Text>{person?.objectives?.length || 0}</Text>
+              <Text>{person?.collections.objective.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -394,7 +400,7 @@ export default function EditPersonPage() {
                 <RainbowCloud />
                 Sonhos criados
               </header>
-              <Text>{person?.dreams?.length || 0}</Text>
+              <Text>{person?.collections.dream.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -402,7 +408,7 @@ export default function EditPersonPage() {
                 <Warning />
                 Medos criados
               </header>
-              <Text>{person?.fears?.length || 0}</Text>
+              <Text>{person?.collections.fear.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -410,7 +416,7 @@ export default function EditPersonPage() {
                 <Person />
                 Aparências criadas
               </header>
-              <Text>{person?.appearances?.length || 0}</Text>
+              <Text>{person?.collections.appearance.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -418,7 +424,7 @@ export default function EditPersonPage() {
                 <UserCircleGear />
                 Personalidades criadas
               </header>
-              <Text>{person?.personalities?.length || 0}</Text>
+              <Text>{person?.collections.personality.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -426,7 +432,7 @@ export default function EditPersonPage() {
                 <Lightning />
                 Poderes criados
               </header>
-              <Text>{person?.powers?.length || 0}</Text>
+              <Text>{person?.collections.power.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -434,7 +440,7 @@ export default function EditPersonPage() {
                 <HeartBreak />
                 Traumas criados
               </header>
-              <Text>{person?.traumas?.length || 0}</Text>
+              <Text>{person?.collections.trauma.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -442,7 +448,7 @@ export default function EditPersonPage() {
                 <TreeStructure />
                 Valores criados
               </header>
-              <Text>{person?.values?.length || 0}</Text>
+              <Text>{person?.collections.value.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -450,7 +456,7 @@ export default function EditPersonPage() {
                 <SketchLogo />
                 Desejos criados
               </header>
-              <Text>{person?.wishes?.length || 0}</Text>
+              <Text>{person?.collections.wishe.itensLength}</Text>
             </Text>
 
             <Text family="body" as="label">
@@ -458,7 +464,7 @@ export default function EditPersonPage() {
                 <Users />
                 Casais
               </header>
-              <Text>{person?.couples?.length || 0}</Text>
+              <Text>{person?.collections.couple.itensLength}</Text>
             </Text>
           </Info>
         </EditContainer>

@@ -1,5 +1,5 @@
 import { getWishesRequest } from '@api/projectsRequests'
-import { IWishe } from '@api/responsesTypes/IPersonsResponse'
+import { IWishe } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -13,18 +13,18 @@ export function useWishes(projectId: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getWishesRequest(projectId)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const wishes = response.wishes as IWishe[]
+      const wishes = response.data?.wishes as IWishe[]
 
       return { wishes, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function useWishes(projectId: string) {
 
   function findWisheWherePersonNotExisteIn(personId: string) {
     const wishesWherePersonNorFund = wishes.filter((wishe) => {
-      const personExisteInWishe = wishe.persons?.find(
+      const personExisteInWishe = wishe.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

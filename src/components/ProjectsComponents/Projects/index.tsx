@@ -1,8 +1,9 @@
+import { IProjectPreview } from '@api/responsesTypes/project/IProjectPreview'
 import { ListEmpty } from '@components/usefull/ListEmpty'
-import { IProjectPreview } from '@hooks/useProjects/entities/IProjectPreview'
 import { useUser } from '@hooks/useUser'
 import { ProjectorScreenChart } from 'phosphor-react'
 import { CardProject } from '../CardProject'
+import { CardProjectSkeleton } from '../CardProject/skeleton'
 import { ProjectsContainer } from './styles'
 
 interface IProjectProps {
@@ -20,7 +21,17 @@ export function Projects({
   isLoading,
   isFirst = false,
 }: IProjectProps) {
-  const { user } = useUser()
+  const { user, loadingUser } = useUser()
+
+  if (loadingUser) {
+    return (
+      <ProjectsContainer isFirst={isFirst}>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <CardProjectSkeleton key={i} />
+        ))}
+      </ProjectsContainer>
+    )
+  }
 
   return (
     <ProjectsContainer isFirst={isFirst} isEmpty={projects && !projects[0]}>
@@ -28,7 +39,7 @@ export function Projects({
         return (
           <CardProject
             key={project.id}
-            isSharable={project.creator.id === user?.id}
+            isSharable={project.creator.id === user?.account.id}
             project={project}
           />
         )

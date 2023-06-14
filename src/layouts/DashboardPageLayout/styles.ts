@@ -14,6 +14,20 @@ export const DashboardPageLayoutContainer = styled('main', {
   overflowY: 'auto',
 
   variants: {
+    disableAccessibilityBottom: {
+      true: {
+        paddingBottom: 0,
+      },
+      false: {
+        paddingBottom: '$40',
+      },
+    },
+    disableScroll: {
+      true: {
+        overflowY: 'hidden',
+      },
+      false: {},
+    },
     NavIsOpen: {
       true: {
         width: '82%',

@@ -1,5 +1,5 @@
 import { getDreamsRequest } from '@api/projectsRequests'
-import { IDream } from '@api/responsesTypes/IPersonsResponse'
+import { IDream } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -13,18 +13,18 @@ export function useDreams(projectId: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getDreamsRequest(projectId)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const dreams = response.dreams as IDream[]
+      const dreams = response.data?.dreams as IDream[]
 
       return { dreams, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function useDreams(projectId: string) {
 
   function findDreamWherePersonNotExisteIn(personId: string) {
     const dreamsWherePersonNorFund = dreams.filter((dream) => {
-      const personExisteInDream = dream.persons?.find(
+      const personExisteInDream = dream.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

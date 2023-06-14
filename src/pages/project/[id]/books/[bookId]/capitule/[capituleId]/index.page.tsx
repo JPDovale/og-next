@@ -81,9 +81,7 @@ export default function CapitulePage() {
 
   const { project, projectName, permission } = useProject(id as string)
 
-  const { bookName, book, bookWrittenWords, bookWords } = useBook(
-    bookId as string,
-  )
+  const { book } = useBook(bookId as string)
 
   const {
     capitule,
@@ -103,16 +101,15 @@ export default function CapitulePage() {
   } = useForm<updateCapituleBodyData>({
     resolver: zodResolver(updateCapituleSchema),
     defaultValues: {
-      act1: capitule?.structure_act_1 ?? '',
-      act2: capitule?.structure_act_2 ?? '',
-      act3: capitule?.structure_act_3 ?? '',
+      act1: capitule?.structure.act1 ?? '',
+      act2: capitule?.structure.act2 ?? '',
+      act3: capitule?.structure.act3 ?? '',
       name: capitule?.name ?? '',
-      objective: capitule?.objective ?? '',
+      objective: capitule?.infos.objective ?? '',
     },
   })
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   async function handleUpdateCapitule(data: updateCapituleBodyData) {
     if (data.act1 === ' ') data.act1 = ''
@@ -140,12 +137,22 @@ export default function CapitulePage() {
 
   return (
     <>
-      <NextSeo title={`${bookName}-${capituleName} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${
+          book?.name.fullName ?? 'Carregando...'
+        }-${capituleName} | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
-        paths={['Livros', bookName, 'Capítulo', capituleName]}
+        paths={[
+          'Livros',
+          book?.name.fullName ?? 'Carregando...',
+          'Capítulo',
+          capituleName,
+        ]}
         loading={loadingCapitule}
         inError={!loadingCapitule && (!book || !capitule)}
         isScrolling
@@ -192,7 +199,7 @@ export default function CapitulePage() {
 
                   <Textarea
                     css={{ width: '100%', boxShadow: 'none' }}
-                    placeholder={capitule?.objective || 'Carregando...'}
+                    placeholder={capitule?.infos.objective || 'Carregando...'}
                     {...register('objective')}
                   />
                 </InputContainer>
@@ -207,7 +214,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure_act_1 || 'Não definido'}
+                      placeholder={capitule?.structure.act1 || 'Não definido'}
                       {...register('act1')}
                     />
                   </InputContainer>
@@ -222,7 +229,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure_act_2 || 'Não definido'}
+                      placeholder={capitule?.structure.act2 || 'Não definido'}
                       {...register('act2')}
                     />
                   </InputContainer>
@@ -237,7 +244,7 @@ export default function CapitulePage() {
 
                     <Textarea
                       css={{ width: '100%', boxShadow: 'none' }}
-                      placeholder={capitule?.structure_act_3 || 'Não definido'}
+                      placeholder={capitule?.structure.act3 || 'Não definido'}
                       {...register('act3')}
                     />
                   </InputContainer>
@@ -324,9 +331,12 @@ export default function CapitulePage() {
           />
           <ContainerGrid darkBackground>
             <InfoDefault
-              title={`Referente ao livro: ${bookWrittenWords} palavras escritas de ${bookWords}`}
+              title={`Referente ao livro: ${book?.infos.writtenWords} palavras escritas de ${book?.infos.words}`}
             >
-              <ProgressBar actual={bookWrittenWords} final={bookWords} />
+              <ProgressBar
+                actual={book?.infos.writtenWords ?? 0}
+                final={book?.infos.words ?? 0}
+              />
             </InfoDefault>
 
             <InfoDefault
@@ -363,15 +373,17 @@ export default function CapitulePage() {
           ) : (
             <ContainerGrid
               columns={
-                capitule?.scenes && capitule.scenes[0]
+                capitule?.collections.scene.itens &&
+                capitule.collections.scene.itens[0]
                   ? smallWindow
                     ? 1
                     : 2
                   : 1
               }
             >
-              {capitule?.scenes && capitule.scenes[0] ? (
-                capitule?.scenes?.map((scene) => {
+              {capitule?.collections.scene.itens &&
+              capitule.collections.scene.itens[0] ? (
+                capitule?.collections.scene.itens?.map((scene) => {
                   return (
                     <SceneCard
                       setOnEditScene={setOnEditScene}
@@ -379,7 +391,7 @@ export default function CapitulePage() {
                       bookId={book?.id!}
                       capituleId={capitule.id!}
                       scene={scene}
-                      persons={scene.persons}
+                      persons={scene.collections.persons.itens}
                     />
                   )
                 })

@@ -18,10 +18,10 @@ import {
 } from './styles'
 import { ShareProjectModal } from './components/ShareProjectModal'
 import { useProjects } from '@hooks/useProjects'
-import { IProjectPreview } from '@hooks/useProjects/entities/IProjectPreview'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { useUser } from '@hooks/useUser'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { IProjectPreview } from '@api/responsesTypes/project/IProjectPreview'
 
 interface ICardProjectProps {
   project: IProjectPreview
@@ -67,7 +67,7 @@ export function CardProject({
         </div>
 
         <ProjectInfos>
-          <InfosContainer>
+          <InfosContainer columns={1}>
             <InfoDefault disableBold title="Nome do projeto" size="md">
               {projectName}
             </InfoDefault>
@@ -79,7 +79,7 @@ export function CardProject({
             </InfoDefault>
 
             <InfoDefault disableBold title="Criador" size="sm">
-              {project.creator.id !== user?.id
+              {project.creator.id !== user?.account.id
                 ? project.creator.username
                 : 'Você'}
             </InfoDefault>

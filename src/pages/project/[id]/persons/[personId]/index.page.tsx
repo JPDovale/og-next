@@ -8,7 +8,7 @@ import {
   ITrauma,
   IValue,
   IWishe,
-} from '@api/responsesTypes/IPersonsResponse'
+} from '@api/responsesTypes/person/IPerson'
 import { CardObjective } from '@components/PersonsComponents/CardObjective'
 import { HeaderImageAndInfos } from '@components/usefull/HeaderImageAndInfos'
 import { HeadingPart } from '@components/usefull/HeadingPart'
@@ -46,7 +46,7 @@ export default function PersonPage() {
   usePreventBack(`/project/${id}/persons`)
 
   const { project, permission, projectName } = useProject(id as string)
-  const { person, couples, personInfos, personName, loadingPerson, callEvent } =
+  const { person, personInfos, personName, loadingPerson, callEvent } =
     usePerson(personId as string)
 
   async function handleUpdateImage(files: FileList | null): Promise<void> {
@@ -79,7 +79,7 @@ export default function PersonPage() {
           idObject={person?.id as string}
           onUpdateCalled={handleUpdateImage}
           onRemoveCalled={handleDeleteImage}
-          url={person?.image_url ?? undefined}
+          url={person?.image.url}
           pathGoBack={`/project/${id}/persons`}
           permission={permission}
           allInfos={personInfos}
@@ -111,14 +111,15 @@ export default function PersonPage() {
           />
 
           <ObjectivesContent>
-            {person?.objectives && person?.objectives[0] ? (
-              person?.objectives?.map((objective) => {
+            {person?.collections.objective.itens &&
+            person?.collections.objective.itens[0] ? (
+              person?.collections.objective.itens?.map((objective) => {
                 return (
                   <CardObjective
                     key={objective.id}
                     objective={objective}
-                    avoiders={objective.avoiders?.persons ?? []}
-                    supporters={objective.supporters?.persons ?? []}
+                    avoiders={objective.collections.avoider.itens}
+                    supporters={objective.collections.supporter.itens}
                   />
                 )
               })
@@ -137,7 +138,9 @@ export default function PersonPage() {
           icon={<UserCircleGear size={40} />}
           title="Personalidade"
           keyIndex="personality"
-          objectOfCampu={person?.personalities as IPersonality[]}
+          objectOfCampu={
+            person?.collections.personality.itens as IPersonality[]
+          }
           withSubObjects="consequências"
           columns={2}
         />
@@ -148,7 +151,7 @@ export default function PersonPage() {
           icon={<TreeStructure size={40} />}
           title="Valores"
           keyIndex="values"
-          objectOfCampu={person?.values as IValue[]}
+          objectOfCampu={person?.collections.value.itens as IValue[]}
           withSubObjects="exceções"
           columns={2}
         />
@@ -159,7 +162,7 @@ export default function PersonPage() {
           icon={<HeartBreak size={40} />}
           title="Traumas"
           keyIndex="traumas"
-          objectOfCampu={person?.traumas as ITrauma[]}
+          objectOfCampu={person?.collections.trauma.itens as ITrauma[]}
           withSubObjects="consequências"
           columns={2}
         />
@@ -170,7 +173,7 @@ export default function PersonPage() {
           icon={<Person size={40} />}
           title="Aparência"
           keyIndex="appearance"
-          objectOfCampu={person?.appearances as IAppearance[]}
+          objectOfCampu={person?.collections.appearance.itens as IAppearance[]}
         />
 
         <Campu
@@ -179,7 +182,7 @@ export default function PersonPage() {
           icon={<RainbowCloud size={48} />}
           title="Sonhos"
           keyIndex="dreams"
-          objectOfCampu={person?.dreams as IDream[]}
+          objectOfCampu={person?.collections.dream.itens as IDream[]}
         />
 
         <Campu
@@ -188,7 +191,7 @@ export default function PersonPage() {
           icon={<Warning size={40} />}
           title="Medos"
           keyIndex="fears"
-          objectOfCampu={person?.fears as IFear[]}
+          objectOfCampu={person?.collections.fear.itens as IFear[]}
         />
 
         <Campu
@@ -197,7 +200,7 @@ export default function PersonPage() {
           icon={<SketchLogo size={40} />}
           title="Desejos"
           keyIndex="wishes"
-          objectOfCampu={person?.wishes as IWishe[]}
+          objectOfCampu={person?.collections.wishe.itens as IWishe[]}
         />
 
         <Campu
@@ -206,7 +209,7 @@ export default function PersonPage() {
           icon={<Users size={40} />}
           title="Casais"
           keyIndex="couples"
-          objectOfCampu={couples as ICouple[]}
+          objectOfCampu={person?.collections.couple.itens as ICouple[]}
           isUniqueRelational
         />
 
@@ -216,7 +219,7 @@ export default function PersonPage() {
           icon={<Lightning size={40} />}
           title="poderes"
           keyIndex="powers"
-          objectOfCampu={person?.powers as IPower[]}
+          objectOfCampu={person?.collections.power.itens as IPower[]}
         />
       </ProjectPageLayout>
     </>

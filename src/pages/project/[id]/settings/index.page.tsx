@@ -55,20 +55,15 @@ export default function SettingsPage() {
     loadingProject,
     callEvent,
     project,
-    // personsThisProject,
-    // booksThisProject,
-    usersInProject,
-    projectName,
-    projectType,
     createdAt,
     updatedAt,
+    projectName,
   } = useProject(id as string)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   function handleUnshare() {
-    const userToRemove = usersInProject.find((user) => user.id === unshare)
+    const userToRemove = project?.users.find((user) => user.id === unshare)
 
     if (!userToRemove) return
 
@@ -211,7 +206,9 @@ export default function SettingsPage() {
                 <LabelInput label="Ano em que a história se passa">
                   <TextInputRoot
                     variant={
-                      project?.initial_date === 'non-set' ? 'denied' : 'default'
+                      project?.initialDate.year === 'Não definido'
+                        ? 'denied'
+                        : 'default'
                     }
                     size="sm"
                   >
@@ -220,7 +217,7 @@ export default function SettingsPage() {
                     </TextInputIcon>
 
                     <TextInputInput
-                      placeholder={project?.initial_date}
+                      placeholder={project?.initialDate.year}
                       onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         setInitialDate(e.target.value)
                       }
@@ -244,8 +241,7 @@ export default function SettingsPage() {
                 variant="noShadow"
                 css={{ padding: '$3 $8' }}
                 disabled={
-                  !initialDate &&
-                  timeChrist === project?.initial_date_time_christ
+                  !initialDate && timeChrist === project?.initialDate.timeChrist
                 }
                 onClick={handleUpdateInitialDate}
               >
@@ -328,7 +324,7 @@ export default function SettingsPage() {
 
           <ContainerGrid padding={6} darkBackground>
             <InfoDefault title="Tipo do projeto">
-              <Text>{projectType}</Text>
+              <Text>{project?.type}</Text>
               <Text family="body" as="label">
                 Outros tipos de projetos estarão disponíveis em breve para os
                 criadores do projeto...
@@ -363,27 +359,28 @@ export default function SettingsPage() {
                 <ContainerGrid>
                   <AvatarWeb
                     size="4xl"
-                    src={project?.user.avatar_url ?? undefined}
+                    src={project?.creator.avatar.url}
+                    alt={project?.creator.avatar.alt}
                   />
                 </ContainerGrid>
                 <ContainerGrid padding={0}>
                   <InfoDefault title="Nome">
-                    <Text>{project?.user.name || 'Carregando...'}</Text>
+                    <Text>{project?.creator.name || 'Carregando...'}</Text>
                   </InfoDefault>
 
                   <InfoDefault title="Nome de usuário">
-                    <Text>{project?.user.username || 'Carregando...'}</Text>
+                    <Text>{project?.creator.username || 'Carregando...'}</Text>
                   </InfoDefault>
 
                   <InfoDefault title="Email">
-                    <Text>{project?.user.email || 'Carregando...'}</Text>
+                    <Text>{project?.creator.email || 'Carregando...'}</Text>
                   </InfoDefault>
                 </ContainerGrid>
               </Creator>
             </InfoDefault>
 
             <InfoDefault
-              title={` Usuários com acesso: ${usersInProject.length}`}
+              title={` Usuários com acesso: ${project?.users.length}`}
             >
               <ContainerGrid padding={0}>
                 <Text family="body" as="label" height="shorter">
@@ -393,22 +390,16 @@ export default function SettingsPage() {
                 </Text>
 
                 <ContainerGrid columns={smallWindow ? 1 : 2} padding={0}>
-                  {usersInProject?.map((userWithAccess) => {
-                    if (userWithAccess?.id !== project?.user?.id) {
-                      return (
-                        <CardUserWithAccess
-                          key={userWithAccess.id}
-                          userWithAccess={userWithAccess}
-                          project={project!}
-                          setUnshare={setUnshare}
-                          unshare={unshare}
-                          handleUnshare={handleUnshare}
-                        />
-                      )
-                    } else {
-                      return ''
-                    }
-                  })}
+                  {project?.users?.map((userWithAccess) => (
+                    <CardUserWithAccess
+                      key={userWithAccess.id}
+                      userWithAccess={userWithAccess}
+                      project={project!}
+                      setUnshare={setUnshare}
+                      unshare={unshare}
+                      handleUnshare={handleUnshare}
+                    />
+                  ))}
                 </ContainerGrid>
               </ContainerGrid>
             </InfoDefault>

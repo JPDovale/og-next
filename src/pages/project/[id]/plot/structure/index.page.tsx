@@ -26,20 +26,20 @@ export default function StructurePage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsStructure = project?.comments?.filter(
+  const commentsStructure = project?.collections.comments.itens?.filter(
     (comment) => comment.to_unknown === 'structure',
   )
 
   async function handleUpdateAct1() {
     setSuccessMessage('')
     setError(null)
-    if (act1 === project?.structure_act_1) return
+    if (act1 === project?.plot.structure.act1) return
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
         act1: act1 || null,
-        act2: project?.structure_act_2,
-        act3: project?.structure_act_3,
+        act2: project?.plot.structure.act2,
+        act3: project?.plot.structure.act3,
       },
     }
 
@@ -57,13 +57,13 @@ export default function StructurePage() {
   async function handleUpdateAct2() {
     setSuccessMessage('')
     setError(null)
-    if (act2 === project?.structure_act_2) return
+    if (act2 === project?.plot.structure.act2) return
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1: project?.structure_act_1,
+        act1: project?.plot.structure.act1,
         act2: act2 || null,
-        act3: project?.structure_act_3,
+        act3: project?.plot.structure.act3,
       },
     }
 
@@ -81,12 +81,12 @@ export default function StructurePage() {
   async function handleUpdateAct3() {
     setSuccessMessage('')
     setError(null)
-    if (act3 === project?.structure_act_3) return
+    if (act3 === project?.plot.structure.act3) return
 
     const updatedPlotStructure: IUpdatePlotDTO = {
       structure: {
-        act1: project?.structure_act_1,
-        act2: project?.structure_act_2,
+        act1: project?.plot.structure.act1,
+        act2: project?.plot.structure.act2,
         act3: act3 || null,
       },
     }
@@ -141,7 +141,7 @@ export default function StructurePage() {
         <Editor
           handleUpdate={handleUpdateAct1}
           permission={permission}
-          preValue={project?.structure_act_1 ?? ''}
+          preValue={project?.plot.structure.act1 ?? ''}
           projectId={project!.id}
           setValue={setAct1}
           to="structure"
@@ -167,7 +167,7 @@ export default function StructurePage() {
         <Editor
           handleUpdate={handleUpdateAct2}
           permission={permission}
-          preValue={project?.structure_act_2 ?? ''}
+          preValue={project?.plot.structure.act2 ?? ''}
           projectId={project!.id}
           setValue={setAct2}
           to="structure"
@@ -188,7 +188,7 @@ export default function StructurePage() {
         <Editor
           handleUpdate={handleUpdateAct3}
           permission={permission}
-          preValue={project?.structure_act_3 ?? ''}
+          preValue={project?.plot.structure.act3 ?? ''}
           projectId={project!.id}
           setValue={setAct3}
           to="structure"

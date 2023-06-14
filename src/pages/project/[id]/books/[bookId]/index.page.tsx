@@ -35,20 +35,10 @@ export default function BookPage() {
   const { id, bookId } = router.query
   usePreventBack(`/project/${id}`)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { permission, projectName } = useProject(id as string)
-  const {
-    book,
-    bookName,
-    bookInfos,
-    bookAuthors,
-    bookWords,
-    bookWrittenWords,
-    loadingBook,
-    callEvent,
-  } = useBook(bookId as string)
+  const { book, bookInfos, loadingBook, callEvent } = useBook(bookId as string)
 
   async function handleUpdateFrontCover(files: FileList | null) {
     if (!files) return
@@ -91,12 +81,12 @@ export default function BookPage() {
 
   return (
     <>
-      <NextSeo title={`${bookName} | Magiscrita`} noindex />
+      <NextSeo title={`${book?.name.fullName} | Magiscrita`} noindex />
 
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
-        paths={['Livros', bookName]}
+        paths={['Livros', book?.name.fullName ?? 'Carregando...']}
         loading={loadingBook}
         inError={!loadingBook && !book}
         isScrolling
@@ -108,14 +98,14 @@ export default function BookPage() {
             idObject={book?.id!}
             onRemoveCalled={handleRemoveFrontCover}
             onUpdateCalled={handleUpdateFrontCover}
-            url={book?.front_cover_url ?? undefined}
+            url={book?.frontCover.url}
             permission={permission}
             pathGoBack={`/project/${id}/books`}
             typeImage="vertical"
             allInfos={bookInfos}
-            initialValeu={bookWrittenWords}
-            finalValue={bookWords}
-            avatares={bookAuthors}
+            initialValeu={book?.infos.writtenWords}
+            finalValue={book?.infos.words}
+            avatares={book?.collections.author.itens}
             withAvatares
             withProgressBar
           />
@@ -165,12 +155,18 @@ export default function BookPage() {
             {!addingGenre && (
               <SubContainer
                 columns={
-                  !book?.genres || !book.genres[0] ? 1 : smallWindow ? 2 : 6
+                  !book?.collections.genre.itens ||
+                  !book.collections.genre.itens[0]
+                    ? 1
+                    : smallWindow
+                    ? 2
+                    : 6
                 }
               >
-                {book?.genres && book.genres[0] ? (
+                {book?.collections.genre.itens &&
+                book.collections.genre.itens[0] ? (
                   <>
-                    {book.genres.map((genere, i) => (
+                    {book.collections.genre.itens.map((genere) => (
                       <BookGenere
                         key={genere.id}
                         genere={genere}
@@ -198,13 +194,21 @@ export default function BookPage() {
             />
 
             <SubContainer
-              columns={book?.capitules && book.capitules[0] ? 3 : 1}
+              columns={
+                book?.collections.capitules.itens &&
+                book.collections.capitules.itens[0]
+                  ? 3
+                  : 1
+              }
             >
-              {book?.capitules && book.capitules[0] ? (
+              {book?.collections.capitules.itens &&
+              book.collections.capitules.itens[0] ? (
                 <>
-                  {book.capitules.map((capitule) => (
+                  {book.collections.capitules.itens.map((capitule) => (
                     <CapituleCard
-                      maxLengthToReorder={book?.capitules?.length || 0}
+                      maxLengthToReorder={
+                        book?.collections.capitules.itens?.length || 0
+                      }
                       bookId={book.id!}
                       key={capitule.id}
                       capitule={capitule}

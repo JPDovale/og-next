@@ -1,5 +1,5 @@
 import { getObjectivesRequest } from '@api/projectsRequests'
-import { IObjective } from '@api/responsesTypes/IPersonsResponse'
+import { IObjective } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -13,18 +13,18 @@ export function useObjectives(projectId: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getObjectivesRequest(projectId)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const objectives = response.objectives as IObjective[]
+      const objectives = response.data?.objectives as IObjective[]
 
       return { objectives, errorMessage, errorTitle }
     },
@@ -34,9 +34,10 @@ export function useObjectives(projectId: string) {
 
   function findObjectiveWherePersonNotExisteIn(personId: string) {
     const objectivesWherePersonNorFund = objectives.filter((objective) => {
-      const personExisteInObjective = objective.persons?.find(
-        (person) => person.id === personId,
-      )
+      const personExisteInObjective =
+        objective.collections.referencesIt.itens?.find(
+          (person) => person.id === personId,
+        )
 
       if (personExisteInObjective) {
         return false

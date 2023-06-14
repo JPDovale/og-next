@@ -3,6 +3,7 @@ import { styled } from '@styles/index'
 export const EventCard = styled('button', {
   all: 'unset',
   display: 'flex',
+  gap: '$2',
   alignItems: 'center',
   padding: '$2',
   background: '$gray700',
@@ -114,6 +115,9 @@ export const EventImportance = styled('span', {
 })
 
 export const EventTime = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  height: '100%',
   borderRight: '1px solid $purple500',
   padding: '$2',
 })

@@ -1,5 +1,5 @@
 import { getPersonalitiesRequest } from '@api/projectsRequests'
-import { IPersonality } from '@api/responsesTypes/IPersonsResponse'
+import { IPersonality } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -13,18 +13,18 @@ export function usePersonalities(projectId: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getPersonalitiesRequest(projectId)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const personalities = response.personalities as IPersonality[]
+      const personalities = response.data?.personalities as IPersonality[]
 
       return { personalities, errorMessage, errorTitle }
     },
@@ -35,9 +35,10 @@ export function usePersonalities(projectId: string) {
   function findPersonalityWherePersonNotExisteIn(personId: string) {
     const personalitiesWherePersonNorFund = personalities.filter(
       (personality) => {
-        const personExisteInPersonality = personality.persons?.find(
-          (person) => person.id === personId,
-        )
+        const personExisteInPersonality =
+          personality.collections.referencesIt.itens?.find(
+            (person) => person.id === personId,
+          )
 
         if (personExisteInPersonality) {
           return false

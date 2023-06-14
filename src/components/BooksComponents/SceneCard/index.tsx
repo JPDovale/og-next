@@ -1,5 +1,6 @@
-import { IScene } from '@api/responsesTypes/IBooksResponse'
+import { IScene } from '@api/responsesTypes/capitule/ICapitule'
 import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPersonInObject } from '@api/responsesTypes/person/IPerson'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { Checkbox } from '@components/usefull/Checkbox'
@@ -38,7 +39,6 @@ const writtenWordsInput = z.string().regex(/^([0-9]+)$/, {
 export function SceneCard({
   scene,
   persons,
-  bookId,
   capituleId,
   setOnEditScene,
 }: ISceneCardProps) {
@@ -89,7 +89,7 @@ export function SceneCard({
 
     const number = Number(toSequenceSet)
 
-    if (capitule?.scenes?.length! < number) {
+    if (capitule?.collections.scene.itensLength! < number) {
       return setErrorIn('reorder-max')
     }
 
@@ -97,7 +97,7 @@ export function SceneCard({
       return setErrorIn('reorder-min')
     }
 
-    if (toSequenceSet === scene.sequence.toString()) {
+    if (toSequenceSet === scene.infos.sequence.toString()) {
       setToSequenceSet('')
       setErrorIn('')
       return setReOrderSelected(false)
@@ -105,7 +105,7 @@ export function SceneCard({
 
     setErrorIn('')
     await callEvent.reorderScenes({
-      sequenceFrom: scene.sequence,
+      sequenceFrom: scene.infos.sequence,
       sequenceTo: Number(toSequenceSet),
     })
 
@@ -116,7 +116,7 @@ export function SceneCard({
   return (
     <SceneCardContainer data-testid="scene-card">
       <SceneHeading as="header">
-        Cena: {scene.sequence}
+        Cena: {scene.infos.sequence}
         <div className="buttons">
           {!checked && (
             <HeaderButton
@@ -128,7 +128,7 @@ export function SceneCard({
             </HeaderButton>
           )}
 
-          {!scene.complete && (
+          {!scene.infos.complete && (
             <Checkbox
               data-testid="check-complete"
               onCheckedChange={() => {
@@ -240,7 +240,7 @@ export function SceneCard({
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">
-                Reordenar cena de {scene.sequence} ---&gt;{' '}
+                Reordenar cena de {scene.infos.sequence} ---&gt;{' '}
                 {toSequenceSet && toSequenceSet}
                 <Text as="span" family="body" size="sm">
                   {errorIn === 'reorder'
@@ -260,7 +260,7 @@ export function SceneCard({
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setToSequenceSet(e.target.value)
                   }
-                  placeholder={`Máximo: ${capitule?.scenes?.length}`}
+                  placeholder={`Máximo: ${capitule?.collections.scene.itensLength}`}
                   value={toSequenceSet}
                 />
               </WrittenWordsInput>
@@ -280,20 +280,20 @@ export function SceneCard({
       {!checked && !deleteSelected && !reOrderSelected && (
         <>
           <SceneContent>
-            {scene.complete && (
+            {scene.infos.complete && (
               <InfoDefault title="Palavras escritas:">
-                {scene.written_words}
+                {scene.infos.writtenWords}
               </InfoDefault>
             )}
 
-            <SceneCompleteAndObjective complete={scene.complete}>
+            <SceneCompleteAndObjective complete={scene.infos.complete}>
               <InfoDefault title="Objetivo da cena">
-                {scene.objective}
+                {scene.infos.objective}
               </InfoDefault>
 
               <InfoDefault title="Completo">
                 <span className="complete">
-                  {scene.complete ? 'Sim' : 'Não'}
+                  {scene.infos.complete ? 'Sim' : 'Não'}
                 </span>
               </InfoDefault>
             </SceneCompleteAndObjective>
@@ -303,20 +303,20 @@ export function SceneCard({
                 size="2xs"
                 columns={10}
                 listEmptyMessage="Nenhum personagem presente na cena"
-                persons={persons}
+                persons={persons as unknown as IPersonInObject[]}
               />
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 1:">
-              {scene.structure_act_1}
+              {scene.structure.act1}
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 2:">
-              {scene.structure_act_2}
+              {scene.structure.act2}
             </InfoDefault>
 
             <InfoDefault title="Estrutura - Ato 3:">
-              {scene.structure_act_3}
+              {scene.structure.act3}
             </InfoDefault>
           </SceneContent>
         </>

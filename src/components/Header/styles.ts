@@ -16,6 +16,14 @@ export const HeaderContainer = styled('header', {
 
   backgroundColor: '$gray700',
   boxShadow: '0 2px 8px black',
+
+  variants: {
+    disableShadow: {
+      true: {
+        boxShadow: 'none',
+      },
+    },
+  },
 })
 
 export const ExplorerHeader = styled('div', {
@@ -28,12 +36,12 @@ export const ExplorerHeader = styled('div', {
 
 export const ImageContent = styled('div', {
   position: 'absolute',
-  left: 0,
+  left: '$4',
 
   img: {
     width: '100%',
     height: '100%',
-    maxHeight: '70px',
+    maxHeight: '50px',
   },
 })
 

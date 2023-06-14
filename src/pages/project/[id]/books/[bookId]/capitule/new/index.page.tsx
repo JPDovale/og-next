@@ -71,11 +71,10 @@ export default function NewCapitule() {
     },
   })
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   const { projectName } = useProject(id as string)
-  const { book, bookName, loadingBook, callEvent } = useBook(bookId as string)
+  const { book, loadingBook, callEvent } = useBook(bookId as string)
 
   async function handleCreateCapitule(data: newCapituleFormData) {
     const newCapitule = {
@@ -101,12 +100,22 @@ export default function NewCapitule() {
 
   return (
     <>
-      <NextSeo title={`${bookName + ' Novo capítulo'} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${
+          book?.name.fullName ?? 'Carregando...' + ' Novo capítulo'
+        } | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
         projectId={`${id}`}
-        paths={['Livros', bookName, 'Capítulos', 'Novo']}
+        paths={[
+          'Livros',
+          book?.name.fullName ?? 'Carregando...',
+          'Capítulos',
+          'Novo',
+        ]}
         loading={loadingBook}
         inError={!loadingBook && !book}
         isFullScreen
@@ -118,7 +127,8 @@ export default function NewCapitule() {
             <GoBackButton topDistance={4} />
 
             <Heading size="sm">
-              Vamos criar um novo capítulo para o livro {bookName}...
+              Vamos criar um novo capítulo para o livro{' '}
+              {book?.name.fullName ?? 'Carregando...'}...
             </Heading>
 
             <InputGroup columns={smallWindow ? 1 : 2}>

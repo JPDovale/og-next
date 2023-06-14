@@ -1,4 +1,4 @@
-import { ITimeEvent } from '@api/responsesTypes/ITimeLineResponse'
+import { ITimeEvent } from '@api/responsesTypes/timeline/ITimeLine'
 import { Calendar } from '@components/usefull/Calendar'
 import { getMonthName } from '@utils/dates/parserMonthName'
 import dayjs from 'dayjs'
@@ -32,8 +32,8 @@ export function TimeLineCalendar({
       i ===
       self.findIndex(
         (obj) =>
-          obj.happened_month === event.happened_month &&
-          obj.happened_year === event.happened_year,
+          obj.happened.month === event.happened.month &&
+          obj.happened.year === event.happened.year,
       ),
   )
   const currentEvent = monthsWeenExistsEvent[currentEventIndex]
@@ -49,7 +49,7 @@ export function TimeLineCalendar({
   }
 
   const { calendarWeeks } = useMemo(() => {
-    const currentDate = dayjs(Number(currentEvent?.happened_date_timestamp))
+    const currentDate = dayjs(currentEvent?.happened.timestamp)
       .add(1, 'day')
       .set('date', 1)
 
@@ -110,9 +110,9 @@ export function TimeLineCalendar({
       calendarWeeks={calendarWeeks}
       currentDate={{
         calendarTitle: `${getMonthName(
-          currentEvent?.happened_month ?? '1',
-        )} ${currentEvent?.happened_year.replace('-', '')} ${
-          currentEvent?.happened_year_time_christ
+          currentEvent?.happened.month ?? '1',
+        )} ${currentEvent?.happened.year.replace('-', '')} ${
+          currentEvent?.happened.timeChrist
         }`,
         index: currentEventIndex,
       }}

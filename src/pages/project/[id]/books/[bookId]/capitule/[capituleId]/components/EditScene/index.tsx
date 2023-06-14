@@ -1,4 +1,3 @@
-import { ICapitule, IScene } from '@api/responsesTypes/IBooksResponse'
 import { Textarea } from '@components/usefull/Textarea'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
@@ -21,6 +20,7 @@ import { EditSceneContainer, AvataresContainer, CloseButton } from './styles'
 import { Checkbox } from '@components/usefull/Checkbox'
 import { useCapitule } from '@hooks/useCapitule'
 import { IUpdateScene } from '@hooks/useCapitule/types/IUpdateScene'
+import { ICapitule, IScene } from '@api/responsesTypes/capitule/ICapitule'
 
 interface IEditSceneProps {
   capitule: ICapitule
@@ -84,13 +84,13 @@ export function EditScene({
   } = useForm<editSceneBodyData>({
     resolver: zodResolver(editSceneSchema),
     defaultValues: {
-      act1: scene.structure_act_1,
-      act2: scene.structure_act_2,
-      act3: scene.structure_act_3,
-      objective: scene.objective,
+      act1: scene.structure.act1,
+      act2: scene.structure.act2,
+      act3: scene.structure.act3,
+      objective: scene.infos.objective,
       persons: [],
-      writtenWords: scene.written_words || 0,
-      complete: scene.complete,
+      writtenWords: scene.infos.writtenWords || 0,
+      complete: scene.infos.complete,
     },
   })
   const selectedPersonsIds = watch('persons')
@@ -106,7 +106,7 @@ export function EditScene({
 
   async function handleUpdateScene(data: editSceneBodyData) {
     const updatedScene: IUpdateScene = {
-      complete: data.complete ?? scene.complete,
+      complete: data.complete ?? scene.infos.complete,
       persons: data.persons,
       id: scene.id,
       objective: data.objective,
@@ -146,7 +146,7 @@ export function EditScene({
     setFormUpdated(true)
 
     if (updatedComplete) {
-      setValue('writtenWords', scene.written_words)
+      setValue('writtenWords', scene.infos.writtenWords)
     } else {
       setValue('writtenWords', 0)
     }
@@ -154,7 +154,7 @@ export function EditScene({
 
   return (
     <EditSceneContainer onSubmit={handleSubmit(handleUpdateScene)}>
-      <Heading size="sm">Cena {scene.sequence}</Heading>
+      <Heading size="sm">Cena {scene.infos.sequence}</Heading>
       <CloseButton type="button" onClick={onClose}>
         <X size={24} />
       </CloseButton>

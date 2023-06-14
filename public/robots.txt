@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://magiscrita.com
+
+# Sitemaps
+Sitemap: https://magiscrita.com/sitemap.xml

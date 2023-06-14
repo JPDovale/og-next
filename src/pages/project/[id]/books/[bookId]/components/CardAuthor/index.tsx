@@ -8,14 +8,14 @@ import { IUserResponse } from '@api/responsesTypes/IUserResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { InfoDefault } from '@components/usefull/InfoDefault'
 import { useWindowSize } from '@hooks/useWindow'
-import { IBooksResponse } from '@api/responsesTypes/IBooksResponse'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { useUser } from '@hooks/useUser'
+import { IBook } from '@api/responsesTypes/book/IBook'
 
 interface ICardAuthorProps {
   userAuthor: IUserResponse | undefined
-  book: IBooksResponse | undefined
+  book: IBook | undefined
 }
 
 export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
@@ -23,8 +23,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
 
   const { user } = useUser()
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
+  const { smallWindow } = useWindowSize()
 
   function handleUnshare() {}
 
@@ -36,7 +35,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
           src={userAuthor?.avatar_url ?? undefined}
           selfCenter
         />
-        {userAuthor?.id !== user?.id && (
+        {userAuthor?.id !== user?.account.id && (
           <UnshareButton
             className="unshare"
             wid="hug"
@@ -54,7 +53,7 @@ export function CardAuthor({ userAuthor, book }: ICardAuthorProps) {
       <ContainerGrid padding={4}>
         <InfoDefault title="Nome:">
           <Text size="xs">{`${userAuthor?.name} ${
-            userAuthor?.id === user?.id ? ' (criador)' : ''
+            userAuthor?.id === user?.account.id ? ' (criador)' : ''
           }`}</Text>
         </InfoDefault>
 

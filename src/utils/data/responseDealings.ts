@@ -1,12 +1,13 @@
 import { IError } from '@@types/errors/IError'
-import { refreshSessionFunction } from '@contexts/user/functions/refreshSessionFunction'
+import { IResponse } from '@api/responses/IResponse'
+import { refreshSessionRequest } from '@api/userRequest'
 
 interface IResponseDealings<T> {
-  response: any
+  response: IResponse
   callback: () => Promise<T>
 }
 
-interface IResponse {
+interface IResponseDealingsResponse {
   error?: IError
   handledAnswer: boolean
 }
@@ -14,11 +15,11 @@ interface IResponse {
 export async function responseDealings<TypeCallback>({
   response,
   callback,
-}: IResponseDealings<TypeCallback>): Promise<IResponse> {
-  if (response.errorMessage === 'Invalid token') {
-    const isRefreshed = await refreshSessionFunction()
+}: IResponseDealings<TypeCallback>): Promise<IResponseDealingsResponse> {
+  if (response.error?.title === 'Login failed') {
+    const response = await refreshSessionRequest()
 
-    if (isRefreshed) {
+    if (response.ok) {
       await callback()
     } else {
       return {
@@ -31,12 +32,12 @@ export async function responseDealings<TypeCallback>({
     }
   }
 
-  if (response.errorMessage) {
+  if (response.error) {
     return {
       handledAnswer: false,
       error: {
-        title: response.errorTitle,
-        message: response.errorMessage,
+        title: response.error.title,
+        message: response.error.message,
       },
     }
   }

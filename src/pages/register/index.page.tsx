@@ -10,7 +10,7 @@ import {
 
 import { useForm } from 'react-hook-form'
 
-import LogoToDown from '../../assets/logos/logoOG.png'
+import LogoToDown from '../../assets/logos/logo.png'
 import Image from 'next/image'
 import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
@@ -24,7 +24,7 @@ import {
   UserCircle,
 } from 'phosphor-react'
 import { z } from 'zod'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 // import { signIn, useSession } from 'next-auth/react'
 // import { unstable_getServerSession } from 'next-auth'
@@ -32,9 +32,6 @@ import { useRouter } from 'next/router'
 // import { authOptions } from '../api/auth/[...nextauth].api'
 // import { GetServerSideProps } from 'next'
 import { NextSeo } from 'next-seo'
-import { UserContext } from '@contexts/user'
-import { Loading } from '@components/usefull/Loading'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
 import { ICreateUserDTO } from '@api/dtos/ICreateUserDTO'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
@@ -42,7 +39,9 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
-import { useUser } from '@hooks/useUser'
+import { createUserRequest } from '@api/userRequest'
+import { InterfaceContext } from '@contexts/interface'
+import { GetStaticProps } from 'next'
 
 const registerFormSchema = z.object({
   name: z
@@ -61,7 +60,6 @@ const registerFormSchema = z.object({
     .max(30, {
       message: 'O nome de usuário não pode ter mais de 30 caracteres',
     })
-
     .transform((username) => username.toLowerCase()),
   email: z.string().email({ message: 'O email é invalido.' }),
   password: z
@@ -76,45 +74,42 @@ type RegisterFormData = z.infer<typeof registerFormSchema>
 
 export default function RegisterPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
+  const { setError } = useContext(InterfaceContext)
 
-  const { createUser, error } = useContext(UserContext)
-  const { userLogged, loadingUser } = useUser()
-
-  const { handleSubmit, register, formState, setError } =
-    useForm<RegisterFormData>({
-      resolver: zodResolver(registerFormSchema),
-    })
+  const {
+    handleSubmit,
+    register,
+    formState,
+    setError: setErrorForm,
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerFormSchema),
+  })
 
   const router = useRouter()
   // const session = useSession()
 
   async function handleCreateUser(data: RegisterFormData) {
     if (data.password !== data.confirmPassword) {
-      return setError('confirmPassword', {
+      return setErrorForm('confirmPassword', {
         message: 'As senhas não correspondem',
       })
     }
 
     const newUser: ICreateUserDTO = { ...data }
-    const userCreated = await createUser(newUser)
+    const response = await createUserRequest({
+      email: data.email,
+      password: data.password,
+      name: newUser.name,
+      username: newUser.username,
+    })
 
-    if (userCreated) {
+    if (response.error) {
+      setError(response.error)
+    }
+
+    if (response.ok) {
       router.push('/projects')
     }
-  }
-
-  useEffect(() => {
-    if (userLogged) {
-      router.push('/projects')
-    }
-  }, [userLogged, router])
-
-  // useEffect(() => {
-  //   if (session?.data?.loggedUser!) setUser(session?.data?.loggedUser!)
-  // }, [session, setUser])
-
-  if (loadingUser) {
-    return <Loading />
   }
 
   return (
@@ -181,8 +176,6 @@ export default function RegisterPage() {
               onClick={() => signIn('google')}
             />
           </InputContainer> */}
-
-          {error && <ResponseInfoApi error={error} />}
 
           <InputContainer>
             <InputHeader size={'xs'} weight="bold">
@@ -360,3 +353,9 @@ export default function RegisterPage() {
 //     },
 //   }
 // }
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {},
+  }
+}

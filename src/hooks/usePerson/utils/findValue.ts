@@ -1,8 +1,8 @@
-import { IValue, IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
+import { IPerson, IValue } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindValue {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -16,7 +16,9 @@ interface IResponseValue {
 }
 
 export function findValueUtil({ id, person }: IFindValue): IResponseValue {
-  const value = person?.values?.find((value) => value.id === id)
+  const value = person?.collections.value.itens?.find(
+    (value) => value.id === id,
+  )
 
   const response: IResponseValue = {
     value,

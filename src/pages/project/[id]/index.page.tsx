@@ -60,20 +60,15 @@ export default function ProjectPage() {
     personsThisProject,
     permission,
     loadingProject,
-    projectName,
-    projectType,
     createdAt,
     updatedAt,
-    projectImage,
-    usersInProject,
     callEvent,
     mainTimeLine,
     todoFirst,
+    projectName,
   } = useProject(id as string)
 
-  const windowSize = useWindowSize()
-  const smallWindow = windowSize.width! < 786
-  const largeWindow = windowSize.width! > 1700
+  const { smallWindow, largeWindow } = useWindowSize()
 
   async function handleUpdateImage(files: FileList | null) {
     setOnEditImg(false)
@@ -112,12 +107,12 @@ export default function ProjectPage() {
           <ImageContainer>
             {loadingProject ? (
               <Loading />
-            ) : !projectImage ? (
+            ) : !project?.image.url ? (
               <ImageIco
                 className="image"
                 weight="thin"
                 size={128}
-                alt=""
+                alt={project?.image.alt}
                 onClick={() => setOnEditImg(!onEditImg)}
               />
             ) : (
@@ -126,7 +121,7 @@ export default function ProjectPage() {
                 width={400}
                 height={400}
                 className="image"
-                src={projectImage}
+                src={project.image.url}
                 alt=""
                 onClick={() => setOnEditImg(!onEditImg)}
               />
@@ -145,7 +140,7 @@ export default function ProjectPage() {
                 }}
               />
             </Input>
-            {projectImage && (
+            {project?.image.url && (
               <ButtonRoot
                 type="button"
                 wid="middle"
@@ -176,7 +171,7 @@ export default function ProjectPage() {
                   Tipo:
                 </Text>
                 <Text as="p" size="sm" weight="bold">
-                  {projectType}
+                  {project?.type}
                 </Text>
               </Info>
             </Infos>
@@ -207,7 +202,7 @@ export default function ProjectPage() {
                   Usuários:
                 </Text>
                 <Text as="p" size="sm" weight="bold">
-                  {usersInProject.length}
+                  {project?.users.length}
                 </Text>
               </Info>
 
@@ -217,7 +212,7 @@ export default function ProjectPage() {
                     Livros:
                   </Text>
                   <Text as="p" size="sm" weight="bold">
-                    {project?._count.books || 0}
+                    {project?.collections.book.itensLength}
                   </Text>
                 </Info>
               )}
@@ -239,7 +234,7 @@ export default function ProjectPage() {
                     Personagens:
                   </Text>
                   <Text as="p" size="sm" weight="bold">
-                    {project?._count.persons || 0}
+                    {project?.collections.person.itensLength}
                   </Text>
                 </Info>
               )}
@@ -259,7 +254,9 @@ export default function ProjectPage() {
 
               <ContainerGrid padding={0}>
                 <TimelineCard
-                  isEmpty={mainTimeLine?.timeEvents.length === 0}
+                  isEmpty={
+                    mainTimeLine?.collections.timeEvent.itensLength === 0
+                  }
                   isMain
                   timeline={mainTimeLine!}
                 />

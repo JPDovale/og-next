@@ -161,7 +161,7 @@ export default function NewCouplePage() {
                       <ContainerGrid padding={0} css={{ display: 'flex' }}>
                         <AvatarWeb
                           size="5xl"
-                          src={personAppliedInPerson.image_url ?? undefined}
+                          src={personAppliedInPerson.image.url}
                         />
 
                         <ContainerGrid padding={0}>
@@ -173,7 +173,7 @@ export default function NewCouplePage() {
                                 height="shorter"
                                 weight="bold"
                               >
-                                {personAppliedInPerson.name}
+                                {personAppliedInPerson.name.first}
                               </Text>
                             </InfoDefault>
 
@@ -184,7 +184,7 @@ export default function NewCouplePage() {
                                 height="shorter"
                                 weight="bold"
                               >
-                                {personAppliedInPerson?.age}
+                                {personAppliedInPerson?.age.number}
                               </Text>
                             </InfoDefault>
                           </ContainerGrid>

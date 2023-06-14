@@ -1,4 +1,3 @@
-import { ICapitule } from '@api/responsesTypes/IBooksResponse'
 import { Avatares } from '@components/usefull/Avatares'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
@@ -20,6 +19,7 @@ import {
 } from './styles'
 import { useCapitule } from '@hooks/useCapitule'
 import { ICreateScene } from '@hooks/useCapitule/types/ICreateScene'
+import { ICapitule } from '@api/responsesTypes/capitule/ICapitule'
 
 interface IAddSceneProps {
   capitule: ICapitule
@@ -110,7 +110,9 @@ export function AddScene({
 
   return (
     <AddSceneContainer onSubmit={handleSubmit(handleCreateScene)}>
-      <Heading size="sm">Cena {capitule.scenes?.length! + 1}</Heading>
+      <Heading size="sm">
+        Cena {capitule.collections.scene.itensLength! + 1}
+      </Heading>
       <CloseButton type="button" onClick={onClose}>
         <X size={24} />
       </CloseButton>

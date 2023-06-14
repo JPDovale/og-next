@@ -1,4 +1,4 @@
-import { ITimeLineResponse } from '@api/responsesTypes/ITimeLineResponse'
+import { ITimeLine } from '@api/responsesTypes/timeline/ITimeLine'
 import { Text } from '@components/usefull/Text'
 import { InterfaceContext } from '@contexts/interface'
 import { orderDatesOfTimelines } from '@services/orderElements'
@@ -14,7 +14,7 @@ import {
 } from './styles'
 
 interface ITimelineCardProps {
-  timeline: ITimeLineResponse
+  timeline: ITimeLine
   isMain?: boolean
   isEmpty?: boolean
 }
@@ -29,7 +29,7 @@ export function TimelineCard({
   const { id } = router.query
 
   const eventsInChronologicOrd = orderDatesOfTimelines(
-    timeline?.timeEvents ?? [],
+    timeline?.collections.timeEvent.itens ?? [],
   )
 
   return (
@@ -48,7 +48,7 @@ export function TimelineCard({
         {eventsInChronologicOrd.map((event, i) => (
           <EventCard
             key={event.id}
-            importance={event.importance}
+            importance={event.infos.importance}
             toDown={i % 2 !== 0}
             isMain={isMain}
           >
@@ -63,22 +63,22 @@ export function TimelineCard({
             </Text>
 
             <Text colorInvert={theme === 'light'} size={isMain ? 'sm' : 'xs'}>
-              {`${event.happened_day.toString().padStart(2, '0')}/${
-                event.happened_month
-              }/${event.happened_year.replace('-', '')} ${
-                event.happened_year.includes('-') ? 'A.C.' : ''
-              } ${event.happened_hour
+              {`${event.happened.day.toString().padStart(2, '0')}/${
+                event.happened.month
+              }/${event.happened.year.replace('-', '')} ${
+                event.happened.year.includes('-') ? 'A.C.' : ''
+              } ${event.happened.hour
                 .toString()
-                .padStart(2, '0')}:${event.happened_minute
+                .padStart(2, '0')}:${event.happened.minute
                 .toString()
-                .padStart(2, '0')}:${event.happened_second
+                .padStart(2, '0')}:${event.happened.second
                 .toString()
                 .padStart(2, '0')}`}
             </Text>
             <Conector
               isMain={isMain}
               toDown={i % 2 !== 0}
-              importance={event.importance}
+              importance={event.infos.importance}
             />
           </EventCard>
         ))}

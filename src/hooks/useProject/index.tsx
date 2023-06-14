@@ -1,6 +1,6 @@
 import { getProjectRequest } from '@api/projectsRequests'
-import { IPersonsResponse } from '@api/responsesTypes/IPersonsResponse'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
+import { IPersonPreview } from '@api/responsesTypes/person/IPersonPreview'
+import { IProject } from '@api/responsesTypes/project/IProject'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useProjects } from '@hooks/useProjects'
 import { useUser } from '@hooks/useUser'
@@ -47,18 +47,18 @@ export function useProject(id: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token' && !isRefreshingSession) {
+      if (response.error?.title === 'Login failed' && !isRefreshingSession) {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getProjectRequest(id)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const project = response.project as IProjectResponse
+      const project = response.data?.project as IProject
 
       return { project, errorMessage, errorTitle }
     },
@@ -70,141 +70,71 @@ export function useProject(id: string) {
   const refetchProject = refetch
   const loadingProject = !(!isLoading && !loadingUser)
   const project = data?.project ?? null
-  const createdAt = project?.created_at
-    ? getDate(project.created_at)
+  const projectName = project?.name || 'Carregando...'
+
+  const createdAt = project?.createdAt
+    ? getDate(project.createdAt)
     : 'Carregando...'
-  const updatedAt = project?.updated_at
-    ? getDate(project.updated_at)
+
+  const updatedAt = project?.updatedAt
+    ? getDate(project.updatedAt)
     : 'Carregando...'
-  const projectName = project?.name ?? 'Carregando...'
-  const projectType = project?.type ?? 'Carregando...'
-  const projectImage = project?.image_url ?? undefined
+
   let permission: 'edit' | 'view' | 'comment' = 'view'
-  const usersInProject: IUserInProject[] = []
-  const usersWithPermissionEdit: IUserInProject[] = []
-  const mainTimeLine = project?.timeLines?.find(
-    (timeLine) => !timeLine.is_alternative,
+
+  const mainTimeLine = project?.collections.timeLine.itens?.find(
+    (timeLine) => !timeLine.infos.isAlternative,
   )
-  const todoFirst = project?.timeLines?.find(
-    (timeline) => timeline.type === 'to_do',
+  const todoFirst = project?.collections.timeLine.itens?.find(
+    (timeline) => timeline.infos.type === 'to_do',
   )
-  const anotherTodos = project?.timeLines?.filter(
+  const anotherTodos = project?.collections.timeLine.itens?.filter(
     (timeline) => timeline.id !== todoFirst?.id,
   )
 
-  project?.users_with_access_comment?.users.map((user) => {
-    usersInProject.push({
-      name: user.name ?? 'Carregando...',
-      username: user.username ?? 'Carregando...',
-      email: user.email ?? 'Carregando...',
-      id: user.id,
-      avatar_url: user.avatar_url ?? undefined,
-    })
-    return usersWithPermissionEdit.push({
-      name: user.name ?? 'Carregando...',
-      username: user.username ?? 'Carregando...',
-      email: user.email ?? 'Carregando...',
-      id: user.id,
-      avatar_url: user.avatar_url ?? undefined,
-    })
-  })
-  project?.users_with_access_view?.users.map((user) =>
-    usersInProject.push({
-      name: user.name ?? 'Carregando...',
-      username: user.username ?? 'Carregando...',
-      email: user.email ?? 'Carregando...',
-      id: user.id,
-      avatar_url: user.avatar_url ?? undefined,
-    }),
-  )
-  project?.users_with_access_edit?.users.map((user) =>
-    usersInProject.push({
-      name: user.name ?? 'Carregando...',
-      username: user.username ?? 'Carregando...',
-      email: user.email ?? 'Carregando...',
-      id: user.id,
-      avatar_url: user.avatar_url ?? undefined,
-    }),
-  )
-
   if (!loadingProject && project) {
-    if (project?.user.id !== user?.id) {
-      const userWithAccessComment =
-        !!project.users_with_access_comment?.users.find(
-          (userWithAccess) => userWithAccess.id === user?.id,
-        )
-      const userWithAccessEdit = !!project.users_with_access_edit?.users.find(
-        (userWithAccess) => userWithAccess.id === user?.id,
-      )
-      const userWithAccessView = !!project.users_with_access_view?.users.find(
-        (userWithAccess) => userWithAccess.id === user?.id,
-      )
+    if (project?.creator.id !== user?.account.id) {
+      const userInProject = project.users.find((u) => u.id === user?.account.id)
 
-      if (userWithAccessView) {
-        permission = 'view'
-      } else if (userWithAccessComment) {
-        permission = 'comment'
-      } else if (userWithAccessEdit) {
-        permission = 'edit'
-      } else {
-        permission = 'view'
-      }
+      permission = userInProject?.permission ?? 'view'
     } else {
       permission = 'edit'
     }
   }
 
   function findBook(id: string) {
-    const book = project?.books?.find((book) => book.id === id)
+    const book = project?.collections.book.itens?.find((book) => book.id === id)
 
-    const bookTitle = book?.title
-      ? `${book?.title}${book?.subtitle ? ` - ${book?.subtitle}` : ''}`
+    const createdAt = book?.infos.createdAt
+      ? getDate(book?.infos.createdAt)
       : 'Carregando...'
-    const literaryGenre = book?.literary_genre
-      ? book?.literary_genre
+
+    const updatedAt = book?.infos.updatedAt
+      ? getDate(book.infos.updatedAt)
       : 'Carregando...'
-    const createdAt = book?.created_at
-      ? getDate(book.created_at)
-      : 'Carregando...'
-    const updatedAt = book?.updated_at
-      ? getDate(book.updated_at)
-      : 'Carregando...'
-    const isbn = loadingProject
-      ? 'Carregando...'
-      : !loadingProject && !book?.isbn
-      ? 'Você ainda não definiu seu isnb'
-      : book?.isbn
-    const bookFrontCover = book?.front_cover_url ?? undefined
 
     return {
       book: book ?? null,
-      bookTitle,
-      literaryGenre,
       createdAt,
       updatedAt,
-      isbn,
-      bookFrontCover,
     }
   }
 
   function findPerson(id: string) {
-    const person = project?.persons?.find((person) => person.id === id)
+    const person = project?.collections.person.itens.find(
+      (person) => person.id === id,
+    )
 
-    const personName = person?.name
-      ? `${person.name} ${person.last_name}`
+    const createdAt = person?.infos.createdAt
+      ? getDate(person.infos.createdAt)
       : 'Carregando...'
-    const personImage = person?.image_url ?? undefined
-    const createdAt = person?.created_at
-      ? getDate(person.created_at)
-      : 'Carregando...'
-    const updatedAt = person?.updated_at
-      ? getDate(person.updated_at)
+
+    const updatedAt = person?.infos.updatedAt
+      ? getDate(person.infos.updatedAt)
       : 'Carregando...'
 
     return {
       person,
-      personName,
-      personImage,
       createdAt,
       updatedAt,
     }
@@ -219,40 +149,37 @@ export function useProject(id: string) {
     const reverse = config?.reverse ?? false
 
     if (reverse) {
-      const filteredPersons = project?.persons?.filter((person) => {
-        const personToRemove = ids?.find((id) => id === person.id)
+      const filteredPersons =
+        project?.collections.person.itens.filter((person) => {
+          const personToRemove = ids?.find((id) => id === person.id)
 
-        if (personToRemove) return false
+          if (personToRemove) return false
 
-        return true
-      }) as IPersonsResponse[]
+          return true
+        }) ?? []
 
       return filteredPersons ?? []
     } else {
       const queryPersons = ids?.map((id) => {
-        const person = project?.persons?.find((person) => person.id === id)
+        const person = project?.collections.person.itens.find(
+          (person) => person.id === id,
+        )
 
         return person
       })
 
       const persons = queryPersons?.filter(
         (queriedPerson) => queriedPerson !== undefined,
-      ) as IPersonsResponse[]
+      ) as IPersonPreview[]
 
       return persons ?? []
     }
   }
 
   function queryPerson(query: string) {
-    const filteredPersons = project?.persons?.filter(
+    const filteredPersons = project?.collections.person.itens?.filter(
       (person) =>
-        person.name
-          .toLowerCase()
-          .trim()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .includes(query.toLowerCase().trim()) ||
-        person.last_name
+        person.name.full
           .toLowerCase()
           .trim()
           .normalize('NFD')
@@ -270,9 +197,11 @@ export function useProject(id: string) {
   }
 
   function findTimeLine(id: string) {
-    const timeLine = project?.timeLines?.find((timeLine) => timeLine.id === id)
+    const timeLine = project?.collections.timeLine.itens?.find(
+      (timeLine) => timeLine.id === id,
+    )
     const eventsInChronologicOrd = orderDatesOfTimelines(
-      timeLine?.timeEvents ?? [],
+      timeLine?.collections.timeEvent.itens ?? [],
     )
 
     return {
@@ -329,18 +258,14 @@ export function useProject(id: string) {
     createdAt,
     updatedAt,
     projectName,
-    projectType,
-    projectImage,
     refetchProject,
     callEvent,
 
     loadingProject,
-    booksThisProject: project?.books ?? [],
-    personsThisProject: project?.persons ?? [],
+    booksThisProject: project?.collections.book.itens ?? [],
+    personsThisProject: project?.collections.person.itens ?? [],
     permission,
     timelineOfProject: [],
-    usersInProject: usersInProject ?? [],
-    usersWithPermissionEdit: usersWithPermissionEdit ?? [],
     mainTimeLine,
     todoFirst,
     anotherTodos,

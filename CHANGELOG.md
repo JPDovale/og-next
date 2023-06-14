@@ -1,5 +1,29 @@
 # og-next
 
+## 1.1.3
+
+### Patch Changes
+
+- Update recive types of api
+
+## 1.1.2
+
+### Patch Changes
+
+- Correction of bugs
+
+## 1.1.1
+
+### Patch Changes
+
+- optimization for SEO
+
+## 1.1.0
+
+### Minor Changes
+
+- Adding documentation page
+
 ## 1.0.0
 
 ### Major Changes

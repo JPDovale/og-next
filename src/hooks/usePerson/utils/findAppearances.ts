@@ -1,11 +1,8 @@
-import {
-  IAppearance,
-  IPersonsResponse,
-} from '@api/responsesTypes/IPersonsResponse'
+import { IAppearance, IPerson } from '@api/responsesTypes/person/IPerson'
 import { IEditorTo } from 'src/@types/editores/IEditorTo'
 
 interface IFindAppearance {
-  person: IPersonsResponse | null
+  person: IPerson | null
   id: string
 }
 
@@ -21,7 +18,7 @@ export function findAppearanceUtil({
   id,
   person,
 }: IFindAppearance): IResponseAppearance {
-  const appearance = person?.appearances?.find(
+  const appearance = person?.collections.appearance.itens?.find(
     (appearance) => appearance.id === id,
   )
 

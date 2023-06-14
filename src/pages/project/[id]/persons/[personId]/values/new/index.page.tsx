@@ -192,7 +192,7 @@ export default function NewValuePage() {
             icon={<TreeStructure size={40} />}
             label={
               valueSelected && value
-                ? `Valor selecionado: ${value.title}`
+                ? `Valor selecionado: ${value.infos.title}`
                 : 'Novo valor'
             }
             inTop
@@ -331,7 +331,8 @@ export default function NewValuePage() {
                   <Anchor />
                 </ButtonIcon>
                 <ButtonLabel>
-                  Atribuir &quot;{value?.title}&quot; ao personagem {personName}
+                  Atribuir &quot;{value?.infos.title}&quot; ao personagem{' '}
+                  {personName}
                 </ButtonLabel>
               </ButtonRoot>
             </ContainerGrid>

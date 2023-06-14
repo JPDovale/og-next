@@ -48,7 +48,10 @@ export default function PowerPage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-${power?.title} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${power?.infos.title} | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -57,7 +60,7 @@ export default function PowerPage() {
           'Personagens',
           `${personName}`,
           'Poderes',
-          power?.title ?? 'Carregando...',
+          power?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -82,20 +85,20 @@ export default function PowerPage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {power?.title}
+                {power?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {power?.description}
+                {power?.infos.description}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {power?.created_at
-                  ? getDate(power?.created_at)
+                {power?.infos.createdAt
+                  ? getDate(power?.infos.createdAt)
                   : 'Carregando...'}
               </Text>
             </InfoDefault>
@@ -105,7 +108,7 @@ export default function PowerPage() {
         <CommentsOnPage
           onNewComment={handleCommentInPower}
           permission={permission}
-          comments={power?.comments}
+          comments={power?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
 

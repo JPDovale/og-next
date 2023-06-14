@@ -11,14 +11,13 @@ import {
   LoginPageContainer,
 } from './styles'
 
-import LogoToDown from '../../assets/logos/logoOG.png'
+import LogoToDown from '../../assets/logos/logo.png'
 
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
-import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../../contexts/user'
+import { useContext, useState } from 'react'
 
 import { NextSeo } from 'next-seo'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
@@ -27,7 +26,8 @@ import {
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
-import { ToastError } from '@components/usefull/ToastError'
+import { createSessionRequest } from '@api/userRequest'
+import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
 
 const loginFormSchema = z.object({
@@ -41,32 +41,28 @@ type LoginFormData = z.infer<typeof loginFormSchema>
 
 export default function LoginPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
-
-  const { createSession, error, setError } = useContext(UserContext)
-  const { userLogged, refetchUser } = useUser()
+  const { setError } = useContext(InterfaceContext)
 
   const { register, handleSubmit, formState } = useForm<LoginFormData>({
     resolver: zodResolver(loginFormSchema),
   })
 
+  const { refetchUser } = useUser()
+
   const router = useRouter()
 
   async function handleLogin(data: LoginFormData) {
-    const newSession = { ...data }
+    const response = await createSessionRequest(data.email, data.password)
 
-    const isLogged = await createSession(newSession)
+    if (response.error) {
+      setError(response.error)
+    }
 
-    if (isLogged) {
+    if (response.ok) {
       await refetchUser()
       router.push('/projects')
     }
   }
-
-  useEffect(() => {
-    if (userLogged) {
-      router.push('/projects')
-    }
-  }, [userLogged, router])
 
   return (
     <>
@@ -116,8 +112,6 @@ export default function LoginPage() {
           >
             Efetue o login
           </Text>
-
-          {error && <ToastError error={error} setError={setError} />}
 
           <InputContainer>
             <InputHeader size={'xs'} weight="bold">

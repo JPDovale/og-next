@@ -1,5 +1,5 @@
 import { getTraumasRequest } from '@api/projectsRequests'
-import { ITrauma } from '@api/responsesTypes/IPersonsResponse'
+import { ITrauma } from '@api/responsesTypes/person/IPerson'
 import { refreshSessionRequest } from '@api/userRequest'
 import { useQuery } from 'react-query'
 
@@ -13,18 +13,18 @@ export function useTraumas(projectId: string) {
       let errorMessage: string | null = null
       let errorTitle: string | null = null
 
-      if (response.errorMessage === 'Invalid token') {
+      if (response.error?.title === 'Login failed') {
         const refresh = await refreshSessionRequest()
 
-        if (!refresh.errorMessage) {
+        if (refresh.ok) {
           response = await getTraumasRequest(projectId)
         } else {
-          errorMessage = refresh.errorMessage
-          errorTitle = refresh.errorTitle
+          errorMessage = refresh.error?.message ?? null
+          errorTitle = refresh.error?.title ?? null
         }
       }
 
-      const traumas = response.traumas as ITrauma[]
+      const traumas = response.data?.traumas as ITrauma[]
 
       return { traumas, errorMessage, errorTitle }
     },
@@ -34,7 +34,7 @@ export function useTraumas(projectId: string) {
 
   function findTraumaWherePersonNotExisteIn(personId: string) {
     const traumasWherePersonNorFund = traumas.filter((trauma) => {
-      const personExisteInTrauma = trauma.persons?.find(
+      const personExisteInTrauma = trauma.collections.referencesIt.itens?.find(
         (person) => person.id === personId,
       )
 

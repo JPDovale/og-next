@@ -1,7 +1,7 @@
 import { NextSeo } from 'next-seo'
 import { HomeContent, HomePageContainer, SideInfo } from './styles'
 
-import aloneLogoImg from '../../assets/logos/logoOG.png'
+import aloneLogoImg from '../../assets/logos/logo.png'
 import Image from 'next/image'
 import { Header } from '@components/Header'
 import { Text } from '@components/usefull/Text'

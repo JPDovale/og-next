@@ -2,7 +2,7 @@ import { NextSeo } from 'next-seo'
 import { useContext, useState } from 'react'
 import Image from 'next/image'
 
-import LogoToDown from '../../../../assets/logos/logoOG.png'
+import LogoToDown from '../../../../assets/logos/logo.png'
 import {
   CardResetPassword,
   InputContainer,
@@ -18,14 +18,15 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/dist/client/router'
 import Link from 'next/link'
-import { UserContext } from '@contexts/user'
-import { ResponseInfoApi } from '@components/usefull/ResponseInfoApi'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
   TextInputRoot,
 } from '@components/usefull/InputText'
+import { InterfaceContext } from '@contexts/interface'
+import { recoveryPasswordRequest } from '@api/userRequest'
+import { Toast } from '@components/usefull/Toast'
 
 const resetPasswordFormSchema = z.object({
   password: z
@@ -40,9 +41,8 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>
 
 export default function ResetPasswordPage() {
   const [isShowPassword, setIsShowPassword] = useState(false)
-
-  const { error, setError, recoveryPassword, success, setSuccess } =
-    useContext(UserContext)
+  const [successToasOpen, setSuccessToastOpen] = useState(false)
+  const { setError } = useContext(InterfaceContext)
 
   const router = useRouter()
 
@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
   })
 
   async function handleResetPassword(data: ResetPasswordFormData) {
-    setSuccess(null)
+    setSuccessToastOpen(false)
     setError(null)
 
     if (data.password !== data.confirmPassword) {
@@ -75,9 +75,17 @@ export default function ResetPasswordPage() {
       })
     }
 
-    await recoveryPassword(data.password, token)
+    const response = await recoveryPasswordRequest(data.password, token)
 
-    reset()
+    if (response.error) {
+      setError(response.error)
+      return
+    }
+
+    if (response.ok) {
+      setSuccessToastOpen(true)
+      reset()
+    }
   }
 
   return (
@@ -85,6 +93,13 @@ export default function ResetPasswordPage() {
       <NextSeo title="Recuperação de senha | Magiscrita" />
 
       <ResetPasswordPageContainer>
+        <Toast
+          open={successToasOpen}
+          setOpen={setSuccessToastOpen}
+          title="Senha alterada"
+          message="Sua senha foi alterada com sucesso! Faça login novamente para acessar a sua conta"
+        />
+
         <CardResetPassword>
           <Image className="logo" src={LogoToDown} alt="" />
           <Text size="3xl" family="headingText" className="logo">
@@ -132,9 +147,6 @@ export default function ResetPasswordPage() {
           >
             Criar nova senha
           </Text>
-
-          {error && <ResponseInfoApi error={error} />}
-          {success && <ResponseInfoApi success={success} />}
 
           <InputContainer>
             <InputHeader size={'xs'} weight="bold">

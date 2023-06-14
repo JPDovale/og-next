@@ -1,4 +1,4 @@
-import { ICapitule } from '@api/responsesTypes/IBooksResponse'
+import { ICapitulePreview } from '@api/responsesTypes/capitule/ICapitulePreview'
 import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
 import { InfoDefault } from '@components/usefull/InfoDefault'
@@ -22,7 +22,7 @@ import {
 } from './styles'
 
 interface ICapituleCardProps {
-  capitule: ICapitule
+  capitule: ICapitulePreview
   maxLengthToReorder: number
   bookId: string
   redirectFunction?: () => void
@@ -63,7 +63,7 @@ export function CapituleCard({
       return setErrorIn('reorder-min')
     }
 
-    if (toSequenceSet === capitule.sequence.toString()) {
+    if (toSequenceSet === capitule.infos.sequence.toString()) {
       setToSequenceSet('')
       setErrorIn('')
       return setReOrderSelected(false)
@@ -71,7 +71,7 @@ export function CapituleCard({
 
     setErrorIn('')
     await callEvent.reorderCapitules({
-      sequenceFrom: capitule.sequence,
+      sequenceFrom: capitule.infos.sequence,
       sequenceTo: Number(toSequenceSet),
     })
 
@@ -113,8 +113,12 @@ export function CapituleCard({
         >
           <ContainerGrid columns={4}>
             <InfoDefault title="Completo">
-              <CapituleComplete as="div" size="sm" complete={capitule.complete}>
-                {capitule.complete ? (
+              <CapituleComplete
+                as="div"
+                size="sm"
+                complete={capitule.infos.complete}
+              >
+                {capitule.infos.complete ? (
                   <Text
                     data-testid="complete"
                     family="body"
@@ -136,17 +140,21 @@ export function CapituleCard({
               </CapituleComplete>
             </InfoDefault>
 
-            <InfoDefault title="Capítulo">{capitule.sequence}</InfoDefault>
+            <InfoDefault title="Capítulo">
+              {capitule.infos.sequence}
+            </InfoDefault>
 
-            <InfoDefault title="Cenas">{capitule?._count.scenes}</InfoDefault>
+            <InfoDefault title="Cenas">
+              {capitule?.collections.scene.itensLength}
+            </InfoDefault>
 
-            <InfoDefault title="Palavras">{capitule.words || 0}</InfoDefault>
+            <InfoDefault title="Palavras">{capitule.infos.words}</InfoDefault>
           </ContainerGrid>
 
           <ContainerGrid>
             <InfoDefault title="Objetivo do capítulo">
               <CapituleObjective family="body">
-                {capitule.objective}
+                {capitule.infos.objective}
               </CapituleObjective>
             </InfoDefault>
 
@@ -156,19 +164,19 @@ export function CapituleCard({
 
             <InfoDefault title="Ato 1">
               <CapituleObjective family="body">
-                {capitule?.structure_act_1 || 'Não definido'}
+                {capitule?.structure.act1 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
 
             <InfoDefault title="Ato 2">
               <CapituleObjective family="body">
-                {capitule?.structure_act_2 || 'Não definido'}
+                {capitule?.structure.act2 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
 
             <InfoDefault title="Ato 3">
               <CapituleObjective family="body">
-                {capitule?.structure_act_3 || 'Não definido'}
+                {capitule?.structure.act3 || 'Não definido'}
               </CapituleObjective>
             </InfoDefault>
           </ContainerGrid>
@@ -180,7 +188,7 @@ export function CapituleCard({
           <div className="form">
             <InputContainer title="">
               <Text family="body" size="sm">
-                Reordenar cena de {capitule.sequence} ---&gt;{' '}
+                Reordenar cena de {capitule.infos.sequence} ---&gt;{' '}
                 {toSequenceSet && toSequenceSet}
                 <Text as="span" family="body" size="sm">
                   {errorIn === 'reorder'

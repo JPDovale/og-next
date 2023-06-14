@@ -24,14 +24,14 @@ export default function AmbientPage() {
   const { project, projectName, permission, loadingProject, callEvent } =
     useProject(id as string)
 
-  const commentsAmbient = project?.comments?.filter(
+  const commentsAmbient = project?.collections.comments?.itens.filter(
     (comment) => comment.to_unknown === 'ambient',
   )
 
   async function handleUpdateAmbient() {
     setSuccessMessage('')
 
-    if (ambient === project?.ambient) return
+    if (ambient === project?.plot.ambient) return
 
     const updatedPlotOnePhrase: IUpdatePlotDTO = {
       ambient: ambient || null,
@@ -84,7 +84,7 @@ export default function AmbientPage() {
         <Editor
           handleUpdate={handleUpdateAmbient}
           permission={permission}
-          preValue={project?.ambient ?? ''}
+          preValue={project?.plot.ambient ?? ''}
           projectId={project!.id}
           setValue={setAmbient}
           to="ambient"
@@ -117,7 +117,7 @@ export default function AmbientPage() {
         <CommentsOnPage
           permission={permission}
           comments={commentsAmbient}
-          isNew={!project?.ambient}
+          isNew={!project?.plot.ambient}
           onNewComment={handleNewComment}
           onNewCommentTo="ambient"
         />

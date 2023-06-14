@@ -48,7 +48,10 @@ export default function FearPage() {
 
   return (
     <>
-      <NextSeo title={`${personName}-${fear?.title} | Magiscrita`} noindex />
+      <NextSeo
+        title={`${personName}-${fear?.infos.title} | Magiscrita`}
+        noindex
+      />
 
       <ProjectPageLayout
         projectName={projectName}
@@ -57,7 +60,7 @@ export default function FearPage() {
           'Personagens',
           `${personName}`,
           'Medos',
-          fear?.title ?? 'Carregando...',
+          fear?.infos.title ?? 'Carregando...',
         ]}
         loading={loadingPerson}
         inError={!loadingPerson && !person}
@@ -82,19 +85,21 @@ export default function FearPage() {
           <ContainerGrid padding={4} darkBackground>
             <InfoDefault size="lg" title="Titulo:">
               <Text family="body" size="3xl" height="shorter" weight="bold">
-                {fear?.title}
+                {fear?.infos.title}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Descrição:">
               <Text family="body" size="xl" height="shorter" weight="bold">
-                {fear?.description}
+                {fear?.infos.description}
               </Text>
             </InfoDefault>
 
             <InfoDefault title="Criado em:">
               <Text family="body" size="sm" height="shorter" weight="bold">
-                {fear?.created_at ? getDate(fear?.created_at) : 'Carregando...'}
+                {fear?.infos.createdAt
+                  ? getDate(fear?.infos.createdAt)
+                  : 'Carregando...'}
               </Text>
             </InfoDefault>
           </ContainerGrid>
@@ -103,7 +108,7 @@ export default function FearPage() {
         <CommentsOnPage
           onNewComment={handleCommentInFear}
           permission={permission}
-          comments={fear?.comments}
+          comments={fear?.collections.comment.itens}
           onResponseIntersect={handleResponseComment}
         />
 

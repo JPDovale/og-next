@@ -6,15 +6,16 @@ import {
   UnshareButton,
   UnshareConfirm,
 } from './styles'
-import { IProjectResponse } from '@api/responsesTypes/IProjectResponse'
 import { AvatarWeb } from '@components/usefull/Avatar'
 import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
-import { IUserInProject, useProject } from '@hooks/useProject'
+import { useProject } from '@hooks/useProject'
 import { useUser } from '@hooks/useUser'
 import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { IProject } from '@api/responsesTypes/project/IProject'
+import { IUserInProject } from '@api/responsesTypes/project/IProjectPreview'
 
 interface ICardUserWithAccessContainerProps {
-  project: IProjectResponse
+  project: IProject
   userWithAccess: IUserInProject
   unshare: string
   setUnshare: (newState: string) => void
@@ -38,9 +39,10 @@ export function CardUserWithAccess({
     <CardUserWithAccessContainer>
       <AvatarWeb
         size={smallWindow ? '2xl' : '4xl'}
-        src={userWithAccess.avatar_url}
+        src={userWithAccess.avatar.url}
+        alt={userWithAccess.avatar.alt}
       />
-      {project.user.id === user?.id && (
+      {project.creator.id === user?.account.id && (
         <UnshareButton
           className="unshare"
           wid="hug"

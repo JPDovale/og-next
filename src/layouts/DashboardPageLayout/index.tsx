@@ -1,5 +1,7 @@
 import { HeaderOptions } from '@components/HeaderOptions'
+import { HeaderOptionsSkeleton } from '@components/HeaderOptions/skeleton'
 import { NavigationBar } from '@components/Navigation'
+import { Skeleton } from '@components/usefull/Skeleton'
 import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
 import { useRouter } from 'next/router'
@@ -15,6 +17,8 @@ interface IDashboardPageLayoutProps {
   setQuery?: (newState: string) => void
   queryless?: boolean
   loading?: boolean
+  disableAccessibilityBottom?: boolean
+  disableScroll?: boolean
 }
 
 export function DashboardPageLayout({
@@ -24,20 +28,42 @@ export function DashboardPageLayout({
   setQuery,
   queryless = false,
   loading = false,
+  disableAccessibilityBottom = false,
+  disableScroll = false,
 }: IDashboardPageLayoutProps) {
   const { navIsOpen } = useContext(InterfaceContext)
-  const { userLogged } = useUser()
+  const { userLogged, loadingUser, user } = useUser()
 
   const router = useRouter()
 
   useEffect(() => {
-    if (!userLogged) router.push('/login')
-  }, [userLogged, router])
+    if (!userLogged && !loadingUser) router.push('/login')
+  }, [userLogged, router, loadingUser])
+
+  if (loadingUser || !user) {
+    return (
+      <>
+        <Skeleton wrapper={NavigationBar} />
+        <DashboardPageLayoutContainer
+          NavIsOpen={navIsOpen}
+          disableAccessibilityBottom={disableAccessibilityBottom}
+          disableScroll={disableScroll}
+        >
+          <HeaderOptionsSkeleton />
+          {children}
+        </DashboardPageLayoutContainer>
+      </>
+    )
+  }
 
   return (
     <>
       <NavigationBar />
-      <DashboardPageLayoutContainer NavIsOpen={navIsOpen}>
+      <DashboardPageLayoutContainer
+        NavIsOpen={navIsOpen}
+        disableAccessibilityBottom={disableAccessibilityBottom}
+        disableScroll={disableScroll}
+      >
         <HeaderOptions
           isLoading={loading}
           windowName={window}
