@@ -1,5 +1,11 @@
 # og-next
 
+## 1.2.0
+
+### Minor Changes
+
+- adding oauth features
+
 ## 1.1.3
 
 ### Patch Changes
