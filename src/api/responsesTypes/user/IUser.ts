@@ -1,5 +1,27 @@
 import { INotification } from '../IUserResponse'
 
+export interface IAccount {
+  id: string
+  type: string
+  provider: string
+  provider_account_id: string
+  refresh_token: string | null
+  access_token: string | null
+  expires_at: number | null
+  token_type: string | null
+  scope: string | null
+  id_token: string | null
+  session_state: string | null
+  user_id: string
+}
+
+export interface ISession {
+  id: string
+  session_token: string | null
+  expires: Date
+  user_id: string
+}
+
 export type IPaymentStatus =
   | 'active'
   | 'canceled'
@@ -41,4 +63,17 @@ export interface IUser {
 
 export interface IUserResponse {
   user: IUser
+}
+
+export interface IAccountResponse {
+  account: IAccount
+}
+
+export interface ISessionResponse {
+  session: ISession
+}
+
+export interface ISessionAndUserResponse {
+  user: IUser
+  session: ISession
 }

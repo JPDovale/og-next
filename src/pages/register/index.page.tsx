@@ -19,6 +19,7 @@ import {
   Envelope,
   Eye,
   EyeClosed,
+  GoogleLogo,
   // GoogleLogo,
   LockKey,
   UserCircle,
@@ -33,7 +34,7 @@ import { useRouter } from 'next/router'
 // import { GetServerSideProps } from 'next'
 import { NextSeo } from 'next-seo'
 import { ICreateUserDTO } from '@api/dtos/ICreateUserDTO'
-import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
@@ -42,6 +43,7 @@ import {
 import { createUserRequest } from '@api/userRequest'
 import { InterfaceContext } from '@contexts/interface'
 import { GetStaticProps } from 'next'
+import { getSession, signIn } from 'next-auth/react'
 
 const registerFormSchema = z.object({
   name: z
@@ -86,7 +88,6 @@ export default function RegisterPage() {
   })
 
   const router = useRouter()
-  // const session = useSession()
 
   async function handleCreateUser(data: RegisterFormData) {
     if (data.password !== data.confirmPassword) {
@@ -110,6 +111,16 @@ export default function RegisterPage() {
     if (response.ok) {
       router.push('/projects')
     }
+  }
+
+  async function handleLoginWithGoogle() {
+    const session = await getSession()
+
+    if (session?.user) {
+      return router.push('/projects')
+    }
+
+    return await signIn('google')
   }
 
   return (
@@ -166,16 +177,20 @@ export default function RegisterPage() {
             Efetue seu cadastro
           </Text>
 
-          {/* <InputContainer>
+          <InputContainer>
             <ButtonRoot
               type="button"
-              label="Fazer cadastro com o google"
-              icon={<GoogleLogo weight="bold" />}
-              css={{ padding: '$3' }}
+              size="sm"
               align="center"
-              onClick={() => signIn('google')}
-            />
-          </InputContainer> */}
+              onClick={handleLoginWithGoogle}
+            >
+              <ButtonIcon>
+                <GoogleLogo weight="bold" />
+              </ButtonIcon>
+
+              <ButtonLabel>Fazer cadastro com o google</ButtonLabel>
+            </ButtonRoot>
+          </InputContainer>
 
           <InputContainer>
             <InputHeader size={'xs'} weight="bold">
