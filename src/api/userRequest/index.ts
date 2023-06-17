@@ -1,5 +1,10 @@
 import { IResponse } from '@api/responses/IResponse'
-import { IUserResponse } from '@api/responsesTypes/user/IUser'
+import {
+  IAccountResponse,
+  ISessionAndUserResponse,
+  ISessionResponse,
+  IUserResponse,
+} from '@api/responsesTypes/user/IUser'
 import { api } from '..'
 import { ICreateUserDTO } from '../dtos/ICreateUserDTO'
 import { INewInitializeDTO } from '../dtos/INewInitializeDTO'
@@ -38,6 +43,155 @@ export async function getUserRequest(
   }
 }
 
+interface IGetOAuthUserRequest {
+  id: string
+}
+
+export async function getOauthUserRequest({
+  id,
+}: IGetOAuthUserRequest): Promise<IResponse<IUserResponse>> {
+  try {
+    const response = await api.get(`/sessions/oauth/users/${id}`)
+    return response.data
+  } catch (err: any) {
+    return err?.response?.data
+  }
+}
+
+interface IGetOAuthByEmailUserRequest {
+  email: string
+}
+
+export async function getOauthByEmailUserRequest({
+  email,
+}: IGetOAuthByEmailUserRequest): Promise<IResponse<IUserResponse>> {
+  try {
+    const response = await api.get(`/sessions/oauth/users/email/${email}`)
+    return response.data
+  } catch (err: any) {
+    return err?.response?.data
+  }
+}
+
+interface IGetOAuthByAccountUserRequest {
+  provider: any
+  providerAccountId: any
+}
+
+export async function getOauthByAccountUserRequest({
+  provider,
+  providerAccountId,
+}: IGetOAuthByAccountUserRequest): Promise<IResponse<IUserResponse>> {
+  try {
+    const response = await api.get(
+      `/sessions/oauth/users/provider/${provider}/${providerAccountId}`,
+    )
+    return response.data
+  } catch (err: any) {
+    return err?.response?.data
+  }
+}
+
+export async function updateOAuthUserRequest(
+  newInfos: IUpdateUserDTO,
+  id: string,
+): Promise<IResponse<IUserResponse>> {
+  try {
+    const response = await api.put(`/sessions/oauth/users/${id}`, newInfos)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+interface ICreateOAuthAccountRequest {
+  userId: string
+  provider: string
+  providerAccountId: string
+  type: string
+  accessToken: string
+  expiresAt: number
+  idToken: string
+  refreshToken: string
+  scope: string
+  sessionState: string
+  tokenType: string
+}
+
+export async function createOAuthAccountRequest(
+  account: ICreateOAuthAccountRequest,
+): Promise<IResponse<IAccountResponse>> {
+  try {
+    const response = await api.post(`/sessions/oauth/accounts`, account)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+interface ICreateOAuthSessionRequest {
+  userId: string
+  expires: Date
+  sessionToken: string
+}
+
+export async function createOAuthSessionRequest(
+  account: ICreateOAuthSessionRequest,
+): Promise<IResponse<ISessionResponse>> {
+  try {
+    const response = await api.post(`/sessions/oauth/session`, account)
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function getSessionAndUserRequest(
+  sessionToken: string,
+): Promise<IResponse<ISessionAndUserResponse>> {
+  try {
+    const response = await api.get(
+      `/sessions/oauth/sessions/${sessionToken}/users`,
+    )
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+export async function updateSessionRequest(
+  sessionToken: string,
+  expires?: Date,
+  userId?: string,
+): Promise<IResponse<ISessionResponse>> {
+  try {
+    const response = await api.put(`/sessions/oauth/sessions/${sessionToken}`, {
+      expires,
+      userId,
+    })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
+interface ICreateOAuthUserRequest {
+  email: string
+  imageUrl?: string | null
+  name?: string | null
+}
+
+export async function createOAuthUserRequest(
+  data: ICreateOAuthUserRequest,
+): Promise<IResponse<IUserResponse>> {
+  try {
+    const response = await api.post(`/sessions/oauth/users`, { ...data })
+    return response.data
+  } catch (err: any) {
+    return err.response.data
+  }
+}
+
 export async function createSessionRequest(
   email: string,
   password: string,
@@ -46,8 +200,6 @@ export async function createSessionRequest(
     const response = await api.post('/sessions/', { email, password })
     return response.data
   } catch (err: any) {
-    console.log(err)
-
     return err
   }
 }
@@ -111,16 +263,6 @@ export async function refreshSessionRequest(
     return response.data
   } catch (err: any) {
     return err.response.data
-  }
-}
-
-export async function loginWithGoogleRequest(user: any) {
-  try {
-    const response = await api.post('/sessions/register/google', user)
-
-    return response.data
-  } catch (err: any) {
-    return err.response
   }
 }
 
