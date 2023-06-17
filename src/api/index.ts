@@ -9,6 +9,8 @@ export const api = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
+    'Ms-Api-key': process.env.NEXT_PUBLIC_MS_KEY,
+    'Ms-Private-Api-Key': process.env.PRIVATE_MS_KEY,
   },
   jar: cookieJar,
 })

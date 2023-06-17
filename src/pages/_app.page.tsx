@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { lightMode } from '@styles/theme/light'
 import { Analytics } from '@vercel/analytics/react'
 import { SkeletonTheme } from '@components/usefull/Skeleton'
+import { SessionProvider } from 'next-auth/react'
 
 LogRocket.init('iaiad2/og')
 
@@ -21,52 +22,57 @@ const queryClient = new QueryClient()
 
 globalStyles()
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   const [theme, setTheme] = useState(lightMode)
 
   const timeScreenToast = 1000 * 10 // 10 segundos
 
   return (
-    <SkeletonTheme
-      baseColor={theme === lightMode ? '#909090' : '#101012'}
-      highlightColor={theme === lightMode ? '#b0b0b0' : '#1f1f25'}
-      duration={2}
-      enableAnimation
-    >
-      <QueryClientProvider client={queryClient}>
-        <Toast.Provider
-          swipeDirection="down"
-          label="Notificação"
-          duration={timeScreenToast}
-        >
-          <InterfaceProvider
-            setTheme={setTheme}
-            theme={theme === lightMode ? 'light' : 'dark'}
+    <SessionProvider session={session}>
+      <SkeletonTheme
+        baseColor={theme === lightMode ? '#909090' : '#101012'}
+        highlightColor={theme === lightMode ? '#b0b0b0' : '#1f1f25'}
+        duration={2}
+        enableAnimation
+      >
+        <QueryClientProvider client={queryClient}>
+          <Toast.Provider
+            swipeDirection="down"
+            label="Notificação"
+            duration={timeScreenToast}
           >
-            <DefaultSeo
-              openGraph={{
-                type: 'website',
-                locale: 'pt-br',
-                url: 'https://www.ognare.com.br',
-                siteName: 'Magiscrita',
-                title: 'Magiscrita',
-                description: 'A origem das suas ideias...',
-              }}
-              defaultTitle="Magiscrita"
-              description="A origem das suas ideias..."
-              title="Magiscrita"
-            />
-            <div className={theme}>
-              <Component {...pageProps} />
-              <Analytics />
-            </div>
-          </InterfaceProvider>
+            <InterfaceProvider
+              setTheme={setTheme}
+              theme={theme === lightMode ? 'light' : 'dark'}
+            >
+              <DefaultSeo
+                openGraph={{
+                  type: 'website',
+                  locale: 'pt-br',
+                  url: 'https://www.ognare.com.br',
+                  siteName: 'Magiscrita',
+                  title: 'Magiscrita',
+                  description: 'A origem das suas ideias...',
+                }}
+                defaultTitle="Magiscrita"
+                description="A origem das suas ideias..."
+                title="Magiscrita"
+              />
+              <div className={theme}>
+                <Component {...pageProps} />
+                <Analytics />
+              </div>
+            </InterfaceProvider>
 
-          <ToastViewport />
-        </Toast.Provider>
+            <ToastViewport />
+          </Toast.Provider>
 
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </SkeletonTheme>
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </SkeletonTheme>
+    </SessionProvider>
   )
 }
