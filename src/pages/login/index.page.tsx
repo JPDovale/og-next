@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
-import { Envelope, Eye, EyeClosed, LockKey } from 'phosphor-react'
+import { Envelope, Eye, EyeClosed, GoogleLogo, LockKey } from 'phosphor-react'
 import {
   CardLogin,
   InputContainer,
@@ -17,10 +17,10 @@ import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { NextSeo } from 'next-seo'
-import { ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
@@ -29,6 +29,8 @@ import {
 import { createSessionRequest } from '@api/userRequest'
 import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
+import { ContainerGrid } from '@components/usefull/ContainerGrid'
+import { signIn } from 'next-auth/react'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -47,7 +49,7 @@ export default function LoginPage() {
     resolver: zodResolver(loginFormSchema),
   })
 
-  const { refetchUser } = useUser()
+  const { refetchUser, user } = useUser()
 
   const router = useRouter()
 
@@ -63,6 +65,14 @@ export default function LoginPage() {
       router.push('/projects')
     }
   }
+
+  async function handleLoginWithGoogle() {
+    return await signIn('google')
+  }
+
+  useEffect(() => {
+    if (user) router.push('/projects')
+  }, [user, router])
 
   return (
     <>
@@ -169,10 +179,26 @@ export default function LoginPage() {
           <ButtonRoot
             type="submit"
             align="center"
+            size="sm"
             disabled={formState.isSubmitting}
           >
             <ButtonLabel>Entrar</ButtonLabel>
           </ButtonRoot>
+
+          <ContainerGrid padding={0}>
+            <ButtonRoot
+              size="sm"
+              align="center"
+              type="button"
+              onClick={handleLoginWithGoogle}
+            >
+              <ButtonIcon>
+                <GoogleLogo weight="bold" />
+              </ButtonIcon>
+
+              <ButtonLabel>Entrar com o Google</ButtonLabel>
+            </ButtonRoot>
+          </ContainerGrid>
 
           <Links>
             <Link href="/register">
