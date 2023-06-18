@@ -375,7 +375,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      prices,
+      prices: prices ?? [],
     },
     revalidate: 60 * 60 * 24, // 1 day
   }
