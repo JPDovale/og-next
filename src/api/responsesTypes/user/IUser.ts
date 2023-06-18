@@ -76,4 +76,6 @@ export interface ISessionResponse {
 export interface ISessionAndUserResponse {
   user: IUser
   session: ISession
+  token: string
+  refreshToken: string
 }
