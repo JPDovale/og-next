@@ -73,8 +73,6 @@ export function useUser() {
     createCheckoutSession: (priceId) => createCheckoutSession(priceId),
   }
 
-  console.log(user)
-
   return {
     user,
     userIsPro,

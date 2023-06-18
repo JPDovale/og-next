@@ -9,9 +9,14 @@ import {
   updateOAuthUserRequest,
   updateSessionRequest,
 } from '@api/userRequest'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { Adapter } from 'next-auth/adapters'
+import { setCookie } from 'nookies'
 
-export function AdapterOAuth(): Adapter {
+export function AdapterOAuth(
+  req: NextApiRequest,
+  res: NextApiResponse,
+): Adapter {
   return {
     async createUser(user) {
       const response = await createOAuthUserRequest({
@@ -140,6 +145,22 @@ export function AdapterOAuth(): Adapter {
       if (!response.data) {
         return null
       }
+
+      setCookie({ res }, '@og-token', response.data.token, {
+        maxAge: 1000 * 60 * 10, // 10 min
+        httpOnly: true,
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      })
+
+      setCookie({ res }, '@og-refresh-token', response.data.refreshToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+        httpOnly: true,
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      })
 
       return {
         session: {
