@@ -25,7 +25,7 @@ import {
   UserCircle,
 } from 'phosphor-react'
 import { z } from 'zod'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 // import { signIn, useSession } from 'next-auth/react'
 // import { unstable_getServerSession } from 'next-auth'
@@ -122,6 +122,10 @@ export default function RegisterPage() {
 
     return await signIn('google')
   }
+
+  useEffect(() => {
+    router.push('/projects')
+  }, [router])
 
   return (
     <>

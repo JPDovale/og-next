@@ -6,8 +6,16 @@ import Image from 'next/image'
 import { Header } from '@components/Header'
 import { Text } from '@components/usefull/Text'
 import { Heading } from '@components/usefull/Heading'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function HomePage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/projects')
+  }, [router])
+
   return (
     <>
       <NextSeo
