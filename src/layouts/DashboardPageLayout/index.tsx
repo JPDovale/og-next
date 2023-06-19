@@ -1,3 +1,4 @@
+import { OnBuilding } from '@components/Dev/OnBuilding'
 import { HeaderOptions } from '@components/HeaderOptions'
 import { HeaderOptionsSkeleton } from '@components/HeaderOptions/skeleton'
 import { NavigationBar } from '@components/Navigation'
@@ -50,7 +51,9 @@ export function DashboardPageLayout({
           disableScroll={disableScroll}
         >
           <HeaderOptionsSkeleton />
-          {children}
+          <OnBuilding text="Serviços em manutenção" />
+
+          {/* {children} */}
         </DashboardPageLayoutContainer>
       </>
     )

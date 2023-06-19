@@ -1,14 +1,13 @@
 import { NextSeo } from 'next-seo'
 import { useState } from 'react'
-// import { Projects } from '@components/ProjectsComponents/Projects'
+import { Projects } from '@components/ProjectsComponents/Projects'
 import { usePreventBack } from '../../hooks/usePreventDefaultBack'
 import { DashboardPageLayout } from '../../layouts/DashboardPageLayout'
-// import { Heading } from '@components/usefull/Heading'
-// import { Container } from './styles'
-// import { useWindowSize } from '@hooks/useWindow'
-// import { ModelsHeader } from '@components/ModelsHeader'
+import { Heading } from '@components/usefull/Heading'
+import { Container } from './styles'
+import { useWindowSize } from '@hooks/useWindow'
+import { ModelsHeader } from '@components/ModelsHeader'
 import { useProjects } from '@hooks/useProjects'
-import { OnBuilding } from '@components/Dev/OnBuilding'
 
 export default function ProjectsPage() {
   usePreventBack()
@@ -20,7 +19,7 @@ export default function ProjectsPage() {
     },
   })
 
-  // const { smallWindow } = useWindowSize()
+  const { smallWindow } = useWindowSize()
 
   return (
     <>
@@ -33,8 +32,7 @@ export default function ProjectsPage() {
         loading={loadingProjects}
         queryless
       >
-        <OnBuilding text="Serviços em manutenção" />
-        {/* <Container>
+        <Container>
           {!smallWindow && (
             <>
               <ModelsHeader />
@@ -48,7 +46,7 @@ export default function ProjectsPage() {
             query={query}
             isLoading={loadingProjects}
           />
-        </Container> */}
+        </Container>
       </DashboardPageLayout>
     </>
   )
