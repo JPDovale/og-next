@@ -19,7 +19,6 @@ import {
   Envelope,
   Eye,
   EyeClosed,
-  GoogleLogo,
   // GoogleLogo,
   LockKey,
   UserCircle,
@@ -34,7 +33,11 @@ import { useRouter } from 'next/router'
 // import { GetServerSideProps } from 'next'
 import { NextSeo } from 'next-seo'
 import { ICreateUserDTO } from '@api/dtos/ICreateUserDTO'
-import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  // ButtonIcon,
+  ButtonLabel,
+  ButtonRoot,
+} from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
@@ -43,7 +46,7 @@ import {
 import { createUserRequest } from '@api/userRequest'
 import { InterfaceContext } from '@contexts/interface'
 import { GetStaticProps } from 'next'
-import { getSession, signIn } from 'next-auth/react'
+// import { getSession, signIn } from 'next-auth/react'
 
 const registerFormSchema = z.object({
   name: z
@@ -113,15 +116,15 @@ export default function RegisterPage() {
     }
   }
 
-  async function handleLoginWithGoogle() {
-    const session = await getSession()
+  // async function handleLoginWithGoogle() {
+  //   const session = await getSession()
 
-    if (session?.user) {
-      return router.push('/projects')
-    }
+  //   if (session?.user) {
+  //     return router.push('/projects')
+  //   }
 
-    return await signIn('google')
-  }
+  //   return await signIn('google')
+  // }
 
   return (
     <>
@@ -177,7 +180,7 @@ export default function RegisterPage() {
             Efetue seu cadastro
           </Text>
 
-          <InputContainer>
+          {/* <InputContainer>
             <ButtonRoot
               type="button"
               size="sm"
@@ -190,7 +193,7 @@ export default function RegisterPage() {
 
               <ButtonLabel>Fazer cadastro com o google</ButtonLabel>
             </ButtonRoot>
-          </InputContainer>
+          </InputContainer> */}
 
           <InputContainer>
             <InputHeader size={'xs'} weight="bold">

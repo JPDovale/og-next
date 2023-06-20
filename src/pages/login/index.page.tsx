@@ -1,7 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Text } from '@components/usefull/Text'
 import Link from 'next/link'
-import { Envelope, Eye, EyeClosed, GoogleLogo, LockKey } from 'phosphor-react'
+import {
+  Envelope,
+  Eye,
+  EyeClosed,
+  //  GoogleLogo,
+  LockKey,
+} from 'phosphor-react'
+
 import {
   CardLogin,
   InputContainer,
@@ -20,7 +27,11 @@ import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 
 import { NextSeo } from 'next-seo'
-import { ButtonIcon, ButtonLabel, ButtonRoot } from '@components/usefull/Button'
+import {
+  //  ButtonIcon,
+  ButtonLabel,
+  ButtonRoot,
+} from '@components/usefull/Button'
 import {
   TextInputIcon,
   TextInputInput,
@@ -29,8 +40,8 @@ import {
 import { createSessionRequest } from '@api/userRequest'
 import { InterfaceContext } from '@contexts/interface'
 import { useUser } from '@hooks/useUser'
-import { ContainerGrid } from '@components/usefull/ContainerGrid'
-import { signIn } from 'next-auth/react'
+// import { ContainerGrid } from '@components/usefull/ContainerGrid'
+// import { signIn } from 'next-auth/react'
 
 const loginFormSchema = z.object({
   email: z.string().email({ message: 'O email é invalido.' }),
@@ -66,9 +77,9 @@ export default function LoginPage() {
     }
   }
 
-  async function handleLoginWithGoogle() {
-    return await signIn('google')
-  }
+  // async function handleLoginWithGoogle() {
+  //   return await signIn('google')
+  // }
 
   useEffect(() => {
     if (user) router.push('/projects')
@@ -185,7 +196,7 @@ export default function LoginPage() {
             <ButtonLabel>Entrar</ButtonLabel>
           </ButtonRoot>
 
-          <ContainerGrid padding={0}>
+          {/* <ContainerGrid padding={0}>
             <ButtonRoot
               size="sm"
               align="center"
@@ -198,7 +209,7 @@ export default function LoginPage() {
 
               <ButtonLabel>Entrar com o Google</ButtonLabel>
             </ButtonRoot>
-          </ContainerGrid>
+          </ContainerGrid> */}
 
           <Links>
             <Link href="/register">
