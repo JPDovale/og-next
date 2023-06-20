@@ -150,7 +150,7 @@ export function AdapterOAuth(
         maxAge: 1000 * 60 * 10, // 10 min
         httpOnly: true,
         path: '/',
-        sameSite: 'none',
+        sameSite: false,
         secure: true,
       })
 
@@ -158,7 +158,7 @@ export function AdapterOAuth(
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
         httpOnly: true,
         path: '/',
-        sameSite: 'none',
+        sameSite: false,
         secure: true,
       })
 
