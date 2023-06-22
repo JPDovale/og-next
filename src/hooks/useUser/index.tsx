@@ -1,5 +1,5 @@
 import { getUserRequest, refreshSessionRequest } from '@api/userRequest'
-import LogRocket from 'logrocket'
+// import LogRocket from 'logrocket'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { createCheckoutSession } from './events/createCheckoutSession'
@@ -59,15 +59,15 @@ export function useUser() {
       }
     }, [data, isLoading])
 
-  if (!loadingUser && userLogged && user) {
-    LogRocket.identify(user.account.id, {
-      name: user.infos.username,
-      email: user.infos.email,
+  // if (!loadingUser && userLogged && user) {
+  //   LogRocket.identify(user.account.id, {
+  //     name: user.infos.username,
+  //     email: user.infos.email,
 
-      // Add your own custom user variables here, ie:
-      subscriptionType: userIsPro ? 'pro' : 'trail',
-    })
-  }
+  //     // Add your own custom user variables here, ie:
+  //     subscriptionType: userIsPro ? 'pro' : 'trail',
+  //   })
+  // }
 
   const callEvent: ICallEvent = {
     createCheckoutSession: (priceId) => createCheckoutSession(priceId),

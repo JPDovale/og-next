@@ -6,17 +6,17 @@ import { InterfaceProvider } from '../contexts/interface'
 import { globalStyles } from '../styles/global'
 import { DefaultSeo } from 'next-seo'
 
-import LogRocket from 'logrocket'
+// import LogRocket from 'logrocket'
 import { ToastViewport } from '@components/usefull/Toast/styles'
 import { QueryClientProvider, QueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { useState } from 'react'
 import { lightMode } from '@styles/theme/light'
-import { Analytics } from '@vercel/analytics/react'
+// import { Analytics } from '@vercel/analytics/react'
 import { SkeletonTheme } from '@components/usefull/Skeleton'
 // import { SessionProvider } from 'next-auth/react'
 
-LogRocket.init('iaiad2/og')
+// LogRocket.init('iaiad2/og')
 
 const queryClient = new QueryClient()
 
@@ -63,7 +63,7 @@ export default function App({
             />
             <div className={theme}>
               <Component {...pageProps} />
-              <Analytics />
+              {/* <Analytics /> */}
             </div>
           </InterfaceProvider>
 

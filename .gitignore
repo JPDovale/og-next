@@ -46,6 +46,6 @@ next.config.original.js
 /.vscode/*
 
 # DEV
-Dockerfile
-.dockerignore
+# Dockerfile
+# .dockerignore
 changesToDo.mkd
