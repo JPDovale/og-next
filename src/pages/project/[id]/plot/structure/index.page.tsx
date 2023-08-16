@@ -41,7 +41,7 @@ export default function StructurePage() {
         act2: project?.plot.structure.act2,
         act3: project?.plot.structure.act3,
       },
-    }
+  }
 
     const { resolved, error } = await callEvent.updatePlot(updatedPlotStructure)
 
